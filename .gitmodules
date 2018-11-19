@@ -1,0 +1,6 @@
+[submodule "software/server"]
+	path = software/server
+	url = https://gitlab.cern.ch/mmalczak/server.git
+[submodule "software/pyqt_app"]
+	path = software/pyqt_app
+	url = https://gitlab.cern.ch/mmalczak/pyqt_app.git
