@@ -7,3 +7,6 @@
 [submodule "software/fec"]
 	path = software/fec
 	url = https://gitlab.cern.ch/mmalczak/fec.git
+[submodule "documentation"]
+	path = documentation
+	url = https://gitlab.cern.ch/mmalczak/documentation.git
