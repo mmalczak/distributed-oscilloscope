@@ -13,3 +13,39 @@
 [submodule "dependencies/wr-trigger-distribution"]
 	path = dependencies/wr-trigger-distribution
 	url = https://gitlab.cern.ch/coht/wr-trigger-distribution.git
+[submodule "dependencies/adc-lib"]
+	path = dependencies/adc-lib
+	url = git://ohwr.org/misc/adc-lib.git
+[submodule "dependencies/fmc-adc-100m14b4cha-gw"]
+	path = dependencies/fmc-adc-100m14b4cha-gw
+	url = git://ohwr.org/fmc-projects/fmc-adc-100m14b4cha/fmc-adc-100m14b4cha-gw.git
+[submodule "dependencies/fmc-adc-100m14b4cha-sw"]
+	path = dependencies/fmc-adc-100m14b4cha-sw
+	url = git://ohwr.org/fmc-projects/fmc-adc-100m14b4cha/fmc-adc-100m14b4cha-sw.git
+[submodule "dependencies/mock-turtle"]
+	path = dependencies/mock-turtle
+	url = git://ohwr.org/hdl-core-lib/mock-turtle.git
+[submodule "dependencies/drivers/coht-tools"]
+	path = dependencies/drivers/coht-tools
+	url = https://gitlab.cern.ch/cohtdrivers/coht-tools.git
+[submodule "dependencies/drivers/coht-vic"]
+	path = dependencies/drivers/coht-vic
+	url = https://gitlab.cern.ch/cohtdrivers/coht-vic
+[submodule "dependencies/drivers/fmc"]
+	path = dependencies/drivers/fmc
+	url = https://gitlab.cern.ch/fvaga/fmc
+[submodule "dependencies/drivers/fmc-adc-100m14b4cha-sw"]
+	path = dependencies/drivers/fmc-adc-100m14b4cha-sw
+	url = git://ohwr.org/fmc-projects/fmc-adc-100m14b4cha/fmc-adc-100m14b4cha-sw.git
+[submodule "dependencies/drivers/fmc-spec"]
+	path = dependencies/drivers/fmc-spec
+	url = https://gitlab.cern.ch/fvaga/fmc-spec
+[submodule "dependencies/drivers/fpga-manager"]
+	path = dependencies/drivers/fpga-manager
+	url = https://gitlab.cern.ch/fvaga/fpga-manager
+[submodule "dependencies/drivers/i2c-ocore"]
+	path = dependencies/drivers/i2c-ocore
+	url = https://gitlab.cern.ch/coht/i2c-ocore.git
+[submodule "dependencies/drivers/mockturtle"]
+	path = dependencies/drivers/mockturtle
+	url = https://gitlab.cern.ch/coht/mockturtle

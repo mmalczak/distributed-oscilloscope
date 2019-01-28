@@ -1,0 +1,24 @@
+#!/usr/bin/python
+
+import yaml
+import argparse
+
+parser = argparse.ArgumentParser(description='It translates a VIC IRQ vector into a Linux IRQ number')
+parser.add_argument('--bus', choices=["vme", "pci"], required=True, help='BUS type')
+parser.add_argument('--id', required=True, help='VIC ID')
+parser.add_argument('--vect', type=int, help='VIC IRQ vector', default=0)
+args = parser.parse_args()
+
+if args.bus == "vme":
+	dev = "htvic-svec.{}".format(args.id)
+else:
+	dev = "htvic-spec.{}".format(args.id)
+
+info = "/sys/kernel/debug/" + dev + "/info"
+with open(info, "r") as f:
+  d = f.read()
+  y = yaml.load(d)
+  for entry in y[dev]["irq-mapping"]:
+      if entry["hardware"] == args.vect:
+          print(entry["linux"])
+          break

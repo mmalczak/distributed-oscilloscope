@@ -1,0 +1,32 @@
+fmc
+====
+https://gitlab.cern.ch/fvaga/fmc 
+devfede
+
+
+i2c-ocore ****  NOT BUILD
+=========
+https://gitlab.cern.ch/coht/i2c-ocore.git
+master
+
+fmc-spec   NOT BUILD
+=======
+https://gitlab.cern.ch/fvaga/fmc-spec
+master
+
+fpga-manager
+===========
+https://gitlab.cern.ch/fvaga/fpga-manager
+master
+
+htvic     NOT INSTALLED
+======
+https://gitlab.cern.ch/cohtdrivers/coht-vic
+proposed_master
+
+mockturtle
+==========
+https://gitlab.cern.ch/coht/mockturtle
+master
+
+

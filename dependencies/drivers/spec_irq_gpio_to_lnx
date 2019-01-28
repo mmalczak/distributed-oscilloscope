@@ -1,0 +1,19 @@
+import yaml
+import argparse
+
+parser = argparse.ArgumentParser(description='Get the Linux IRQ number from SPEC IRQ controller')
+parser.add_argument('--gpio', type=int, help='GPIO number')
+parser.add_argument("--pci", help="PCI device id", required=True)
+args = parser.parse_args()
+
+if len(args.pci) == 7:
+   dev = "0000:" + args.pci
+else:
+   dev = args.pci
+info = "/sys/kernel/debug/" + dev + "/info"
+
+with open(info, "r") as f:
+  d = f.read()
+  y = yaml.load(d)
+  print(y[dev]["irq-mapping"][args.gpio]["linux"])
+
