@@ -12,19 +12,19 @@
 	url = https://gitlab.cern.ch/mmalczak/documentation.git
 [submodule "dependencies/wr-trigger-distribution"]
 	path = dependencies/wr-trigger-distribution
-	url = https://gitlab.cern.ch/coht/wr-trigger-distribution.git
+	url = https://ohwr.org/project/wrtd.git 
 [submodule "dependencies/adc-lib"]
 	path = dependencies/adc-lib
 	url = git://ohwr.org/misc/adc-lib.git
 [submodule "dependencies/fmc-adc-100m14b4cha-gw"]
 	path = dependencies/fmc-adc-100m14b4cha-gw
-	url = git://ohwr.org/fmc-projects/fmc-adc-100m14b4cha/fmc-adc-100m14b4cha-gw.git
+	url = https://ohwr.org/project/fmc-adc-100m14b4cha-gw.git
 [submodule "dependencies/fmc-adc-100m14b4cha-sw"]
 	path = dependencies/fmc-adc-100m14b4cha-sw
-	url = git://ohwr.org/fmc-projects/fmc-adc-100m14b4cha/fmc-adc-100m14b4cha-sw.git
+	url = https://ohwr.org/project/fmc-adc-100m14b4cha-sw.git
 [submodule "dependencies/mock-turtle"]
 	path = dependencies/mock-turtle
-	url = git://ohwr.org/hdl-core-lib/mock-turtle.git
+	url = https://ohwr.org/project/mock-turtle.git
 [submodule "dependencies/drivers/coht-tools"]
 	path = dependencies/drivers/coht-tools
 	url = https://gitlab.cern.ch/cohtdrivers/coht-tools.git
@@ -36,7 +36,7 @@
 	url = https://gitlab.cern.ch/fvaga/fmc
 [submodule "dependencies/drivers/fmc-adc-100m14b4cha-sw"]
 	path = dependencies/drivers/fmc-adc-100m14b4cha-sw
-	url = git://ohwr.org/fmc-projects/fmc-adc-100m14b4cha/fmc-adc-100m14b4cha-sw.git
+	url = https://ohwr.org/project/fmc-adc-100m14b4cha-sw.git
 [submodule "dependencies/drivers/fmc-spec"]
 	path = dependencies/drivers/fmc-spec
 	url = https://gitlab.cern.ch/fvaga/fmc-spec
