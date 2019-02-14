@@ -28,9 +28,9 @@ sudo mount -t debugfs none /sys/kernel/debug/
 # laziness, needed to avoid to compile two different ADC drivers
 #sudo insmod ${DRIVERSDIR}/vmebridge/vmebus.ko
 sudo insmod ${DRIVERSDIR}/coht-vic/drivers/htvic.ko
-sudo insmod ${DRIVERSDIR}/fmc-adc-100m14b4cha-sw/zio/zio.ko
-sudo insmod ${DRIVERSDIR}/fmc-adc-100m14b4cha-sw/zio/buffers/zio-buf-vmalloc.ko   #????
-sudo insmod ${DRIVERSDIR}/fmc-adc-100m14b4cha-sw/kernel/fmc-adc-100m14b.ko
+sudo insmod ${DRIVERSDIR}/../fmc-adc-100m14b4cha-sw/zio/zio.ko
+sudo insmod ${DRIVERSDIR}/../fmc-adc-100m14b4cha-sw/zio/buffers/zio-buf-vmalloc.ko   #????
+sudo insmod ${DRIVERSDIR}/../fmc-adc-100m14b4cha-sw/kernel/fmc-adc-100m14b.ko
 sudo insmod ${DRIVERSDIR}/fmc/drivers/fmc/fmc.ko
 sudo insmod ${DRIVERSDIR}/fpga-manager/drivers/fpga/fpga-mgr.ko
 sudo insmod ${DRIVERSDIR}/fmc-spec/kernel/spec.ko
@@ -75,8 +75,9 @@ do
 	ADC_DMA_MEM=$(printf "0x%x,0x%x" $(($BASE_ADDR + $SPEC_DMA_START)) $(($BASE_ADDR + $SPEC_DMA_END)))
 	ADC_CARR_MEM=$(printf "0x%x,0x%x" $(($BASE_ADDR + $SPEC_MEM_START)) $(($BASE_ADDR + $SPEC_MEM_END)))
 	ADC_MEM=$(printf "0x%x,0x%x" $(($BASE_ADDR + $ADC_MEM_START)) $(($BASE_ADDR + $ADC_MEM_END)))
-
+    PARENT=$(dmesg | grep $pciid | grep 'dev ptr' | grep -o -E "0x[a-f0-9]*")
 	$PYTHON $PLATFORM_DEVICE_LOADER -c load --name adc-100m-spec \
+    --parent $PARENT \
 		    --id $adc_id \
 		    --irq $ADC_IRQ_READY,0x4 \
 		    --irq $ADC_IRQ_DMA,0x4 \
