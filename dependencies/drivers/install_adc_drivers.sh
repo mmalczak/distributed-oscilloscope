@@ -96,7 +96,7 @@ do
 
 	# some debug stuff
 	sudo sh -c 'awk '"'"'$2 == "[fmc_adc_100m14b]" {print $1}'"'"' /sys/kernel/debug/tracing/available_filter_functions > /sys/kernel/debug/tracing/set_ftrace_filter'
-	sudo sh -c 'awk '"'"'$2 == "[mockturtle]" {print $1}'"'"' /sys/kernel/debug/tracing/available_filter_functions >> /sys/kernel/debug/tracing/set_ftrace_filter'
+#	sudo sh -c 'awk '"'"'$2 == "[mockturtle]" {print $1}'"'"' /sys/kernel/debug/tracing/available_filter_functions >> /sys/kernel/debug/tracing/set_ftrace_filter'
 	sudo sh -c 'echo function > /sys/kernel/debug/tracing/current_tracer'
 	sudo sh -c 'echo 1 > /sys/kernel/debug/tracing/tracing_on'
 
