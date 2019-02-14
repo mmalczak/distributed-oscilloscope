@@ -34,9 +34,6 @@
 [submodule "dependencies/drivers/fmc"]
 	path = dependencies/drivers/fmc
 	url = https://gitlab.cern.ch/fvaga/fmc
-[submodule "dependencies/drivers/fmc-adc-100m14b4cha-sw"]
-	path = dependencies/drivers/fmc-adc-100m14b4cha-sw
-	url = https://ohwr.org/project/fmc-adc-100m14b4cha-sw.git
 [submodule "dependencies/drivers/fmc-spec"]
 	path = dependencies/drivers/fmc-spec
 	url = https://gitlab.cern.ch/fvaga/fmc-spec
