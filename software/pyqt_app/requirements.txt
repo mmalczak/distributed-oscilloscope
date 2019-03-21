@@ -1,0 +1,13 @@
+ifaddr==0.1.4
+ipaddress==1.0.22
+numpy==1.15.3
+pkg-resources==0.0.0
+plumbum==1.6.7
+PyQt5==5.11.3
+PyQt5-sip==4.19.13
+PyQtChart==5.11.3
+pyqtgraph==0.10.0
+PySide2==5.11.2
+rpyc==4.0.2
+sip==4.19.8
+zeroconf==0.21.3
