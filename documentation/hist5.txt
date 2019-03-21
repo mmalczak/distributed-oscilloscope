@@ -1,0 +1,1000 @@
+    3  make clean
+    4  vim Makefile 
+    5  WRTD_DEP_TRTL = /home/Projects/distributed_oscilloscope/dependencies/mock-turtle/
+    6  WRTD_DEP_TRTL = /home/Projects/distributed_oscilloscope/dependencies/mock-turtle/ make
+    7  WRTD_DEP_TRTL=/home/Projects/distributed_oscilloscope/dependencies/mock-turtle/ make
+    8  WRTD_DEP_TRTL=/home/Projects/distributed_oscilloscope/dependencies/mock-turtle/ make clean
+    9  WRTD_DEP_TRTL=/home/Projects/distributed_oscilloscope/dependencies/mock-turtle/ make
+   10  cd ..
+   11  cd mock-turtle/
+   12  git remote -v
+   13  git fetch 
+   14  gitk --all
+   15  cd ../wr-trigger-distribution/software/\
+   16  cd ../wr-trigger-distribution/software/
+   17  WRTD_DEP_TRTL=/home/Projects/distributed_oscilloscope/dependencies/mock-turtle/ make clean
+   18  WRTD_DEP_TRTL=/home/Projects/distributed_oscilloscope/dependencies/mock-turtle/ make
+   19  gitk --all
+   20  find -name libmockturtle.h
+   21  find -name libmockturtle.h ../../
+   22  find ../../ -name libmockturtle.h
+   23  cd ../../mock-turtle/software/lib/
+   24  vim Makefile 
+   25  cd -
+   26  vim ../../mock-turtle/software/lib/Makefile 
+   27  find ../../ -name mockturtle.h
+   28  vim ../../mock-turtle/software/lib/Makefile 
+   29  ls /home/Projects/distributed_oscilloscope/dependencies/mock-turtle//include
+   30  ls /home/Projects/distributed_oscilloscope/dependencies/mock-turtle/include
+   31  vim /home/Projects/distributed_oscilloscope/dependencies/mock-turtle/software/lib/Makefile 
+   32  git diff
+   33  gitk --all
+   34  git status 
+   35  pwd
+   36  cd ../../mock-turtle/
+   37  git diff
+   38  cd -
+   39  WRTD_DEP_TRTL=/home/Projects/distributed_oscilloscope/dependencies/mock-turtle/ make clean
+   40  WRTD_DEP_TRTL=/home/Projects/distributed_oscilloscope/dependencies/mock-turtle/ make
+   41  vim /home/Projects/distributed_oscilloscope/dependencies/mock-turtle/software/tools/Makefile 
+   42  WRTD_DEP_TRTL=/home/Projects/distributed_oscilloscope/dependencies/mock-turtle/ make clean
+   43  WRTD_DEP_TRTL=/home/Projects/distributed_oscilloscope/dependencies/mock-turtle/ make
+   44  vim /home/Projects/distributed_oscilloscope/dependencies/mock-turtle/software/tools/Makefile 
+   45  WRTD_DEP_TRTL=/home/Projects/distributed_oscilloscope/dependencies/mock-turtle/ make clean
+   46  WRTD_DEP_TRTL=/home/Projects/distributed_oscilloscope/dependencies/mock-turtle/ make
+   47  vim /home/Projects/distributed_oscilloscope/dependencies/mock-turtle/software/tools/Makefile 
+   48  WRTD_DEP_TRTL=/home/Projects/distributed_oscilloscope/dependencies/mock-turtle/ make clean
+   49  WRTD_DEP_TRTL=/home/Projects/distributed_oscilloscope/dependencies/mock-turtle/ make
+   50  cd ../../mock-turtle/
+   51  git diff
+   52  git checkout -- .
+   53  git diff
+   54  cd -
+   55  WRTD_DEP_TRTL=/home/Projects/distributed_oscilloscope/dependencies/mock-turtle/ make clean
+   56  env
+   57  unset TRTL
+   58  env
+   59  env |grep TRTL
+   60  grep MT
+   61  env |grep MT
+   62  unset DEP_MT
+   63  WRTD_DEP_TRTL=/home/Projects/distributed_oscilloscope/dependencies/mock-turtle/ make clean
+   64  WRTD_DEP_TRTL=/home/Projects/distributed_oscilloscope/dependencies/mock-turtle/ make
+   65  cd ../
+   66  ls
+   67  cd dependencies/
+   68  ls
+   69  pwd
+   70  cd ../
+   71  ls
+   72  cd wr-trigger-distribution/dependencies/fmc-
+   73  cd wr-trigger-distribution/dependencies/fmc-adc-100m14b4cha-gw/
+   74  ls
+   75  git remote -v
+   76  cd ..
+   77  ;
+   78  ls
+   79  cd ..
+   80  ls
+   81  cd ..
+   82  ls
+   83  git clone git://ohwr.org/fmc-projects/fmc-adc-100m14b4cha/fmc-adc-100m14b4cha-gw.git
+   84  cd wr-trigger-distribution/dependencies/fmc-adc-100m14b4cha-gw/
+   85  gitk --all
+   86  cd -
+   87  git fetch
+   88  ls
+   89  cd fmc-adc-100m14b4cha-gw/
+   90  git fetch
+   91  git checkout wrtd-dev 
+   92  gitk --all
+   93  cd ..
+   94  cd wr-trigger-distribution/
+   95  cd software/
+   96  vim Makefile 
+   97  lds
+   98  ls
+   99  cd firmware/adc/
+  100  vim Makefile 
+  101  cd -
+  102  WRTD_DEP_TRTL=/home/Projects/distributed_oscilloscope/dependencies/mock-turtle/ WRTD_DEP_FMC_ADC=/home/Projects/distributed_oscilloscope/dependencies/fmc-adc-100m14b4cha-gw/ make
+  103  WRTD_DEP_TRTL=/home/Projects/distributed_oscilloscope/dependencies/mock-turtle/ WRTD_DEP_FMC_ADC=/home/Projects/distributed_oscilloscope/dependencies/fmc-adc-100m14b4cha-gw/ make clean
+  104  WRTD_DEP_TRTL=/home/Projects/distributed_oscilloscope/dependencies/mock-turtle/ WRTD_DEP_FMC_ADC=/home/Projects/distributed_oscilloscope/dependencies/fmc-adc-100m14b4cha-gw/ make 
+  105  cd /home/
+  106  vim ~/.bashrc
+  107  cd /
+  108  ls
+  109  cd /home/toolchain/
+  110  ;s
+  111  ls
+  112  rm -R riscv
+  113  rm -R -friscv
+  114  rm -R -f riscv
+  115  mv /riscv/ /home/toolchain/
+  116  ls
+  117  cd /home/Projects/distributed_oscilloscope/dependencies/wr-trigger-distribution/software/
+  118  WRTD_DEP_TRTL=/home/Projects/distributed_oscilloscope/dependencies/mock-turtle/ WRTD_DEP_FMC_ADC=/home/Projects/distributed_oscilloscope/dependencies/fmc-adc-100m14b4cha-gw/ make clean
+  119  WRTD_DEP_TRTL=/home/Projects/distributed_oscilloscope/dependencies/mock-turtle/ WRTD_DEP_FMC_ADC=/home/Projects/distributed_oscilloscope/dependencies/fmc-adc-100m14b4cha-gw/ make 
+  120  rm /home/toolchain/riscv
+  121  rm -R of/home/toolchain/riscv
+  122  rm -R -f /home/toolchain/riscv
+  123  cd /
+  124  l
+  125  ls
+  126  mv riscv/ /home/toolchain/
+  127  cd -
+  128  WRTD_DEP_TRTL=/home/Projects/distributed_oscilloscope/dependencies/mock-turtle/ WRTD_DEP_FMC_ADC=/home/Projects/distributed_oscilloscope/dependencies/fmc-adc-100m14b4cha-gw/ make clean
+  129  WRTD_DEP_TRTL=/home/Projects/distributed_oscilloscope/dependencies/mock-turtle/ WRTD_DEP_FMC_ADC=/home/Projects/distributed_oscilloscope/dependencies/fmc-adc-100m14b4cha-gw/ make
+  130  vim ~/.bashrc
+  131  WRTD_DEP_TRTL=/home/Projects/distributed_oscilloscope/dependencies/mock-turtle/ WRTD_DEP_FMC_ADC=/home/Projects/distributed_oscilloscope/dependencies/fmc-adc-100m14b4cha-gw/ CROSS_COMPILE_TARGET=/home/toolchain/riscv/bin/riscv32-elf- make clean
+  132  WRTD_DEP_TRTL=/home/Projects/distributed_oscilloscope/dependencies/mock-turtle/ WRTD_DEP_FMC_ADC=/home/Projects/distributed_oscilloscope/dependencies/fmc-adc-100m14b4cha-gw/  make
+  133  vim ~/.bashrc
+  134  WRTD_DEP_TRTL=/home/Projects/distributed_oscilloscope/dependencies/mock-turtle/ WRTD_DEP_FMC_ADC=/home/Projects/distributed_oscilloscope/dependencies/fmc-adc-100m14b4cha-gw/ CROSS_COMPILE_TARGET=/home/toolchain/riscv/bin/riscv32-elf- make clean
+  135  mv /riscv/ /home/toolchain/riscv_cernmachine
+  136  WRTD_DEP_TRTL=/home/Projects/distributed_oscilloscope/dependencies/mock-turtle/ WRTD_DEP_FMC_ADC=/home/Projects/distributed_oscilloscope/dependencies/fmc-adc-100m14b4cha-gw/ CROSS_COMPILE_TARGET=/home/toolchain/riscvcernmachine/bin/riscv32-elf- make clean
+  137  WRTD_DEP_TRTL=/home/Projects/distributed_oscilloscope/dependencies/mock-turtle/ WRTD_DEP_FMC_ADC=/home/Projects/distributed_oscilloscope/dependencies/fmc-adc-100m14b4cha-gw/ CROSS_COMPILE_TARGET=/home/toolchain/riscvcernmachine/bin/riscv32-elf- make
+  138  WRTD_DEP_TRTL=/home/Projects/distributed_oscilloscope/dependencies/mock-turtle/ WRTD_DEP_FMC_ADC=/home/Projects/distributed_oscilloscope/dependencies/fmc-adc-100m14b4cha-gw/ CROSS_COMPILE_TARGET=/home/toolchain/riscvcernmachine/bin/riscv32-elf- make clean
+  139  WRTD_DEP_TRTL=/home/Projects/distributed_oscilloscope/dependencies/mock-turtle/ WRTD_DEP_FMC_ADC=/home/Projects/distributed_oscilloscope/dependencies/fmc-adc-100m14b4cha-gw/ CROSS_COMPILE_TARGET=/home/toolchain/riscv/bin/riscv32-elf- make clean
+  140  WRTD_DEP_TRTL=/home/Projects/distributed_oscilloscope/dependencies/mock-turtle/ WRTD_DEP_FMC_ADC=/home/Projects/distributed_oscilloscope/dependencies/fmc-adc-100m14b4cha-gw/ CROSS_COMPILE_TARGET=/home/toolchain/riscv/bin/riscv32-elf- make 
+  141  WRTD_DEP_TRTL=/home/Projects/distributed_oscilloscope/dependencies/mock-turtle/ WRTD_DEP_FMC_ADC=/home/Projects/distributed_oscilloscope/dependencies/fmc-adc-100m14b4cha-gw/ CROSS_COMPILE_TARGET=/home/toolchain/riscvcernmachine/bin/riscv32-elf- make clean
+  142  WRTD_DEP_TRTL=/home/Projects/distributed_oscilloscope/dependencies/mock-turtle/ WRTD_DEP_FMC_ADC=/home/Projects/distributed_oscilloscope/dependencies/fmc-adc-100m14b4cha-gw/ CROSS_COMPILE_TARGET=/home/toolchain/riscvcernmachine/bin/riscv32-elf- make 
+  143  WRTD_DEP_TRTL=/home/Projects/distributed_oscilloscope/dependencies/mock-turtle/ WRTD_DEP_FMC_ADC=/home/Projects/distributed_oscilloscope/dependencies/fmc-adc-100m14b4cha-gw/ CROSS_COMPILE_TARGET=/home/toolchain/riscv_cernmachine/bin/riscv32-elf- make clean
+  144  WRTD_DEP_TRTL=/home/Projects/distributed_oscilloscope/dependencies/mock-turtle/ WRTD_DEP_FMC_ADC=/home/Projects/distributed_oscilloscope/dependencies/fmc-adc-100m14b4cha-gw/ CROSS_COMPILE_TARGET=/home/toolchain/riscv_cernmachine/bin/riscv32-elf- make 
+  145  mv /riscv/ /home/toolchain/riscv_cernmachine2/
+  146  WRTD_DEP_TRTL=/home/Projects/distributed_oscilloscope/dependencies/mock-turtle/ WRTD_DEP_FMC_ADC=/home/Projects/distributed_oscilloscope/dependencies/fmc-adc-100m14b4cha-gw/ CROSS_COMPILE_TARGET=/home/toolchain/riscv_cernmachine2/bin/riscv32-elf- make 
+  147  cd adc
+  148  pwd
+  149  cd firmware/adc
+  150  make
+  151  ls
+  152  cd ..
+  153  ls
+  154  cd adc/
+  155  ls
+  156  cd ../../../../drivers/
+  157  sh install_adc_drivers.sh 
+  158  ls -l
+  159  pwd
+  160  cd ../
+  161  ls
+  162  cd wr-trigger-distribution/software/tools/
+  163  ls
+  164  ./wrtd-boot 
+  165  ./wrtd-boot -D trtl-0001
+  166  gdb --args ./wrtd-boot -D trtl-0001
+  167  ll
+  168  vi wrtd-boot.c
+  169  make
+  170  WRTD_DEP_TRTL=/home/Projects/distributed_oscilloscope/dependencies/mock-turtle/ WRTD_DEP_FMC_ADC=/home/Projects/distributed_oscilloscope/dependencies/fmc-adc-100m14b4cha-gw/ CROSS_COMPILE_TARGET=/home/toolchain/riscv_cernmachine2/bin/riscv32-elf- make 
+  171  ll
+  172  ./wrtd-boot -D trtl-0001
+  173  ./wrtd-boot -D trtl-0001 0x35b0 ../firmware/adc/wrtd-rt-adc.bin 
+  174  ./wrtd-boot -D trtl-0002 0x35b0 ../firmware/adc/wrtd-rt-adc.bin 
+  175  ./wrtd-config -D trtl-0001
+  176  ./wrtd-config -D trtl-0001 time
+  177  ./wrtd-config -D trtl-0002 time
+  178  ./wrtd-config -D trtl-0001 time
+  179  ./wrtd-config -D trtl-0001 dump-cpus
+  180  ./wrtd-config -D trtl-0001 dump-cpu
+  181  cd ..
+  182  ls
+  183  cd ..
+  184  cd adc-lib/
+  185  git log
+  186  git branch -r
+  187  git log origin/tgingold-dev
+  188  git cherry-pick  e87ada7a32
+  189  git diff
+  190  gitk --all
+  191  cd ../
+  192  ls
+  193  cd ../
+  194  l
+  195  ls
+  196  cd software/fec/
+  197  vim adc_lib_wrapper.py 
+  198  ls
+  199  cd ../
+  200  c d-
+  201  vim fec/adc_lib_wrapper.py 
+  202  cd ../../adc-lib/
+  203  ls
+  204  cd lib/
+  205  l
+  206  ls
+  207  make clean
+  208  make
+  209  ZIO=/home/Projects/fmc-adc-100m14b4cha-sw/zio/ FMCADC100M=/home/Projects/fmc-adc-100m14b4cha-sw/ make clean
+  210  ZIO=/home/Projects/fmc-adc-100m14b4cha-sw/zio/ FMCADC100M=/home/Projects/fmc-adc-100m14b4cha-sw/ make 
+  211  history > /home/Projects/distributed_oscilloscope/documentation/hist2.txt
+  212  ls
+  213  pwd
+  214  cd ../
+  215  l
+  216  ls
+  217  cd ..
+  218  ls
+  219  pwd
+  220  cd distributed_oscilloscope/
+  221  ls
+  222  cd dependencies/
+  223  ls
+  224  cd adc-lib/
+  225  ls
+  226  gitk --all
+  227  git fetch origin 
+  228  gitk --all
+  229  git merge origin/tgingold-dev 
+  230  gitk --all
+  231  git cherry-pick  e87ada7a32
+  232  git reset 
+  233  gitk --all
+  234  git reset origin/tgingold-dev 
+  235  gitk --all
+  236  cd ..
+  237  rm -r -f adc-lib/
+  238  cp /home/Projects/adc-lib/ /home/Projects/distributed_oscilloscope/dependencies/
+  239  ls
+  240  cp -r /home/Projects/adc-lib/ /home/Projects/distributed_oscilloscope/dependencies/
+  241  ls
+  242  cd adc-lib/
+  243  gitk --all
+  244  cd /home/Projects/adc-lib/
+  245  gitk --all
+  246  ls
+  247  cd ../
+  248  ls
+  249  git cherry-pick  e87ada7a32
+  250  cd distributed_oscilloscope/dependencies/adc-lib/
+  251  git cherry-pick  e87ada7a32
+  252  gitk --all
+  253  ZIO=/home/Projects/fmc-adc-100m14b4cha-sw/zio/ FMCADC100M=/home/Projects/fmc-adc-100m14b4cha-sw/ make clean
+  254  ZIO=/home/Projects/fmc-adc-100m14b4cha-sw/zio/ FMCADC100M=/home/Projects/fmc-adc-100m14b4cha-sw/ make
+  255  gitk --all
+  256  ZIO=/home/Projects/fmc-adc-100m14b4cha-sw/zio/ FMCADC100M=/home/Projects/fmc-adc-100m14b4cha-sw/ make clean
+  257  ZIO=/home/Projects/fmc-adc-100m14b4cha-sw/zio/ FMCADC100M=/home/Projects/fmc-adc-100m14b4cha-sw/ make 
+  258  cd ../
+  259  ls
+  260  cd ../
+  261  cd adc-lib/
+  262  ls
+  263  ZIO=/home/Projects/fmc-adc-100m14b4cha-sw/zio/ FMCADC100M=/home/Projects/fmc-adc-100m14b4cha-sw/ make clean
+  264  ZIO=/home/Projects/fmc-adc-100m14b4cha-sw/zio/ FMCADC100M=/home/Projects/fmc-adc-100m14b4cha-sw/ make 
+  265  gitk --all
+  266  cd /home/Projects/distributed_oscilloscope/dependencies/adc-lib/
+  267  l
+  268  ld
+  269  ls
+  270  ZIO=/home/Projects/fmc-adc-100m14b4cha-sw/zio/ FMCADC100M=/home/Projects/fmc-adc-100m14b4cha-sw/ make clean
+  271  ZIO=/home/Projects/fmc-adc-100m14b4cha-sw/zio/ FMCADC100M=/home/Projects/fmc-adc-100m14b4cha-sw/ make 
+  272  ls
+  273  cd ../
+  274  ls
+  275  gitk --all
+  276  cd adc-lib/
+  277  gitk --all
+  278  cd ../../../
+  279  pwd
+  280  cd adc-lib/
+  281  gitk --all
+  282  git cherry-pick  e87ada7a32
+  283  ZIO=/home/Projects/fmc-adc-100m14b4cha-sw/zio/ FMCADC100M=/home/Projects/fmc-adc-100m14b4cha-sw/ make clean
+  284  ZIO=/home/Projects/fmc-adc-100m14b4cha-sw/zio/ FMCADC100M=/home/Projects/fmc-adc-100m14b4cha-sw/ make
+  285  gitk --all
+  286  git fetch 
+  287  gitk --all
+  288  cd lib/
+  289  vim fmc-adc-100m14b4cha.c 
+  290  gitk --all
+  291  vim adc-lib
+  292  vim adc-lib-100m14b4cha.h 
+  293  gitk --all
+  294  cd /home/Projects/fmc-adc-100m14b4cha-sw/
+  295  git fetch 
+  296  gitk --all
+  297  cd /home/Projects/distributed_oscilloscope/
+  298  kls
+  299  ls
+  300  cd dependencies/
+  301  ls
+  302  cd fmc-adc-100m14b4cha-gw/
+  303  gitk --all
+  304  cd /home/Projects/distributed_oscilloscope/
+  305  ls
+  306  cd dependencies/
+  307  ls
+  308  clone e6bedf640a97a57445ead032b6dfab29120e3274
+  309  git clone e6bedf640a97a57445ead032b6dfab29120e3274
+  310  git clone git://ohwr.org/fmc-projects/fmc-adc-100m14b4cha/fmc-adc-100m14b4cha-sw.git
+  311  gitk --all
+  312  cd fmc-adc-100m14b4cha-sw/
+  313  gitk --all
+  314  git cherry-pick 8786ab99717cfb71c4a55153adabb04c473d731b
+  315  gitk --all
+  316  git reset master^
+  317  git checkout feature/platform 
+  318  git status 
+  319  git diff
+  320  git reset 
+  321  git checkout -- .
+  322  git status 
+  323  git checkout feature/platform 
+  324  git cherry-pick 8786ab99717cfb71c4a55153adabb04c473d731b
+  325  gitk --all
+  326  cd ..
+  327  ls
+  328  cd adc-lib/
+  329  ls
+  330  ZIO=/home/Projects/distributed_oscilloscope/dependencies/fmc-adc-100m14b4cha-sw/zio/ FMCADC100M=/home/Projects/distributed_oscilloscope/dependencies/fmc-adc-100m14b4cha-sw/ make
+  331  ZIO=/home/Projects/distributed_oscilloscope/dependencies/fmc-adc-100m14b4cha-sw/zio/ FMCADC100M=/home/Projects/distributed_oscilloscope/dependencies/fmc-adc-100m14b4cha-sw/ make clean
+  332  ZIO=/home/Projects/distributed_oscilloscope/dependencies/fmc-adc-100m14b4cha-sw/zio/ FMCADC100M=/home/Projects/distributed_oscilloscope/dependencies/fmc-adc-100m14b4cha-sw/ make 
+  333  ZIO=/home/Projects/distributed_oscilloscope/dependencies/fmc-adc-100m14b4cha-sw/zio/ FMCADC100M=/home/Projects/distributed_oscilloscope/dependencies/fmc-adc-100m14b4cha-sw/ make clean
+  334  cd lib/
+  335  vim Makefile 
+  336  cd ../../
+  337  cd fmc-adc-100m14b4cha-sw/
+  338  ls
+  339  cd zio/
+  340  l
+  341  ls
+  342  cd ../
+  343  ls
+  344  make clean
+  345  make
+  346  cd ../adc-lib/
+  347  ZIO=/home/Projects/distributed_oscilloscope/dependencies/fmc-adc-100m14b4cha-sw/zio/ FMCADC100M=/home/Projects/distributed_oscilloscope/dependencies/fmc-adc-100m14b4cha-sw/ make clean
+  348  ZIO=/home/Projects/distributed_oscilloscope/dependencies/fmc-adc-100m14b4cha-sw/zio/ FMCADC100M=/home/Projects/distributed_oscilloscope/dependencies/fmc-adc-100m14b4cha-sw/ make
+  349  cd ../../software/fec/
+  350  l
+  351  ls
+  352  cim adc_lib_wrapper.py 
+  353  ls
+  354  vim adc_lib_wrapper.py 
+  355  cd ../../dependencies/adc-lib/
+  356  fg
+  357  cd lib/
+  358  pwd
+  359  fg
+  360  cd /home/Projects/distributed_oscilloscope/software/fec/
+  361  service firewalld stop
+  362  python3.6 adc_client.py 
+  363  ls
+  364  cd ../
+  365  cd software/
+  366  cd ../
+  367  ;s
+  368  ls
+  369  git status 
+  370  git diff software/fec/
+  371  cd software/fec/
+  372  git diff
+  373  git add --patch 
+  374  git commit -m "Added dependency in distributed_oscilloscope project, insted of external one"
+  375  git push
+  376  cd ../
+  377  cd dependencies/
+  378  ls
+  379  git status 
+  380  git submodule add adc-lib/.
+  381  git submodule add adc-lib/.git
+  382  git submodule 
+  383  git submodule -h
+  384  git remote get-url
+  385  ls
+  386  cd adc-lib/
+  387  git remote 
+  388  git remote -v
+  389  cd ..
+  390  git submodule add git://ohwr.org/misc/adc-lib.git
+  391  git submodule 
+  392  cd fmc-adc-100m14b4cha-ge
+  393  cd fmc-adc-100m14b4cha-gw/
+  394  git remote -v
+  395  cd ..
+  396  git submodule add git://ohwr.org/fmc-projects/fmc-adc-100m14b4cha/fmc-adc-100m14b4cha-gw.git
+  397  ls
+  398  git remote -v fmc-adc-100m14b4cha-sw/
+  399  fmc-adc-100m14b4cha-sw/ git remote
+  400  cd git fmc-adc-100m14b4cha-sw/ remote
+  401  cd fmc-adc-100m14b4cha-sw/
+  402  git remote -v
+  403  cd ..
+  404  git submodule add
+  405  git submodule add git://ohwr.org/fmc-projects/fmc-adc-100m14b4cha/fmc-adc-100m14b4cha-sw.git
+  406  ls
+  407  cd mock-turtle/
+  408  git remote -v
+  409  cd ..
+  410  git submodule add git://ohwr.org/hdl-core-lib/mock-turtle.git
+  411  git submodule 
+  412  cd drivers/
+  413  ls
+  414  cd bitstream/
+  415  ls
+  416  cd ..
+  417  git init 
+  418  git
+  419  git status 
+  420  cd ..
+  421  shutdown now
+  422  cd /home/Projects/distributed_oscilloscope/software/fec/
+  423  python3.6 adc_client.py 8109
+  424  cd ../../documentation/
+  425  vim hist2.txt 
+  426  cd ..
+  427  ls
+  428  cd dependencies/
+  429  ls
+  430  cd wr-trigger-distribution/
+  431  fg
+  432  ls
+  433  cd software/
+  434  ls
+  435  cd firmware/
+  436  ls
+  437  c dad
+  438  cd adc/
+  439  fg
+  440  ls
+  441  fg
+  442  ./wrtd-boot -D trtl-0001 0x35b0 wrtd-rt-adc.bin
+  443  cd ..
+  444  ;ls
+  445  ls
+  446  fg
+  447  ls
+  448  find -name wrtd-boot
+  449  find -name 'wrtd-boot'
+  450  fg
+  451  cd ..
+  452  find -name 'wrtd-boot'
+  453  fg
+  454  cd tools/
+  455  fg
+  456  ./wrtd-boot -D trtl-0001 0x35b0 ../firmware/adc/wrtd-rt-adc.bin
+  457  fg
+  458  ./wrtd-config -D trtl-0001
+  459  ./wrtd-config -D trtl-0001 dump-all
+  460  ./wrtd-config -D trtl-0001 time 
+  461  ./wrtd-config -D trtl-0001
+  462  fg
+  463  ./wrtd-config -D trtl-0001 dump-cpu
+  464  ls
+  465  vim wrtd-config.c 
+  466  vim wrtd-internal.h 
+  467  cd ..
+  468  ls
+  469  cd firmware/
+  470  ls
+  471  cd adc/
+  472  ls
+  473  cd ../../tools/
+  474  ./wrtd-config -D trtl-0001 set-alarm 'bleble' -p 100 -c 0
+  475  ./wrtd-config -D trtl-0001 add-alarm 'bleble'
+  476  ./wrtd-config -D trtl-0001 set-alarm 'bleble' -p 100 -c 0
+  477  ./wrtd-config -D trtl-0001 list-alarms
+  478  ./wrtd-config -D trtl-0001 disable-alarm
+  479  ./wrtd-config -D trtl-0001 disable-alarm 'bleble'
+  480  ./wrtd-config -D trtl-0001 del-alarm 'bleble'
+  481  ./wrtd-config -D trtl-0001 list-alarms
+  482  ./wrtd-config -D trtl-0001 add-alarm 'bleble'
+  483  cd ../
+  484  ls
+  485  cd lib/
+  486  ls
+  487  ls *.h
+  488  vim libwrtd.h 
+  489  cd ../tools/
+  490  ./wrtd-config -D trtl-0001 list-alarms
+  491  ./wrtd-config -D
+  492  ./wrtd-config -D trtl-0001 add-alarm -p 1 -c 0
+  493  ./wrtd-config -D trtl-0001 add-alarm 'bleble' -p 1 -c 0
+  494  ./wrtd-config -D trtl-0001 set-alarm 'bleble' -p 1 -c 0
+  495  ./wrtd-config -D trtl-0001 enable-alarm 'bleble'
+  496  ./wrtd-config -D trtl-0001 set-log on
+  497  ./wrtd-config -D trtl-0001 set-alarm 'bleble' -p 0.001 -c 0
+  498  ./wrtd-config -D trtl-0001 disable-alarm 'bleble'
+  499  ./wrtd-config -D trtl-0001 set-alarm 'bleble' -p 0.001 -c 0
+  500  fg
+  501  ./wrtd-config -D trtl-0001 disable-alarm 'bleble'
+  502  ./wrtd-config -D trtl-0001 set-alarm 'bleble' -p 1000 -c 0
+  503  ./wrtd-config -D trtl-0001 disable-alarm 'bleble'
+  504  ./wrtd-config -D trtl-0001 set-alarm 'bleble' -p 10000 -c 0
+  505   time
+  506  ./wrtd-config time
+  507  ./wrtd-config -D trtl-0001 time
+  508  ./wrtd-config -D trtl-0001 disable-alarm 'bleble'
+  509  ./wrtd-config -D trtl-0001 list-alarms
+  510  ls
+  511  vim wrtd-config.c 
+  512  grep -R Failes to receive"
+  513  grep -R "Failed to receive"
+  514  grep -R "Failed to receive" *.c
+  515  grep -R "Failed to receive" *.h
+  516  cd ..
+  517  grep -R "Failed to receive" *.c
+  518  grep -R "Failed to receive"
+  519  cd tools/
+  520  ./wrtd-config -D trtl-0001 list-alarms
+  521  ./wrtd-config -D trtl-0002 list-alarms
+  522  vim /home/Projects/distributed_oscilloscope/documentation/hist2.txt 
+  523  ls
+  524  ./wrtd-boot -D trtl-0001 0x35b0 ../firmware/adc/wrtd-rt-adc.bin
+  525  fg
+  526  cd /home/Projects/distributed_oscilloscope/
+  527  ls
+  528  git submodule 
+  529  cd dependencies/
+  530  git submodule 
+  531  ls
+  532  cd drivers/
+  533  ls
+  534  cd coht-tools/
+  535  ls
+  536  git remote 
+  537  git remote -v\
+  538  git remote -v
+  539  cd ..
+  540  git submodule add https://gitlab.cern.ch/cohtdrivers/coht-tools.git
+  541  git submodule 
+  542  cd ..
+  543  ls
+  544  cd drivers/
+  545  rm .git
+  546  rm -R -f.git
+  547  rm -R -f .git
+  548  rm -R -f .gitmodules 
+  549  git submodule add https://gitlab.cern.ch/cohtdrivers/coht-tools.git
+  550  git submodule 
+  551  ls
+  552  cd coht-vic/
+  553  git remote -v
+  554  git submodule add https://gitlab.cern.ch/cohtdrivers/coht-vic
+  555  ls
+  556  cd coht-vic/
+  557  ls
+  558  cd ..
+  559  rm -R -f coht-vic/
+  560  ls
+  561  cd ..
+  562  git submodule add https://gitlab.cern.ch/cohtdrivers/coht-vic
+  563  ls
+  564  cd fm
+  565  cd fmc
+  566  ls
+  567  git remote -v
+  568  cd ..
+  569  l
+  570  git submodule add https://gitlab.cern.ch/fvaga/fmc
+  571  cd ..
+  572  ls
+  573  cd drivers/
+  574  ls
+  575  cd fmc-adc-100m14b4cha-sw/
+  576  ls
+  577  cd .
+  578  cd ..
+  579  vim install_adc_drivers.sh 
+  580  cd ..
+  581  ls
+  582  cd ..
+  583  ls
+  584  cd dri
+  585  cd dependencies/drivers/
+  586  ls
+  587  git submodule 
+  588  cd fmc
+  589  cd ..
+  590  cd fmc-adc-100m14b4cha-sw/
+  591  git remote -v
+  592  cd ..
+  593  git submodule add git://ohwr.org/fmc-projects/fmc-adc-100m14b4cha/fmc-adc-100m14b4cha-sw.git
+  594  cd fmc-spec/
+  595  git remote -v
+  596  cd ..
+  597  git submodule add https://gitlab.cern.ch/fvaga/fmc-spec
+  598  cd fpga-manager/
+  599  git remote -v
+  600  cd ..
+  601  git submodule add https://gitlab.cern.ch/fvaga/fpga-manager 
+  602  cd i2c-ocore/
+  603  git remote -v
+  604  cd ..
+  605  git submodule add https://gitlab.cern.ch/coht/i2c-ocore.git
+  606  cd mockturtle/
+  607  git remote -v
+  608  cd ..
+  609  git submodule add https://gitlab.cern.ch/coht/mockturtle
+  610  git add bitstream/spec_adc_top.bin
+  611  git add htvic_irq_hw_to_lnx
+  612  git add install_adc_drivers.sh
+  613  git add mt_repos.txt
+  614  git add spec_irq_gpio_to_lnx
+  615  git status 
+  616  git diff
+  617  cd ..
+  618  git status 
+  619  cd dependencies/adc-lib/
+  620  git diff
+  621  cd -
+  622  cd dependencies/drivers/coht-vic/
+  623  git diff
+  624  gitk --all
+  625  cd ../fmc-adc-100m14b4cha-sw/
+  626  gitk --all
+  627  cd ../fmc-spec/
+  628  gitk --all
+  629  cd ../../wr-trigger-distribution/
+  630  gitk --all
+  631  cd ../adc-lib/
+  632  gitk --all
+  633  cd ../drivers/coht-vic/
+  634  ls
+  635  ls -a
+  636  vim .gitmodules 
+  637  gitk --all
+  638  git reset 
+  639  gitk --all
+  640  cd ..
+  641  git status 
+  642  git diff ../documentation/
+  643  cd ../documentation/
+  644  git status 
+  645  git diff
+  646  git sta
+  647  git status 
+  648  cd ..
+  649  cd distributed_oscilloscope/
+  650  git commit -m "Added dependencies"
+  651  gitk --all
+  652  git push
+  653  git fetch 
+  654  git merge
+  655  gitk --all
+  656  git status 
+  657  cd dependencies/adc-lib/
+  658  git status 
+  659  git diff tools/Makefile
+  660  cd ../
+  661  ls
+  662  cd adc-lib/
+  663  ls
+  664  cd tools/
+  665  vim example_mine
+  666  vim example_mine.c 
+  667  rm example_mine*
+  668  ls
+  669  rm -f example_mine*
+  670  git checkout -- Makefile
+  671  git status 
+  672  ls
+  673  scd ../
+  674  cd ../
+  675  ls
+  676  ls -a
+  677  git stta
+  678  git status 
+  679  cd tools/
+  680  ls
+  681  cd old/
+  682  ls
+  683  cd ..
+  684  rm -f -R old/
+  685  ls
+  686  cd ../
+  687  gitk --all
+  688  git status 
+  689  rm tags 
+  690  git status 
+  691  git diff
+  692  cd tools/
+  693  kls
+  694  ls
+  695  rm \
+  696  rm '\'
+  697  cd ..
+  698  git status 
+  699  cd ..
+  700  git status 
+  701  cd ../documentation/
+  702  kls
+  703  ls
+  704  vim hist2.txt 
+  705  git add hist2.txt
+  706  git commit -m "Added hist2.txt"
+  707  git push
+  708  git push 
+  709  git status 
+  710  cd ../
+  711  ls
+  712  git stta
+  713  git status 
+  714  ls
+  715  cd software/server/
+  716  ls
+  717  git diff
+  718  git status 
+  719  gitk --all
+  720  git status 
+  721  gitk --all
+  722  git fetch 
+  723  gitk --all
+  724  cd ../
+  725  git fetch 
+  726  gitk --all
+  727  git status 
+  728  cd software/fec/
+  729  git sstat
+  730  git status 
+  731  ls
+  732  cd venv/
+  733  ls
+  734  cd ../
+  735  ls
+  736  rm venv/ -R
+  737  rm venv/ -R -f
+  738  ls
+  739  cd __pycache__/
+  740  ls
+  741  cd ../
+  742  rm __pycache__/ -R -f
+  743  ld
+  744  ls
+  745  git status 
+  746  git diff
+  747  cd ..
+  748  ls
+  749  cd ../
+  750  git status 
+  751  cd dependencies/drivers/fmc-adc-100m14b4cha-sw/
+  752  git diff
+  753  cd
+  754  cd dependencies/drivers/fmc-spec/
+  755  git diff
+  756  cd -
+  757  cd dependencies/wr-trigger-distribution/
+  758  git diff
+  759  cd -
+  760  git sta
+  761  git status 
+  762  git add dependencies/
+  763  git commit -m "Updated dependencied"
+  764  git diff
+  765  git status 
+  766  gitk --all
+  767  git reset 
+  768  git status 
+  769  git add dependencies/drivers/fmc-adc-100m14b4cha-sw/
+  770  git add dependencies/drivers/fmc-spec/
+  771  git status 
+  772  git add dependencies/wr-trigger-distribution/
+  773  git commit -m "Updated dependencies"
+  774  git push
+  775  git status 
+  776  gitk --all
+  777  git commit -m "Updated dependencies"
+  778  cd dependencies/drivers/fmc-adc-100m14b4cha-sw/
+  779  git status 
+  780  ls
+  781  cd fmc-bus/
+  782  ls
+  783  cd ..
+  784  git diff
+  785  git 
+  786  git status 
+  787  git add kernel/fa-core.c
+  788  git commit -m "Commented out SVEC -art"
+  789  git push
+  790  gitk --all
+  791  cd 
+  792  cd -
+  793  ls
+  794  cd fmc-bus/
+  795  cd ../
+  796  ls
+  797  cd fmc-bus/
+  798  ls
+  799  cd ../
+  800  ls
+  801  cd ../
+  802  ls
+  803  git status 
+  804  cd ../../
+  805  ls
+  806  git status
+  807  cd software/server/
+  808  git fetch 
+  809  gitk --all
+  810  git checkout redesign
+  811  git merge
+  812  gitk --all
+  813  cd ..
+  814  ls
+  815  cd ..
+  816  git status 
+  817  git add documentation/
+  818  git commit -m "Updated docs"
+  819  git push
+  820  git status 
+  821  cd dependencies/wr-trigger-distribution/
+  822  git status 
+  823  git diff
+  824  git add software/tools/wrtd-boot.c
+  825  gitk --all
+  826  git commit -m "Added some initital value to variable"
+  827  cd ../
+  828  cd wr-trigger-distribution/
+  829  git status 
+  830  cd ../
+  831  ls
+  832  git add wr-trigger-distribution/
+  833  git status 
+  834  cd drivers/sp
+  835  cd drivers/
+  836  cd fmc-spec/
+  837  git status 
+  838  git diff
+  839  git add kernel/spec.h
+  840  git add kernel/spec-core.c
+  841  git commit -m "Added support for 150T"
+  842  cd ../
+  843  ls
+  844  git status 
+  845  git add fmc-spec/
+  846  git status 
+  847  cd fmc-
+  848  cd fmc-adc-100m14b4cha-sw/
+  849  git status 
+  850  cd ../
+  851  git commit -m "Updated some dependencies"
+  852  git status 
+  853  cd ../../software/fec/
+  854  git diff
+  855  git add map_timer_trig.py
+  856  git status 
+  857  gitk --all
+  858  git checkout -b map_trigg
+  859  git commit -m "Changes if only one card"
+  860  gitk --all
+  861  git checkout master 
+  862  service firewalld stop
+  863  ls
+  864  cd /home/Projects/distributed_oscilloscope/dependencies/drivers/
+  865  sh install_adc_drivers.sh 
+  866  cd -
+  867  python3.6 adc_client.py 
+  868  gitk --all
+  869  git branch -d map_trigg 
+  870  gitk --all
+  871  git branch -D map_trigg 
+  872  gitk --all
+  873  cd ../
+  874  git status 
+  875  cd fec/
+  876  git status 
+  877  git diff
+  878  cd ../
+  879  git add fec/
+  880  git status 
+  881  git commit -m "Added fec changes"
+  882  git push
+  883  git status 
+  884  python3.6 adc_client.py 
+  885  cd fec/
+  886  python3.6 adc_client.py 
+  887  python3.6 adc_client.py 81029
+  888  python3.6 adc_client.py 8100
+  889  python3.6 adc_client.py
+  890  vim adc_client.py 
+  891  python3.6 adc_client.py
+  892  shutdown noe
+  893  shutdown now
+  894  cd /home/Projects/distributed_oscilloscope/software/fec/
+  895  python3.6 adc_client.py 
+  896  python3.6 adc_client.py 8019
+  897  python3.6 adc_client.py
+  898  python3.6 adc_client.py 8029
+  899  cd ../../dependencies/wr-trigger-distribution/software/tools/
+  900  ls
+  901  ./wrtd-logging 
+  902  ./wrtd-config -D trtl-0001 
+  903  ./wrtd-config -D trtl-0001 set-log off
+  904  ./wrtd-config -D trtl-0002 set-log off
+  905  ./wrtd-config -D trtl-0001 set-log off
+  906  ./wrtd-boot -D trtl-0001 
+  907  ./wrtd-boot -D trtl-0001 0x35b0 ../firmware/adc/wrtd-rt-adc.bin 
+  908  cd /home/Projects/distributed_oscilloscope/software/fec/
+  909  python3.6 adc_client.py 
+  910  python3.6 adc_client.py 8109
+  911  python3.6 adc_client.py
+  912  ls
+  913  vim adc_client.py 
+  914  python3.6 adc_client.py
+  915  python3.6 adc_client.py &
+  916  python3.6 adc_client.py 8102 &
+  917  exit
+  918  python3.6 adc_client.py &
+  919  exit
+  920  cd /home/Projects/distributed_oscilloscope/software/fec/
+  921  python3.6 adc_client.py 8019
+  922  cd /home/Projects/distributed_oscilloscope/dependencies/wr-trigger-distribution/
+  923  ls
+  924  cd software/
+  925  vim /home/Projects/distributed_oscilloscope/documentation/hist3.txt 
+  926  cd tools/
+  927  fg
+  928  ./wrtd-boot -D trtl-0001 0x35b0 ../firmware/adc/wrtd-rt-adc.bin
+  929  vim set_alarm.sh
+  930  fg
+  931  fg2
+  932  fg 2
+  933  fg 1
+  934  fg
+  935  fg 1
+  936  fg 2
+  937  fd 1
+  938  fg 1
+  939  fg 
+  940  fg 1
+  941  fg 2 
+  942  sh set_alarm.sh 
+  943  fg
+  944  vim set_alarm.sh 
+  945  ./wrtd-config 
+  946  vim set_alarm.sh 
+  947  fg
+  948  sh set_alarm.sh 
+  949  vim set_alarm.sh 
+  950  sh set_alarm.sh 
+  951  vim set_alarm.sh 
+  952  fg
+  953  ./wrtd-config 
+  954  vim set_alarm.sh 
+  955  sh set_alarm.sh 
+  956  vim set_alarm.sh 
+  957  sh set_alarm.sh 
+  958  vim set_alarm.sh 
+  959  sh set_alarm.sh 
+  960  vim set_alarm.sh 
+  961  sh set_alarm.sh 
+  962  vim set_alarm.sh 
+  963  sh set_alarm.sh 
+  964  vim set_alarm.sh 
+  965  sh set_alarm.sh 
+  966  vim set_alarm.sh 
+  967  sh set_alarm.sh 
+  968  vim set_alarm.sh 
+  969  sh set_alarm.sh 
+  970  vim set_alarm.sh 
+  971  sh set_alarm.sh 
+  972  vim set_alarm.sh 
+  973  vim wrtd-config.c 
+  974  ./wrtd-config 
+  975  vim ../lib/libwrtd.h 
+  976  vim wrtd-config.c 
+  977  vim ../lib/libwrtd.h 
+  978  vim wrtd-config.c 
+  979  cd ..
+  980  ctags -R .
+  981  cd tools/
+  982  vim wrtd-config.c 
+  983  vim set_alarm.sh 
+  984  sh set_alarm.sh 
+  985  vim set_alarm.sh 
+  986  sh set_alarm.sh 
+  987  vim set_alarm.sh 
+  988  sh set_alarm.sh 
+  989  vim set_alarm.sh 
+  990  sh set_alarm.sh 
+  991  vim set_alarm.sh 
+  992  sh set_alarm.sh 
+  993  vim set_alarm.sh 
+  994  fg
+  995  cd /home/Projects/distributed_oscilloscope/dependencies/wr-trigger-distribution/software/
+  996  cd tools/
+  997  ./wrtd-logging 
+  998  ./wrtd-logging -D trtl-0001
+  999  ./wrtd-logging -D trtl-0002
+ 1000  shutdown now
+ 1001  cat /dev/ttytrtl-0001-0 
+ 1002  history > /home/Projects/distributed_oscilloscope/documentation/hist5.txt
