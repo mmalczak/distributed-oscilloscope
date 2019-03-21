@@ -1,6 +1,3 @@
-[submodule "documentation"]
-	path = documentation
-	url = https://gitlab.cern.ch/mmalczak/documentation.git
 [submodule "dependencies/wr-trigger-distribution"]
 	path = dependencies/wr-trigger-distribution
 	url = https://ohwr.org/project/wrtd.git 
