@@ -1,6 +1,7 @@
 import threading
 from xmlrpc.server import SimpleXMLRPCServer
 import sys
+import selectors
 
 from ADC import *
 
@@ -39,6 +40,19 @@ class ServerExpose(threading.Thread):
         self.server.register_function(self.adc.set_WRTD_master, "set_WRTD_master")
         self.server.register_function(self.adc.stop_acquisition, "stop_acquisition")
 
-        self.server.serve_forever()
+        #self.server.serve_forever()
+        _ServerSelector = selectors.PollSelector
+        try:
+            with _ServerSelector() as selector:
+                selector.register(self.server, selectors.EVENT_READ)
 
+                while True: 
+                    ready = selector.select(0.5)
+                    print('select output: ' + str(ready))
+                    # bpo-35017: shutdown() called during select(), exit immediately.
+                    if ready:
+                        self.server._handle_request_noblock()
 
+                    self.server.service_actions()
+        finally:
+            pass

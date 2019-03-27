@@ -4,7 +4,7 @@ import subprocess
 import ctypes
 from proxy import *
 from WRTD import *
-import select
+import selectors
 
 delay_u = 600
 delay_samples = delay_u * 100
@@ -129,9 +129,13 @@ class ADC():
         return adc_zio_get_file_descriptor(self.adc_ptr)
 
     def poll(self):
-        poll = select.poll()
-        poll.register(self,  select.POLLIN | select.POLLERR)
-        print(poll.poll())
+        Selector = selectors.PollSelector
+        
+        with Selector() as selector:
+            #print(selector.register(4))# | selectors.EVENT_WRITE))
+            print(selector.register(self, selectors.EVENT_READ))# | selectors.EVENT_WRITE))
+        #while True:
+        print(selector.select())
         print(self.fileno())
 #        err = adc_acq_poll(self.adc_ptr, 0, None)
 #        if(err != 0): 
