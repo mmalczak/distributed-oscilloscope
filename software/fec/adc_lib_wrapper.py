@@ -209,6 +209,10 @@ adc_acq_start = libc.adc_acq_start
 adc_acq_start.restype = c_int
 adc_acq_start.argtypes = [c_void_p, c_uint, c_void_p]
 
+adc_zio_get_file_descriptor = libc.adc_zio_get_file_descriptor
+adc_zio_get_file_descriptor.restype = c_int
+adc_zio_get_file_descriptor.argtypes = [c_void_p]
+
 adc_acq_poll = libc.adc_acq_poll
 adc_acq_poll.restype = c_int
 adc_acq_poll.argtypes = [c_void_p, c_uint, c_void_p]

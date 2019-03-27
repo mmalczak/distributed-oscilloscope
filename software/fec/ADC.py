@@ -4,6 +4,7 @@ import subprocess
 import ctypes
 from proxy import *
 from WRTD import *
+import select
 
 delay_u = 600
 delay_samples = delay_u * 100
@@ -124,12 +125,19 @@ class ADC():
             print(adc_strerror(ctypes.get_errno()))
             return 0 
 
+    def fileno(self):
+        return adc_zio_get_file_descriptor(self.adc_ptr)
+
     def poll(self):
-        err = adc_acq_poll(self.adc_ptr, 0, None)
-        if(err != 0): 
-            print("Failed to wait for data")
-            print(adc_strerror(ctypes.get_errno()))
-            return [0, 0]
+        poll = select.poll()
+        poll.register(self,  select.POLLIN | select.POLLERR)
+        print(poll.poll())
+        print(self.fileno())
+#        err = adc_acq_poll(self.adc_ptr, 0, None)
+#        if(err != 0): 
+#            print("Failed to wait for data")
+#            print(adc_strerror(ctypes.get_errno()))
+#            return [0, 0]
 
     def fill_buffer(self):
             err = adc_fill_buffer(self.adc_ptr, self.buf_ptr, 0, None)
