@@ -62,6 +62,9 @@ class ADC():
 
         set_number_of_shots(self.adc_ptr, NSHOT)
         self.set_buffer()
+        self.channels = None
+        self.selector = None
+        self.adc_selector = None
 
     def __del__(self):
         self.remove_buffer()
@@ -116,6 +119,9 @@ class ADC():
             print("Cannot stop pending acquisition")
             print(adc_strerror(ctypes.get_errno()))
             return 0 
+        if self.adc_selector:
+            self.selector.unregister(self)
+            self.adc_selector = None
 
     def start_acquisition(self):
         tv = timeval()
@@ -123,20 +129,23 @@ class ADC():
         if(err != 0): 
             print("Failed to start acq")
             print(adc_strerror(ctypes.get_errno()))
-            return 0 
+            return 0
+        self.adc_selector = self.selector.register(self, selectors.EVENT_READ)
 
     def fileno(self):
         return adc_zio_get_file_descriptor(self.adc_ptr)
 
     def poll(self):
         Selector = selectors.PollSelector
-        
-        with Selector() as selector:
-            #print(selector.register(4))# | selectors.EVENT_WRITE))
-            print(selector.register(self, selectors.EVENT_READ))# | selectors.EVENT_WRITE))
-        #while True:
-        print(selector.select())
-        print(self.fileno())
+        try:        
+                with Selector() as selector:
+                    #print(selector.register(4))# | selectors.EVENT_WRITE))
+                    print(selector.register(self, selectors.EVENT_READ))# | selectors.EVENT_WRITE))
+                    #while True:
+                    print(selector.select(2))
+                    print(self.fileno())
+        finally:
+            pass
 #        err = adc_acq_poll(self.adc_ptr, 0, None)
 #        if(err != 0): 
 #            print("Failed to wait for data")
@@ -153,14 +162,16 @@ class ADC():
 
     @move_to_thread
     def configure_acquisition_retrieve_and_send_data(self, channels):
+        
+        self.channels = channels
         self.stop_acquisition()
 
         self.start_acquisition()
-        self.poll()
-        print("ACQUISITION CONFIGURED")
-        timestamp_and_data = self.retrieve_ADC_timestamp_and_data(channels)
-        proxy = get_proxy(self.server_proxy.proxy_addr)
-        proxy.update_data(timestamp_and_data, self.unique_ADC_name) 
+#        self.poll()
+#        print("ACQUISITION CONFIGURED")
+#        timestamp_and_data = self.retrieve_ADC_timestamp_and_data(channels)
+#        proxy = get_proxy(self.server_proxy.proxy_addr)
+#        proxy.update_data(timestamp_and_data, self.unique_ADC_name) 
 
     def retrieve_ADC_timestamp_and_data(self, channels):
         try:
