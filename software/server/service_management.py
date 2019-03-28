@@ -35,17 +35,17 @@ class ZeroconfListener:
 # adding and removing service could be done either by zeroconf, or directly by the client using RPC call
 def remove_service(name, osc):
 
-    if name[0:3] == "GUI":
+    if name.startswith("GUI"):
         print("Service %s removed" % (name,))
         osc.unregister_GUI(name)
 
-    if name[0:3] == "ADC":
+    if name.startswith("ADC"):
         print("Service %s removed" % (name,))
         osc.remove_available_ADC (name)
 
 def add_service(name, addr, port, osc):
 
-   if name[0:3] == "ADC":
+   if name.startswith("ADC"):
        ADC_proxy_addr = "http://" + str(addr) + ":" + str(port) + "/"
        server_addr = os.popen("ifconfig| grep inet").read().split()[1]
        conf = get_proxy(ADC_proxy_addr).get_current_conf()
@@ -55,7 +55,7 @@ def add_service(name, addr, port, osc):
        get_proxy(ADC_proxy_addr).set_server_address(server_addr)
        print("Service %s added" % (name))
 
-   if name[0:3] == "GUI":
+   if name.startswith("GUI"):
        GUI_proxy_addr = "http://" + str(addr) + ":" + str(port) + "/"
        server_addr = os.popen("ifconfig| grep inet").read().split()[1]
        get_proxy(GUI_proxy_addr).set_server_address(server_addr)

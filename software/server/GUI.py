@@ -113,7 +113,7 @@ class GUI():
    
     def run_acquisition(self, run):
         self.run = run
-        if run == True:
+        if run:
             self.configure_acquisition_ADCs_used()
 
     def configure_acquisition_ADCs_used(self):
@@ -155,7 +155,7 @@ class GUI():
         proxy = get_proxy(self.GUI_proxy_addr)
         proxy.update_data(data, pre_post_samples, offsets)
         # TODO make sure that the data rate is not too big for plot
-        if self.run == True:
+        if self.run:
             self.configure_acquisition_ADCs_used()
 
 
@@ -182,15 +182,16 @@ class GUI():
                 raise HorizontalSettingsError 
 
     def update_horizontal_settings(self):
-        ADC0 = self.ADCs_used[0]
-        ADC0 = self.available_ADCs[ADC0]
-        presamples = ADC0.acq_conf.presamples
-        postsamples = ADC0.acq_conf.postsamples
-        horizontal_params= {'presamples':presamples, 'postsamples':postsamples}
-        try:
-            get_proxy(self.GUI_proxy_addr).set_horizontal_params(horizontal_params)
-        except Exception as e:
-             print('Exception = : ' + str(e))
+        if self.ADCs_used:
+            ADC0 = self.ADCs_used[0]
+            ADC0 = self.available_ADCs[ADC0]
+            presamples = ADC0.acq_conf.presamples
+            postsamples = ADC0.acq_conf.postsamples
+            horizontal_params= {'presamples':presamples, 'postsamples':postsamples}
+            try:
+                get_proxy(self.GUI_proxy_addr).set_horizontal_params(horizontal_params)
+            except Exception as e:
+                 print('Exception = : ' + str(e))
        
     def update_channels(self):
         oscilloscope_channels_params = {}
@@ -205,7 +206,7 @@ class GUI():
 
     def update_trigger(self):
         trigger = self.trigger
-        if(trigger == None):
+        if(trigger is None):
             return 
         threshold = None
         try:
