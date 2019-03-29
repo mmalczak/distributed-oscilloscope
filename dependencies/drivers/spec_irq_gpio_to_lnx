@@ -10,7 +10,7 @@ if len(args.pci) == 7:
    dev = "0000:" + args.pci
 else:
    dev = args.pci
-info = "/sys/kernel/debug/" + dev + "/info"
+info = "/sys/kernel/debug/spec-" + dev + "/info"
 
 with open(info, "r") as f:
   d = f.read()

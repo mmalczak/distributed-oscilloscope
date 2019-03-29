@@ -56,7 +56,7 @@ do
 
 
 
-	fpga=$(basename $(ls -d /sys/bus/pci/devices/$pciid/fpga_manager/fpga*))
+	fpga=$(basename $(ls -d /sys/bus/pci/devices/$pciid/spec-$pciid/fpga_manager/fpga*))
 
 	echo unlock > /sys/class/fpga_manager/$fpga/config_lock
 	sudo dd if=$adc_bitstream of=/dev/$fpga obs=10M
@@ -76,7 +76,7 @@ do
 	ADC_DMA_MEM=$(printf "0x%x,0x%x" $(($BASE_ADDR + $SPEC_DMA_START)) $(($BASE_ADDR + $SPEC_DMA_END)))
 	ADC_CARR_MEM=$(printf "0x%x,0x%x" $(($BASE_ADDR + $SPEC_MEM_START)) $(($BASE_ADDR + $SPEC_MEM_END)))
 	ADC_MEM=$(printf "0x%x,0x%x" $(($BASE_ADDR + $ADC_MEM_START)) $(($BASE_ADDR + $ADC_MEM_END)))
-    PARENT=$(dmesg | grep $pciid | grep 'dev ptr' | grep -o -E "0x[a-f0-9]*")
+    PARENT=$(dmesg | grep $pciid | grep 'devptr' | grep -o -E "0x[a-f0-9]*")
 	$PYTHON $PLATFORM_DEVICE_LOADER -c load --name adc-100m-spec \
     --parent $PARENT \
 		    --id $adc_id \
