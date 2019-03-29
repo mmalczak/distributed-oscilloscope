@@ -31,6 +31,3 @@
 [submodule "dependencies/drivers/i2c-ocore"]
 	path = dependencies/drivers/i2c-ocore
 	url = https://gitlab.cern.ch/coht/i2c-ocore.git
-[submodule "dependencies/drivers/mockturtle"]
-	path = dependencies/drivers/mockturtle
-	url = https://gitlab.cern.ch/coht/mockturtle
