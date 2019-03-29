@@ -1,5 +1,6 @@
 PYTHON=python3.6
-DRIVERSDIR=/home/Projects/distributed_oscilloscope/dependencies/drivers
+DEPDIR=/home/Projects/distributed_oscilloscope/dependencies
+DRIVERSDIR=${DEPDIR}/drivers
 PLATFORM_DEVICE_LOADER=$DRIVERSDIR/coht-tools/drivers/platform-device-loader/platform-device-loader
 HTVIC_IRQ_HW_TO_LNX=$DRIVERSDIR/htvic_irq_hw_to_lnx
 SPEC_GPIO_HW_TO_LNX=$DRIVERSDIR/spec_irq_gpio_to_lnx
@@ -28,13 +29,13 @@ sudo mount -t debugfs none /sys/kernel/debug/
 # laziness, needed to avoid to compile two different ADC drivers
 #sudo insmod ${DRIVERSDIR}/vmebridge/vmebus.ko
 sudo insmod ${DRIVERSDIR}/coht-vic/drivers/htvic.ko
-sudo insmod ${DRIVERSDIR}/../fmc-adc-100m14b4cha-sw/zio/zio.ko
-sudo insmod ${DRIVERSDIR}/../fmc-adc-100m14b4cha-sw/zio/buffers/zio-buf-vmalloc.ko   #????
-sudo insmod ${DRIVERSDIR}/../fmc-adc-100m14b4cha-sw/kernel/fmc-adc-100m14b.ko
+sudo insmod ${DEPDIR}/fmc-adc-100m14b4cha-sw/zio/zio.ko
+sudo insmod ${DEPDIR}/fmc-adc-100m14b4cha-sw/zio/buffers/zio-buf-vmalloc.ko   #????
+sudo insmod ${DEPDIR}/fmc-adc-100m14b4cha-sw/kernel/fmc-adc-100m14b.ko
 sudo insmod ${DRIVERSDIR}/fmc/drivers/fmc/fmc.ko
 sudo insmod ${DRIVERSDIR}/fpga-manager/drivers/fpga/fpga-mgr.ko
 sudo insmod ${DRIVERSDIR}/fmc-spec/kernel/spec.ko
-sudo insmod ${DRIVERSDIR}/mockturtle/software/kernel/mockturtle.ko
+sudo insmod ${DEPDIR}/mock-turtle/software/kernel/mockturtle.ko
 
 
 
