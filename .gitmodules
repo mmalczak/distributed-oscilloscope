@@ -3,7 +3,7 @@
 	url = https://ohwr.org/project/wrtd.git 
 [submodule "dependencies/adc-lib"]
 	path = dependencies/adc-lib
-	url = git://ohwr.org/project/adc-lib.git
+	url = git://ohwr.org/mmalczak/adc-lib.git
 [submodule "dependencies/fmc-adc-100m14b4cha-gw"]
 	path = dependencies/fmc-adc-100m14b4cha-gw
 	url = https://ohwr.org/project/fmc-adc-100m14b4cha-gw.git
