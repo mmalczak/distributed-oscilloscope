@@ -15,15 +15,14 @@ from commands import *
 def main():
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('--port', nargs =1, help='port used on the current machine')
+    parser.add_argument('--port', nargs =1, help='port used on the current machine', type = int, default = [8000])
+    parser.add_argument('--pci_addr', nargs =1, help='pci address of the desired board', type = int, default = [0x01])
     parser.add_argument('--ip_server', nargs =1, help='IP address of the server')
+    
     args = parser.parse_args()
-    if(args.port == None):
-        port = 8000
-        pci_addr = 0x01
-    else:
-        port = int(args.port[0])
-        pci_addr = 0x02
+    print(args)
+    port = int(args.port[0])
+    pci_addr = int(args.pci_addr[0])
 
 
     number_of_channels = 4 #TODO
@@ -40,7 +39,6 @@ def main():
  
     serv_expose = ServerExpose(addr, port, server_proxy, adc)
     serv_expose.start()
-
 
     zeroconf_service = None
     zeroconf_info = None

@@ -52,6 +52,7 @@ class ServerExpose(threading.Thread):
                     # bpo-35017: shutdown() called during select(), exit immediately.
                     if ready:
                         if ready[0][0] == self.adc.adc_selector:
+                            print("Dupa")
                             selector.unregister(self.adc)
                             self.adc.adc_selector = None
                             timestamp_and_data = self.adc.retrieve_ADC_timestamp_and_data(self.adc.channels)

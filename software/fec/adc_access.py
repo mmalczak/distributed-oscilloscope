@@ -48,12 +48,12 @@ def get_timestamp(buf_ptr, offset):
    else:
       ticks = ticks - 16
    print('secs = ' + str(secs) + ' ticks = ' + str(ticks))
-   secs_low = secs &               int('0x0000000000ffffff', 16)
-   secs_middle = (secs >> 24) &    int('0x0000000000ffffff', 16)
-   secs_high = (secs >> 48) &      int('0x0000000000ffffff', 16)
-   ticks_low = ticks &             int('0x0000000000ffffff', 16)
-   ticks_middle = (ticks >> 24) &  int('0x0000000000ffffff', 16)
-   ticks_high = (ticks >> 48) &    int('0x0000000000ffffff', 16)
+   secs_low = secs &               0x0000000000ffffff
+   secs_middle = (secs >> 24) &    0x0000000000ffffff
+   secs_high = (secs >> 48) &      0x0000000000ffffff
+   ticks_low = ticks &             0x0000000000ffffff
+   ticks_middle = (ticks >> 24) &  0x0000000000ffffff
+   ticks_high = (ticks >> 48) &    0x0000000000ffffff
    #print( (secs_high << 48 ) + (secs_middle << 24) + secs_low)
    timestamp = [secs_low, secs_middle, secs_high, ticks_low, ticks_middle, ticks_high]
    return timestamp 

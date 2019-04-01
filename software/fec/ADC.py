@@ -8,7 +8,7 @@ import selectors
 
 delay_u = 600
 delay_samples = delay_u * 100
-delay_tics = int(delay_samples * 125/100)
+delay_tics = delay_samples * 125 // 100
 
 
 NSHOT = 1
@@ -47,10 +47,8 @@ class ADC():
         for count in range(0, 4):
             set_internal_trigger_enable(self.adc_ptr, count, 0)
         set_external_trigger_enable(self.adc_ptr, count, 0)
-
         if(not self.WRTD_master):
             set_presamples(self.adc_ptr, delay_samples)
-
         self.WRTD.add_rule_mult_src('dist_triggers', 5) 
         self.WRTD.set_rule_mult_src('dist_triggers', 0, 'ADCI', 'LAN1', 5) 
 
@@ -86,7 +84,7 @@ class ADC():
     def configure_parameter(self, function_to_invoke, args):
         if(function_to_invoke == set_presamples and self.WRTD_master == False):
             self.required_presamples = args[0]
-            args[0] = args[0] + delay_samples
+            args[0] += delay_samples
         function_to_invoke(self.adc_ptr, *args) 
         if(function_to_invoke == set_presamples or function_to_invoke == set_postsamples):
             self.set_buffer()
@@ -95,7 +93,7 @@ class ADC():
     def get_current_conf(self):
         conf =  current_config(self.adc_ptr)
         if(not self.WRTD_master):
-            conf['acq_conf']['presamples'] = conf['acq_conf']['presamples'] - delay_samples 
+            conf['acq_conf']['presamples'] -= delay_samples 
         return conf
 
     def set_buffer(self):
