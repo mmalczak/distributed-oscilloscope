@@ -173,7 +173,7 @@ class wrtd_tstamp(Structure):
                ]    
 
 
-wrtd_lib = CDLL("/home/Projects/distributed_oscilloscope/dependencies/wr-trigger-distribution/software/lib/libwrtd.so")
+wrtd_lib = CDLL("libwrtd.so")
 
 
 

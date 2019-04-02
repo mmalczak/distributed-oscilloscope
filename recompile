@@ -8,7 +8,9 @@ make
 cd ../wr-trigger-distribution/software
 make clean 
 make
-cd ../../adc-lib/
+cd lib
+make install
+cd ../../../adc-lib/
 ZIO=../../fmc-adc-100m14b4cha-sw/zio/ FMCADC100M=../../fmc-adc-100m14b4cha-sw/ make clean 
 ZIO=../../fmc-adc-100m14b4cha-sw/zio/ FMCADC100M=../../fmc-adc-100m14b4cha-sw/ make
 ZIO=../../fmc-adc-100m14b4cha-sw/zio/ FMCADC100M=../../fmc-adc-100m14b4cha-sw/ make install

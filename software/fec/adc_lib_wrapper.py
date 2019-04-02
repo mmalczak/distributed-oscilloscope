@@ -154,7 +154,7 @@ class adc_timestamp(Structure):
                ("bins", c_ulong)
               ]
 
-libc = CDLL("/home/Projects/distributed_oscilloscope/dependencies/adc-lib/lib/libadc.so")
+libc = CDLL("libadc.so")
 
 adc_print_version = libc.adc_print_version
 adc_print_version.restype = None
