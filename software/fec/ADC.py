@@ -44,7 +44,7 @@ class ADC():
         self.required_presamples = 0
         self.server_proxy = server_proxy
         self.unique_ADC_name = unique_ADC_name
-        for count in range(0, 4):
+        for count in range(4):
             set_internal_trigger_enable(self.adc_ptr, count, 0)
         set_external_trigger_enable(self.adc_ptr, count, 0)
         if(not self.WRTD_master):
