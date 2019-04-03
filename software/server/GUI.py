@@ -40,7 +40,7 @@ class GUI():
     @stop_and_retrieve_acquisition
     def add_trigger(self, type, unique_ADC_name, ADC_trigger_idx):
         trigger = None
-        if type == 'internal':
+        if type == 'internal':   # consider dictionary
             trigger = self.available_ADCs[unique_ADC_name].internal_triggers[ADC_trigger_idx]
         else:
             trigger= self.available_ADCs[unique_ADC_name].external_triggers[ADC_trigger_idx]

@@ -36,6 +36,7 @@ class Trigger:
         self.enable = enable
         self.polarity = polarity
         self.delay = delay
+        self.type = None
 
     def set_enable(self, enable):
         self.enable = enable

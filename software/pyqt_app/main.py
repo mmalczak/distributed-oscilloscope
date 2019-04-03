@@ -76,8 +76,6 @@ def main():
     win.zeroconf_info = zeroconf_info
     win.zeroconf_service = zeroconf_service
     win.GUI_name = GUI_name
-    while(GUI.server_proxy.proxy_addr == None):
-        pass
     app.exec()
 
 if __name__ == '__main__':

@@ -37,10 +37,7 @@ class ChannelClosure:
         proxy.remove_channel(self.channel_count, self.GUI_name)
     
     def channel_exists(self):
-        if(self.properties == None):
-            return False
-        else:
-            return True
+        return self.properties is not None
 
 
 class ChannelProperties:
