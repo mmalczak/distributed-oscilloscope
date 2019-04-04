@@ -43,16 +43,17 @@ def remove_service(name, osc):
         print("Service %s removed" % (name,))
         osc.remove_available_ADC (name)
 
-def add_service(name, addr, port, osc):
+def add_service(name, addr, port, osc, server_addr_known = False):
 
    if name.startswith("ADC"):
        ADC_proxy_addr = "http://" + str(addr) + ":" + str(port) + "/"
-       server_addr = os.popen("ifconfig| grep inet").read().split()[1]
        conf = get_proxy(ADC_proxy_addr).get_current_conf()
        # name provided by zeroconf ihas to be unique and is not user friendly, thats why user selected name is passed in properties
        osc.add_available_ADC(name, conf['board_conf']['n_chan'], ADC_proxy_addr, conf)
        #server_address should be set at the end, (ADC checks if server_address was set and assumes that if it was set, server is properly configured)
-       get_proxy(ADC_proxy_addr).set_server_address(server_addr)
+       if not server_addr_known:
+           server_addr = os.popen("ifconfig| grep inet").read().split()[1]
+           get_proxy(ADC_proxy_addr).set_server_address(server_addr)
        print("Service %s added" % (name))
 
    if name.startswith("GUI"):

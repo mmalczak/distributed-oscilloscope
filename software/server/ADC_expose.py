@@ -8,7 +8,7 @@ class ThreadADC_Expose(threading.Thread):
         threading.Thread.__init__(self)
         self.osc = osc
     def add_service(self, name, addr, port):
-        add_service(name, addr, port, self.osc)
+        add_service(name, addr, port, self.osc, server_addr_known=True)
     def remove_service(self, name):
         remove_service(name, self.osc)
 
