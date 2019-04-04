@@ -47,7 +47,9 @@ def main():
         zeroconf_service = zeroconf.Zeroconf()
         zeroconf_service.register_service(zeroconf_info)
     else: 
+        serv_expose.set_server_address(args.ip_server[0])
         xmlrpc.client.ServerProxy("http://" + args.ip_server[0] + ":7999/").add_service(ADC_name, addr, port)
+
     
     cmd = Commands(zeroconf_service, zeroconf_info, ADC_name, server_proxy)
     cmd_thread = CommandsThread(cmd)
