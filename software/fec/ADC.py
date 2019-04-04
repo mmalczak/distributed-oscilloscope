@@ -157,7 +157,7 @@ class ADC():
                 return [0, 0]
 
 
-    @move_to_thread
+#    @move_to_thread
     def configure_acquisition_retrieve_and_send_data(self, channels):
         
         self.channels = channels
