@@ -45,7 +45,7 @@ def main():
     if(args.ip_server == None):
         zeroconf_info = zeroconf.ServiceInfo("_http._tcp.local.", ADC_name, zeroconf.socket.inet_aton(addr), 8000, properties={'addr': addr, 'port':str(port), 'conf':conf})
         zeroconf_service = zeroconf.Zeroconf()
-        zeroconf_service.register_service(zeroconf_info)
+        zeroconf_service.register_service(zeroconf_info)    # TODO check if it is working, if it will not block until the registration is finished(during registration the server will try to set it's own addres in the ADC
     else:
         serv_expose.set_server_address(args.ip_server[0])
         xmlrpc.client.ServerProxy("http://" + args.ip_server[0] + ":7999/").add_service(ADC_name, addr, port, conf)
