@@ -9,7 +9,7 @@ from ADC import *
 #from map_timer_trig import *
 from server_expose import *
 from commands import *
-
+import selectors  
 
 
 def main():
@@ -36,21 +36,48 @@ def main():
     pci_addr = pci_addr
     trtl = 'trtl-000' + str(pci_addr)
     adc = ADC(pci_addr, trtl, server_proxy, ADC_name)
- 
+    conf = adc.get_current_conf() 
     serv_expose = ServerExpose(addr, port, server_proxy, adc)
-    serv_expose.start()
+    serv_expose.run()
 
     zeroconf_service = None
     zeroconf_info = None
     if(args.ip_server == None):
-        zeroconf_info = zeroconf.ServiceInfo("_http._tcp.local.", ADC_name, zeroconf.socket.inet_aton(addr), 8000, properties={'addr': addr, 'port':str(port)})
+        zeroconf_info = zeroconf.ServiceInfo("_http._tcp.local.", ADC_name, zeroconf.socket.inet_aton(addr), 8000, properties={'addr': addr, 'port':str(port), 'conf':conf})
         zeroconf_service = zeroconf.Zeroconf()
         zeroconf_service.register_service(zeroconf_info)
-    else: 
+    else:
         serv_expose.set_server_address(args.ip_server[0])
-        xmlrpc.client.ServerProxy("http://" + args.ip_server[0] + ":7999/").add_service(ADC_name, addr, port)
+        xmlrpc.client.ServerProxy("http://" + args.ip_server[0] + ":7999/").add_service(ADC_name, addr, port, conf)
 
-    
+
+
+
+
+    _ServerSelector = selectors.PollSelector
+    try:
+        with _ServerSelector() as selector:
+            adc.selector = selector
+            selector.register(serv_expose.server, selectors.EVENT_READ)
+
+            print("Bleble") 
+            while True: 
+                ready = selector.select(0.5)
+                if ready:
+                    if ready[0][0] == adc.adc_selector:
+                        print("Dupa")
+                        selector.unregister(adc)
+                        adc.adc_selector = None
+                        timestamp_and_data = adc.retrieve_ADC_timestamp_and_data(adc.channels)
+                        proxy = get_proxy(serv_expose.server_proxy.proxy_addr)
+                        proxy.update_data(timestamp_and_data, adc.unique_ADC_name) 
+                    else:
+                        serv_expose.server._handle_request_noblock()
+
+                serv_expose.server.service_actions()
+    finally:
+        pass
+
     cmd = Commands(zeroconf_service, zeroconf_info, ADC_name, server_proxy)
     cmd_thread = CommandsThread(cmd)
     cmd_thread.start()

@@ -8,14 +8,14 @@ from ADC import *
 
 thismodule = sys.modules[__name__]
 
-class ServerExpose(threading.Thread):
+class ServerExpose():
     adc = None
     def __init__(self, addr, port, server_proxy, adc):
-        threading.Thread.__init__(self)
         self.addr = addr
         self.port = port
         self.server_proxy = server_proxy
         self.adc = adc
+        self.server = None
     def set_server_address(self, addr):
         self.server_proxy.proxy_addr = "http://" + addr + ":7999/"
 
@@ -41,26 +41,4 @@ class ServerExpose(threading.Thread):
         self.server.register_function(self.adc.stop_acquisition, "stop_acquisition")
 
         #self.server.serve_forever()
-        _ServerSelector = selectors.PollSelector
-        try:
-            with _ServerSelector() as selector:
-                self.adc.selector = selector
-                selector.register(self.server, selectors.EVENT_READ)
-               # self.adc_selector = selector.register(self.adc, selectors.EVENT_READ)
-                while True: 
-                    ready = selector.select(0.5)
-                    # bpo-35017: shutdown() called during select(), exit immediately.
-                    if ready:
-                        if ready[0][0] == self.adc.adc_selector:
-                            print("Dupa")
-                            selector.unregister(self.adc)
-                            self.adc.adc_selector = None
-                            timestamp_and_data = self.adc.retrieve_ADC_timestamp_and_data(self.adc.channels)
-                            proxy = get_proxy(self.server_proxy.proxy_addr)
-                            proxy.update_data(timestamp_and_data, self.adc.unique_ADC_name) 
-                        else:
-                            self.server._handle_request_noblock()
 
-                    self.server.service_actions()
-        finally:
-            pass
