@@ -128,7 +128,6 @@ class ADC():
             print("Failed to start acq")
             print(adc_strerror(ctypes.get_errno()))
             return 0
-        self.adc_selector = self.selector.register(self, selectors.EVENT_READ)
 
     def fileno(self):
         return adc_zio_get_file_descriptor(self.adc_ptr)
@@ -165,6 +164,7 @@ class ADC():
         self.stop_acquisition()
 
         self.start_acquisition()
+        self.adc_selector = self.selector.register(self, selectors.EVENT_READ)
 #        self.poll()
 #        print("ACQUISITION CONFIGURED")
 #        timestamp_and_data = self.retrieve_ADC_timestamp_and_data(channels)
