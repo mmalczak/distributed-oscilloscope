@@ -27,7 +27,7 @@ class ZeroconfListener:
     def add_service(self, zeroconf, type, name):
         info = zeroconf.get_service_info(type, name)
         try:
-            add_service(name, socket.inet_ntoa(info.address), str(int(info.properties[b'port'])), self.osc)
+            add_service(name, socket.inet_ntoa(info.address), str(int(info.properties[b'port'])), self.osc, info.properties[b'conf'])
         except Exception as e:
             pass
 
