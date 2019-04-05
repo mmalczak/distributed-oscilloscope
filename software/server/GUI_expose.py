@@ -65,7 +65,8 @@ class ThreadGUI_Expose(threading.Thread):
     def remove_trigger(self, GUI_name):
         trigger = self.osc.GUIs[GUI_name].trigger
         try:
-            self.set_ADC_parameter(trigger.type + '_trigger_enable', 0, trigger.unique_ADC_name, trigger.ADC_trigger_idx)
+#            self.set_ADC_parameter(trigger.type + '_trigger_enable', 0, trigger.unique_ADC_name, trigger.ADC_trigger_idx)
+            self.send_RPC_request('set_trigger_enable', trigger.unique_ADC_name, 0, trigger.ADC_trigger_idx)
             proxy = get_proxy(self.osc.available_ADCs[trigger.unique_ADC_name].ADC_proxy_addr)
             proxy.set_WRTD_master(False)
         except Exception as e:
