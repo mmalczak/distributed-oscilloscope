@@ -136,18 +136,9 @@ class ADC():
         Selector = selectors.PollSelector
         try:        
                 with Selector() as selector:
-                    #print(selector.register(4))# | selectors.EVENT_WRITE))
                     print(selector.register(self, selectors.EVENT_READ))# | selectors.EVENT_WRITE))
-                    #while True:
-                    print(selector.select(2))
-                    print(self.fileno())
         finally:
             pass
-#        err = adc_acq_poll(self.adc_ptr, 0, None)
-#        if(err != 0): 
-#            print("Failed to wait for data")
-#            print(adc_strerror(ctypes.get_errno()))
-#            return [0, 0]
 
     def fill_buffer(self):
             err = adc_fill_buffer(self.adc_ptr, self.buf_ptr, 0, None)
@@ -157,7 +148,6 @@ class ADC():
                 return [0, 0]
 
 
-#    @move_to_thread
     def configure_acquisition_retrieve_and_send_data(self, channels):
         
         self.channels = channels
@@ -165,11 +155,6 @@ class ADC():
 
         self.start_acquisition()
         self.adc_selector = self.selector.register(self, selectors.EVENT_READ)
-#        self.poll()
-#        print("ACQUISITION CONFIGURED")
-#        timestamp_and_data = self.retrieve_ADC_timestamp_and_data(channels)
-#        proxy = get_proxy(self.server_proxy.proxy_addr)
-#        proxy.update_data(timestamp_and_data, self.unique_ADC_name) 
 
     def retrieve_ADC_timestamp_and_data(self, channels):
         try:
@@ -184,7 +169,6 @@ class ADC():
             return([0, 0])
             print(e)
 
-        #data = np.ctypeslib.as_array(self.buf_ptr.contents.data, (self.presamples+self.postsamples, n_chan))
         data = np.transpose(data)
         data = data.tolist()
 
