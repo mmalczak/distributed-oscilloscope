@@ -20,7 +20,6 @@ def main():
     parser.add_argument('--ip_server', nargs =1, help='IP address of the server')
     
     args = parser.parse_args()
-    print(args)
     port = int(args.port[0])
     pci_addr = int(args.pci_addr[0])
 
@@ -60,12 +59,10 @@ def main():
             adc.selector = selector
             selector.register(serv_expose.server, selectors.EVENT_READ)
 
-            print("Bleble") 
             while True: 
                 ready = selector.select(0.5)
                 if ready:
                     if ready[0][0] == adc.adc_selector:
-                        print("Dupa")
                         selector.unregister(adc)
                         adc.adc_selector = None
                         timestamp_and_data = adc.retrieve_ADC_timestamp_and_data(adc.channels)
