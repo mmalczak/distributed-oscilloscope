@@ -50,6 +50,9 @@ def main():
         xmlrpc.client.ServerProxy("http://" + args.ip_server[0] + ":7999/").add_service(ADC_name, addr, port, conf)
 
 
+    cmd = Commands(zeroconf_service, zeroconf_info, ADC_name, server_proxy)
+    cmd_thread = CommandsThread(cmd)
+    cmd_thread.start()
 
 
 
@@ -75,9 +78,6 @@ def main():
     finally:
         pass
 
-    cmd = Commands(zeroconf_service, zeroconf_info, ADC_name, server_proxy)
-    cmd_thread = CommandsThread(cmd)
-    cmd_thread.start()
     while(True):
         pass
 
