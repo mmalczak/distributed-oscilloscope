@@ -1,0 +1,6 @@
+XML_RPC drwabacks:
+- not able to sne dthe dictionaries with integer keys
+- not able to send integers bigger than 24 bits
+- not able to send notifications
+- not able to send data without response
+- not able to establish just one connection - every request is seperate connection
