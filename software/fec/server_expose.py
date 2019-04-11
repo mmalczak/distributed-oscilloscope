@@ -25,9 +25,9 @@ class ServerExpose():
  
     def set_adc_parameter(self, function_name, value, idx=-1):
         if(idx == -1):
-            self.adc.configure_parameter(getattr(thismodule, function_name), [value]) 
+            self.adc.configure_parameter(function_name, [value]) 
         else:
-            self.adc.configure_parameter(getattr(thismodule, function_name), [idx, value]) 
+            self.adc.configure_parameter(function_name, [idx, value]) 
 
 
     def run(self):
