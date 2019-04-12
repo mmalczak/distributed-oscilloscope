@@ -6,15 +6,14 @@ from WRTD import *
 import selectors
 from adc_lib_wrapper import *
 
-
 delay_u = 600
 delay_samples = delay_u * 100
 delay_tics = delay_samples * 125 // 100
 
-
 NSHOT = 1
 NCHAN = 4
- 
+
+
 class ADC(ADC_Specialized):
 
     def __init__(self, pci_addr, trtl, server_proxy, unique_ADC_name):
@@ -31,14 +30,14 @@ class ADC(ADC_Specialized):
         self.set_external_trigger_enable(0, 0)
         if(not self.WRTD_master):
             self.set_presamples(delay_samples)
-        self.WRTD.add_rule_mult_src('dist_triggers', 5) 
-        self.WRTD.set_rule_mult_src('dist_triggers', 0, 'ADCI', 'LAN1', 5) 
+        self.WRTD.add_rule_mult_src('dist_triggers', 5)
+        self.WRTD.set_rule_mult_src('dist_triggers', 0, 'ADCI', 'LAN1', 5)
 
-        self.WRTD.add_rule('receive_trigger') 
-        self.WRTD.set_rule('receive_trigger', 600e6, 'LAN1', 'ADCO1') 
+        self.WRTD.add_rule('receive_trigger')
+        self.WRTD.set_rule('receive_trigger', 600e6, 'LAN1', 'ADCO1')
 
-        self.WRTD.enable_rule('receive_trigger') 
-        self.WRTD.disable_rule_mult_src('dist_triggers', 5) 
+        self.WRTD.enable_rule('receive_trigger')
+        self.WRTD.disable_rule_mult_src('dist_triggers', 5)
 
         self.set_number_of_shots(NSHOT)
         self.set_buffer()
@@ -51,28 +50,29 @@ class ADC(ADC_Specialized):
         self.WRTD_master = WRTD_master
         if(WRTD_master):
             self.set_presamples(self.required_presamples)
-            self.WRTD.disable_rule('receive_trigger') 
-            self.WRTD.enable_rule_mult_src('dist_triggers', 5) 
+            self.WRTD.disable_rule('receive_trigger')
+            self.WRTD.enable_rule_mult_src('dist_triggers', 5)
 
         else:
             self.set_presamples(self.required_presamples + delay_samples)
-            self.WRTD.disable_rule_mult_src('dist_triggers', 5) 
-            self.WRTD.enable_rule('receive_trigger') 
+            self.WRTD.disable_rule_mult_src('dist_triggers', 5)
+            self.WRTD.enable_rule('receive_trigger')
 
     # overwrites method from ADC_specialized
     def configure_parameter(self, function_name, args):
-        if(function_name == 'set_presamples' and self.WRTD_master == False):
+        if(function_name == 'set_presamples' and self.WRTD_master is False):
             self.required_presamples = args[0]
             args[0] += delay_samples
-        getattr(self, function_name)(*args) 
-        if(function_name == 'set_presamples' or function_name == 'set_postsamples'):
+        getattr(self, function_name)(*args)
+        if(function_name == 'set_presamples' or
+                function_name == 'set_postsamples'):
             self.set_buffer()
 
     # overwrites method from ADC_specialized
     def get_current_conf(self):
-        conf =  self.current_config()
+        conf = self.current_config()
         if(not self.WRTD_master):
-            conf['acq_conf']['presamples'] -= delay_samples 
+            conf['acq_conf']['presamples'] -= delay_samples
         return conf
 
     # overwrites method from ADC_specialized
@@ -84,15 +84,14 @@ class ADC(ADC_Specialized):
 
     def poll(self):
         Selector = selectors.PollSelector
-        try:        
-                with Selector() as selector:
-                    print(selector.register(self, selectors.EVENT_READ))# | selectors.EVENT_WRITE))
+        try:
+            with Selector() as selector:
+                print(selector.register(self, selectors.EVENT_READ))
         finally:
             pass
 
-
     def configure_acquisition_retrieve_and_send_data(self, channels):
-        
+
         self.channels = channels
         self.stop_acquisition()
 
@@ -107,7 +106,9 @@ class ADC(ADC_Specialized):
             print(e)
 
         try:
-            data = np.ctypeslib.as_array(self.buf_ptr.contents.data, (self.presamples+self.postsamples, 4))
+            data = np.ctypeslib.as_array(
+                    self.buf_ptr.contents.data,
+                    (self.presamples+self.postsamples, 4))
         except Exception as e:
             return([0, 0])
             print(e)
@@ -118,14 +119,10 @@ class ADC(ADC_Specialized):
         data_dict = {}
         for channel in channels:
             data_dict[str(channel)] = data[channel]
-        
- 
+
         if(not self.WRTD_master):
             timestamp = self.get_timestamp(self.buf_ptr, delay_tics)
         else:
             timestamp = self.get_timestamp(self.buf_ptr, 0)
         self.adc_acq_stop(self.adc_ptr, 0)
-        return [timestamp, data_dict] 
-     
-     
-
+        return [timestamp, data_dict]
