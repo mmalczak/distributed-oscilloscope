@@ -15,7 +15,7 @@ delay_tics = delay_samples * 125 // 100
 NSHOT = 1
 NCHAN = 4
  
-class ADC(ADC_Specialised):
+class ADC(ADC_Specialized):
 
     class ThreadADC(threading.Thread):
     
