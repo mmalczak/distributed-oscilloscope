@@ -407,6 +407,32 @@ class ADC_Specialized(ADC_Generic):
             self.adc_ptr = 0
             self.adc_exit()
 
+    def start_acquisition(self):
+        tv = timeval()
+        self.adc_acq_start(self.adc_ptr, self.ADC_F_FLUSH, byref(tv))
+
+    def set_buffer(self):
+        self.adc_release_buffer(self.adc_ptr, self.buf_ptr, None)
+        conf = self.get_current_conf()
+        acq_conf = conf['acq_conf'] 
+        self.presamples = acq_conf['presamples'] 
+        self.postsamples = acq_conf['postsamples']
+        self.buf_ptr = self.adc_request_buffer(self.adc_ptr, self.presamples + self.postsamples , None, 0)
+
+    def get_current_conf(self):
+        conf =  self.current_config()
+        return conf
+
+    def stop_acquisition(self):
+        self.adc_acq_stop(self.adc_ptr, 0)
+
+    def configure_parameter(self, function_name, args):
+        getattr(self, function_name)(*args) 
+        if(function_name == 'set_presamples' or function_name == 'set_postsamples'):
+            self.set_buffer()
+
+
+
     def fill_buffer(self):
             self.adc_fill_buffer(self.adc_ptr, self.buf_ptr, 0, None)
 

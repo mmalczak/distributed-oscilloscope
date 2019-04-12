@@ -59,6 +59,7 @@ class ADC(ADC_Specialized):
             self.WRTD.disable_rule_mult_src('dist_triggers', 5) 
             self.WRTD.enable_rule('receive_trigger') 
 
+    # overwrites method from ADC_specialized
     def configure_parameter(self, function_name, args):
         if(function_name == 'set_presamples' and self.WRTD_master == False):
             self.required_presamples = args[0]
@@ -67,31 +68,19 @@ class ADC(ADC_Specialized):
         if(function_name == 'set_presamples' or function_name == 'set_postsamples'):
             self.set_buffer()
 
-
-
+    # overwrites method from ADC_specialized
     def get_current_conf(self):
         conf =  self.current_config()
         if(not self.WRTD_master):
             conf['acq_conf']['presamples'] -= delay_samples 
         return conf
 
-    def set_buffer(self):
-        self.adc_release_buffer(self.adc_ptr, self.buf_ptr, None)
-        conf = self.get_current_conf()
-        acq_conf = conf['acq_conf'] 
-        self.presamples = acq_conf['presamples'] 
-        self.postsamples = acq_conf['postsamples']
-        self.buf_ptr = self.adc_request_buffer(self.adc_ptr, self.presamples + self.postsamples , None, 0)
-
+    # overwrites method from ADC_specialized
     def stop_acquisition(self):
         self.adc_acq_stop(self.adc_ptr, 0)
         if self.adc_selector:
             self.selector.unregister(self)
             self.adc_selector = None
-
-    def start_acquisition(self):
-        tv = timeval()
-        self.adc_acq_start(self.adc_ptr, self.ADC_F_FLUSH, byref(tv))
 
     def poll(self):
         Selector = selectors.PollSelector
