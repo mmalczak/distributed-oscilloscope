@@ -20,7 +20,7 @@ class ServerExpose():
         self.server_proxy.proxy_addr = "http://" + addr + ":7999/"
 
     def set_channel_range(self, channel_range, channel_idx):
-        self.adc.configure_parameter(set_channel_range, [channel_idx, channel_range])
+        self.adc.configure_parameter('set_channel_range', [channel_idx, channel_range])
 
  
     def set_adc_parameter(self, function_name, value, idx=-1):
