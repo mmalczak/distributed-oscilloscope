@@ -82,9 +82,6 @@ class ADC(ADC_Specialized):
         self.presamples = acq_conf['presamples'] 
         self.postsamples = acq_conf['postsamples']
         self.buf_ptr = self.adc_request_buffer(self.adc_ptr, self.presamples + self.postsamples , None, 0)
-        if(self.buf_ptr == 0):
-            print("Cannot allocate buffer")
-            print(adc_strerror(ctypes.get_errno()))
 
     def stop_acquisition(self):
         self.adc_acq_stop(self.adc_ptr, 0)
