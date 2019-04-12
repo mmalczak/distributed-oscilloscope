@@ -93,9 +93,6 @@ class ADC(ADC_Specialized):
         tv = timeval()
         self.adc_acq_start(self.adc_ptr, ADC_F_FLUSH, byref(tv))
 
-    def fileno(self):
-        return self.adc_zio_get_file_descriptor(self.adc_ptr)
-
     def poll(self):
         Selector = selectors.PollSelector
         try:        
@@ -103,9 +100,6 @@ class ADC(ADC_Specialized):
                     print(selector.register(self, selectors.EVENT_READ))# | selectors.EVENT_WRITE))
         finally:
             pass
-
-    def fill_buffer(self):
-            self.adc_fill_buffer(self.adc_ptr, self.buf_ptr, 0, None)
 
 
     def configure_acquisition_retrieve_and_send_data(self, channels):

@@ -210,12 +210,6 @@ class ADC_Generic():
     def __init__(self, pci_addr):
         self.init_lib()
         
-        self.adc_init()
-        self.adc_ptr = self.adc_open(b"fmc-adc-100m14b4cha", pci_addr, 0 , 0 , ADC_F_FLUSH)
-
-        self.adc_closed = False
-
-
     def init_lib(self):
 
         self.libc = CDLL("libadc.so", use_errno=True)
@@ -387,11 +381,31 @@ class ADC_Generic():
 class ADC_Specialized(ADC_Generic):
     def __init__(self, pci_addr):
         super().__init__(pci_addr)
+        self.buf_ptr = 0
+
+        self.adc_init()
+        self.adc_ptr = self.adc_open(b"fmc-adc-100m14b4cha", pci_addr, 0 , 0 , ADC_F_FLUSH)
 
     def __del__(self):
         self.remove_buffer()
         self.close_adc()
- 
+
+    def remove_buffer(self):
+        if not self.buf_ptr:
+            self.adc_release_buffer(self.adc_ptr, self.buf_ptr, None)
+            self.buf_ptr = 0
+     
+    def close_adc(self):
+        if not self.adc_ptr:
+            self.adc_close(self.adc_ptr)
+            self.adc_ptr = 0
+            self.adc_exit()
+
+    def fill_buffer(self):
+            self.adc_fill_buffer(self.adc_ptr, self.buf_ptr, 0, None)
+
+    def fileno(self):
+        return self.adc_zio_get_file_descriptor(self.adc_ptr)
 
     def set_presamples(self, presamples):
        cfg = adc_conf()
@@ -437,17 +451,6 @@ class ADC_Specialized(ADC_Generic):
        #print( (secs_high << 48 ) + (secs_middle << 24) + secs_low)
        timestamp = [secs_low, secs_middle, secs_high, ticks_low, ticks_middle, ticks_high]
        return timestamp 
-    
-    
-#    ADC_CONF_100M14B4CHA_CHN_RANGE_OPEN_DRAIN   = 0
-#    ADC_CONF_100M14B4CHA_CHN_RANGE_100mV        = 0x23
-#    ADC_CONF_100M14B4CHA_CHN_RANGE_1V           = 0x11
-#    ADC_CONF_100M14B4CHA_CHN_RANGE_10V          = 0x45
-#    ADC_CONF_100M14B4CHA_CHN_RANGE_100mV_CAL    = 0x42
-#    ADC_CONF_100M14B4CHA_CHN_RANGE_1V_CAL       = 0x40
-#    ADC_CONF_100M14B4CHA_CHN_RANGE_10V_CAL      = 0x44
-#    
-    
     
     
     def set_channel_range(self, channel, channel_range):
@@ -559,17 +562,6 @@ class ADC_Specialized(ADC_Generic):
        self.adc_set_conf(byref(cfg), ADC_CONF_TRG_THR_HYSTERESIS, hysteresis)
        self.adc_apply_config(self.adc_ptr, 0, byref(cfg))
    
-     def remove_buffer(self):
-        if not self.buf_ptr:
-            self.adc_release_buffer(self.adc_ptr, self.buf_ptr, None)
-            self.buf_ptr = 0
-     
-    def close_adc(self):
-        if not self.adc_closed:
-            self.adc_close(self.adc_ptr)
-            self.adc_exit()
-            self.adc_closed = True
-
     def current_config_acq(self):
        n_shots = c_uint()
        presamples = c_uint()
