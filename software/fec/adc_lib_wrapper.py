@@ -212,7 +212,10 @@ class ADC_Generic():
         
         self.adc_init()
         self.adc_ptr = self.adc_open(b"fmc-adc-100m14b4cha", pci_addr, 0 , 0 , ADC_F_FLUSH)
- 
+
+        self.adc_closed = False
+
+
     def init_lib(self):
 
         self.libc = CDLL("libadc.so", use_errno=True)
@@ -385,6 +388,11 @@ class ADC_Specialized(ADC_Generic):
     def __init__(self, pci_addr):
         super().__init__(pci_addr)
 
+    def __del__(self):
+        self.remove_buffer()
+        self.close_adc()
+ 
+
     def set_presamples(self, presamples):
        cfg = adc_conf()
        cfg.type = ADC_CONF_TYPE_ACQ
@@ -550,12 +558,18 @@ class ADC_Specialized(ADC_Generic):
        cfg.route_to = channel
        self.adc_set_conf(byref(cfg), ADC_CONF_TRG_THR_HYSTERESIS, hysteresis)
        self.adc_apply_config(self.adc_ptr, 0, byref(cfg))
-    
+   
+     def remove_buffer(self):
+        if not self.buf_ptr:
+            self.adc_release_buffer(self.adc_ptr, self.buf_ptr, None)
+            self.buf_ptr = 0
      
     def close_adc(self):
-       self.adc_close(self.adc_ptr)
-       self.adc_exit()
-    
+        if not self.adc_closed:
+            self.adc_close(self.adc_ptr)
+            self.adc_exit()
+            self.adc_closed = True
+
     def current_config_acq(self):
        n_shots = c_uint()
        presamples = c_uint()

@@ -46,10 +46,6 @@ class ADC(ADC_Specialized):
         self.selector = None
         self.adc_selector = None
 
-    def __del__(self):
-        self.remove_buffer()
-        self.close_adc()
-
     def set_WRTD_master(self, WRTD_master):
         print(WRTD_master)
         self.WRTD_master = WRTD_master
@@ -86,13 +82,9 @@ class ADC(ADC_Specialized):
         self.presamples = acq_conf['presamples'] 
         self.postsamples = acq_conf['postsamples']
         self.buf_ptr = self.adc_request_buffer(self.adc_ptr, self.presamples + self.postsamples , None, 0)
-        if(self.buf_ptr == 0): 
+        if(self.buf_ptr == 0):
             print("Cannot allocate buffer")
             print(adc_strerror(ctypes.get_errno()))
-
-    def remove_buffer(self):
-        self.adc_release_buffer(self.adc_ptr, self.buf_ptr, None)
-        self.buf_ptr = 0
 
     def stop_acquisition(self):
         self.adc_acq_stop(self.adc_ptr, 0)
