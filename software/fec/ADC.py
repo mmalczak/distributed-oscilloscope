@@ -91,7 +91,7 @@ class ADC(ADC_Specialized):
 
     def start_acquisition(self):
         tv = timeval()
-        self.adc_acq_start(self.adc_ptr, ADC_F_FLUSH, byref(tv))
+        self.adc_acq_start(self.adc_ptr, self.ADC_F_FLUSH, byref(tv))
 
     def poll(self):
         Selector = selectors.PollSelector
