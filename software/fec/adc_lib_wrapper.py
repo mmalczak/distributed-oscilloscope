@@ -191,7 +191,6 @@ class ADC_Generic():
         self.adc_get_driver_type = self.libc.adc_get_driver_type
         self.adc_get_driver_type.restype = c_char_p
         self.adc_get_driver_type.argtypes = [c_void_p]
-        self.adc_get_driver_type.errcheck = self.__errcheck_pointer
      
         self.adc_open = self.libc.adc_open
         self.adc_open.restype = c_void_p
@@ -317,7 +316,7 @@ class ADC_Generic():
         and -1 as error"""
         if ret < 0:
             raise OSError(get_errno(),
-                          self.libc.adc_strerror(get_errno()), "")
+                          self.strerror(get_errno()), "")
         else:
             return ret
 
@@ -325,11 +324,74 @@ class ADC_Generic():
         """Generic error handler for functions returning pointers"""
         if ret is None:
             raise OSError(get_errno(),
-                          self.libc.adc_strerror(get_errno()), "")
+                          self.strerror(get_errno()), "")
         else:
             return ret
 
+    def print_version(self):
+        self.adc_print_version()
+        
+    def init(self):
+        self.adc_init()
+    
+    def exit(self):
+        self.adc_exit()
+    
+    def strerror(self, errnum):
+        return self.adc_strerror(errnum)
+   
+    def get_driver_type(self):
+        return self.adc_get_driver_type(self.adc_ptr)
+  
+    def open(self, name, dev_id, totalsamples, nbuffer, flags):
+        return self.adc_open(name, dev_id, totalsamples, nbuffer, flags)
  
+    def open_by_lun(self, name, lun, totalsamples, nbuffer, flags):
+        return self.adc_open_by_lun(name, lun, totalsamples, nbuffer, flags)
+   
+    def request_buffer(self, 
+  
+#    def set_conf
+# 
+#    def set_conf_mask
+#
+#    def get_conf
+#
+#    def apply_config
+#
+#    def acq_start
+#
+#    def zio_get_file_descriptor
+#
+#    def acq_poll
+#
+#    def fill_buffer
+#   
+#    def acq_stop
+#  
+#    def tstamp_buffer
+# 
+#    def release_buffer
+#
+#    def close
+#
+#    def trigger_fire
+#
+#    def has_trigger_fire
+#
+#    def apply_config
+#
+#    def retrieve_config
+#
+#    def get_capabilities
+#
+#    def get_param
+#
+#    def set_param
+#   
+#    def set_conf_mask_all
+#
+
 
 
 
@@ -342,8 +404,8 @@ class ADC_Specialized(ADC_Generic):
         self.init_adc_100m14b4cha_lib()
         self.buf_ptr = 0
 
-        self.adc_init()
-        self.adc_ptr = self.adc_open(b"fmc-adc-100m14b4cha", pci_addr, 0 , 0 , self.ADC_F_FLUSH)
+        self.init()
+        self.adc_ptr = self.open(b"fmc-adc-100m14b4cha", pci_addr, 0 , 0 , self.ADC_F_FLUSH)
 
     def init_adc_100m14b4cha_lib(self):
          ######################################################
@@ -404,7 +466,7 @@ class ADC_Specialized(ADC_Generic):
         if not self.adc_ptr:
             self.adc_close(self.adc_ptr)
             self.adc_ptr = 0
-            self.adc_exit()
+            self.exit()
 
     def start_acquisition(self):
         tv = timeval()
