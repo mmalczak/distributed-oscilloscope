@@ -349,7 +349,7 @@ class ADC_Generic():
     def open_by_lun(self, name, lun, totalsamples, nbuffer, flags):
         return self.adc_open_by_lun(name, lun, totalsamples, nbuffer, flags)
    
-    def request_buffer(self, 
+#    def request_buffer(self, 
   
 #    def set_conf
 # 
