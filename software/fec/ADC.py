@@ -17,25 +17,6 @@ NCHAN = 4
  
 class ADC(ADC_Specialized):
 
-    class ThreadADC(threading.Thread):
-    
-        def __init__(self, function, adc, *args):
-            threading.Thread.__init__(self)
-            self.function = function
-            self.adc = adc
-            self.args = args     
-        def __del__(self):
-            print("Thread DELETED")
-
-
-        def run(self):
-            self.function(self.adc, *self.args)
-    
-    def move_to_thread(func):
-        def wrapper(self, *args, **kwargs):
-            self.ThreadADC(func, self, *args).start()
-        return wrapper
-    
     def __init__(self, pci_addr, trtl, server_proxy, unique_ADC_name):
         super().__init__(pci_addr)
         self.buf_ptr = 0
