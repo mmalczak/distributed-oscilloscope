@@ -175,48 +175,6 @@ class ADC_Generic():
         
         self.__ADC_CONF_LEN = 64 # number of allocated items in each structure 
         
-        ######################################################
-        #adc_lib_100m14b4cha_wrapper.py
-        ######################################################
-        self.ADC_CONF_100M14B4CHA_CHN_RANGE_N = 3
-        
-        #List of known voltage ranges to be used with the configuration option
-        #ADC_CONF_CHN_RANGE
-        
-        #enum adc_configuration_100m14b4cha_channel_range {
-        self.ADC_CONF_100M14B4CHA_CHN_RANGE_OPEN_DRAIN   = 0
-        self.ADC_CONF_100M14B4CHA_CHN_RANGE_100mV        = 0x23
-        self.ADC_CONF_100M14B4CHA_CHN_RANGE_1V           = 0x11
-        self.ADC_CONF_100M14B4CHA_CHN_RANGE_10V          = 0x45
-        self.ADC_CONF_100M14B4CHA_CHN_RANGE_100mV_CAL    = 0x42
-        self.ADC_CONF_100M14B4CHA_CHN_RANGE_1V_CAL       = 0x40
-        self.ADC_CONF_100M14B4CHA_CHN_RANGE_10V_CAL      = 0x44
-        
-        
-        #List of possible buffer types (options for ADC_CONF_100M14B4CHA_BUF_TYPE)
-        
-        #enum adc_100m14b4cha_buf_type {
-        self.ADC_CONF_100M14B4CHA_BUF_KMALLOC    = 0     #< buffer type 'kmalloc' 
-        self.ADC_CONF_100M14B4CHA_BUF_VMALLOC    = 1     #< buffer type 'vmalloc'
-        
-        
-        #It describes the possible configuration parameters for the
-        #FMCADC100M14B4CHA card (ADC_CONF_TYPE_CUS)
-        
-        #enum adc_configuration_100m14b4cha {
-        self.ADC_CONF_100M14B4CHA_BUF_TYPE       = 0 # < the ZIO buffer type in use */
-        self.ADC_CONF_100M14B4CHA_TRG_SW_EN      = 1 # < software trigger enable/disable */
-        self.ADC_CONF_100M14B4CHA_ACQ_MSHOT_MAX  = 2 # < Maximum size for a single shot
-                                                # in multi-shot mode (in samples) */
-        self.ADC_CONF_100M14B4CHA_BUF_SIZE_KB    = 3 # < it manually sets the buffer size but
-                                                # only for VMALLOC buffers */
-        self.ADC_CONF_100M14B4CHA_TRG_ALT_EN     = 4 # < alternate trigger enable/disable */
-        self.__ADC_CONF_100M14B4CHA_LAST_INDEX   = 5 # < It represents the the last index
-                                                # of this enum. It can be useful for
-                                                # some sort of automation */
-         
-        
-
 
         self.libc = CDLL("libadc.so", use_errno=True)
         self.adc_print_version = self.libc.adc_print_version
@@ -387,10 +345,57 @@ class ADC_Generic():
 class ADC_Specialized(ADC_Generic):
     def __init__(self, pci_addr):
         super().__init__(pci_addr)
+        self.init_adc_100m14b4cha_lib()
         self.buf_ptr = 0
 
         self.adc_init()
         self.adc_ptr = self.adc_open(b"fmc-adc-100m14b4cha", pci_addr, 0 , 0 , self.ADC_F_FLUSH)
+
+    def init_adc_100m14b4cha_lib(self):
+         ######################################################
+         #adc_lib_100m14b4cha_wrapper.py
+         ######################################################
+         self.ADC_CONF_100M14B4CHA_CHN_RANGE_N = 3
+         
+         #List of known voltage ranges to be used with the configuration option
+         #ADC_CONF_CHN_RANGE
+         
+         #enum adc_configuration_100m14b4cha_channel_range {
+         self.ADC_CONF_100M14B4CHA_CHN_RANGE_OPEN_DRAIN   = 0
+         self.ADC_CONF_100M14B4CHA_CHN_RANGE_100mV        = 0x23
+         self.ADC_CONF_100M14B4CHA_CHN_RANGE_1V           = 0x11
+         self.ADC_CONF_100M14B4CHA_CHN_RANGE_10V          = 0x45
+         self.ADC_CONF_100M14B4CHA_CHN_RANGE_100mV_CAL    = 0x42
+         self.ADC_CONF_100M14B4CHA_CHN_RANGE_1V_CAL       = 0x40
+         self.ADC_CONF_100M14B4CHA_CHN_RANGE_10V_CAL      = 0x44
+         
+         
+         #List of possible buffer types (options for ADC_CONF_100M14B4CHA_BUF_TYPE)
+         
+         #enum adc_100m14b4cha_buf_type {
+         self.ADC_CONF_100M14B4CHA_BUF_KMALLOC    = 0     #< buffer type 'kmalloc' 
+         self.ADC_CONF_100M14B4CHA_BUF_VMALLOC    = 1     #< buffer type 'vmalloc'
+         
+         
+         #It describes the possible configuration parameters for the
+         #FMCADC100M14B4CHA card (ADC_CONF_TYPE_CUS)
+         
+         #enum adc_configuration_100m14b4cha {
+         self.ADC_CONF_100M14B4CHA_BUF_TYPE       = 0 # < the ZIO buffer type in use */
+         self.ADC_CONF_100M14B4CHA_TRG_SW_EN      = 1 # < software trigger enable/disable */
+         self.ADC_CONF_100M14B4CHA_ACQ_MSHOT_MAX  = 2 # < Maximum size for a single shot
+                                                 # in multi-shot mode (in samples) */
+         self.ADC_CONF_100M14B4CHA_BUF_SIZE_KB    = 3 # < it manually sets the buffer size but
+                                                 # only for VMALLOC buffers */
+         self.ADC_CONF_100M14B4CHA_TRG_ALT_EN     = 4 # < alternate trigger enable/disable */
+         self.__ADC_CONF_100M14B4CHA_LAST_INDEX   = 5 # < It represents the the last index
+                                                 # of this enum. It can be useful for
+                                                 # some sort of automation */
+          
+         
+
+
+
 
     def __del__(self):
         self.remove_buffer()
