@@ -100,7 +100,7 @@ class ADC(ADC_Specialized):
 
     def retrieve_ADC_timestamp_and_data(self, channels):
         try:
-            self.fill_buffer()
+            self.fill_buf()
         except Exception as e:
             return [0, 0]
             print(e)

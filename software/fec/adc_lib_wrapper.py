@@ -161,9 +161,7 @@ class ADC_Generic():
     ADC_CONF_TYPE_TRG_TIM      = 6   #Configuration for time triggers 
     __ADC_CONF_TYPE_LAST_INDEX = 7   #It represents the the last index of this enum. It can be useful for some sort of automation 
 
-    def __init__(self, pci_addr):
-        self.__init_lib()
-        
+       
     def __init_lib(self):
         
         self.__ADC_CONF_LEN = 64 # number of allocated items in each structure 
@@ -274,7 +272,6 @@ class ADC_Generic():
         self.adc_has_trigger_fire = self.libc.adc_has_trigger_fire
         self.adc_has_trigger_fire.restype = c_int
         self.adc_has_trigger_fire.argtypes = [c_void_p]
-        self.adc_has_trigger_fire.errcheck = self.__errcheck_int
 
         #this function doesn't have body
         #self.adc_reset_conf = self.libc.adc_reset_conf
@@ -282,11 +279,6 @@ class ADC_Generic():
         #self.adc_reset_conf.argtypes = [c_void_p, c_uint, c_void_p]
         #self.adc_reset_conf.errcheck = self.__errcheck_int
         
-        self.adc_apply_config = self.libc.adc_apply_config
-        self.adc_apply_config.restype = c_int
-        self.adc_apply_config.argtypes = [c_void_p, c_uint, c_void_p]
-        self.adc_apply_config.errcheck = self.__errcheck_int
-       
         self.adc_retrieve_config = self.libc.adc_retrieve_config
         self.adc_retrieve_config.restype = c_int
         self.adc_retrieve_config.argtypes = [c_void_p, c_void_p]
@@ -330,10 +322,17 @@ class ADC_Generic():
 
     def print_version(self):
         self.adc_print_version()
-        
-    def init(self):
+
+    def __init__(self, pci_addr):
+        self.__init_lib()
         self.adc_init()
-    
+        self.adc_ptr = self.open(b"fmc-adc-100m14b4cha", pci_addr, 0 , 0 , self.ADC_F_FLUSH)
+        self.adc_conf = adc_conf()
+
+    def __del__(self):
+        self.close()
+        self.exit()
+
     def exit(self):
         self.adc_exit()
     
@@ -349,48 +348,72 @@ class ADC_Generic():
     def open_by_lun(self, name, lun, totalsamples, nbuffer, flags):
         return self.adc_open_by_lun(name, lun, totalsamples, nbuffer, flags)
    
-#    def request_buffer(self, 
+    def request_buffer(self, nsamples, alloc, flags):
+        return self.adc_request_buffer(self.adc_ptr, nsamples, alloc, flags)
+
+    def set_conf(self, conf_index, val):
+        self.adc_set_conf(slef.adc_conf, conf_index, val)
+ 
+    def set_conf_mask(self, conf_index):
+        self.adc_set_conf_mask(self.adc_conf, conf_index)
+
+    def get_conf(self, conf_index, val):
+        self.adc_get_conf(self.adc_conf, conf_index, val)
+
+    def apply_config(self, flags):
+        self.adc_apply_config(self.adc_ptr, flags, self.adc_conf)
+
+    def acq_start(self, flags, timeout):
+        self.adc_acq_start(self.adc_ptr, flags, timeout)
+
+# NON API
+    def zio_get_file_descriptor(self):
+        return self.adc_zio_get_file_descriptor(self.adc_ptr)
+
+    def acq_poll(self, flags, timeout):
+        self.adc_acq_poll(self.adc_ptr, flags, timeout)
+
+    def fill_buffer(self, buf, flags, timeout):
+        self.adc_fill_buffer(self.adc_ptr, buf, flags, timeout)
+   
+    def acq_stop(self, flags):
+        self.adc_acq_stop(self.adc_ptr, flags)
   
-#    def set_conf
-# 
-#    def set_conf_mask
-#
-#    def get_conf
-#
-#    def apply_config
-#
-#    def acq_start
-#
-#    def zio_get_file_descriptor
-#
-#    def acq_poll
-#
-#    def fill_buffer
-#   
-#    def acq_stop
-#  
-#    def tstamp_buffer
-# 
-#    def release_buffer
-#
-#    def close
-#
-#    def trigger_fire
-#
-#    def has_trigger_fire
-#
-#    def apply_config
-#
-#    def retrieve_config
-#
-#    def get_capabilities
-#
-#    def get_param
-#
-#    def set_param
-#   
-#    def set_conf_mask_all
-#
+    def tstamp_buffer(self, buf, ts):
+        self.adc_tstamp_buffer(buf, ts)
+     
+    def release_buffer(self, buf, free):
+        self.adc_release_buffer(self.adc_ptr, buf, free)
+
+    def close(self):
+        if not self.adc_ptr:
+            self.adc_close(self.adc_ptr)
+            self.adc_ptr = 0
+
+    def trigger_fire(self):
+        self.adc_trigger_fire(self.adc_ptr)
+
+    def has_trigger_fire(self): 
+        return self.adc_has_trigger_fire(self.adc_ptr)
+
+    def apply_config(self, flags):
+        self.adc_apply_config(self.adc_ptr, flags, self.adc_conf)
+
+    def retrieve_config(self): 
+        self.retrieve_config(self.adc_ptr, self.adc_conf)
+
+    def get_capabilities(self, type):
+        self.adc_get_capabilities(self.adc_ptr, type)
+
+    def get_param(self, name, sptr, iptr): 
+        self.adc_get_param(self.adc_ptr, name, sptr, iptr)
+
+    def set_param(self, name, sptr, iptr): 
+        self.adc_set_param(self.adc_ptr, name, sptr, iptr)
+  
+    def set_conf_mask_all(self):
+        self.adc_set_conf_mask_all(self.adc_conf, self.adc_ptr)
+
 
 
 
@@ -404,8 +427,6 @@ class ADC_Specialized(ADC_Generic):
         self.init_adc_100m14b4cha_lib()
         self.buf_ptr = 0
 
-        self.init()
-        self.adc_ptr = self.open(b"fmc-adc-100m14b4cha", pci_addr, 0 , 0 , self.ADC_F_FLUSH)
 
     def init_adc_100m14b4cha_lib(self):
          ######################################################
@@ -454,51 +475,43 @@ class ADC_Specialized(ADC_Generic):
 
 
     def __del__(self):
+        super().__del__()
         self.remove_buffer()
-        self.close_adc()
 
     def remove_buffer(self):
         if not self.buf_ptr:
             self.adc_release_buffer(self.adc_ptr, self.buf_ptr, None)
             self.buf_ptr = 0
      
-    def close_adc(self):
-        if not self.adc_ptr:
-            self.adc_close(self.adc_ptr)
-            self.adc_ptr = 0
-            self.exit()
-
     def start_acquisition(self):
         tv = timeval()
-        self.adc_acq_start(self.adc_ptr, self.ADC_F_FLUSH, byref(tv))
+        self.acq_start(self.ADC_F_FLUSH, byref(tv))
 
     def set_buffer(self):
-        self.adc_release_buffer(self.adc_ptr, self.buf_ptr, None)
+        self.release_buffer(self.buf_ptr, None)
         conf = self.get_current_conf()
         acq_conf = conf['acq_conf'] 
         self.presamples = acq_conf['presamples'] 
         self.postsamples = acq_conf['postsamples']
-        self.buf_ptr = self.adc_request_buffer(self.adc_ptr, self.presamples + self.postsamples , None, 0)
+        self.buf_ptr = self.request_buffer(self.presamples + self.postsamples , None, 0)
 
     def get_current_conf(self):
         conf =  self.current_config()
         return conf
 
     def stop_acquisition(self):
-        self.adc_acq_stop(self.adc_ptr, 0)
+        self.acq_stop(0)
 
     def configure_parameter(self, function_name, args):
         getattr(self, function_name)(*args) 
         if(function_name == 'set_presamples' or function_name == 'set_postsamples'):
             self.set_buffer()
 
-
-
-    def fill_buffer(self):
-            self.adc_fill_buffer(self.adc_ptr, self.buf_ptr, 0, None)
+    def fill_buf(self):
+            self.fill_buffer(self.buf_ptr, 0, None)
 
     def fileno(self):
-        return self.adc_zio_get_file_descriptor(self.adc_ptr)
+        return self.zio_get_file_descriptor()
 
     def set_presamples(self, presamples):
        cfg = adc_conf()
