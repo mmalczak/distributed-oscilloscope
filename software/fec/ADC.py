@@ -14,7 +14,7 @@ NSHOT = 1
 NCHAN = 4
 
 
-class ADC(ADC_Specialized):
+class ADC_100m14b4cha_extended_API_WRTD(ADC_100m14b4cha_extended_API):
 
     def __init__(self, pci_addr, trtl, server_proxy, unique_ADC_name):
         super().__init__(pci_addr)

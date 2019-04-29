@@ -34,7 +34,7 @@ def main():
     server_proxy = Proxy()
     pci_addr = pci_addr
     trtl = 'trtl-000' + str(pci_addr)
-    adc = ADC(pci_addr, trtl, server_proxy, ADC_name)
+    adc = ADC_100m14b4cha_extended_API_WRTD(pci_addr, trtl, server_proxy, ADC_name)
     conf = adc.get_current_conf() 
     serv_expose = ServerExpose(addr, port, server_proxy, adc)
     serv_expose.run()

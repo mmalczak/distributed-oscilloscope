@@ -358,7 +358,7 @@ class ADC_Generic():
         self.adc_set_conf_mask(byref(self.adc_conf), conf_index)
 
     def get_conf(self, conf_index, val):
-        self.adc_get_conf(self.adc_conf, conf_index, val)
+        self.adc_get_conf(byref(self.adc_conf), conf_index, val)
 
     def acq_start(self, flags, timeout):
         self.adc_acq_start(self.adc_ptr, flags, timeout)
@@ -398,7 +398,7 @@ class ADC_Generic():
         memset(byref(self.adc_conf), 0, sizeof(adc_conf))
 
     def retrieve_config(self): 
-        self.adc_retrieve_config(self.adc_ptr, self.adc_conf)
+        self.adc_retrieve_config(self.adc_ptr, byref(self.adc_conf))
 
     def get_capabilities(self, type):
         self.adc_get_capabilities(self.adc_ptr, type)
@@ -413,53 +413,59 @@ class ADC_Generic():
         self.adc_set_conf_mask_all(byref(self.adc_conf), self.adc_ptr)
 
 
-class ADC_Specialized(ADC_Generic):
+
+
+class ADC_100m14b4cha(ADC_Generic):
+    ADC_CONF_100M14B4CHA_CHN_RANGE_N = 3
+    
+    #List of known voltage ranges to be used with the configuration option
+    #ADC_CONF_CHN_RANGE
+    
+    #enum adc_configuration_100m14b4cha_channel_range {
+    ADC_CONF_100M14B4CHA_CHN_RANGE_OPEN_DRAIN   = 0
+    ADC_CONF_100M14B4CHA_CHN_RANGE_100mV        = 0x23
+    ADC_CONF_100M14B4CHA_CHN_RANGE_1V           = 0x11
+    ADC_CONF_100M14B4CHA_CHN_RANGE_10V          = 0x45
+    ADC_CONF_100M14B4CHA_CHN_RANGE_100mV_CAL    = 0x42
+    ADC_CONF_100M14B4CHA_CHN_RANGE_1V_CAL       = 0x40
+    ADC_CONF_100M14B4CHA_CHN_RANGE_10V_CAL      = 0x44
+    
+    
+    #List of possible buffer types (options for ADC_CONF_100M14B4CHA_BUF_TYPE)
+    
+    #enum adc_100m14b4cha_buf_type {
+    ADC_CONF_100M14B4CHA_BUF_KMALLOC    = 0     #< buffer type 'kmalloc' 
+    ADC_CONF_100M14B4CHA_BUF_VMALLOC    = 1     #< buffer type 'vmalloc'
+    
+    
+    #It describes the possible configuration parameters for the
+    #FMCADC100M14B4CHA card (ADC_CONF_TYPE_CUS)
+    
+    #enum adc_configuration_100m14b4cha {
+    ADC_CONF_100M14B4CHA_BUF_TYPE       = 0 # < the ZIO buffer type in use */
+    ADC_CONF_100M14B4CHA_TRG_SW_EN      = 1 # < software trigger enable/disable */
+    ADC_CONF_100M14B4CHA_ACQ_MSHOT_MAX  = 2 # < Maximum size for a single shot
+                                       # in multi-shot mode (in samples) */
+    ADC_CONF_100M14B4CHA_BUF_SIZE_KB    = 3 # < it manually sets the buffer size but
+                                       # only for VMALLOC buffers */
+    ADC_CONF_100M14B4CHA_TRG_ALT_EN     = 4 # < alternate trigger enable/disable */
+    __ADC_CONF_100M14B4CHA_LAST_INDEX   = 5 # < It represents the the last index
+                                            # of this enum. It can be useful for
+                                            # some sort of automation */
+     
+
     def __init__(self, pci_addr):
         super().__init__(pci_addr)
-        self.init_adc_100m14b4cha_lib()
+
+         
+
+
+
+class ADC_100m14b4cha_extended_API(ADC_100m14b4cha):
+    def __init__(self, pci_addr):
+        super().__init__(pci_addr)
         self.buf_ptr = 0
 
-    def init_adc_100m14b4cha_lib(self):
-         ######################################################
-         #adc_lib_100m14b4cha_wrapper.py
-         ######################################################
-         self.ADC_CONF_100M14B4CHA_CHN_RANGE_N = 3
-         
-         #List of known voltage ranges to be used with the configuration option
-         #ADC_CONF_CHN_RANGE
-         
-         #enum adc_configuration_100m14b4cha_channel_range {
-         self.ADC_CONF_100M14B4CHA_CHN_RANGE_OPEN_DRAIN   = 0
-         self.ADC_CONF_100M14B4CHA_CHN_RANGE_100mV        = 0x23
-         self.ADC_CONF_100M14B4CHA_CHN_RANGE_1V           = 0x11
-         self.ADC_CONF_100M14B4CHA_CHN_RANGE_10V          = 0x45
-         self.ADC_CONF_100M14B4CHA_CHN_RANGE_100mV_CAL    = 0x42
-         self.ADC_CONF_100M14B4CHA_CHN_RANGE_1V_CAL       = 0x40
-         self.ADC_CONF_100M14B4CHA_CHN_RANGE_10V_CAL      = 0x44
-         
-         
-         #List of possible buffer types (options for ADC_CONF_100M14B4CHA_BUF_TYPE)
-         
-         #enum adc_100m14b4cha_buf_type {
-         self.ADC_CONF_100M14B4CHA_BUF_KMALLOC    = 0     #< buffer type 'kmalloc' 
-         self.ADC_CONF_100M14B4CHA_BUF_VMALLOC    = 1     #< buffer type 'vmalloc'
-         
-         
-         #It describes the possible configuration parameters for the
-         #FMCADC100M14B4CHA card (ADC_CONF_TYPE_CUS)
-         
-         #enum adc_configuration_100m14b4cha {
-         self.ADC_CONF_100M14B4CHA_BUF_TYPE       = 0 # < the ZIO buffer type in use */
-         self.ADC_CONF_100M14B4CHA_TRG_SW_EN      = 1 # < software trigger enable/disable */
-         self.ADC_CONF_100M14B4CHA_ACQ_MSHOT_MAX  = 2 # < Maximum size for a single shot
-                                                 # in multi-shot mode (in samples) */
-         self.ADC_CONF_100M14B4CHA_BUF_SIZE_KB    = 3 # < it manually sets the buffer size but
-                                                 # only for VMALLOC buffers */
-         self.ADC_CONF_100M14B4CHA_TRG_ALT_EN     = 4 # < alternate trigger enable/disable */
-         self.__ADC_CONF_100M14B4CHA_LAST_INDEX   = 5 # < It represents the the last index
-                                                 # of this enum. It can be useful for
-                                                 # some sort of automation */
-          
 
     def __del__(self):
         super().__del__()
@@ -467,7 +473,7 @@ class ADC_Specialized(ADC_Generic):
 
     def remove_buffer(self):
         if not self.buf_ptr:
-            self.adc_release_buffer(self.adc_ptr, self.buf_ptr, None)
+            self.release_buffer(self.buf_ptr, None)
             self.buf_ptr = 0
      
     def start_acquisition(self):
@@ -517,7 +523,7 @@ class ADC_Specialized(ADC_Generic):
     
     def get_timestamp(self, buf_ptr, offset):
        ts = adc_timestamp()
-       self.adc_tstamp_buffer(buf_ptr, byref(ts))
+       self.tstamp_buffer(buf_ptr, byref(ts))
     #cannot send 32bit int using xmlrpc
        secs = np.ctypeslib.as_array(ts.secs, (1 ,1))
        ticks = np.ctypeslib.as_array(ts.ticks, (1 ,1))
@@ -655,14 +661,14 @@ class ADC_Specialized(ADC_Generic):
        self.set_conf_mask(self.ADC_CONF_ACQ_UNDERSAMPLE)
        self.set_conf_mask(self.ADC_CONF_ACQ_FREQ_HZ)
        self.set_conf_mask(self.ADC_CONF_ACQ_N_BITS)
-       self.adc_retrieve_config(self.adc_ptr, byref(self.adc_conf))
+       self.retrieve_config()
        
-       self.adc_get_conf(byref(self.adc_conf), self.ADC_CONF_ACQ_N_SHOTS, byref(n_shots))
-       self.adc_get_conf(byref(self.adc_conf), self.ADC_CONF_ACQ_POST_SAMP, byref(postsamples))
-       self.adc_get_conf(byref(self.adc_conf), self.ADC_CONF_ACQ_PRE_SAMP, byref(presamples))
-       self.adc_get_conf(byref(self.adc_conf), self.ADC_CONF_ACQ_UNDERSAMPLE, byref(undersample))
-       self.adc_get_conf(byref(self.adc_conf), self.ADC_CONF_ACQ_FREQ_HZ, byref(freq))
-       self.adc_get_conf(byref(self.adc_conf), self.ADC_CONF_ACQ_N_BITS, byref(n_bits))
+       self.get_conf(self.ADC_CONF_ACQ_N_SHOTS, byref(n_shots))
+       self.get_conf(self.ADC_CONF_ACQ_POST_SAMP, byref(postsamples))
+       self.get_conf(self.ADC_CONF_ACQ_PRE_SAMP, byref(presamples))
+       self.get_conf(self.ADC_CONF_ACQ_UNDERSAMPLE, byref(undersample))
+       self.get_conf(self.ADC_CONF_ACQ_FREQ_HZ, byref(freq))
+       self.get_conf(self.ADC_CONF_ACQ_N_BITS, byref(n_bits))
        acq_conf = {'n_shots':n_shots.value, 'presamples':presamples.value, 'postsamples':postsamples.value, 
                 'undersample':undersample.value, 'freq':freq.value, 'n_bits':n_bits.value}
    
@@ -685,13 +691,13 @@ class ADC_Specialized(ADC_Generic):
        self.set_conf_mask(self.ADC_CONF_CHN_OFFSET)
        self.set_conf_mask(self.ADC_CONF_CHN_SATURATION)
     #   self.set_conf_mask(self.ADC_CONF_CHN_GAIN) doesn't work
-       self.adc_retrieve_config(self.adc_ptr, byref(self.adc_conf))
+       self.retrieve_config()
       
-       self.adc_get_conf(byref(self.adc_conf), self.ADC_CONF_CHN_RANGE, byref(channel_range))
-       self.adc_get_conf(byref(self.adc_conf), self.ADC_CONF_CHN_TERMINATION, byref(termination))
-       self.adc_get_conf(byref(self.adc_conf), self.ADC_CONF_CHN_OFFSET, byref(offset))
-       self.adc_get_conf(byref(self.adc_conf), self.ADC_CONF_CHN_SATURATION, byref(saturation))
-    #   self.adc_get_conf(byref(self.adc_conf), self.ADC_CONF_CHN_GAIN, byref(gain))
+       self.get_conf(self.ADC_CONF_CHN_RANGE, byref(channel_range))
+       self.get_conf(self.ADC_CONF_CHN_TERMINATION, byref(termination))
+       self.get_conf(self.ADC_CONF_CHN_OFFSET, byref(offset))
+       self.get_conf(self.ADC_CONF_CHN_SATURATION, byref(saturation))
+    #   self.get_conf(self.ADC_CONF_CHN_GAIN, byref(gain))
       
        chn_conf = {'channel_range':channel_range.value, 'termination':termination.value, 'offset':offset.value,
                 'saturation':saturation.value}
@@ -709,11 +715,11 @@ class ADC_Specialized(ADC_Generic):
        self.set_conf_mask(self.ADC_CONF_TRG_EXT_ENABLE)
        self.set_conf_mask(self.ADC_CONF_TRG_EXT_POLARITY)
        self.set_conf_mask(self.ADC_CONF_TRG_EXT_DELAY)
-       self.adc_retrieve_config(self.adc_ptr, byref(self.adc_conf))
+       self.retrieve_config()
       
-       self.adc_get_conf(byref(self.adc_conf), self.ADC_CONF_TRG_EXT_ENABLE, byref(enable))
-       self.adc_get_conf(byref(self.adc_conf), self.ADC_CONF_TRG_EXT_POLARITY, byref(polarity))
-       self.adc_get_conf(byref(self.adc_conf), self.ADC_CONF_TRG_EXT_DELAY, byref(delay))
+       self.get_conf(self.ADC_CONF_TRG_EXT_ENABLE, byref(enable))
+       self.get_conf(self.ADC_CONF_TRG_EXT_POLARITY, byref(polarity))
+       self.get_conf(self.ADC_CONF_TRG_EXT_DELAY, byref(delay))
        ext_trg_conf = {'enable':enable.value, 'polarity':polarity.value, 'delay':delay.value}
        memset(byref(self.adc_conf), 0, sizeof(adc_conf))
        return ext_trg_conf
@@ -733,13 +739,13 @@ class ADC_Specialized(ADC_Generic):
        self.set_conf_mask(self.ADC_CONF_TRG_THR_DELAY)
        self.set_conf_mask(self.ADC_CONF_TRG_THR_THRESHOLD)
     #   self.set_conf_mask(self.ADC_CONF_TRG_THR_HYSTERESIS) doesn't work
-       self.adc_retrieve_config(self.adc_ptr, byref(self.adc_conf))
+       self.retrieve_config()
        
-       self.adc_get_conf(byref(self.adc_conf), self.ADC_CONF_TRG_THR_ENABLE, byref(enable))
-       self.adc_get_conf(byref(self.adc_conf), self.ADC_CONF_TRG_THR_POLARITY, byref(polarity))
-       self.adc_get_conf(byref(self.adc_conf), self.ADC_CONF_TRG_THR_DELAY, byref(delay))
-       self.adc_get_conf(byref(self.adc_conf), self.ADC_CONF_TRG_THR_THRESHOLD, byref(threshold))
-    #   self.adc_get_conf(byref(self.adc_conf), self.ADC_CONF_TRG_THR_HYSTERESIS, byref(hysteresis))
+       self.get_conf(self.ADC_CONF_TRG_THR_ENABLE, byref(enable))
+       self.get_conf(self.ADC_CONF_TRG_THR_POLARITY, byref(polarity))
+       self.get_conf(self.ADC_CONF_TRG_THR_DELAY, byref(delay))
+       self.get_conf(self.ADC_CONF_TRG_THR_THRESHOLD, byref(threshold))
+    #   self.get_conf(self.ADC_CONF_TRG_THR_HYSTERESIS, byref(hysteresis))
        threshold = threshold.value
        if(threshold > 0x7FFF):
           threshold = -(0x8000-(threshold - 0x8000))
@@ -758,11 +764,11 @@ class ADC_Specialized(ADC_Generic):
        self.set_conf_mask(self.ADC_CONF_BRD_N_CHAN)
        self.set_conf_mask(self.ADC_CONF_BRD_N_TRG_EXT)
        self.set_conf_mask(self.ADC_CONF_BRD_N_TRG_THR)
-       self.adc_retrieve_config(self.adc_ptr, byref(self.adc_conf))
+       self.retrieve_config()
        
-       self.adc_get_conf(byref(self.adc_conf), self.ADC_CONF_BRD_N_CHAN, byref(n_chan))
-       self.adc_get_conf(byref(self.adc_conf), self.ADC_CONF_BRD_N_TRG_EXT, byref(n_trg_ext))
-       self.adc_get_conf(byref(self.adc_conf), self.ADC_CONF_BRD_N_TRG_THR, byref(n_trg_int))
+       self.get_conf(self.ADC_CONF_BRD_N_CHAN, byref(n_chan))
+       self.get_conf(self.ADC_CONF_BRD_N_TRG_EXT, byref(n_trg_ext))
+       self.get_conf(self.ADC_CONF_BRD_N_TRG_THR, byref(n_trg_int))
        board_conf = {'n_chan':n_chan.value, 'n_trg_ext':n_trg_ext.value, 'n_trg_int':n_trg_int.value}
        memset(byref(self.adc_conf), 0, sizeof(adc_conf))
        return board_conf
