@@ -4,7 +4,7 @@ import ctypes
 from proxy import *
 from WRTD import *
 import selectors
-from adc_lib_wrapper import *
+from ADC_100m14b4cha import *
 
 delay_u = 600
 delay_samples = delay_u * 100
