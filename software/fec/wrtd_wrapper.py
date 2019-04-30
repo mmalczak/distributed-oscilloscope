@@ -171,7 +171,7 @@ class WRTD_wrapper():
 
         self.wrtd_get_error = self.wrtd_lib.wrtd_get_error
         self.wrtd_get_error.restype = c_uint
-        self.wrtd_get_error.errcheck = self.__errcheck_int
+     #   self.wrtd_get_error.errcheck = self.__errcheck_int
         self.wrtd_get_error.argtypes = [c_void_p, c_void_p,
                                         c_uint, c_char_p]
 
@@ -325,6 +325,7 @@ class WRTD_wrapper():
         self.__init_lib()
         self.resource_name = resource_name.encode('utf-8')
         self.wrtd_p = POINTER(wrtd)()
+        self.init(0, None)
 
     def init(self, reset, options_str):
         self.wrtd_init(self.resource_name, reset, options_str, 
@@ -427,19 +428,17 @@ extern enum wrtd_status wrtd_get_attr_string(struct wrtd_dev *dev,
 #   def get_rule_id(self, 
 
 
-
+    # TODO check if works correctly
     def __errcheck_int(self, ret, func, args):
         """Generic error checker for functions returning 0 as success
         and -1 as error"""
         if ret != self.WRTD_SUCCESS:
-            #TODO use this funciton here
-            # const char *wrtd_get_error_msg(struct wrtd_dev *dev)
-            #{
-            #        return dev->error_msg;
-            #}
-
-            raise OSError(ret,
-                          "error", "")
+            error_code = c_int()
+            error_description = create_string_buffer(256)   
+            self.wrtd_get_error(self.wrtd_p, byref(error_code), 256,
+                                error_description)
+            raise OSError(ret, str(error_description.value),
+                          "")
         else:
             return ret
 
