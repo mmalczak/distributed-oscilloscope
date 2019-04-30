@@ -17,14 +17,7 @@ class WRTD(WRTD_wrapper):
     def __init__(self, trtl):
         super().__init__(trtl)
         self.trtl = trtl.encode('utf-8')
-        self.wrtd_p = POINTER(wrtd)()
-        status = self.wrtd_init(self.trtl, 0, None, byref(self.wrtd_p))
-        if(status != self.WRTD_SUCCESS):
-            print("Cannot open WRTD: " + str(args.D[0]) +
-                " status: 0x" + str(format(status, '08x')) +
-                " errno: " + os.strerror(get_errno()) )
-            os._exit(1)
-
+        
         status = self.wrtd_disable_all_rules(self.wrtd_p)
         self.check_for_errors(status, 'disable_all_rules')
 
