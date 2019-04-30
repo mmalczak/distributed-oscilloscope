@@ -15,7 +15,7 @@ def encode_arguments(func):
 
 class WRTD(WRTD_wrapper):
     def __init__(self, trtl):
-        super().__init__()
+        super().__init__(trtl)
         self.trtl = trtl.encode('utf-8')
         self.wrtd_p = POINTER(wrtd)()
         status = self.wrtd_init(self.trtl, 0, None, byref(self.wrtd_p))

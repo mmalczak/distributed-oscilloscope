@@ -149,7 +149,7 @@ class WRTD_wrapper():
              TODO: add log types"""
     __WRTD_MAX_LOG_TYPE_NUMBER = 0
 
-    def __init__(self):
+    def __init_lib(self):
         self.wrtd_lib = CDLL("libwrtd.so")
 
         self.wrtd_init = self.wrtd_lib.wrtd_init
@@ -320,6 +320,113 @@ class WRTD_wrapper():
            self.wrtd_reset_rule_stats.restype = c_uint
            self.wrtd_reset_rule_stats.errcheck = self.__errcheck_int
            self.wrtd_reset_rule_stats.argtypes = [c_void_p, c_char_p]"""
+
+    def __init__(self, resource_name):
+        self.__init_lib()
+        self.resource_name = resource_name.encode('utf-8')
+        self.wrtd_p = POINTER(wrtd)()
+
+    def init(self, reset, options_str):
+        self.wrtd_init(self.resource_name, reset, options_str, 
+                       byref(self.wrtd_p))
+
+    def close(self):
+        self.wrtd_close(byref(self.wrtd_p))
+
+    def reset(self):
+        self.wrtd_reset(byref(self.wrtd_p))
+
+    def get_error(self, error_code, buffer_size, error_description):
+        self.wrtd_get_error(byref(self.wrtd_p), error_code, buffer_size, 
+                            error_description)
+
+    def error_message(self, err_code, err_message):
+        self.wrtd_error_message(byref(self.wrtd_p), err_code, err_message)
+
+    def get_attr_int32(self, rep_cap_id, id, value) 
+
+extern enum wrtd_status wrtd_get_attr_int32(struct wrtd_dev *dev,
+					    const char *rep_cap_id,
+					    enum wrtd_attr id,
+					    int32_t *value);
+extern enum wrtd_status wrtd_set_attr_int32(struct wrtd_dev *dev,
+					    const char *rep_cap_id,
+					    enum wrtd_attr id,
+					    int32_t value);
+extern enum wrtd_status wrtd_set_attr_int64(struct wrtd_dev *dev,
+					    const char *rep_cap_id,
+					    enum wrtd_attr id,
+					    int64_t value);
+extern enum wrtd_status wrtd_get_attr_bool(struct wrtd_dev *dev,
+					   const char *rep_cap_id,
+					   enum wrtd_attr id,
+					   bool *value);
+extern enum wrtd_status wrtd_set_attr_bool(struct wrtd_dev *dev,
+					   const char *rep_cap_id,
+					   enum wrtd_attr id,
+					   bool value);
+extern enum wrtd_status wrtd_get_attr_tstamp(struct wrtd_dev *dev,
+					     const char *rep_cap_id,
+					     enum wrtd_attr id,
+					     struct wrtd_tstamp *value);
+extern enum wrtd_status wrtd_set_attr_tstamp(struct wrtd_dev *dev,
+					     const char *rep_cap_id,
+					     enum wrtd_attr id,
+					     const struct wrtd_tstamp *value);
+extern enum wrtd_status wrtd_set_attr_string(struct wrtd_dev *dev,
+					     const char *rep_cap_id,
+					     enum wrtd_attr id,
+					     const char *value);
+extern enum wrtd_status wrtd_get_attr_int64(struct wrtd_dev *dev,
+					    const char *rep_cap_id,
+					    enum wrtd_attr id,
+					    int64_t *value);
+extern enum wrtd_status wrtd_get_attr_string(struct wrtd_dev *dev,
+					     const char *rep_cap_id,
+					     enum wrtd_attr id,
+					     int32_t value_buf_size,
+					     char *value);
+
+/
+#
+#
+#   def set_attr_int32(self, 
+#
+#   def get_attr_bool(self, 
+#
+#   def set_attr_bool(self, 
+#
+#   def set_attr_tstamp(self, 
+#
+#   def set_attr_string(self, 
+#
+#   def get_attr_string(self, 
+#
+#   def get_sys_time(self, 
+#
+#   def log_read(self, 
+#
+#   def add_alarm(self, 
+#
+#   def disable_all_alarms(self, 
+#
+#   def remove_alarm(self, 
+#
+#   def remove_all_alarms(self, 
+#
+#   def get_alarm_id(self, 
+#
+#   def add_rule(self, 
+#
+#   def disable_all_rules(self, 
+#
+#   def remove_rule(self, 
+#
+#   def remove_all_rules(self, 
+#
+#   def get_rule_id(self, 
+
+
 
     def __errcheck_int(self, ret, func, args):
         """Generic error checker for functions returning 0 as success
