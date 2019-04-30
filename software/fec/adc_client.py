@@ -6,7 +6,6 @@ import random
 import argparse
 import threading
 from ADC import *
-#from map_timer_trig import *
 from server_expose import *
 from commands import *
 import selectors  
