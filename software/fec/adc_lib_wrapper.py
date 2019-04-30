@@ -38,35 +38,35 @@ class adc_timestamp(Structure):
 
 
 class ADC_Generic():
-    ADC_F_USERMASK  = 0xffff0000
+    ADC_F_USERMASK = 0xffff0000
     """Flag mask -- low-bits are used by lib-int.h"""
-    ADC_F_FLUSH     = 0x00010000
+    ADC_F_FLUSH = 0x00010000
     """Flag used to flush the buffer (used by adc_open)"""
-    ADC_F_VERBOSE   = 0x00020000
+    ADC_F_VERBOSE = 0x00020000
     """Flag used to verbose on stdout/stderr\
     (usable by any function)"""
-    ADC_F_FIXUP     = 0x00400000
+    ADC_F_FIXUP = 0x00400000
     """Flag used to fixup a buffer when
     filling it (usable by adc_fill_buffer)"""
 
     """Enumerate all supported boards
     enum adc_supported_boards"""
-    FMCADC_100MS_4CH_14BIT              = 0
+    FMCADC_100MS_4CH_14BIT = 0
     """It identifies the FMC ADC 100M 14Bit 4Channel"""
-    ADC_ZIOFAKE                         = 1
+    ADC_ZIOFAKE = 1
     """It identifies a generi board that supports the ZIO frameworki"""
-    ADC_GENERICFAKE                     = 2
+    ADC_GENERICFAKE = 2
     """It identifies a generic  board for testing purpose"""
-    __ADC_SUPPORTED_BOARDS_LAST_INDEX   = 3
+    __ADC_SUPPORTED_BOARDS_LAST_INDEX = 3
     """ It represents the the las index of enum. It can be useful\
     for some sort of automation"""
 
     """ It describes the possible polarity value
     enum adc_trigger_polarity """
 
-    ADC_TRG_POL_POS                   = 0
+    ADC_TRG_POL_POS = 0
     """positive edge/slope"""
-    ADC_TRG_POL_NEG                   = 1
+    ADC_TRG_POL_NEG = 1
     """negative edge/slope"""
 
     """It describes the possible configuration option for an external
@@ -76,13 +76,13 @@ class ADC_Generic():
     @todo we should have a generic definition and then the
     device-specific code dealing with the conversion
     enum adc_configuration_trigger_ext"""
-    ADC_CONF_TRG_EXT_ENABLE             = 0
+    ADC_CONF_TRG_EXT_ENABLE = 0
     """It enable/disable the trigger"""
-    ADC_CONF_TRG_EXT_POLARITY           = 1
+    ADC_CONF_TRG_EXT_POLARITY = 1
     """ It is used to apply the polarity to the external triggers"""
-    ADC_CONF_TRG_EXT_DELAY              = 2
+    ADC_CONF_TRG_EXT_DELAY = 2
     """acquisition delay after trigger"""
-    __ADC_CONF_TRG_EXT_LAST_INDEX       = 3
+    __ADC_CONF_TRG_EXT_LAST_INDEX = 3
     """It represents the the last index of this enum. It can be useful
      for some sort of automation"""
 
@@ -92,17 +92,17 @@ class ADC_Generic():
     @todo we should have a generic definition and then the
     device-specific code dealing with the conversion
     enum adc_configuration_trigger_thr """
-    ADC_CONF_TRG_THR_ENABLE             = 0
+    ADC_CONF_TRG_THR_ENABLE = 0
     """It enable (1) or disable (0) the trigger"""
-    ADC_CONF_TRG_THR_POLARITY           = 1
+    ADC_CONF_TRG_THR_POLARITY = 1
     """It is used to apply the polarity to thethreshold triggers"""
-    ADC_CONF_TRG_THR_DELAY              = 2
+    ADC_CONF_TRG_THR_DELAY = 2
     """It defines the acquisition delay aftertrigger"""
-    ADC_CONF_TRG_THR_THRESHOLD          = 3
+    ADC_CONF_TRG_THR_THRESHOLD = 3
     """The threshold value that triggersthe acquisition"""
-    ADC_CONF_TRG_THR_HYSTERESIS         = 4
+    ADC_CONF_TRG_THR_HYSTERESIS = 4
     """If defines the hysteresis associatedto the threshold value"""
-    __ADC_CONF_TRG_THR_LAST_INDEX       = 5
+    __ADC_CONF_TRG_THR_LAST_INDEX = 5
     """It represents the the last indexof this enum. It can be useful
     forsome sort of automation"""
 
@@ -113,26 +113,26 @@ class ADC_Generic():
     @todo we should have a generic definition and then the
     device-specific code dealing with the conversion
     enum adc_configuration_trigger_tim {"""
-    ADC_CONF_TRG_TIM_ENABLE             = 0
+    ADC_CONF_TRG_TIM_ENABLE = 0
     """It enable (1) or disable (0)the trigger"""
-    __ADC_CONF_TRG_TIM_LAST_INDEX       = 1
+    __ADC_CONF_TRG_TIM_LAST_INDEX = 1
     """It represents the the last index of this enum. It can be
     useful for some sort of automation"""
 
     """This represents the list of configuration options for the
     acquisition when using ``conf->type = ADC_CONF_TYPE_ACQ``
     enum adc_configuration_acquisition {"""
-    ADC_CONF_ACQ_N_SHOTS                = 0
+    ADC_CONF_ACQ_N_SHOTS = 0
     """number of shots during the acquisition"""
-    ADC_CONF_ACQ_POST_SAMP              = 1
+    ADC_CONF_ACQ_POST_SAMP = 1
     """number of samples afterthe trigger"""
-    ADC_CONF_ACQ_PRE_SAMP               = 2
+    ADC_CONF_ACQ_PRE_SAMP = 2
     """number of sample before the trigger"""
-    ADC_CONF_ACQ_UNDERSAMPLE            = 3
+    ADC_CONF_ACQ_UNDERSAMPLE = 3
     """Acquisition undersample factor"""
-    ADC_CONF_ACQ_FREQ_HZ                = 4
+    ADC_CONF_ACQ_FREQ_HZ = 4
     """Acquisition frequency"""
-    ADC_CONF_ACQ_N_BITS                 = 5
+    ADC_CONF_ACQ_N_BITS = 5
     """Number of bit per sample"""
     __ADC_CONF_ACQ_ATTRIBUTE_LAST_INDEX = 6
     """It represents the the last index of this enum. It can be
@@ -145,15 +145,15 @@ class ADC_Generic():
     @todo we should have a generic definition and then the
     device-specific code dealing with the conversion
     enum adc_configuration_channel """
-    ADC_CONF_CHN_RANGE                  = 0
+    ADC_CONF_CHN_RANGE = 0
     """Volt range"""
-    ADC_CONF_CHN_TERMINATION            = 1
+    ADC_CONF_CHN_TERMINATION = 1
     """channel Termination"""
-    ADC_CONF_CHN_OFFSET                 = 2
+    ADC_CONF_CHN_OFFSET = 2
     """signal offset"""
-    ADC_CONF_CHN_SATURATION             = 3
+    ADC_CONF_CHN_SATURATION = 3
     """saturation value"""
-    ADC_CONF_CHN_GAIN                   = 4
+    ADC_CONF_CHN_GAIN = 4
     """signal gain"""
     __ADC_CONF_CHN_ATTRIBUTE_LAST_INDEX = 5
     """It represents the the last index of this enum. It can be useful
@@ -166,28 +166,28 @@ class ADC_Generic():
     @todo we should have a generic definition and then the
     device-specific code dealing with the conversion
     enum adc_configuration_board """
-    ADC_CONF_BRD_STATUS                 = 0
+    ADC_CONF_BRD_STATUS = 0
     """Board status"""
-    ADC_CONF_BRD_MAX_FREQ_HZ            = 1
+    ADC_CONF_BRD_MAX_FREQ_HZ = 1
     """Maximum frequency in HZ"""
-    ADC_CONF_BRD_MIN_FREQ_HZ            = 2
+    ADC_CONF_BRD_MIN_FREQ_HZ = 2
     """Minimum frequency in HZ"""
-    ADC_CONF_BRD_STATE_MACHINE_STATUS   = 3
+    ADC_CONF_BRD_STATE_MACHINE_STATUS = 3
     """Acquisition state machine status"""
-    ADC_CONF_BRD_N_CHAN                 = 4
+    ADC_CONF_BRD_N_CHAN = 4
     """Number of acquisition channel"""
-    ADC_CONF_BRD_N_TRG_EXT              = 5
+    ADC_CONF_BRD_N_TRG_EXT = 5
     """Number of external triggers"""
-    ADC_CONF_BRD_N_TRG_THR              = 6
+    ADC_CONF_BRD_N_TRG_THR = 6
     """Number of threshold triggers"""
-    ADC_CONF_BRD_N_TRG_TIM              = 7
+    ADC_CONF_BRD_N_TRG_TIM = 7
     """Number of timer triggers"""
     """TODO seconds, ticks and bins are bit -> High - low"""
-    ADC_CONF_UTC_TIMING_BASE_S          = 8
+    ADC_CONF_UTC_TIMING_BASE_S = 8
     """Board internal time: seconds"""
-    ADC_CONF_UTC_TIMING_BASE_T          = 9
+    ADC_CONF_UTC_TIMING_BASE_T = 9
     """Board internal time: coarsesub-seconds"""
-    ADC_CONF_UTC_TIMING_BASE_B          = 10
+    ADC_CONF_UTC_TIMING_BASE_B = 10
     """Board internal time: finesub-seconds"""
     __ADC_CONF_BRD_ATTRIBUTE_LAST_INDEX = 11
     """It represents the the last index of this enum.
@@ -199,20 +199,20 @@ class ADC_Generic():
     @todo we should have a generic definition and then the
     device-specific code dealing with the conversion
     enum adc_configuration_type """
-    ADC_CONF_TYPE_BRD          = 0
+    ADC_CONF_TYPE_BRD = 0
     """Configuration for the board"""
-    ADC_CONF_TYPE_CHN          = 1
+    ADC_CONF_TYPE_CHN = 1
     """Configuration for an acquisition channels"""
-    ADC_CONF_TYPE_ACQ          = 2
+    ADC_CONF_TYPE_ACQ = 2
     """Configuration for the acquisition"""
-    ADC_CONF_TYPE_CUS          = 3
+    ADC_CONF_TYPE_CUS = 3
     """Custom configuration for board-specific options for any of the
     possible domain: board,channel, triggers."""
-    ADC_CONF_TYPE_TRG_EXT      = 4
+    ADC_CONF_TYPE_TRG_EXT = 4
     """Configuration for external triggers"""
-    ADC_CONF_TYPE_TRG_THR      = 5
+    ADC_CONF_TYPE_TRG_THR = 5
     """Configuration for threshold triggers"""
-    ADC_CONF_TYPE_TRG_TIM      = 6
+    ADC_CONF_TYPE_TRG_TIM = 6
     """Configuration for time triggers"""
     __ADC_CONF_TYPE_LAST_INDEX = 7
     """It represents the the last index of this enum. It can be useful
