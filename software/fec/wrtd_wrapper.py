@@ -1,4 +1,5 @@
 from ctypes import *
+import numpy as np
 
 
 class wrtd(Structure):
@@ -9,6 +10,40 @@ class wrtd_tstamp(Structure):
     _fields_ = [("seconds", c_uint),
                 ("ns", c_uint),
                 ("frac", c_uint)]
+
+
+class wrtd_event(Structure):
+    _fields_ = [('wrtd_tstamp', wrtd_tstamp),
+                ('id', c_char_p),
+                ('seq', c_uint32),
+                ('flags', c_char)]
+
+
+class wrtd_log_entry(Structure):
+    _fields_ = [('type', c_uint32),
+                ('reason', c_uint32),
+                ('wrtd_event', wrtd_event),
+                ('wrtd_tstamp', wrtd_tstamp)]
+
+
+class tstamp():
+    def __init__(self):
+        seconds = 0
+        ns = 0
+        frac = 0
+
+
+def encode_arguments(func):
+    def wrapper(self, *args, **kwargs):
+        encoded = []
+        for arg in args:
+            if(type(arg) == str):
+                encoded.append(arg.encode('utf-8'))
+            else:
+                encoded.append(arg)
+        args = tuple(encoded)
+        return func(self, *args, **kwargs)
+    return wrapper
 
 
 class WRTD_wrapper():
@@ -45,7 +80,7 @@ class WRTD_wrapper():
     """Feature not implemented"""
     WRTD_ERROR_NOT_IMPLEMENTED = 0xBFFA3013
 
-    """Incorrect repeated capability id: too long, 
+    """Incorrect repeated capability id: too long,
        invalid character..."""
     WRTD_ERROR_BAD_REP_CAP_ID = 0xBFFA3014
 
@@ -140,7 +175,7 @@ class WRTD_wrapper():
     __WRTD_ATTR_MAX_NUMBER = 950037
 
     """A repeated capability identifier for global attributes"""
-    WRTD_GLOBAL_REP_CAP_ID = "WGRCI"
+    WRTD_GLOBAL_REP_CAP_ID = 'WGRCI'
 
     """@enum wrtd_log_type
        White Rabbit Trigger Distribution log entry type"""
@@ -171,8 +206,7 @@ class WRTD_wrapper():
 
         self.wrtd_get_error = self.wrtd_lib.wrtd_get_error
         self.wrtd_get_error.restype = c_uint
-     #   self.wrtd_get_error.errcheck = self.__errcheck_int
-        self.wrtd_get_error.argtypes = [c_void_p, c_void_p,
+        self.wrtd_get_error.argtypes = [c_void_p, POINTER(c_uint32),
                                         c_uint, c_char_p]
 
         self.wrtd_error_message = self.wrtd_lib.wrtd_error_message
@@ -184,7 +218,7 @@ class WRTD_wrapper():
         self.wrtd_get_attr_int32.restype = c_uint
         self.wrtd_get_attr_int32.errcheck = self.__errcheck_int
         self.wrtd_get_attr_int32.argtypes = [c_void_p, c_char_p,
-                                             c_uint, c_void_p]
+                                             c_uint, POINTER(c_int32)]
 
         self.wrtd_set_attr_int32 = self.wrtd_lib.wrtd_set_attr_int32
         self.wrtd_set_attr_int32.restype = c_uint
@@ -196,7 +230,7 @@ class WRTD_wrapper():
            self.wrtd_set_attr_int64.restype = c_uint
            self.wrtd_set_attr_int64.errcheck = self.__errcheck_int
            self.wrtd_set_attr_int64.argtypes = [c_void_p, c_char_p,
-                                                c_uint, c_long]"""
+                                             c_uint, c_long]"""
 
         self.wrtd_get_attr_bool = self.wrtd_lib.wrtd_get_attr_bool
         self.wrtd_get_attr_bool.restype = c_uint
@@ -215,7 +249,7 @@ class WRTD_wrapper():
            self.wrtd_get_attr_tstamp.restype = c_uint
            self.wrtd_get_attr_tstamp.errcheck = self.__errcheck_int
            self.wrtd_get_attr_tstamp.argtypes = [c_void_p, c_char_p,
-                                                c_uint, c_void_p]"""
+                                                   c_uint, c_void_p]"""
 
         self.wrtd_set_attr_tstamp = self.wrtd_lib.wrtd_set_attr_tstamp
         self.wrtd_set_attr_tstamp.restype = c_uint
@@ -327,114 +361,133 @@ class WRTD_wrapper():
         self.wrtd_p = POINTER(wrtd)()
         self.init(0, None)
 
+    def __del__(self):
+        self.close()
+
     def init(self, reset, options_str):
-        self.wrtd_init(self.resource_name, reset, options_str, 
-                       byref(self.wrtd_p))
+        self.wrtd_init(self.resource_name, reset, options_str,
+                       self.wrtd_p)
 
     def close(self):
-        self.wrtd_close(byref(self.wrtd_p))
+        self.wrtd_close(self.wrtd_p)
 
     def reset(self):
-        self.wrtd_reset(byref(self.wrtd_p))
+        self.wrtd_reset(self.wrtd_p)
 
-    def get_error(self, error_code, buffer_size, error_description):
-        self.wrtd_get_error(byref(self.wrtd_p), error_code, buffer_size, 
+    def get_error(self, buffer_size):
+        error_description = create_string_buffer(buffer_size)
+        error_c = c_uint()
+        self.wrtd_get_error(self.wrtd_p, byref(error_c), buffer_size,
                             error_description)
+        return {'error_description': error_description.value,
+                'error_code': error_c.value}
 
-    def error_message(self, err_code, err_message):
-        self.wrtd_error_message(byref(self.wrtd_p), err_code, err_message)
+    def error_message(self, err_code):
+        error_message = create_string_buffer(256)
+        self.wrtd_error_message(self.wrtd_p, err_code,
+                                error_message)
+        return error_message.value
 
-    def get_attr_int32(self, rep_cap_id, id, value) 
+    @encode_arguments
+    def get_attr_int32(self, rep_cap_id, id):
+        value = c_int32()
+        self.wrtd_get_attr_int32(self.wrtd_p, rep_cap_id, id,
+                                 byref(value))
+        return value.value
 
-extern enum wrtd_status wrtd_get_attr_int32(struct wrtd_dev *dev,
-					    const char *rep_cap_id,
-					    enum wrtd_attr id,
-					    int32_t *value);
-extern enum wrtd_status wrtd_set_attr_int32(struct wrtd_dev *dev,
-					    const char *rep_cap_id,
-					    enum wrtd_attr id,
-					    int32_t value);
-extern enum wrtd_status wrtd_set_attr_int64(struct wrtd_dev *dev,
-					    const char *rep_cap_id,
-					    enum wrtd_attr id,
-					    int64_t value);
-extern enum wrtd_status wrtd_get_attr_bool(struct wrtd_dev *dev,
-					   const char *rep_cap_id,
-					   enum wrtd_attr id,
-					   bool *value);
-extern enum wrtd_status wrtd_set_attr_bool(struct wrtd_dev *dev,
-					   const char *rep_cap_id,
-					   enum wrtd_attr id,
-					   bool value);
-extern enum wrtd_status wrtd_get_attr_tstamp(struct wrtd_dev *dev,
-					     const char *rep_cap_id,
-					     enum wrtd_attr id,
-					     struct wrtd_tstamp *value);
-extern enum wrtd_status wrtd_set_attr_tstamp(struct wrtd_dev *dev,
-					     const char *rep_cap_id,
-					     enum wrtd_attr id,
-					     const struct wrtd_tstamp *value);
-extern enum wrtd_status wrtd_set_attr_string(struct wrtd_dev *dev,
-					     const char *rep_cap_id,
-					     enum wrtd_attr id,
-					     const char *value);
-extern enum wrtd_status wrtd_get_attr_int64(struct wrtd_dev *dev,
-					    const char *rep_cap_id,
-					    enum wrtd_attr id,
-					    int64_t *value);
-extern enum wrtd_status wrtd_get_attr_string(struct wrtd_dev *dev,
-					     const char *rep_cap_id,
-					     enum wrtd_attr id,
-					     int32_t value_buf_size,
-					     char *value);
+    @encode_arguments
+    def set_attr_int32(self, rep_cap_id, id, value):
+        self.wrtd_set_attr_int32(self.wrtd_p, rep_cap_id, id, value)
 
-/
-#
-#
-#   def set_attr_int32(self, 
-#
-#   def get_attr_bool(self, 
-#
-#   def set_attr_bool(self, 
-#
-#   def set_attr_tstamp(self, 
-#
-#   def set_attr_string(self, 
-#
-#   def get_attr_string(self, 
-#
-#   def get_sys_time(self, 
-#
-#   def log_read(self, 
-#
-#   def add_alarm(self, 
-#
-#   def disable_all_alarms(self, 
-#
-#   def remove_alarm(self, 
-#
-#   def remove_all_alarms(self, 
-#
-#   def get_alarm_id(self, 
-#
-#   def add_rule(self, 
-#
-#   def disable_all_rules(self, 
-#
-#   def remove_rule(self, 
-#
-#   def remove_all_rules(self, 
-#
-#   def get_rule_id(self, 
+    @encode_arguments
+    def get_attr_bool(self, rep_cap_id, id):
+        value = c_bool()
+        self.wrtd_get_attr_bool(self.wrtd_p, rep_cap_id, id,
+                                byref(value))
+        return value.value
 
+    @encode_arguments
+    def set_attr_bool(self, rep_cap_id, id, value):
+        self.wrtd_set_attr_bool(self.wrtd_p, rep_cap_id, id, value)
+
+    @encode_arguments
+    def set_attr_tstamp(self, rep_cap_id, id, value):
+        self.wrtd_set_attr_tstamp(self.wrtd_p, rep_cap_id, id, value)
+
+    @encode_arguments
+    def get_attr_string(self, rep_cap_id, id, value_buf_size):
+        value = create_string_buffer(value_buf_size)
+        self.wrtd_get_attr_string(self.wrtd_p, rep_cap_id, id,
+                                  value_buf_size, value)
+        return value.value
+
+    @encode_arguments
+    def set_attr_string(self, rep_cap_id, id, value):
+        self.wrtd_set_attr_string(self.wrtd_p, rep_cap_id, id, value)
+
+    def get_sys_time(self):
+        def getdict(struct):
+            return dict((field, getattr(struct, field)) for field,
+                        _ in struct._fields_)
+        tstamp = wrtd_tstamp()
+        self.wrtd_get_sys_time(self.wrtd_p, byref(tstamp))
+        return getdict(tstamp)
+
+    def log_read(self, poll_timeout):
+        def getdict(struct):
+            return dict((field, getattr(struct, field)) for field,
+                        _ in struct._fields_)
+        log = wrtd_log_entry()
+        self.wrtd_log_read(self.wrtd_p, byref(log), poll_timeout)
+        """TODO think of smarter way to do it"""
+        log = getdict(log)
+        log['wrtd_event'] = getdict(log['wrtd_event'])
+        log['wrtd_tstamp'] = getdict(log['wrtd_tstamp'])
+        log['wrtd_event']['wrtd_tstamp'] =\
+            getdict(log['wrtd_event']['wrtd_tstamp'])
+        return log
+
+    def add_alarm(self, rep_cap_id):
+        self.wrtd_add_alarm(self.wrtd_p, rep_cap_id)
+
+    def disable_all_alarms(self):
+        self.wrtd_disable_all_alarms(self.wrtd_p)
+
+    def remove_alarm(self, rep_cap_id):
+        self.wrtd_remove_alarm(self.wrtd_p, rep_cap_id)
+
+    def get_alarm_id(self, index, name_buffer_size):
+        rep_cap_id = create_string_buffer(name_buffer_size)
+        self.wrtd_get_alarm_id(self.wrtd_p, index, name_buffer_size,
+                               rep_cap_id)
+        return rep_cap_id.value
+
+    @encode_arguments
+    def add_rule(self, rep_cap_id):
+        self.wrtd_add_rule(self.wrtd_p, rep_cap_id)
+
+    def disable_all_rules(self):
+        self.wrtd_disable_all_rules(self.wrtd_p)
+
+    def remove_rule(self, rep_cap_id):
+        self.wrtd_remove_rule(self.wrtd_p, rep_cap_id)
+
+    def remove_all_rules(self):
+        self.wrtd_remove_all_rules(self.wrtd_p)
+
+    def get_rule_id(self, index, name_buffer_size):
+        rep_cap_id = create_string_buffer(name_buffer_size)
+        self.wrtd_get_rule_id(self.wrtd_p, index, name_buffer_size,
+                              rep_cap_id)
+        return rep_cap_id.value
 
     # TODO check if works correctly
     def __errcheck_int(self, ret, func, args):
         """Generic error checker for functions returning 0 as success
         and -1 as error"""
         if ret != self.WRTD_SUCCESS:
-            error_code = c_int()
-            error_description = create_string_buffer(256)   
+            error_code = c_uint()
+            error_description = create_string_buffer(256)
             self.wrtd_get_error(self.wrtd_p, byref(error_code), 256,
                                 error_description)
             raise OSError(ret, str(error_description.value),
@@ -442,7 +495,7 @@ extern enum wrtd_status wrtd_get_attr_string(struct wrtd_dev *dev,
         else:
             return ret
 
- 
+
 """############################### NOT API #########################"""
 
 
