@@ -1,10 +1,11 @@
 class Channel:
 
-    def __init__(self, channel_range, termination, offset, saturation, unique_ADC_name, ADC_channel_idx):
+    def __init__(self, channel_range, termination, offset, saturation,
+                 unique_ADC_name, ADC_channel_idx):
         self.unique_ADC_name = unique_ADC_name
         self.ADC_channel_idx = ADC_channel_idx
-        self.range_conv = {35:100, 69:10, 17:1}
-        self.active = True # TO BE REMOVED
+        self.range_conv = {35: 100, 69: 10, 17: 1}
+        self.active = True  # TO BE REMOVED
         self.channel_range = self.range_conv[channel_range]
         self.termination = termination
         self.offset = offset
@@ -14,7 +15,7 @@ class Channel:
     def set_channel_range(self, channel_range):
         self.channel_range = self.range_conv[channel_range]
 
-    def set_termination(self, termination):     
+    def set_termination(self, termination):
         self.termination = termination
 
     def set_offset(self, offset):
@@ -23,7 +24,8 @@ class Channel:
     def set_saturation(self, saturation):
         self.saturation = saturation
 
-    def update_channel_conf(self, channel_range, termination, offset, saturation):
+    def update_channel_conf(self, channel_range, termination, offset,
+                            saturation):
         self.channel_range = self.range_conv[channel_range]
         self.termination = termination
         self.offset = offset
@@ -52,10 +54,11 @@ class Trigger:
         self.polarity = polarity
         self.delay = delay
 
- 
+
 class InternalTrigger(Trigger):
 
-    def __init__(self, enable, polarity, delay, threshold, unique_ADC_name, ADC_trigger_idx ):
+    def __init__(self, enable, polarity, delay, threshold,
+                 unique_ADC_name, ADC_trigger_idx):
         super().__init__(enable, polarity, delay)
         self.unique_ADC_name = unique_ADC_name
         self.ADC_trigger_idx = ADC_trigger_idx
@@ -74,7 +77,8 @@ class InternalTrigger(Trigger):
 
 class ExternalTrigger(Trigger):
 
-    def __init__(self, enable, polarity, delay, unique_ADC_name, ADC_trigger_idx):
+    def __init__(self, enable, polarity, delay, unique_ADC_name,
+                 ADC_trigger_idx):
         super().__init__(enable, polarity, delay)
         self.type = 'external'
         self.unique_ADC_name = unique_ADC_name
@@ -96,5 +100,3 @@ class AcqConf:
     def update_acq_conf(self, presamples, postsamples):
         self.set_presamples(presamples)
         self.set_postsamples(postsamples)
- 
-
