@@ -31,10 +31,10 @@ class ADC_100m14b4cha_extended_API_WRTD(ADC_100m14b4cha_extended_API):
         if(not self.WRTD_master):
             self.set_presamples(delay_samples)
         self.WRTD.add_rule_mult_src('dist_triggers', 5)
-        self.WRTD.set_rule_mult_src('dist_triggers', 0, 'ADCI', 'LAN1', 5)
+        self.WRTD.set_rule_mult_src('dist_triggers', 0, 'LC-I', 'LAN1', 5)
 
         self.WRTD.add_rule('receive_trigger')
-        self.WRTD.set_rule('receive_trigger', 600e6, 'LAN1', 'ADCO1')
+        self.WRTD.set_rule('receive_trigger', 600e6, 'LAN1', 'LC-O1')
 
         self.WRTD.enable_rule('receive_trigger')
         self.WRTD.disable_rule_mult_src('dist_triggers', 5)
