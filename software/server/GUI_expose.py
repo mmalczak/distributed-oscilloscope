@@ -111,9 +111,9 @@ class ThreadGUI_Expose(threading.Thread):
                                   unique_ADC_name, 0, channel_idx)
             print("Internal trigger disabled: value out of range")
             for GUI_name, GUI in self.osc.GUIs.items():
-                get_proxy(GUI.GUI_proxy_addr).print("Internal trigger
-                                                    disabled: value out
-                                                    of range")
+                get_proxy(GUI.GUI_proxy_addr).print("Internal trigger\
+                                                     disabled: value\
+                                                     out of range")
         else:
             self.send_RPC_request('set_internal_trigger_threshold',
                                   unique_ADC_name, threshold,
