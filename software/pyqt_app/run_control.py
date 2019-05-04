@@ -15,6 +15,7 @@ class SingleAcquisitionButton(QtGui.QPushButton):
         proxy = get_proxy(self.server_proxy.proxy_addr)
         proxy.single_acquisition(self.GUI_name)
 
+
 class RunStopButton(QtGui.QPushButton):
 
     def __init__(self, server_proxy, GUI_name):
@@ -31,10 +32,3 @@ class RunStopButton(QtGui.QPushButton):
     def action(self):
         proxy = get_proxy(self.server_proxy.proxy_addr)
         proxy.run_acquisition(self.is_active(), self.GUI_name)
-
-
-        
-
-
-
-
