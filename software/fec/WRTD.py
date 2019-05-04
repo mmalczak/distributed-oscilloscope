@@ -25,8 +25,7 @@ class WRTD(WRTD_wrapper):
 
     @encode_arguments
     def enable_rule(self, name):
-        self.set_attr_bool(name, self.WRTD_ATTR_RULE_ENABLED,
-                           1)
+        self.set_attr_bool(name, self.WRTD_ATTR_RULE_ENABLED, 1)
 
     @encode_arguments
     def disable_rule(self, name):
