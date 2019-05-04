@@ -11,7 +11,7 @@ class Oscilloscope():
                           ADC_proxy_addr, conf):
         self.available_ADCs[unique_ADC_name] = ADC(unique_ADC_name,
                                                    ADC_proxy_addr,
-                                                   conf )
+                                                   conf)
         for name_GUI, GUI in self.GUIs.items():
             get_proxy(GUI.GUI_proxy_addr).\
                 add_available_ADC(unique_ADC_name,
@@ -21,7 +21,7 @@ class Oscilloscope():
         for name_GUI, GUI in self.GUIs.items():
             get_proxy(GUI.GUI_proxy_addr).\
                 remove_available_ADC(unique_ADC_name)
-	# wait until there are no more users
+        """wait until there are no more users"""
         del self.available_ADCs[unique_ADC_name]
 
     def register_GUI(self, GUI_name, GUI_proxy_addr):
@@ -54,23 +54,22 @@ class Oscilloscope():
             if GUI.contains_ADC(unique_ADC_name):
                 GUI.retrieve_acquisition_ADCs_used()
 
-#check if data from all ADCs is properly aligned
+
 def validate_data(GUI):
+    """check if data from all ADCs is properly aligned"""
     max_timestamp = [0, 0]
     all_the_same = False
     max_offset = 300
-    while( all_the_same == False):
+    while(all_the_same is False):
         for ADC_name, ADC in GUI.ADCs.items():
             try:
                 timestamp = ADC.timestamp_and_data[0][0]
                 print(ADC_name + str(timestamp))
             except Exception as e:
-            #    print(e)
-            #    print("Data not available max")
                 return False
-            if( (timestamp[0] > max_timestamp[0]) or
-                ( (timestamp[0] == max_timestamp[0]) and
-                  (timestamp[1] >   max_timestamp[1]) )):
+            if((timestamp[0] > max_timestamp[0]) or
+               ((timestamp[0] == max_timestamp[0]) and
+               (timestamp[1] > max_timestamp[1]))):
                 max_timestamp = timestamp
                 max_timestamp_sec = max_timestamp[0]
                 max_timestamp_tic = max_timestamp[1]
@@ -80,8 +79,6 @@ def validate_data(GUI):
                 timestamp_sec = timestamp[0]
                 timestamp_tic = timestamp[1]
             except Exception as e:
-             #  print(e)
-             #  print("Data not available del ")
                 return False
             if(check_if_not_max(max_timestamp_sec, max_timestamp_tic,
                                 timestamp_sec, timestamp_tic,
@@ -94,8 +91,6 @@ def validate_data(GUI):
                 timestamp_sec = timestamp[0]
                 timestamp_tic = timestamp[1]
             except Exception as e:
-             #  print(e)
-             #  print("Data not available check")
                 return False
             if(not check_if_equal(max_timestamp_sec, max_timestamp_tic,
                                   timestamp_sec, timestamp_tic,
