@@ -2,6 +2,13 @@ from ctypes import *
 import numpy as np
 
 
+""" Wrapper for WRTD C library using ctypes
+All ctypes functions have exactly the same names as the ones in the
+C library. To each function corresponds python function that hides
+C specific operations from the user. The names of these functions are
+the sames as the ctypes functions without WRTD prefix."""
+
+
 class wrtd(Structure):
     pass
 
@@ -34,6 +41,7 @@ class tstamp():
 
 
 def encode_arguments(func):
+    """Used to convert arguments from strings to bytes"""
     def wrapper(self, *args, **kwargs):
         encoded = []
         for arg in args:
