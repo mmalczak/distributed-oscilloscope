@@ -2,20 +2,24 @@ from PyQt5.QtWidgets import QVBoxLayout
 from parent_classes import *
 from proxy import *
 
+
 DBG = False
+
 
 class ChannelClosure:
 
-    def __init__(self, ADC_Lay, server_proxy, plot, GUI_name, channel_count, update_triggers):
+    def __init__(self, ADC_Lay, server_proxy, plot, GUI_name,
+                 channel_count, update_triggers):
         self.menu = ChannelsMenu(self, channel_count, plot)
         self.channel_count = channel_count
         self.layout = ChannelLayout(self.menu)
         self.plot = plot
         self.GUI_name = GUI_name
         ADC_Lay.addLayout(self.layout)
-        self.properties = None 
+        self.properties = None
         self.server_proxy = server_proxy
-        self.update_triggers = update_triggers  # updates the list of channels for the trigger
+        self.update_triggers = update_triggers
+        """updates the list of channels for the trigger"""
 
     def add_available_ADC(self, name, number_of_channels):
         self.menu.add_available_ADC(name, number_of_channels)
@@ -23,36 +27,47 @@ class ChannelClosure:
     def remove_available_ADC(self, name):
         self.menu.remove_available_ADC(name)
         if self.channel_exists():
-            if(self.properties.unique_ADC_name == name): 
+            if(self.properties.unique_ADC_name == name):
                 self.remove_channel()
 
     def set_channel_properties(self, unique_ADC_name, idx):
-        self.properties = ChannelProperties(unique_ADC_name, idx, self.layout, self.server_proxy, self.plot, self.GUI_name, self)
-        self.update_triggers() 
+        self.properties = ChannelProperties(unique_ADC_name, idx,
+                                            self.layout,
+                                            self.server_proxy,
+                                            self.plot,
+                                            self.GUI_name, self)
+        self.update_triggers()
 
     def remove_channel(self):
         self.properties = None
         self.plot.remove_channel(self.channel_count)
         proxy = get_proxy(self.server_proxy.proxy_addr)
         proxy.remove_channel(self.channel_count, self.GUI_name)
-    
+
     def channel_exists(self):
         return self.properties is not None
 
 
 class ChannelProperties:
 
-    def __init__(self, unique_ADC_name, idx, layout, server_proxy, plot, GUI_name, channel_closure):
+    def __init__(self, unique_ADC_name, idx, layout, server_proxy,
+                 plot, GUI_name, channel_closure):
         self.idx = idx
         self.unique_ADC_name = unique_ADC_name
         self.layout = layout
         self.server_proxy = server_proxy
         self.channel_closure = channel_closure
-        self.button = ChannelEnableButton('Channel'+str(idx), idx, unique_ADC_name, server_proxy, plot, GUI_name)
-        self.range_menu = ChannelRange(idx, unique_ADC_name, server_proxy)
-        self.termination_menu = ChannelTermination(idx, unique_ADC_name, server_proxy)
-        self.offset_box = ChannelOffset(idx, unique_ADC_name, server_proxy)
-        self.saturation_box = ChannelSaturation(idx, unique_ADC_name, server_proxy)
+        self.button = ChannelEnableButton('Channel'+str(idx), idx,
+                                          unique_ADC_name, server_proxy,
+                                          plot, GUI_name)
+        self.range_menu = ChannelRange(idx, unique_ADC_name,
+                                       server_proxy)
+        self.termination_menu = ChannelTermination(idx, unique_ADC_name,
+                                                   server_proxy)
+        self.offset_box = ChannelOffset(idx, unique_ADC_name,
+                                        server_proxy)
+        self.saturation_box = ChannelSaturation(idx, unique_ADC_name,
+                                                server_proxy)
 
         self.layout.addWidget(self.button)
         self.layout.addWidget(self.range_menu)
@@ -75,7 +90,8 @@ class ChannelProperties:
     def set_button_saturation(self, value):
         self.saturation_box.set_value(value)
 
-    def set_channel_params(self, active, range, termination, offset, saturation):
+    def set_channel_params(self, active, range, termination, offset,
+                           saturation):
         self.button.set_active(active)
         self.range_menu.set_value(range)
         self.termination_menu.set_value(termination)
@@ -109,7 +125,7 @@ class ChannelsMenu(QMenuBar):
         ADC.menuAction().hovered.connect(self.select_ADC)
         for count in range(0, number_of_channels):
             chan = ADC.addAction("chan " + str(count))
-            chan.triggered.connect(self.add_channel) 
+            chan.triggered.connect(self.add_channel)
 
     def remove_available_ADC(self, name):
         self.ADCs_menu.removeAction(self.ADCs[name].menuAction())
@@ -122,10 +138,12 @@ class ChannelsMenu(QMenuBar):
             self.remove_channel()
         str_chan = self.sender().text()
         idx = int(str_chan.split()[1])
-        self.channel_closure.set_channel_properties(self.selected_ADC, idx)
+        self.channel_closure.set_channel_properties(self.selected_ADC,
+                                                    idx)
         self.plot.add_channel(self.channel_count)
         proxy = get_proxy(self.channel_closure.server_proxy.proxy_addr)
-        proxy.add_channel(self.channel_count, self.selected_ADC, idx, self.channel_closure.GUI_name)
+        proxy.add_channel(self.channel_count, self.selected_ADC, idx,
+                          self.channel_closure.GUI_name)
 
     def remove_channel(self):
         self.channel_closure.remove_channel()
@@ -143,11 +161,12 @@ class ChannelLayout(QVBoxLayout):
 
 class ChannelEnableButton(Button):
 
-    def __init__(self, button_name, idx, unique_ADC_name, server_proxy, plot, GUI_name):
+    def __init__(self, button_name, idx, unique_ADC_name, server_proxy,
+                 plot, GUI_name):
         super().__init__(button_name, idx, unique_ADC_name)
-        self.server_proxy = server_proxy 
+        self.server_proxy = server_proxy
         self.plot = plot
-        self.GUI_name = GUI_name # probably to be removed
+        self.GUI_name = GUI_name  # probably to be removed
 
     def action(self):
         active = not self.isChecked()
@@ -157,7 +176,7 @@ class ChannelRange(Menu):
 
     def __init__(self, idx, unique_ADC_name, server_proxy):
         super().__init__(idx, unique_ADC_name)
-        self.server_proxy = server_proxy 
+        self.server_proxy = server_proxy
         self.range = self.addMenu("Range")
         range_10V = self.range.addAction("10V")
         range_10V.setText("10V")
@@ -173,7 +192,8 @@ class ChannelRange(Menu):
         range_value_str = self.sender().text()
         try:
             proxy = get_proxy(self.server_proxy.proxy_addr)
-            proxy.set_channel_range(range_value_str, self.idx, self.unique_ADC_name)
+            proxy.set_channel_range(range_value_str, self.idx,
+                                    self.unique_ADC_name)
         except Exception as e:
             print(e)
 
@@ -185,7 +205,7 @@ class ChannelTermination(Menu):
 
     def __init__(self, idx, unique_ADC_name, server_proxy):
         super().__init__(idx, unique_ADC_name)
-        self.server_proxy = server_proxy 
+        self.server_proxy = server_proxy
         self.termination = self.addMenu("Termination")
         termination_0 = self.termination.addAction("0")
         termination_0.setText("0")
@@ -198,7 +218,10 @@ class ChannelTermination(Menu):
         termination_str = self.sender().text()
         try:
             proxy = get_proxy(self.server_proxy.proxy_addr)
-            proxy.set_ADC_parameter('channel_termination', termination_str, self.unique_ADC_name, self.idx)
+            proxy.set_ADC_parameter('channel_termination',
+                                    termination_str,
+                                    self.unique_ADC_name,
+                                    self.idx)
         except Exception as e:
             print(e)
 
@@ -210,7 +233,7 @@ class ChannelOffset(Box):
 
     def __init__(self, idx, unique_ADC_name, server_proxy):
         super().__init__(idx, unique_ADC_name, "Offset uV")
-        self.server_proxy = server_proxy 
+        self.server_proxy = server_proxy
         self.box.setMinimum(-5000000)
         self.box.setMaximum(5000000)
 
@@ -218,7 +241,8 @@ class ChannelOffset(Box):
         offset = self.box.value()
         try:
             proxy = get_proxy(self.server_proxy.proxy_addr)
-            proxy.set_ADC_parameter('channel_offset', offset, self.unique_ADC_name, self.idx)
+            proxy.set_ADC_parameter('channel_offset', offset,
+                                    self.unique_ADC_name, self.idx)
         except Exception as e:
             print(e)
 
@@ -227,7 +251,7 @@ class ChannelSaturation(Box):
 
     def __init__(self, idx, unique_ADC_name, server_proxy):
         super().__init__(idx, unique_ADC_name, "Saturation")
-        self.server_proxy = server_proxy 
+        self.server_proxy = server_proxy
         self.box.setMinimum(0)
         self.box.setMaximum(65535)
 
@@ -235,6 +259,7 @@ class ChannelSaturation(Box):
         saturation = self.box.value()
         try:
             proxy = get_proxy(self.server_proxy.proxy_addr)
-            proxy.set_ADC_parameter('channel_saturation', saturation, self.unique_ADC_name, self.idx)
+            proxy.set_ADC_parameter('channel_saturation', saturation,
+                                    self.unique_ADC_name, self.idx)
         except Exception as e:
             print(e)
