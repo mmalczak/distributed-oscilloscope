@@ -5,14 +5,15 @@ from proxy import *
 
 class TriggerClosure:
 
-    def __init__(self, ADC_Lay, server_proxy, plot, GUI_name, GUI_trigger_idx, channels, available_ADCs):
+    def __init__(self, ADC_Lay, server_proxy, plot, GUI_name,
+                 GUI_trigger_idx, channels, available_ADCs):
         self.GUI_trigger_idx = GUI_trigger_idx
         self.menu_type = TriggerTypeMenu(self)
         self.layout = TriggerLayout(self.menu_type)
         self.plot = plot
         self.GUI_name = GUI_name
         ADC_Lay.addLayout(self.layout)
-        self.properties = None 
+        self.properties = None
         self.server_proxy = server_proxy
         self.trigger_type = 'internal'
         self.channels = channels
@@ -23,14 +24,15 @@ class TriggerClosure:
     def update_triggers(self):
         self.menu.update_triggers()
         try:
-            if not self.properties.unique_ADC_name in self.available_ADCs:
+            if self.properties.unique_ADC_name not in self.available_ADCs:
                 self.properties = None
         except:
             pass
 
     def set_menu(self):
         if(self.trigger_type == 'internal'):
-            self.menu = IntTriggersMenu(self, self.GUI_trigger_idx, self.plot, self.channels)
+            self.menu = IntTriggersMenu(self, self.GUI_trigger_idx,
+                                        self.plot, self.channels)
         else:
             self.menu = ExtTriggersMenu(self, self.GUI_trigger_idx)
         self.layout.set_menu(self.menu)
@@ -50,19 +52,32 @@ class TriggerClosure:
 
     def set_trigger_properties(self, unique_ADC_name, idx=0):
         if(self.trigger_type == 'internal'):
-            self.properties = IntTriggerProperties(unique_ADC_name, idx, self.layout, self.server_proxy, self.plot, self.GUI_name)
+            self.properties = IntTriggerProperties(unique_ADC_name, idx,
+                                                   self.layout,
+                                                   self.server_proxy,
+                                                   self.plot,
+                                                   self.GUI_name)
         else:
-            self.properties = ExtTriggerProperties(unique_ADC_name, idx, self.layout, self.server_proxy, self.plot, self.GUI_name)
+            self.properties = ExtTriggerProperties(unique_ADC_name, idx,
+                                                   self.layout,
+                                                   self.server_proxy,
+                                                   self.plot,
+                                                   self.GUI_name)
 
     def trigger_exists(self):
-        if(self.properties == None):
+        if(self.properties is None):
             return False
         else:
             return True
 
-class TriggerProperties():          # would it be better instead of creating classes ExtTriggerProperties and IntTriggerProperties create and delete threshold trigger conditionally? 
 
-    def __init__(self, unique_ADC_name, ADC_idx, layout, server_proxy, plot, GUI_name, type):
+class TriggerProperties():
+    """would it be better instead of creating classes
+    ExtTriggerProperties and IntTriggerProperties create and delete
+    threshold trigger conditionally?"""
+
+    def __init__(self, unique_ADC_name, ADC_idx, layout, server_proxy,
+                 plot, GUI_name, type):
         self.ADC_idx = ADC_idx
         self.unique_ADC_name = unique_ADC_name
         self.layout = layout
@@ -73,39 +88,49 @@ class TriggerProperties():          # would it be better instead of creating cla
         else:
             name = 'ExtTrigger '+str(ADC_idx)
 
-        self.button = TriggerEnableButton(name, ADC_idx, unique_ADC_name, server_proxy, type)
-        self.polarity_menu = TriggerPolarity(ADC_idx, unique_ADC_name, server_proxy, type)
-        self.delay_box = TriggerDelay(ADC_idx, unique_ADC_name, server_proxy, type)
-        self.threshold_box = TriggerThreshold(ADC_idx, unique_ADC_name, server_proxy)
+        self.button = TriggerEnableButton(name, ADC_idx,
+                                          unique_ADC_name, server_proxy,
+                                          type)
+        self.polarity_menu = TriggerPolarity(ADC_idx, unique_ADC_name,
+                                             server_proxy, type)
+        self.delay_box = TriggerDelay(ADC_idx, unique_ADC_name,
+                                      server_proxy, type)
+        self.threshold_box = TriggerThreshold(ADC_idx, unique_ADC_name,
+                                              server_proxy)
 
         self.layout.addWidget(self.button)
         self.layout.addWidget(self.polarity_menu)
         self.layout.addWidget(self.delay_box)
 
     def set_active(self, value):
-        self.button.set_active(value) 
-    
+        self.button.set_active(value)
+
     def set_delay(self, delay):
         self.delay_box.set_value(delay)
-    
+
     def set_polarity(self, polarity):
         self.polarity_menu.set_value(polarity)
-    
+
     def set_threshold(self, threshold):
-        try:        
+        try:
             self.threshold_box.set_value(threshold)
         except TypeError:
-            pass    # for external trigger there is not threshold, the value of threshold in that case is 'not_available'
+            pass
+            """for external trigger there is not threshold, the value
+            of threshold in that case is 'not_available'"""
         except Exception as e:
             print(type(e))
-            
+
         try:
             self.plot.trigger.set_value(threshold)
         except AttributeError:
-            pass # for external trigger the plot does not exist
-        except Exception as e: 
-            print("Error: set value of the threshold in the plot " + str(type(e)))
-            print("Error: set value of the threshold in the plot " + str(e))
+            pass
+            """for external trigger the plot does not exist"""
+        except Exception as e:
+            print("Error: set value of the threshold in the plot " +
+                  str(type(e)))
+            print("Error: set value of the threshold in the plot "
+                  + str(e))
 
     def set_params(self, enable, polarity, delay, threshold):
         self.set_active(enable)
@@ -121,13 +146,17 @@ class TriggerProperties():          # would it be better instead of creating cla
 
 
 class ExtTriggerProperties(TriggerProperties):
-    def __init__(self, unique_ADC_name, ADC_idx, layout, server_proxy, plot, GUI_name):
-        super().__init__(unique_ADC_name, ADC_idx, layout, server_proxy, plot, GUI_name, 'external')
+    def __init__(self, unique_ADC_name, ADC_idx, layout, server_proxy,
+                 plot, GUI_name):
+        super().__init__(unique_ADC_name, ADC_idx, layout, server_proxy,
+                         plot, GUI_name, 'external')
 
 
 class IntTriggerProperties(TriggerProperties):
-    def __init__(self, unique_ADC_name, ADC_idx, layout, server_proxy, plot, GUI_name):
-        super().__init__(unique_ADC_name, ADC_idx, layout, server_proxy, plot, GUI_name, 'internal')
+    def __init__(self, unique_ADC_name, ADC_idx, layout, server_proxy,
+                 plot, GUI_name):
+        super().__init__(unique_ADC_name, ADC_idx, layout, server_proxy,
+                         plot, GUI_name, 'internal')
         self.layout.addWidget(self.threshold_box)
 
 
@@ -167,7 +196,7 @@ class TriggersMenu(QMenuBar):
         self.selected_ADC = None
 
     def update_triggers(self):
-        pass 
+        pass
 
     def remove_trigger(self):
         self.trigger_closure.remove_trigger()
@@ -178,7 +207,8 @@ class TriggersMenu(QMenuBar):
 
 class IntTriggersMenu(TriggersMenu):
 
-    def __init__(self, trigger_closure, GUI_trigger_idx, plot, channels):
+    def __init__(self, trigger_closure, GUI_trigger_idx, plot,
+                 channels):
         super().__init__(trigger_closure, GUI_trigger_idx)
         self.plot = plot
         self.channels = channels
@@ -189,13 +219,16 @@ class IntTriggersMenu(TriggersMenu):
         none = self.ADCs_menu.addAction("None")
         none.triggered.connect(self.remove_trigger)
         for channel in self.channels:
-            if channel.properties != None:
-                chan = self.ADCs_menu.addAction("Channel: " + str(channel.channel_count)) 
+            if channel.properties is not None:
+                chan = self.ADCs_menu.addAction("Channel: " +
+                                                str(channel.
+                                                    channel_count))
                 chan.triggered.connect(self.select_trigger)
                 self.actions.append(chan)
-        if self.trigger_closure.properties != None:
-            self.add_trigger()   # this is done in case the ADC connected to the channel on  which I trigger changes 
-
+        if self.trigger_closure.properties is not None:
+            self.add_trigger()
+            """this is done in case the ADC connected to the channel on
+            which I trigger changes """
 
     def select_trigger(self):
         str_trigg = self.sender().text()
@@ -204,12 +237,16 @@ class IntTriggersMenu(TriggersMenu):
 
     def add_trigger(self):
         self.remove_trigger()
-        selected_ADC = self.channels[self.GUI_channel_idx].properties.unique_ADC_name 
-        ADC_idx = self.channels[self.GUI_channel_idx].properties.idx 
-        self.trigger_closure.set_trigger_properties(selected_ADC, ADC_idx)
+        selected_ADC = self.channels[self.GUI_channel_idx].properties.\
+            unique_ADC_name
+        ADC_idx = self.channels[self.GUI_channel_idx].properties.idx
+        self.trigger_closure.set_trigger_properties(selected_ADC,
+                                                    ADC_idx)
         self.plot.add_trigger(self.GUI_channel_idx)
         proxy = get_proxy(self.trigger_closure.server_proxy.proxy_addr)
-        proxy.add_trigger('internal', selected_ADC, ADC_idx, self.trigger_closure.GUI_name)
+        proxy.add_trigger('internal', selected_ADC, ADC_idx,
+                          self.trigger_closure.GUI_name)
+
 
 class ExtTriggersMenu(TriggersMenu):
 
@@ -236,7 +273,8 @@ class ExtTriggersMenu(TriggersMenu):
         self.remove_trigger()
         self.trigger_closure.set_trigger_properties(self.selected_ADC)
         proxy = get_proxy(self.trigger_closure.server_proxy.proxy_addr)
-        proxy.add_trigger('external', self.selected_ADC, 0, self.trigger_closure.GUI_name)
+        proxy.add_trigger('external', self.selected_ADC, 0,
+                          self.trigger_closure.GUI_name)
 
 
 class TriggerLayout(QVBoxLayout):
@@ -247,10 +285,10 @@ class TriggerLayout(QVBoxLayout):
         self.menu_type = menu_type
         self.addWidget(self.menu_type)
         self.ADCs = {}
-        self.trigger= None
+        self.trigger = None
 
     def set_menu(self, menu):
-        if self.menu != None:
+        if self.menu is not None:
             self.menu.deleteLater()
         self.menu = menu
         self.addWidget(self.menu)
@@ -265,36 +303,42 @@ class TriggerThreshold(Box):
         self.idx = idx
         self.box.setMinimum(-5000)
         self.box.setMaximum(4999)
- 
+
     def value_change(self):
-        threshold = self.box.value()    #in mV
+        threshold = self.box.value()   # in mV
         proxy = get_proxy(self.server_proxy.proxy_addr)
-        proxy.set_ADC_parameter('internal_trigger_threshold', threshold, self.unique_ADC_name, self.idx)
+        proxy.set_ADC_parameter('internal_trigger_threshold', threshold,
+                                self.unique_ADC_name, self.idx)
 
 
 class TriggerEnableButton(Button):
 
-    def __init__(self, button_name, idx, unique_ADC_name, server_proxy, type):
+    def __init__(self, button_name, idx, unique_ADC_name, server_proxy,
+                 type):
         super().__init__(button_name, idx, unique_ADC_name)
         self.server_proxy = server_proxy
         self.type = type
-    
+
     def action(self):
         proxy = get_proxy(self.server_proxy.proxy_addr)
-        proxy.set_ADC_parameter(self.type + '_trigger_enable', not self.isChecked(), self.unique_ADC_name, self.idx)
+        proxy.set_ADC_parameter(self.type + '_trigger_enable',
+                                not self.isChecked(),
+                                self.unique_ADC_name, self.idx)
 
 
 class TriggerPolarity(TriggerPolarity):
-    
+
     def __init__(self, idx, unique_ADC_name, server_proxy, type):
         super().__init__(idx, unique_ADC_name)
         self.server_proxy = server_proxy
         self.type = type
-    
+
     def action(self):
         polarity_str = self.sender().text()
         proxy = get_proxy(self.server_proxy.proxy_addr)
-        proxy.set_ADC_parameter(self.type + '_trigger_polarity', int(polarity_str), self.unique_ADC_name, self.idx)
+        proxy.set_ADC_parameter(self.type + '_trigger_polarity',
+                                int(polarity_str), self.unique_ADC_name,
+                                self.idx)
 
 
 class TriggerDelay(Box):
@@ -305,10 +349,9 @@ class TriggerDelay(Box):
         self.type = type
         self.box.setMinimum(0)
         self.box.setMaximum(65535)
-      
+
     def value_change(self):
-        delay= self.box.value()
+        delay = self.box.value()
         proxy = get_proxy(self.server_proxy.proxy_addr)
-        proxy.set_ADC_parameter(self.type + '_trigger_delay', delay, self.unique_ADC_name, self.idx)
-
-
+        proxy.set_ADC_parameter(self.type + '_trigger_delay', delay,
+                                self.unique_ADC_name, self.idx)
