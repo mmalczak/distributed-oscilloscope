@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1167</width>
+    <width>1500</width>
     <height>1000</height>
    </rect>
   </property>
@@ -19,8 +19,8 @@
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>891</width>
-      <height>611</height>
+      <width>1181</width>
+      <height>651</height>
      </rect>
     </property>
    </widget>
@@ -28,9 +28,9 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>660</y>
-      <width>861</width>
-      <height>221</height>
+      <y>680</y>
+      <width>1181</width>
+      <height>211</height>
      </rect>
     </property>
     <layout class="QHBoxLayout" name="inputs_layout"/>
@@ -38,8 +38,8 @@
    <widget class="QWidget" name="verticalLayoutWidget_2">
     <property name="geometry">
      <rect>
-      <x>920</x>
-      <y>10</y>
+      <x>1330</x>
+      <y>0</y>
       <width>160</width>
       <height>80</height>
      </rect>
@@ -49,8 +49,8 @@
    <widget class="QWidget" name="verticalLayoutWidget_3">
     <property name="geometry">
      <rect>
-      <x>920</x>
-      <y>110</y>
+      <x>1330</x>
+      <y>100</y>
       <width>160</width>
       <height>80</height>
      </rect>
@@ -63,7 +63,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1167</width>
+     <width>1500</width>
      <height>22</height>
     </rect>
    </property>
