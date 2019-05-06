@@ -33,7 +33,7 @@
       <height>221</height>
      </rect>
     </property>
-    <layout class="QHBoxLayout" name="ADC_Lay"/>
+    <layout class="QHBoxLayout" name="inputs_layout"/>
    </widget>
    <widget class="QWidget" name="verticalLayoutWidget_2">
     <property name="geometry">

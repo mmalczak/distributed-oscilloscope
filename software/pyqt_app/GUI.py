@@ -23,14 +23,14 @@ class GUI_Class:
         self.layouts = []
         self.server_proxy = Proxy()
         for count in range(self.number_of_GUI_triggers):
-            self.triggers.append(TriggerClosure(self.ui.ADC_Lay,
+            self.triggers.append(TriggerClosure(self.ui.inputs_layout,
                                                 self.server_proxy,
                                                 self.plot,
                                                 self.GUI_name, count,
                                                 self.channels,
                                                 self.available_ADCs))
         for count in range(self.number_of_GUI_channels):
-            self.channels.append(ChannelClosure(self.ui.ADC_Lay,
+            self.channels.append(ChannelClosure(self.ui.inputs_layout,
                                                 self.server_proxy,
                                                 self.plot,
                                                 self.GUI_name, count,

@@ -5,14 +5,14 @@ from proxy import *
 
 class TriggerClosure:
 
-    def __init__(self, ADC_Lay, server_proxy, plot, GUI_name,
+    def __init__(self, inputs_layout, server_proxy, plot, GUI_name,
                  GUI_trigger_idx, channels, available_ADCs):
         self.GUI_trigger_idx = GUI_trigger_idx
         self.menu_type = TriggerTypeMenu(self)
         self.layout = TriggerLayout(self.menu_type)
         self.plot = plot
         self.GUI_name = GUI_name
-        ADC_Lay.addLayout(self.layout)
+        inputs_layout.addLayout(self.layout)
         self.properties = None
         self.server_proxy = server_proxy
         self.trigger_type = 'internal'
