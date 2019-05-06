@@ -65,7 +65,7 @@ def main():
     """So that I can list all widgets"""
     win.threading_widget = threading_widget
     """I want the thread to be destroyed when I close the window"""
-    threading_widget.setParent(win) i
+    threading_widget.setParent(win)
     """remove widgets after close"""
 
     zeroconf_service = None
