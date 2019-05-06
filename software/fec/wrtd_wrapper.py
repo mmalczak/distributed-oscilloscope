@@ -420,7 +420,8 @@ class WRTD_wrapper():
 
     @encode_arguments
     def set_attr_tstamp(self, rep_cap_id, id, value):
-        self.wrtd_set_attr_tstamp(self.wrtd_p, rep_cap_id, id, value)
+        tstamp = wrtd_tstamp(value["seconds"], value["ns"], value["frac"])
+        self.wrtd_set_attr_tstamp(self.wrtd_p, rep_cap_id, id, byref(tstamp))
 
     @encode_arguments
     def get_attr_string(self, rep_cap_id, id, value_buf_size):
@@ -502,19 +503,3 @@ class WRTD_wrapper():
                           "")
         else:
             return ret
-
-
-"""############################### NOT API #########################"""
-
-
-def ts_add_ps(ts, ps):
-    ps = int(ps)
-    frac = ps * 1 << 32
-    frac = frac // 1000
-    frac_temp = ts.frac + frac
-
-    ns_temp = ts.ns + frac_temp // 2**32
-    ts.frac = int(frac_temp % 2**32)
-
-    ts.seconds = int(ts.seconds + ns_temp // 1e9)
-    ts.ns = int(ns_temp % 1e9)
