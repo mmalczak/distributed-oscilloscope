@@ -42,8 +42,7 @@ class GUI_Class:
         ui.horizontal_settings_layout.addWidget(self.presamples)
         ui.horizontal_settings_layout.addWidget(self.postsamples)
 
-        self.single_acquisition = SingleAcquisitionButton(self.
-                                                          server_proxy,
+        self.single_acquisition = SingleAcquisitionButton(self.server_proxy,
                                                           self.GUI_name)
         self.ui.run_control_layout.addWidget(self.single_acquisition)
 
@@ -72,12 +71,13 @@ class GUI_Class:
 
     def update_data(self, data, pre_post_samples, offsets):
         for channel_idx_str, channel_data in data.items():
-            [presamples, postsamples] =\
-                pre_post_samples[channel_idx_str]
+            [presamples, postsamples] = pre_post_samples[channel_idx_str]
             offset = int(offsets[channel_idx_str])*4/5
             offset = int(offset)
-            presamples = presamples + offset
-            postsamples = postsamples - offset
+#            if(offset>10 and offset < 14):
+#                offset = 12
+            presamples = presamples - offset
+            postsamples = postsamples + offset
             print('presamples: ' + str(presamples))
             print('postsamples: ' + str(postsamples))
             print('offsets: ' + str(offsets))
