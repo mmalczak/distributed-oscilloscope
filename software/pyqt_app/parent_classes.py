@@ -12,6 +12,11 @@ class Button(QtGui.QPushButton):
         self.unique_ADC_name = unique_ADC_name
         self.setCheckable(True)
         self.clicked.connect(self.action)
+        """If unique_ADC_name is None it means that the certain channel
+        is no enabled therefore the widget is disabled"""
+        if(unique_ADC_name is None):
+            self.setEnabled(False)
+
 
     def action(self):
         pass
@@ -33,6 +38,11 @@ class Menu(QMenuBar):
         self.idx = idx
         self.unique_ADC_name = unique_ADC_name
         """self.setMaximumSize(130, 30)"""
+        """If unique_ADC_name is None it means that the certain channel
+        is no enabled therefore the widget is disabled"""
+        if(unique_ADC_name is None):
+            self.setEnabled(False)
+
 
 
 class Box(QtGui.QWidget):
@@ -50,6 +60,11 @@ class Box(QtGui.QWidget):
         self.layout.addWidget(self.label)
         self.setLayout(self.layout)
         self.box.editingFinished.connect(self.value_change)
+        """If unique_ADC_name is None it means that the certain channel
+        is no enabled therefore the widget is disabled"""
+        if(unique_ADC_name is None):
+            self.setEnabled(False)
+
 
     def value_change(self):
         pass

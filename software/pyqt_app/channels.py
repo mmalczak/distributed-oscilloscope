@@ -177,8 +177,6 @@ class ChannelEnableButton(Button):
     def __init__(self, button_name, idx, unique_ADC_name, server_proxy,
                  plot, GUI_name):
         super().__init__(button_name, idx, unique_ADC_name)
-        if(unique_ADC_name is None):
-            self.set_active(False)
         self.server_proxy = server_proxy
         self.plot = plot
         self.GUI_name = GUI_name  # probably to be removed
@@ -191,8 +189,6 @@ class ChannelRange(Menu):
 
     def __init__(self, idx, unique_ADC_name, server_proxy):
         super().__init__(idx, unique_ADC_name)
-        #if(unique_ADC_name is None):
-        #    self.setEnabled(False)
         self.server_proxy = server_proxy
         self.range = self.addMenu("Range")
         range_10V = self.range.addAction("10V")
