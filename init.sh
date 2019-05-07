@@ -1,3 +1,7 @@
+cd dependencies/drivers/
+sh install_adc_drivers.sh
+cd ../../
+
 MT_CPU_RESTART="/home/Projects/distributed_oscilloscope/dependencies/mock-turtle/software/tools/mockturtle-cpu-restart"
 
 #WRTD_CONFIG="/home/dlamprid/wrtd/repos/wrtd/software/tools/wrtd-config"
