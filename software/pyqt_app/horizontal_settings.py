@@ -4,7 +4,7 @@ from proxy import *
 
 class Presamples(Box):
     def __init__(self, server_proxy, GUI_name):
-        super().__init__(0, None, "Presamples")
+        super().__init__(0, "No_ADC", "Presamples")
         self.box.setMinimum(0)
         self.box.setMaximum(1000000)
         """TODO check how many pre and postsamples maximum"""
@@ -19,7 +19,7 @@ class Presamples(Box):
 
 class Postsamples(Box):
     def __init__(self, server_proxy, GUI_name):
-        super().__init__(0, None, "Postsamples")
+        super().__init__(0, "No_ADC", "Postsamples")
         self.box.setMinimum(0)
         self.box.setMaximum(1000000)
         """TODO check how many pre and postsamples maximum"""
