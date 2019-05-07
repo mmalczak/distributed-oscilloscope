@@ -51,7 +51,12 @@ class ChannelClosure:
             self.plot.remove_channel(self.channel_count)
             proxy = get_proxy(self.server_proxy.proxy_addr)
             proxy.remove_channel(self.channel_count, self.GUI_name)
-        self.properties = None
+        """When the channel is removed the widgets should remain for 
+        the user, but they are disabled.
+        The widgets are deleted and new are created so that they
+        contain the information that they are not connected to any of
+        the ADCs"""
+        self.set_channel_properties(None, 0)
 
     def channel_exists(self):
         return self.properties is not None
