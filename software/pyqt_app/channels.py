@@ -121,11 +121,11 @@ class ChannelsMenu(QMenuBar):
         super().__init__()
         self.channel_count = channel_count
         self.channel_closure = channel_closure
-        self.ADCs_menu = self.addMenu("ADCs")
+        self.ADCs_menu = self.addMenu("Select input")
         self.ADCs = {}
         self.selected_ADC = None
-        none = self.ADCs_menu.addAction("None")
-        none.triggered.connect(self.remove_channel)
+        disconnect = self.ADCs_menu.addAction("Disconnect")
+        disconnect.triggered.connect(self.remove_channel)
         self.plot = plot
 
     def add_available_ADC(self, name, number_of_channels):
@@ -147,6 +147,7 @@ class ChannelsMenu(QMenuBar):
             self.remove_channel()
         str_chan = self.sender().text()
         idx = int(str_chan.split()[1])
+        self.ADCs_menu.setTitle(self.selected_ADC + " " + str_chan)
         self.channel_closure.set_channel_properties(self.selected_ADC,
                                                     idx)
         self.plot.add_channel(self.channel_count)
@@ -155,6 +156,7 @@ class ChannelsMenu(QMenuBar):
                           self.channel_closure.GUI_name)
 
     def remove_channel(self):
+        self.ADCs_menu.setTitle("Select input")
         self.channel_closure.remove_channel()
 
 
