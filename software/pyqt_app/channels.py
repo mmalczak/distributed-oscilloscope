@@ -8,18 +8,23 @@ DBG = False
 
 class ChannelClosure:
 
-    def __init__(self, inputs_layout, server_proxy, plot, GUI_name,
-                 channel_count, update_triggers):
+    def __init__(self, inputs_layout, ver_set_layout, server_proxy, 
+                 plot, GUI_name, channel_count, update_triggers):
         self.menu = ChannelsMenu(self, channel_count, plot)
         self.channel_count = channel_count
-        self.layout = ChannelLayout(self.menu)
+        self.chan_in_layout = ChannelInputsLayout(self.menu)
+        self.chan_set_layout = ChannelSettingsLayout()
         self.plot = plot
         self.GUI_name = GUI_name
-        inputs_layout.addLayout(self.layout)
+        inputs_layout.addLayout(self.chan_in_layout)
+        ver_set_layout.addLayout(self.chan_set_layout)
         self.properties = None
         self.server_proxy = server_proxy
-        self.update_triggers = update_triggers
         """updates the list of channels for the trigger"""
+        self.update_triggers = update_triggers
+        """adds layout to that is shown to the user, nothing there 
+        should be active, None is unique_ADC_name"""
+        self.set_channel_properties(None, 0)
 
     def add_available_ADC(self, name, number_of_channels):
         self.menu.add_available_ADC(name, number_of_channels)
@@ -32,17 +37,21 @@ class ChannelClosure:
 
     def set_channel_properties(self, unique_ADC_name, idx):
         self.properties = ChannelProperties(unique_ADC_name, idx,
-                                            self.layout,
+                                            self.chan_set_layout,
                                             self.server_proxy,
                                             self.plot,
                                             self.GUI_name, self)
         self.update_triggers()
 
     def remove_channel(self):
+        """unique_ADC_name is None if there is actually no channel,
+        just the layout that is shown to the user. In that case
+        just the properties should be removed"""
+        if self.properties.unique_ADC_name is not None:
+            self.plot.remove_channel(self.channel_count)
+            proxy = get_proxy(self.server_proxy.proxy_addr)
+            proxy.remove_channel(self.channel_count, self.GUI_name)
         self.properties = None
-        self.plot.remove_channel(self.channel_count)
-        proxy = get_proxy(self.server_proxy.proxy_addr)
-        proxy.remove_channel(self.channel_count, self.GUI_name)
 
     def channel_exists(self):
         return self.properties is not None
@@ -50,11 +59,11 @@ class ChannelClosure:
 
 class ChannelProperties:
 
-    def __init__(self, unique_ADC_name, idx, layout, server_proxy,
-                 plot, GUI_name, channel_closure):
+    def __init__(self, unique_ADC_name, idx, chan_set_layout, 
+                 server_proxy, plot, GUI_name, channel_closure):
         self.idx = idx
         self.unique_ADC_name = unique_ADC_name
-        self.layout = layout
+        self.chan_set_layout = chan_set_layout
         self.server_proxy = server_proxy
         self.channel_closure = channel_closure
         self.button = ChannelEnableButton('Channel'+str(idx), idx,
@@ -69,11 +78,11 @@ class ChannelProperties:
         self.saturation_box = ChannelSaturation(idx, unique_ADC_name,
                                                 server_proxy)
 
-        self.layout.addWidget(self.button)
-        self.layout.addWidget(self.range_menu)
-        self.layout.addWidget(self.termination_menu)
-        self.layout.addWidget(self.offset_box)
-        self.layout.addWidget(self.saturation_box)
+        self.chan_set_layout.addWidget(self.button)
+        self.chan_set_layout.addWidget(self.range_menu)
+        self.chan_set_layout.addWidget(self.termination_menu)
+        self.chan_set_layout.addWidget(self.offset_box)
+        self.chan_set_layout.addWidget(self.saturation_box)
 
     def set_button_active(self, active):
         self.button.set_active(active)
@@ -149,7 +158,7 @@ class ChannelsMenu(QMenuBar):
         self.channel_closure.remove_channel()
 
 
-class ChannelLayout(QVBoxLayout):
+class ChannelInputsLayout(QVBoxLayout):
 
     def __init__(self, menu):
         super().__init__()
@@ -158,12 +167,18 @@ class ChannelLayout(QVBoxLayout):
         self.ADCs = {}
         self.channel = None
 
+class ChannelSettingsLayout(QVBoxLayout):
+
+    def __init__(self):
+        super().__init__()
 
 class ChannelEnableButton(Button):
 
     def __init__(self, button_name, idx, unique_ADC_name, server_proxy,
                  plot, GUI_name):
         super().__init__(button_name, idx, unique_ADC_name)
+        if(unique_ADC_name is None):
+            self.set_active(False)
         self.server_proxy = server_proxy
         self.plot = plot
         self.GUI_name = GUI_name  # probably to be removed
@@ -176,6 +191,8 @@ class ChannelRange(Menu):
 
     def __init__(self, idx, unique_ADC_name, server_proxy):
         super().__init__(idx, unique_ADC_name)
+        #if(unique_ADC_name is None):
+        #    self.setEnabled(False)
         self.server_proxy = server_proxy
         self.range = self.addMenu("Range")
         range_10V = self.range.addAction("10V")

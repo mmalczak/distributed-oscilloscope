@@ -239,13 +239,14 @@ class IntTriggersMenu(TriggersMenu):
         self.remove_trigger()
         selected_ADC = self.channels[self.GUI_channel_idx].properties.\
             unique_ADC_name
-        ADC_idx = self.channels[self.GUI_channel_idx].properties.idx
-        self.trigger_closure.set_trigger_properties(selected_ADC,
-                                                    ADC_idx)
-        self.plot.add_trigger(self.GUI_channel_idx)
-        proxy = get_proxy(self.trigger_closure.server_proxy.proxy_addr)
-        proxy.add_trigger('internal', selected_ADC, ADC_idx,
-                          self.trigger_closure.GUI_name)
+        if selected_ADC is not None: 
+            ADC_idx = self.channels[self.GUI_channel_idx].properties.idx
+            self.trigger_closure.set_trigger_properties(selected_ADC,
+                                                        ADC_idx)
+            self.plot.add_trigger(self.GUI_channel_idx)
+            proxy = get_proxy(self.trigger_closure.server_proxy.proxy_addr)
+            proxy.add_trigger('internal', selected_ADC, ADC_idx,
+                              self.trigger_closure.GUI_name)
 
 
 class ExtTriggersMenu(TriggersMenu):

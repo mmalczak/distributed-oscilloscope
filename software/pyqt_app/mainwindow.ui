@@ -19,7 +19,7 @@
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>1181</width>
+      <width>1071</width>
       <height>651</height>
      </rect>
     </property>
@@ -28,9 +28,9 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>680</y>
-      <width>1181</width>
-      <height>211</height>
+      <y>720</y>
+      <width>1071</width>
+      <height>171</height>
      </rect>
     </property>
     <layout class="QHBoxLayout" name="inputs_layout"/>
@@ -56,6 +56,17 @@
      </rect>
     </property>
     <layout class="QVBoxLayout" name="run_control_layout"/>
+   </widget>
+   <widget class="QWidget" name="horizontalLayoutWidget_2">
+    <property name="geometry">
+     <rect>
+      <x>1090</x>
+      <y>680</y>
+      <width>401</width>
+      <height>211</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="vertical_settings_layout"/>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">

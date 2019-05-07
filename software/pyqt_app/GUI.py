@@ -1,6 +1,6 @@
 from proxy import *
 from plot import *
-from channels import *
+from channels import ChannelClosure
 from triggers import *
 from horizontal_settings import *
 from run_control import *
@@ -22,20 +22,28 @@ class GUI_Class:
         self.triggers = []
         self.layouts = []
         self.server_proxy = Proxy()
+
         for count in range(self.number_of_GUI_triggers):
-            self.triggers.append(TriggerClosure(self.ui.inputs_layout,
-                                                self.server_proxy,
-                                                self.plot,
-                                                self.GUI_name, count,
-                                                self.channels,
-                                                self.available_ADCs))
+            trig_clos = TriggerClosure(self.ui.inputs_layout,
+                                       self.server_proxy,
+                                       self.plot,
+                                       self.GUI_name,
+                                       count,
+                                       self.channels,
+                                       self.available_ADCs)
+
+            self.triggers.append(trig_clos)
+
         for count in range(self.number_of_GUI_channels):
-            self.channels.append(ChannelClosure(self.ui.inputs_layout,
-                                                self.server_proxy,
-                                                self.plot,
-                                                self.GUI_name, count,
-                                                self.triggers[0].
-                                                update_triggers))
+            chan_clos = ChannelClosure(self.ui.inputs_layout,
+                                       self.ui.vertical_settings_layout,
+                                       self.server_proxy,
+                                       self.plot,
+                                       self.GUI_name,
+                                       count,
+                                       self.triggers[0].update_triggers)
+
+            self.channels.append(chan_clos)
 
         self.presamples = Presamples(self.server_proxy, self.GUI_name)
         self.postsamples = Postsamples(self.server_proxy, self.GUI_name)
