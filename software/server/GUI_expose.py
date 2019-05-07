@@ -15,11 +15,9 @@ def stop_and_retrieve_acquisition(func):
             except:
                 pass
         try:
-            self.osc.stop_acquisition_if_GUI_contains_ADC(
-                                                    unique_ADC_name)
+            self.osc.stop_acquisition_if_GUI_contains_ADC(unique_ADC_name)
             func(self, *args, **kwargs)
-            self.osc.retrieve_acquisition_if_GUI_contains_ADC(
-                                                    unique_ADC_name)
+            self.osc.retrieve_acquisition_if_GUI_contains_ADC(unique_ADC_name)
         except Exception as e:
             print(type(e))
             print(e)
@@ -59,8 +57,7 @@ class ThreadGUI_Expose(threading.Thread):
     def remove_channel(self, oscilloscope_channel_idx, GUI_name):
         self.osc.GUIs[GUI_name].remove_channel(oscilloscope_channel_idx)
 
-    def add_trigger(self, type, unique_ADC_name, ADC_trigger_idx,
-                    GUI_name):
+    def add_trigger(self, type, unique_ADC_name, ADC_trigger_idx, GUI_name):
         self.osc.GUIs[GUI_name].add_trigger(type, unique_ADC_name,
                                             ADC_trigger_idx)
         try:
@@ -73,9 +70,10 @@ class ThreadGUI_Expose(threading.Thread):
     def remove_trigger(self, GUI_name):
         trigger = self.osc.GUIs[GUI_name].trigger
         try:
-            self.send_RPC_request('set_' + trigger.type +
-                                  '_trigger_enable',
-                                  trigger.unique_ADC_name, 0,
+            function_name = 'set_' + trigger.type + '_trigger_enable'
+            self.send_RPC_request(function_name,
+                                  trigger.unique_ADC_name,
+                                  0,
                                   trigger.ADC_trigger_idx)
             proxy = get_proxy(self.osc.available_ADCs[
                                 trigger.unique_ADC_name].ADC_proxy_addr)
@@ -91,9 +89,8 @@ class ThreadGUI_Expose(threading.Thread):
         channel_ranges = {'10V': 10, '1V': 1, '100mV': 100}
         ADC_proxy_addr = self.osc.available_ADCs[unique_ADC_name].\
             ADC_proxy_addr
-        get_proxy(ADC_proxy_addr).\
-            set_channel_range(channel_ranges[range_value_str],
-                              channel_idx)
+        proxy = get_proxy(ADC_proxy_addr)
+        proxy.set_channel_range(channel_ranges[range_value_str], channel_idx)
         curr_threshold = self.osc.available_ADCs[unique_ADC_name].\
             internal_triggers[channel_idx].threshold
         curr_range = self.osc.available_ADCs[unique_ADC_name].\
@@ -111,9 +108,8 @@ class ThreadGUI_Expose(threading.Thread):
                                   unique_ADC_name, 0, channel_idx)
             print("Internal trigger disabled: value out of range")
             for GUI_name, GUI in self.osc.GUIs.items():
-                get_proxy(GUI.GUI_proxy_addr).print("Internal trigger\
-                                                     disabled: value\
-                                                     out of range")
+                proxy = get_proxy(GUI.GUI_proxy_addr)
+                proxy.print("Internal trigger disabled: value out of range")
         else:
             self.send_RPC_request('set_internal_trigger_threshold',
                                   unique_ADC_name, threshold,
@@ -176,7 +172,8 @@ class ThreadGUI_Expose(threading.Thread):
         self.osc.GUIs[GUI_name].set_postsamples(value)
 
     def run(self):
-        self.server = SimpleXMLRPCServer(('', 8000), allow_none=True,
+        self.server = SimpleXMLRPCServer(('', 8000),
+                                         allow_none=True,
                                          logRequests=False)
         print("Listening on port 8000...")
 
@@ -190,14 +187,10 @@ class ThreadGUI_Expose(threading.Thread):
         self.server.register_function(self.add_service, "add_service")
         self.server.register_function(self.add_channel, "add_channel")
         self.server.register_function(self.add_trigger, "add_trigger")
-        self.server.register_function(self.remove_channel,
-                                      "remove_channel")
-        self.server.register_function(self.remove_trigger,
-                                      "remove_trigger")
-        self.server.register_function(self.set_presamples,
-                                      "set_presamples")
-        self.server.register_function(self.set_postsamples,
-                                      "set_postsamples")
+        self.server.register_function(self.remove_channel, "remove_channel")
+        self.server.register_function(self.remove_trigger, "remove_trigger")
+        self.server.register_function(self.set_presamples, "set_presamples")
+        self.server.register_function(self.set_postsamples, "set_postsamples")
         self.server.register_function(self.set_channel_range,
                                       "set_channel_range")
         self.server.register_function(self.set_ADC_parameter,
