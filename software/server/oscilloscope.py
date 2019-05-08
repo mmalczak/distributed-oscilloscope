@@ -19,8 +19,8 @@ class Oscilloscope():
 
     def remove_available_ADC(self, unique_ADC_name):
         for name_GUI, GUI in self.GUIs.items():
-            get_proxy(GUI.GUI_proxy_addr).\
-                remove_available_ADC(unique_ADC_name)
+            proxy = get_proxy(GUI.GUI_proxy_addr)
+            proxy.remove_available_ADC(unique_ADC_name)
         """wait until there are no more users"""
         del self.available_ADCs[unique_ADC_name]
 

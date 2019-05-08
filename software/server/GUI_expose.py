@@ -50,7 +50,8 @@ class ThreadGUI_Expose(threading.Thread):
 
     def add_channel(self, oscilloscope_channel_idx, unique_ADC_name,
                     ADC_channel_idx, GUI_name):
-        self.osc.GUIs[GUI_name].add_channel(oscilloscope_channel_idx,
+        GUI = self.osc.GUIs[GUI_name]
+        GUI.add_channel(oscilloscope_channel_idx,
                                             unique_ADC_name,
                                             ADC_channel_idx)
 
