@@ -57,6 +57,7 @@ class ChannelClosure:
         contain the information that they are not connected to any of
         the ADCs"""
         self.set_channel_properties(None, 0)
+        self.menu.ADCs_menu.setTitle("Select input")
 
     def channel_exists(self):
         return self.properties is not None
@@ -158,7 +159,6 @@ class ChannelsMenu(QMenuBar):
                           self.channel_closure.GUI_name)
 
     def remove_channel(self):
-        self.ADCs_menu.setTitle("Select input")
         self.channel_closure.remove_channel()
 
 
