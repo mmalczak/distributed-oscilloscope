@@ -61,7 +61,7 @@ class ChannelClosure:
         self.menu.ADCs_menu.setTitle("Select input")
 
     def channel_exists(self):
-        return self.properties is not None
+        return self.properties.unique_ADC_name is not None
 
 
 class ChannelProperties:
