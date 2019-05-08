@@ -23,6 +23,16 @@ class Oscilloscope():
             proxy.remove_available_ADC(unique_ADC_name)
         """wait until there are no more users"""
         del self.available_ADCs[unique_ADC_name]
+        channels_to_delete = []
+        for GUI_name, GUI in self.GUIs.items():
+            for channel_idx, channel in GUI.channels.items():
+                if channel.unique_ADC_name == unique_ADC_name:
+                    channels_to_delete.append(channel_idx)
+            for channel_idx in channels_to_delete:
+                GUI.remove_channel(channel_idx)
+
+
+
 
     def register_GUI(self, GUI_name, GUI_proxy_addr):
         GUI_ = GUI(self.available_ADCs, GUI_name, GUI_proxy_addr)
