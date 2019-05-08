@@ -8,7 +8,7 @@ DBG = False
 
 class ChannelClosure:
 
-    def __init__(self, inputs_layout, ver_set_layout, server_proxy, 
+    def __init__(self, inputs_layout, ver_set_layout, server_proxy,
                  plot, GUI_name, channel_count, update_triggers):
         self.menu = ChannelsMenu(self, channel_count, plot)
         self.channel_count = channel_count
@@ -22,7 +22,7 @@ class ChannelClosure:
         self.server_proxy = server_proxy
         """updates the list of channels for the trigger"""
         self.update_triggers = update_triggers
-        """adds layout to that is shown to the user, nothing there 
+        """adds layout to that is shown to the user, nothing there
         should be active, None is unique_ADC_name"""
         self.set_channel_properties(None, 0)
 
@@ -51,7 +51,7 @@ class ChannelClosure:
             self.plot.remove_channel(self.channel_count)
             proxy = get_proxy(self.server_proxy.proxy_addr)
             proxy.remove_channel(self.channel_count, self.GUI_name)
-        """When the channel is removed the widgets should remain for 
+        """When the channel is removed the widgets should remain for
         the user, but they are disabled.
         The widgets are deleted and new are created so that they
         contain the information that they are not connected to any of
@@ -64,22 +64,19 @@ class ChannelClosure:
 
 class ChannelProperties:
 
-    def __init__(self, unique_ADC_name, idx, chan_set_layout, 
+    def __init__(self, unique_ADC_name, idx, chan_set_layout,
                  server_proxy, plot, GUI_name, channel_closure):
         self.idx = idx
         self.unique_ADC_name = unique_ADC_name
         self.chan_set_layout = chan_set_layout
         self.server_proxy = server_proxy
         self.channel_closure = channel_closure
-        self.button = ChannelEnableButton('Channel'+str(idx), idx,
-                                          unique_ADC_name, server_proxy,
-                                          plot, GUI_name)
-        self.range_menu = ChannelRange(idx, unique_ADC_name,
-                                       server_proxy)
+        self.button = ChannelEnableButton(idx, unique_ADC_name,
+                                          server_proxy, plot, GUI_name)
+        self.range_menu = ChannelRange(idx, unique_ADC_name, server_proxy)
         self.termination_menu = ChannelTermination(idx, unique_ADC_name,
                                                    server_proxy)
-        self.offset_box = ChannelOffset(idx, unique_ADC_name,
-                                        server_proxy)
+        self.offset_box = ChannelOffset(idx, unique_ADC_name, server_proxy)
         self.saturation_box = ChannelSaturation(idx, unique_ADC_name,
                                                 server_proxy)
 
@@ -181,9 +178,9 @@ class ChannelSettingsLayout(QVBoxLayout):
 
 class ChannelEnableButton(Button):
 
-    def __init__(self, button_name, idx, unique_ADC_name, server_proxy,
+    def __init__(self, idx, unique_ADC_name, server_proxy,
                  plot, GUI_name):
-        super().__init__(button_name, idx, unique_ADC_name)
+        super().__init__("Enable", idx, unique_ADC_name)
         self.server_proxy = server_proxy
         self.plot = plot
         self.GUI_name = GUI_name  # probably to be removed
