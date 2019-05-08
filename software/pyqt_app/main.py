@@ -4,7 +4,6 @@ from mainwindow import Ui_MainWindow
 import os
 import zeroconf
 import argparse
-import random
 from PyQt5 import QtGui
 from server_expose import *
 from proxy import *
@@ -54,8 +53,8 @@ def main():
         port = int(args.port[0])
 
     addr = os.popen("ifconfig| grep inet").read().split()[1]
-    GUI_idx = str(random.random())
-    GUI_name = "GUI" + GUI_idx + "._http._tcp.local."
+    GUI_idx = addr + "_" + str(port)
+    GUI_name = "GUI" + "_" + GUI_idx + "._http._tcp.local."
     app = QApplication([])
     win = MainWindow()
     GUI = GUI_Class(win.ui, GUI_name)
