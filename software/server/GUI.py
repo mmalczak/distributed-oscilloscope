@@ -30,7 +30,6 @@ class GUI():
     def contains_ADC(self, unique_ADC_name):
         return unique_ADC_name in self.ADCs_used
 
-    @stop_and_retrieve_acquisition
     def add_channel(self, oscilloscope_channel_idx, unique_ADC_name,
                     ADC_channel_idx):
         try:
@@ -44,7 +43,6 @@ class GUI():
         self.update_ADCs_used()
         self.update_conf(unique_ADC_name)
 
-    @stop_and_retrieve_acquisition
     def add_trigger(self, type, unique_ADC_name, ADC_trigger_idx):
         trigger = None
         if type == 'internal':   # consider dictionary
@@ -57,12 +55,10 @@ class GUI():
         self.update_ADCs_used()
         self.update_conf(unique_ADC_name)
 
-    @stop_and_retrieve_acquisition
     def remove_channel(self, oscilloscope_channel_idx):
         del self.channels[oscilloscope_channel_idx]
         self.update_ADCs_used()
 
-    @stop_and_retrieve_acquisition
     def remove_trigger(self):
         self.trigger = None
         self.update_ADCs_used()
@@ -169,6 +165,7 @@ class GUI():
         if self.run:
             self.configure_acquisition_ADCs_used()
 
+    @stop_and_retrieve_acquisition
     def update_conf(self, unique_ADC_name):
         ADC = self.available_ADCs[unique_ADC_name]
         ADC.update_conf()
