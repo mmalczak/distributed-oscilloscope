@@ -30,6 +30,11 @@ class GUI():
     def contains_ADC(self, unique_ADC_name):
         return unique_ADC_name in self.ADCs_used
 
+    def remove_available_ADC(self, unique_ADC_name):
+        for channel_idx, channel in self.channels.items():
+            if channel.unique_ADC_name == unique_ADC_name:
+                self.remove_channel(channel_idx)
+
     def add_channel(self, oscilloscope_channel_idx, unique_ADC_name,
                     ADC_channel_idx):
         try:
