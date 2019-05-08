@@ -5,7 +5,7 @@ from triggers import *
 from horizontal_settings import *
 from run_control import *
 import numpy as np
-
+from PyQt5.QtCore import pyqtSlot
 
 class GUI_Class:
 

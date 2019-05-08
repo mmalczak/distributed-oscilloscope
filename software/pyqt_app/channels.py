@@ -73,8 +73,8 @@ class ChannelProperties:
         self.chan_set_layout = chan_set_layout
         self.server_proxy = server_proxy
         self.channel_closure = channel_closure
-        self.button = ChannelEnableButton(idx, unique_ADC_name,
-                                          server_proxy, plot, GUI_name)
+        self.button = ChannelEnableButton(idx, unique_ADC_name, server_proxy,
+                                          plot, GUI_name)
         self.range_menu = ChannelRange(idx, unique_ADC_name, server_proxy)
         self.termination_menu = ChannelTermination(idx, unique_ADC_name,
                                                    server_proxy)
