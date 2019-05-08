@@ -29,11 +29,11 @@ class ChannelClosure:
     def add_available_ADC(self, name, number_of_channels):
         self.menu.add_available_ADC(name, number_of_channels)
 
-    def remove_available_ADC(self, name):
+    def remove_available_ADC(self, name, remote=False):
         self.menu.remove_available_ADC(name)
         if self.channel_exists():
             if(self.properties.unique_ADC_name == name):
-                self.remove_channel()
+                self.remove_channel(remote)
 
     def set_channel_properties(self, unique_ADC_name, idx):
         self.properties = ChannelProperties(unique_ADC_name, idx,
@@ -43,14 +43,15 @@ class ChannelClosure:
                                             self.GUI_name, self)
         self.update_triggers()
 
-    def remove_channel(self):
+    def remove_channel(self, remote=False):
         """unique_ADC_name is None if there is actually no channel,
         just the layout that is shown to the user. In that case
         just the properties should be removed"""
         if self.properties.unique_ADC_name is not None:
             self.plot.remove_channel(self.channel_count)
-            proxy = get_proxy(self.server_proxy.proxy_addr)
-            proxy.remove_channel(self.channel_count, self.GUI_name)
+            if not remote:
+                proxy = get_proxy(self.server_proxy.proxy_addr)
+                proxy.remove_channel(self.channel_count, self.GUI_name)
         """When the channel is removed the widgets should remain for
         the user, but they are disabled.
         The widgets are deleted and new are created so that they

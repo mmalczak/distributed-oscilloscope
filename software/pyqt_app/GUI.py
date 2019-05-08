@@ -71,7 +71,7 @@ class GUI_Class:
         self.available_ADCs.remove(unique_ADC_name)
         """TODO the same for the new layout"""
         for count in range(0, self.number_of_GUI_channels):
-            self.channels[count].remove_available_ADC(unique_ADC_name)
+            self.channels[count].remove_available_ADC(unique_ADC_name, True)
         for count in range(0, self.number_of_GUI_triggers):
             self.triggers[count].remove_trigger()
             self.triggers[count].update_triggers()
