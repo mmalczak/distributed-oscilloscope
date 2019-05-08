@@ -2,7 +2,6 @@ import numpy as np
 import xmlrpc.client
 import zeroconf
 import os
-import random
 import argparse
 import threading
 from ADC import *
@@ -29,8 +28,8 @@ def main():
 
     number_of_channels = 4  # TODO
     addr = os.popen("ifconfig| grep inet").read().split()[1]
-    ADC_idx = str(random.random())
-    ADC_name = "ADC" + ADC_idx + "._http._tcp.local."
+    ADC_idx = addr + '_' +  str(port)
+    ADC_name = 'ADC' + '_' + ADC_idx + '._tcp.local.'
 
     server_proxy = Proxy()
     pci_addr = pci_addr
