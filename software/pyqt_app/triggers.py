@@ -43,11 +43,12 @@ class TriggerClosure:
             self.menu = ExtTriggersMenu(self, self.GUI_trigger_idx)
         self.trig_in_layout.set_menu(self.menu)
 
-    def remove_trigger(self):
+    def remove_trigger(self, remote=False):
         if self.trigger_exists():
             self.plot.remove_trigger()
-            proxy = get_proxy(self.server_proxy.proxy_addr)
-            proxy.remove_trigger(self.GUI_name)
+            if not remote:
+                proxy = get_proxy(self.server_proxy.proxy_addr)
+                proxy.remove_trigger(self.GUI_name)
         self.set_trigger_properties(None, 0)
 
     def set_trigger_properties(self, unique_ADC_name, idx=0):
