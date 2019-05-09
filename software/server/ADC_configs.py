@@ -1,6 +1,6 @@
 class Channel:
 
-    def __init__(self, channel_range, termination, offset, saturation,
+    def __init__(self, channel_range, termination, offset,
                  unique_ADC_name, ADC_channel_idx):
         self.unique_ADC_name = unique_ADC_name
         self.ADC_channel_idx = ADC_channel_idx
@@ -9,7 +9,6 @@ class Channel:
         self.channel_range = self.range_conv[channel_range]
         self.termination = termination
         self.offset = offset
-        self.saturation = saturation
         self.timestamp_and_data = None
 
     def set_channel_range(self, channel_range):
@@ -21,15 +20,10 @@ class Channel:
     def set_offset(self, offset):
         self.offset = offset
 
-    def set_saturation(self, saturation):
-        self.saturation = saturation
-
-    def update_channel_conf(self, channel_range, termination, offset,
-                            saturation):
+    def update_channel_conf(self, channel_range, termination, offset):
         self.channel_range = self.range_conv[channel_range]
         self.termination = termination
         self.offset = offset
-        self.saturation = saturation
 
 
 class Trigger:

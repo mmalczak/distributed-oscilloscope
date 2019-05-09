@@ -214,8 +214,7 @@ class GUI():
             channel_params = {'active': channel.active,
                               'range': channel.channel_range,
                               'termination': channel.termination,
-                              'offset': channel.offset,
-                              'saturation': channel.saturation}
+                              'offset': channel.offset}
             """converting to str because of xmlrpc bug"""
             channel_idx = str(channel_idx)  # remove with XMLRPC
             oscilloscope_channels_params[channel_idx] = channel_params

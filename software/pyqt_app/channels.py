@@ -79,14 +79,11 @@ class ChannelProperties:
         self.termination_menu = ChannelTermination(idx, unique_ADC_name,
                                                    server_proxy)
         self.offset_box = ChannelOffset(idx, unique_ADC_name, server_proxy)
-        self.saturation_box = ChannelSaturation(idx, unique_ADC_name,
-                                                server_proxy)
 
         self.chan_set_layout.addWidget(self.button)
         self.chan_set_layout.addWidget(self.range_menu)
         self.chan_set_layout.addWidget(self.termination_menu)
         self.chan_set_layout.addWidget(self.offset_box)
-        self.chan_set_layout.addWidget(self.saturation_box)
 
     def set_button_active(self, active):
         self.button.set_active(active)
@@ -100,23 +97,17 @@ class ChannelProperties:
     def set_button_offset(self, value):
         self.offset_box.set_value(value)
 
-    def set_button_saturation(self, value):
-        self.saturation_box.set_value(value)
-
-    def set_channel_params(self, active, range, termination, offset,
-                           saturation):
+    def set_channel_params(self, active, range, termination, offset):
         self.button.set_active(active)
         self.range_menu.set_value(range)
         self.termination_menu.set_value(termination)
         self.offset_box.set_value(offset)
-        self.saturation_box.set_value(saturation)
 
     def __del__(self):
         self.button.deleteLater()
         self.range_menu.deleteLater()
         self.termination_menu.deleteLater()
         self.offset_box.deleteLater()
-        self.saturation_box.deleteLater()
 
 
 class ChannelsMenu(QMenuBar):
@@ -260,24 +251,6 @@ class ChannelOffset(Box):
         try:
             proxy = get_proxy(self.server_proxy.proxy_addr)
             proxy.set_ADC_parameter('channel_offset', offset,
-                                    self.unique_ADC_name, self.idx)
-        except Exception as e:
-            print(e)
-
-
-class ChannelSaturation(Box):
-
-    def __init__(self, idx, unique_ADC_name, server_proxy):
-        super().__init__(idx, unique_ADC_name, "Saturation")
-        self.server_proxy = server_proxy
-        self.box.setMinimum(0)
-        self.box.setMaximum(65535)
-
-    def value_change(self):
-        saturation = self.box.value()
-        try:
-            proxy = get_proxy(self.server_proxy.proxy_addr)
-            proxy.set_ADC_parameter('channel_saturation', saturation,
                                     self.unique_ADC_name, self.idx)
         except Exception as e:
             print(e)

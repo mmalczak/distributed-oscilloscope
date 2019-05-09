@@ -104,8 +104,7 @@ class GUI_Class:
             channel_prop.set_channel_params(channel_params['active'],
                                             channel_params['range'],
                                             channel_params['termination'],
-                                            channel_params['offset'],
-                                            channel_params['saturation'])
+                                            channel_params['offset'])
 
     def set_trigger_params(self, trigger_params):
         trig_prop = self.triggers[0].properties

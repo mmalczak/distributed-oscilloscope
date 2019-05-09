@@ -20,7 +20,7 @@ class ADC:
             channel = conf['chn_conf'][count]
             self.add_channel(channel['channel_range'],
                              channel['termination'], channel['offset'],
-                             channel['saturation'], count)
+                             count)
         for count in range(0, self.conf['board_conf']['n_trg_int']):
             trigger = conf['int_trg_conf'][count]
             self.add_internal_trigger(trigger['enable'],
@@ -55,9 +55,9 @@ class ADC:
                 [timestamp, data_channel]
 
     def add_channel(self, channel_range, termination, offset,
-                    saturation, ADC_channel_idx):
+                    ADC_channel_idx):
         self.channels.append(Channel(channel_range, termination,
-                                     offset, saturation,
+                                     offset,
                                      self.unique_name, ADC_channel_idx))
         self.number_of_channels += 1
 
@@ -82,8 +82,7 @@ class ADC:
             self.channels[count].\
                 update_channel_conf(channel['channel_range'],
                                     channel['termination'],
-                                    channel['offset'],
-                                    channel['saturation'])
+                                    channel['offset'])
         for count in range(0, self.conf['board_conf']['n_trg_int']):
             trigger = self.conf['int_trg_conf'][count]
             self.internal_triggers[count].\
