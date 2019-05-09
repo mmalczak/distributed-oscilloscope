@@ -9,8 +9,8 @@ class TriggerClosure:
                  GUI_name, GUI_trigger_idx, channels, available_ADCs):
         self.GUI_trigger_idx = GUI_trigger_idx
         self.menu_type = TriggerTypeMenu(self)
-        self.trig_in_layout = TriggerInputsLayout(self.menu_type)
-        self.trig_set_layout = TriggerSettingsLayout()
+        self.trig_in_layout = TriggerInputsLayout()
+        self.trig_set_layout = TriggerSettingsLayout(self.menu_type)
         self.plot = plot
         self.GUI_name = GUI_name
         inputs_layout.addLayout(self.trig_in_layout)
@@ -278,11 +278,9 @@ class ExtTriggersMenu(TriggersMenu):
 
 class TriggerInputsLayout(QVBoxLayout):
 
-    def __init__(self, menu_type):
+    def __init__(self):
         super().__init__()
         self.menu = None
-        self.menu_type = menu_type
-        self.addWidget(self.menu_type)
         self.ADCs = {}
         self.trigger = None
 
@@ -294,8 +292,10 @@ class TriggerInputsLayout(QVBoxLayout):
 
 class TriggerSettingsLayout(QVBoxLayout):
 
-    def __init__(self):
+    def __init__(self, menu_type):
         super().__init__()
+        self.menu_type = menu_type
+        self.addWidget(self.menu_type)
  
 
 
