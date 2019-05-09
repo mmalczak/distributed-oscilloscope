@@ -219,8 +219,7 @@ class IntTriggersMenu(TriggersMenu):
         for channel in self.channels:
             if channel.properties is not None:
                 chan = self.ADCs_menu.addAction("Channel: " +
-                                                str(channel.
-                                                    channel_count))
+                                                str(channel.channel_count))
                 chan.triggered.connect(self.select_trigger)
                 self.actions.append(chan)
         if self.trigger_closure.trigger_exists():
