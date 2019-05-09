@@ -189,7 +189,6 @@ class TriggersMenu(QMenuBar):
         super().__init__()
         self.GUI_trigger_idx = GUI_trigger_idx
         self.trigger_closure = trigger_closure
-        self.ADCs_menu = self.addMenu("ADCs")
         self.ADCs = {}
         self.selected_ADC = None
 
@@ -208,6 +207,7 @@ class IntTriggersMenu(TriggersMenu):
     def __init__(self, trigger_closure, GUI_trigger_idx, plot,
                  channels):
         super().__init__(trigger_closure, GUI_trigger_idx)
+        self.ADCs_menu = self.addMenu("Select channel to trigger")
         self.plot = plot
         self.channels = channels
         self.actions = []
@@ -250,6 +250,7 @@ class ExtTriggersMenu(TriggersMenu):
 
     def __init__(self, trigger_closure, GUI_trigger_idx):
         super().__init__(trigger_closure, GUI_trigger_idx)
+        self.ADCs_menu = self.addMenu("Select external trigger")
 
     def update_triggers(self):
         self.ADCs_menu.clear()
