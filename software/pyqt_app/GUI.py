@@ -25,6 +25,7 @@ class GUI_Class:
 
         for count in range(self.number_of_GUI_triggers):
             trig_clos = TriggerClosure(self.ui.inputs_layout,
+                                       self.ui.triggers_settings_layout,
                                        self.server_proxy,
                                        self.plot,
                                        self.GUI_name,
@@ -84,8 +85,8 @@ class GUI_Class:
             offset = int(offset)
 #            if(offset>10 and offset < 14):
 #                offset = 12
-            presamples = presamples - offset
-            postsamples = postsamples + offset
+#            presamples = presamples - offset
+#            postsamples = postsamples + offset
             print('presamples: ' + str(presamples))
             print('postsamples: ' + str(postsamples))
             print('offsets: ' + str(offsets))

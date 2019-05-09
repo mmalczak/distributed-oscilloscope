@@ -5,14 +5,16 @@ from proxy import *
 
 class TriggerClosure:
 
-    def __init__(self, inputs_layout, server_proxy, plot, GUI_name,
-                 GUI_trigger_idx, channels, available_ADCs):
+    def __init__(self, inputs_layout, trig_set_layout, server_proxy, plot,
+                 GUI_name, GUI_trigger_idx, channels, available_ADCs):
         self.GUI_trigger_idx = GUI_trigger_idx
         self.menu_type = TriggerTypeMenu(self)
-        self.layout = TriggerLayout(self.menu_type)
+        self.trig_in_layout = TriggerInputsLayout(self.menu_type)
+        self.trig_set_layout = TriggerSettingsLayout()
         self.plot = plot
         self.GUI_name = GUI_name
-        inputs_layout.addLayout(self.layout)
+        inputs_layout.addLayout(self.trig_in_layout)
+        trig_set_layout.addLayout(self.trig_set_layout)
         self.properties = None
         self.server_proxy = server_proxy
         self.trigger_type = 'internal'
@@ -20,12 +22,16 @@ class TriggerClosure:
         self.available_ADCs = available_ADCs
         self.menu = None
         self.set_menu()
+        self.set_trigger_properties(None, 0)
+        """Adds widgets in the GUI, when unique_ADC_name==None, 
+        widgets are disabled"""
+
 
     def update_triggers(self):
         self.menu.update_triggers()
         try:
             if self.properties.unique_ADC_name not in self.available_ADCs:
-                self.properties = None
+                self.set_trigger_properties(None, 0)
         except:
             pass
 
@@ -35,40 +41,31 @@ class TriggerClosure:
                                         self.plot, self.channels)
         else:
             self.menu = ExtTriggersMenu(self, self.GUI_trigger_idx)
-        self.layout.set_menu(self.menu)
+        self.trig_in_layout.set_menu(self.menu)
 
     def remove_trigger(self):
         if self.trigger_exists():
-            self.properties = None
-            try:
-                self.plot.remove_trigger()
-            except Exception as e:
-                print(e)
+            self.plot.remove_trigger()
             proxy = get_proxy(self.server_proxy.proxy_addr)
-            try:
-                proxy.remove_trigger(self.GUI_name)
-            except Exception as e:
-                print(e)
+            proxy.remove_trigger(self.GUI_name)
+        self.set_trigger_properties(None, 0)
 
     def set_trigger_properties(self, unique_ADC_name, idx=0):
         if(self.trigger_type == 'internal'):
             self.properties = IntTriggerProperties(unique_ADC_name, idx,
-                                                   self.layout,
+                                                   self.trig_set_layout,
                                                    self.server_proxy,
                                                    self.plot,
                                                    self.GUI_name)
         else:
             self.properties = ExtTriggerProperties(unique_ADC_name, idx,
-                                                   self.layout,
+                                                   self.trig_set_layout,
                                                    self.server_proxy,
                                                    self.plot,
                                                    self.GUI_name)
 
     def trigger_exists(self):
-        if(self.properties is None):
-            return False
-        else:
-            return True
+        return self.properties.unique_ADC_name is not None
 
 
 class TriggerProperties():
@@ -76,11 +73,11 @@ class TriggerProperties():
     ExtTriggerProperties and IntTriggerProperties create and delete
     threshold trigger conditionally?"""
 
-    def __init__(self, unique_ADC_name, ADC_idx, layout, server_proxy,
-                 plot, GUI_name, type):
+    def __init__(self, unique_ADC_name, ADC_idx, trig_set_layout, 
+                 server_proxy, plot, GUI_name, type):
         self.ADC_idx = ADC_idx
         self.unique_ADC_name = unique_ADC_name
-        self.layout = layout
+        self.trig_set_layout = trig_set_layout
         self.plot = plot
 
         if(type == 'internal'):
@@ -98,9 +95,9 @@ class TriggerProperties():
         self.threshold_box = TriggerThreshold(ADC_idx, unique_ADC_name,
                                               server_proxy)
 
-        self.layout.addWidget(self.button)
-        self.layout.addWidget(self.polarity_menu)
-        self.layout.addWidget(self.delay_box)
+        self.trig_set_layout.addWidget(self.button)
+        self.trig_set_layout.addWidget(self.polarity_menu)
+        self.trig_set_layout.addWidget(self.delay_box)
 
     def set_active(self, value):
         self.button.set_active(value)
@@ -146,18 +143,18 @@ class TriggerProperties():
 
 
 class ExtTriggerProperties(TriggerProperties):
-    def __init__(self, unique_ADC_name, ADC_idx, layout, server_proxy,
-                 plot, GUI_name):
-        super().__init__(unique_ADC_name, ADC_idx, layout, server_proxy,
-                         plot, GUI_name, 'external')
+    def __init__(self, unique_ADC_name, ADC_idx, trig_set_layout, 
+                 server_proxy, plot, GUI_name):
+        super().__init__(unique_ADC_name, ADC_idx, trig_set_layout, 
+                         server_proxy, plot, GUI_name, 'external')
 
 
 class IntTriggerProperties(TriggerProperties):
-    def __init__(self, unique_ADC_name, ADC_idx, layout, server_proxy,
-                 plot, GUI_name):
-        super().__init__(unique_ADC_name, ADC_idx, layout, server_proxy,
-                         plot, GUI_name, 'internal')
-        self.layout.addWidget(self.threshold_box)
+    def __init__(self, unique_ADC_name, ADC_idx, trig_set_layout, 
+                 server_proxy, plot, GUI_name):
+        super().__init__(unique_ADC_name, ADC_idx, trig_set_layout, 
+                         server_proxy, plot, GUI_name, 'internal')
+        self.trig_set_layout.addWidget(self.threshold_box)
 
 
 class TriggerTypeMenu(QMenuBar):
@@ -225,7 +222,7 @@ class IntTriggersMenu(TriggersMenu):
                                                     channel_count))
                 chan.triggered.connect(self.select_trigger)
                 self.actions.append(chan)
-        if self.trigger_closure.properties is not None:
+        if self.trigger_closure.trigger_exists():
             self.add_trigger()
             """this is done in case the ADC connected to the channel on
             which I trigger changes """
@@ -278,7 +275,7 @@ class ExtTriggersMenu(TriggersMenu):
                           self.trigger_closure.GUI_name)
 
 
-class TriggerLayout(QVBoxLayout):
+class TriggerInputsLayout(QVBoxLayout):
 
     def __init__(self, menu_type):
         super().__init__()
@@ -293,6 +290,12 @@ class TriggerLayout(QVBoxLayout):
             self.menu.deleteLater()
         self.menu = menu
         self.addWidget(self.menu)
+
+class TriggerSettingsLayout(QVBoxLayout):
+
+    def __init__(self):
+        super().__init__()
+ 
 
 
 class TriggerThreshold(Box):
