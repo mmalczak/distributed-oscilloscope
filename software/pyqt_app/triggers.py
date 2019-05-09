@@ -7,6 +7,7 @@ class TriggerClosure:
 
     def __init__(self, inputs_layout, trig_set_layout, server_proxy, plot,
                  GUI_name, GUI_trigger_idx, channels, available_ADCs):
+        self.trigger_type = 'internal'  # default one
         self.GUI_trigger_idx = GUI_trigger_idx
         self.menu_type = TriggerTypeMenu(self)
         self.trig_in_layout = TriggerInputsLayout()
@@ -17,7 +18,6 @@ class TriggerClosure:
         trig_set_layout.addLayout(self.trig_set_layout)
         self.properties = None
         self.server_proxy = server_proxy
-        self.trigger_type = 'internal'
         self.channels = channels
         self.available_ADCs = available_ADCs
         self.menu = None
@@ -163,7 +163,9 @@ class TriggerTypeMenu(QMenuBar):
     def __init__(self, trigger_closure):
         super().__init__()
         self.trigger_closure = trigger_closure
-        self.trig_menu = self.addMenu("Trigger Type")
+        print(self.trigger_closure)
+        self.trig_menu = self.addMenu("Trigger Type - " + 
+                               self.trigger_closure.trigger_type.capitalize())
         trig = self.trig_menu.addAction("Internal")
         trig.triggered.connect(self.select_type)
         trig = self.trig_menu.addAction("External")
@@ -171,10 +173,8 @@ class TriggerTypeMenu(QMenuBar):
 
     def select_type(self):
         type = self.sender().text()
-        if type == 'Internal':
-            type = 'internal'
-        else:
-            type = 'external'
+        self.trig_menu.setTitle("Trigger Type - " + type)
+        type = type.lower()
         if(self.trigger_closure.trigger_type == type):
             pass
         else:
