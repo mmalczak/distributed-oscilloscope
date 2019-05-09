@@ -6,6 +6,7 @@ from proxy import *
 class ServerExpose(QtCore.QObject):
 
     rem_av_ADC_signal = QtCore.pyqtSignal(['QString'])
+    add_av_ADC_signal = QtCore.pyqtSignal(['QString', int])
 
     def __init__(self, GUI, port_GUI):
         super().__init__()
@@ -13,6 +14,7 @@ class ServerExpose(QtCore.QObject):
         self.GUI = GUI
         self.app = None
         self.rem_av_ADC_signal.connect(self.GUI.remove_available_ADC)
+        self.add_av_ADC_signal.connect(self.GUI.add_available_ADC)
 
     def set_server_address(self, addr):
         self.GUI.server_proxy.proxy_addr = "http://" + addr + ":8000/"
@@ -26,12 +28,14 @@ class ServerExpose(QtCore.QObject):
     def remove_available_ADC(self, unique_ADC_name):
         self.rem_av_ADC_signal.emit(unique_ADC_name)
 
+    def add_available_ADC(self, unique_ADC_name, number_of_channels):
+        self.add_av_ADC_signal.emit(unique_ADC_name, number_of_channels)
+
     def monitorSlot(self):
         server = SimpleXMLRPCServer(("", self.port_GUI),
                                     allow_none=True)
         print("Listening on port " + str(self.port_GUI) + "...")
-        server.register_function(self.GUI.add_available_ADC,
-                                 "add_available_ADC")
+        server.register_function(self.add_available_ADC, "add_available_ADC")
         server.register_function(self.remove_available_ADC,
                                  "remove_available_ADC")
         server.register_function(self.set_server_address,
