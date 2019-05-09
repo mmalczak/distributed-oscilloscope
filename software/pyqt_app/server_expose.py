@@ -25,11 +25,11 @@ class ServerExpose(QtCore.QObject):
             print(w)
         return True
 
-    def remove_available_ADC(self, unique_ADC_name):
-        self.rem_av_ADC_signal.emit(unique_ADC_name)
+    def remove_available_ADC(self, *args, **kwargs):
+        self.rem_av_ADC_signal.emit(*args, **kwargs)
 
-    def add_available_ADC(self, unique_ADC_name, number_of_channels):
-        self.add_av_ADC_signal.emit(unique_ADC_name, number_of_channels)
+    def add_available_ADC(self, *args, **kwargs):
+        self.add_av_ADC_signal.emit(*args, **kwargs)
 
     def monitorSlot(self):
         server = SimpleXMLRPCServer(("", self.port_GUI),
