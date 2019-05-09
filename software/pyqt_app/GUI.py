@@ -65,7 +65,7 @@ class GUI_Class:
             self.channels[count].add_available_ADC(unique_ADC_name,
                                                    number_of_channels)
         for count in range(0, self.number_of_GUI_triggers):
-            self.triggers[count].menu.update_triggers()
+            self.triggers[count].update_triggers()
         return True
 
     def remove_available_ADC(self, unique_ADC_name):

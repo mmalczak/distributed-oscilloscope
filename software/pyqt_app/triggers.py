@@ -20,7 +20,8 @@ class TriggerClosure:
         self.server_proxy = server_proxy
         self.channels = channels
         self.available_ADCs = available_ADCs
-        self.menu = None
+        self.int_trig_menu = None
+        self.ext_trig_menu = None
         self.set_menu()
         self.set_trigger_properties(None, 0)
         """Adds widgets in the GUI, when unique_ADC_name==None, 
@@ -28,7 +29,8 @@ class TriggerClosure:
 
 
     def update_triggers(self):
-        self.menu.update_triggers()
+        self.int_trig_menu.update_triggers()
+        self.ext_trig_menu.update_triggers()
         try:
             if self.properties.unique_ADC_name not in self.available_ADCs:
                 self.set_trigger_properties(None, 0)
@@ -36,12 +38,17 @@ class TriggerClosure:
             pass
 
     def set_menu(self):
+        self.int_trig_menu = IntTriggersMenu(self, self.GUI_trigger_idx,
+                                    self.plot, self.channels)
+        self.ext_trig_menu = ExtTriggersMenu(self, self.GUI_trigger_idx)
         if(self.trigger_type == 'internal'):
-            self.menu = IntTriggersMenu(self, self.GUI_trigger_idx,
-                                        self.plot, self.channels)
+            self.int_trig_menu.setEnabled(True)
+            self.ext_trig_menu.setEnabled(False)
         else:
-            self.menu = ExtTriggersMenu(self, self.GUI_trigger_idx)
-        self.trig_in_layout.set_menu(self.menu)
+            self.int_trig_menu.setVisible(False)
+            self.ext_trig_menu.setEnabled(True)
+        self.trig_in_layout.set_menu(self.ext_trig_menu)
+        self.trig_set_layout.set_menu(self.int_trig_menu)
 
     def remove_trigger(self, remote=False):
         if self.trigger_exists():
@@ -81,14 +88,8 @@ class TriggerProperties():
         self.trig_set_layout = trig_set_layout
         self.plot = plot
 
-        if(type == 'internal'):
-            name = 'IntTrigger '+str(ADC_idx)
-        else:
-            name = 'ExtTrigger '+str(ADC_idx)
-
-        self.button = TriggerEnableButton(name, ADC_idx,
-                                          unique_ADC_name, server_proxy,
-                                          type)
+        self.button = TriggerEnableButton(ADC_idx, unique_ADC_name,
+                                          server_proxy, type)
         self.polarity_menu = TriggerPolarity(ADC_idx, unique_ADC_name,
                                              server_proxy, type)
         self.delay_box = TriggerDelay(ADC_idx, unique_ADC_name,
@@ -180,7 +181,7 @@ class TriggerTypeMenu(QMenuBar):
         else:
             self.trigger_closure.trigger_type = type
             self.trigger_closure.set_menu()
-            self.trigger_closure.menu.update_triggers()
+            self.trigger_closure.update_triggers()
 
 
 class TriggersMenu(QMenuBar):
@@ -294,9 +295,16 @@ class TriggerSettingsLayout(QVBoxLayout):
 
     def __init__(self, menu_type):
         super().__init__()
+        self.menu = None
         self.menu_type = menu_type
         self.addWidget(self.menu_type)
  
+    def set_menu(self, menu):
+        if self.menu is not None:
+            self.menu.deleteLater()
+        self.menu = menu
+        self.addWidget(self.menu)
+
 
 
 class TriggerThreshold(Box):
@@ -318,9 +326,9 @@ class TriggerThreshold(Box):
 
 class TriggerEnableButton(Button):
 
-    def __init__(self, button_name, idx, unique_ADC_name, server_proxy,
+    def __init__(self, idx, unique_ADC_name, server_proxy,
                  type):
-        super().__init__(button_name, idx, unique_ADC_name)
+        super().__init__("Enable", idx, unique_ADC_name)
         self.server_proxy = server_proxy
         self.type = type
 
