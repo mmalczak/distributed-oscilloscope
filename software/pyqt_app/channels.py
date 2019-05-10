@@ -230,7 +230,10 @@ class ChannelRange(Menu):
             print(e)
 
     def set_value(self, value):
-        self.range.setTitle("Range " + str(value))
+        if value == 100:
+            self.range.setTitle("Range " + str(value) + "mV")
+        else:
+            self.range.setTitle("Range " + str(value) + "V")
 
 
 class ChannelTermination(Menu):
