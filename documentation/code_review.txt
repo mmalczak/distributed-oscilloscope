@@ -1,0 +1,131 @@
+Dimitris
+* General
+  - [-] I do not like functions outside of classes. What do others say?
+  - [?] what is your naming scheme?
+  - [+] naming is not good, plus import * does not help
+  - [-] I propose Server->DistOscServer, ADC->DistOscDev/DistOscNode and
+    GUI->DistOscClient/DistOscViewer to begin with
+  - [+] lack of comments
+  - [+] it seems that bidirectional RPC is abused for something that should be done with some sort
+    of notifications/messages
+  - [-] no logging
+
+* Server
+  - [-] I'm missing a "Server" class (I guess that's the oscilloscope.py)
+  - [?] Do we need a thread for ADC? It should only do something when asked by the GUI
+  - [-] code duplication between ADC and GUI, perhaps common parent class for add/remove service, etc
+  - [-] add option to set listening port
+** Proxy.py
+  - [-] I would eliminate it
+** Conversion.py
+  - [-] I would eliminate it
+** Timestamp.py
+  - [-] I would create a timestamp object with operations, or eliminate it
+** GUI_expose.py
+  - [+] there is another get_proxy() here!
+** service_management.py
+  - [-] I'd merge this into the main server class
+  - [+] the whole story about the clients not needing the server to tell them their address
+** oscilloscope.py
+  - [?] why import GUI and not also ADC? this seems like the result of bad arch
+** GUI
+  - [?] why include ADC class here? see above remark for oscilloscope.py
+  - [+] bad, confusing name
+** ADC
+  - [+] bad, confusing name
+
+* GUI
+  - [-] I'm missing a "GUI" class (I guess that's the GUI.py)
+  - [-] code duplication with GUI --> missing inheritance (Client)
+  - [-] should be a virtual class (Application), inherited by the GUI (Viewer/...)
+  - [-] add option for server port
+  - [+] it feels *really* wrong that RPC is bidirectional. The server should not call things in the
+    GUI.
+
+* ADC
+  - [-] I'm missing an "ADC" class (I guess that's the ADC.py)
+  - [-] code duplication with GUI --> missing inheritance (Client)
+  - [+] should be a virtual class (Dev/Node), inherited by the ADC
+  - [-] add option for server port
+
+https://stackoverflow.com/questions/2129374/ip-address-of-client-in-python-simplexmlrpcserver
+https://stackoverflow.com/questions/3223373/how-can-i-get-the-ip-address-of-the-request-in-a-regested-function-of-python-xmlr
+https://stackoverflow.com/questions/10741992/python-simplexmlrpcserver-get-user-ip-and-simple-authentication
+
+
+Tristan
+My review:
+
+Global points:
+* not sure you really need threading (except maybe for ZeroConf, which
+is really independent).
+* global lack of comments
+* are requirements.txt minimalized ?  Do you really use ifaddr or
+ipaddress ?
+* 'import *' is poorly considered.
+* testing strategy ?
+* error strategy
+* style consistency
+* No need for parenthesis after if.
+
+server/ADC_configs.py:
+* range_conv could be a class variable or even global.  -- WHY?
+* shouldn't Trigger be abstract, and 'type' declare there ? -- add decorator abstract
+* All the classes defined here look like datastructure.  -- fix range_conv in the library, remove setters except for update_conf
+
+server/conversion.py:
+* use //, or use a map ?
+
+server/GUI_expose.py:
+server/GUI.py:
+* fixme + print
+* set_channel_range: class variable + factorize code (Self.osc.available...)
+[done] * run == True
+[done] * except IndexError -> look unreliable to me.
+[done] * .. == None  -->  ... is None
+
+server/service_management.py:
+[done] * name[0:3]  --> startswith
+* popen("ifconfig ...")  --> humm, not portable.
+
+
+fec/adc_access.py:
+* error handling
+[done] * int('0x....', 16) -> why not using directly 0x.... ?
+* set_channel_range: use a map
+
+fec/adc_client.py:
+[done] * argparse: use default values for port arg.
+[done] * How to specify pci addr ?
+* why random() ? -> ip + pcie
+
+fec/adc_lib_wrapper.py:
+[done] * Hardcoded path for libadc.so
+
+fec/ADC.py:
+[done] * delay_tics: use // for integer division
+* range (0, 4)
+[done] * X = X - Y  --> X -= Y
+
+fec/map_timer_trig.py: -> TO BE REMOVED
+[done] * hard-coded path for pci ?
+* use pack/unpack to convert from bytes to integers
+
+fec/wrtd_wrapper.py:
+[done] * wrtd_lib: hard-coded path.
+
+pyqt_app/channels.py:
+[done] * channel_exists: -> return self.properties is not None
+
+pyqt_app/main.py:
+* os.popen
+* random()
+* while (xxxx): pass  -> busy waiting -> at least use sleep
+
+pyqt_app/mainwindow.py:
+* import -> at the beginning of the file
+
+pyqt_app/parent_classes.py:
+* set_active: use is_active ?
+
+
