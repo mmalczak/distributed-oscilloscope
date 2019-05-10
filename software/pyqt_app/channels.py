@@ -1,8 +1,9 @@
 from PyQt5.QtWidgets import QVBoxLayout
 from PyQt5.QtCore import Qt
+from PyQt5.QtCore import QRect
 from parent_classes import *
 from proxy import *
-
+from colors import Colors
 DBG = False
 
 
@@ -21,7 +22,7 @@ class ChannelClosure:
                                                   self.channel_label,
                                                   channel_count)
         self.chan_in_layout.setAlignment(Qt.AlignCenter | Qt.AlignVCenter)
-        self.chan_set_layout = ChannelSettingsLayout()
+        self.chan_set_layout = ChannelSettingsLayout(channel_count)
         self.plot = plot
         self.GUI_name = GUI_name
         channel_inputs_layout.addLayout(self.chan_in_layout)
@@ -142,7 +143,7 @@ class ChannelsMenu(QMenuBar):
         self.ADCs[name] = ADC
         ADC.menuAction().hovered.connect(self.select_ADC)
         for count in range(0, number_of_channels):
-            chan = ADC.addAction("chan " + str(count))
+            chan = ADC.addAction("Chan " + str(count))
             chan.triggered.connect(self.add_channel)
 
     def remove_available_ADC(self, name):
@@ -177,6 +178,11 @@ class ChannelInputsLayout(QVBoxLayout):
         self.menu = menu
         GUI_channel_label = QLabel("Channel " + str(channel_count))
         GUI_channel_label.setAlignment(Qt.AlignCenter | Qt.AlignVCenter)
+        GUI_channel_label.setMaximumHeight(20)
+        GUI_channel_label.resize(50, 50)
+        color = str((tuple(Colors().get_color(channel_count))))
+        GUI_channel_label.setStyleSheet("border: 1px solid rgb" + color + ";\
+                                         height: 10px")
         self.addWidget(GUI_channel_label)
         self.addWidget(self.menu)
         self.addWidget(adc_label)
@@ -186,8 +192,15 @@ class ChannelInputsLayout(QVBoxLayout):
 
 class ChannelSettingsLayout(QVBoxLayout):
 
-    def __init__(self):
+    def __init__(self, channel_count):
         super().__init__()
+        GUI_channel_label = QLabel("Channel " + str(channel_count))
+        GUI_channel_label.setAlignment(Qt.AlignCenter | Qt.AlignVCenter)
+        GUI_channel_label.setMaximumHeight(30)
+        color = str((tuple(Colors().get_color(channel_count))))
+        GUI_channel_label.setStyleSheet("border: 1px solid rgb" + color + ";")
+        self.addWidget(GUI_channel_label)
+
 
 class ChannelEnableButton(Button):
 
