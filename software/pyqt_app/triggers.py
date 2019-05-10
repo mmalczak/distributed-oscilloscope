@@ -7,10 +7,12 @@ class TriggerClosure:
 
     def __init__(self, trigger_inputs_layout, trig_set_layout, server_proxy, 
                  plot, GUI_name, GUI_trigger_idx, channels, available_ADCs):
+        self.adc_label = QLabel("")
+        self.adc_label.setAlignment(Qt.AlignCenter | Qt.AlignVCenter)
         self.trigger_type = 'internal'  # default one
         self.GUI_trigger_idx = GUI_trigger_idx
         self.menu_type = TriggerTypeMenu(self)
-        self.trig_in_layout = TriggerInputsLayout()
+        self.trig_in_layout = TriggerInputsLayout(self.adc_label) 
         self.trig_set_layout = TriggerSettingsLayout(self.menu_type)
         self.plot = plot
         self.GUI_name = GUI_name
@@ -40,7 +42,8 @@ class TriggerClosure:
     def set_menu(self):
         self.int_trig_menu = IntTriggersMenu(self, self.GUI_trigger_idx,
                                     self.plot, self.channels)
-        self.ext_trig_menu = ExtTriggersMenu(self, self.GUI_trigger_idx)
+        self.ext_trig_menu = ExtTriggersMenu(self, self.GUI_trigger_idx,
+                                             self.adc_label) 
         if(self.trigger_type == 'internal'):
             self.int_trig_menu.setEnabled(True)
             self.ext_trig_menu.setEnabled(False)
@@ -57,6 +60,7 @@ class TriggerClosure:
                 proxy = get_proxy(self.server_proxy.proxy_addr)
                 proxy.remove_trigger(self.GUI_name)
         self.set_trigger_properties(None, 0)
+        self.adc_label.setText('')
 
     def set_trigger_properties(self, unique_ADC_name, idx=0):
         if(self.trigger_type == 'internal'):
@@ -249,9 +253,10 @@ class IntTriggersMenu(TriggersMenu):
 
 class ExtTriggersMenu(TriggersMenu):
 
-    def __init__(self, trigger_closure, GUI_trigger_idx):
+    def __init__(self, trigger_closure, GUI_trigger_idx, adc_label):
         super().__init__(trigger_closure, GUI_trigger_idx)
         self.ADCs_menu = self.addMenu("Select external trigger")
+        self.adc_label = adc_label
 
     def update_triggers(self):
         self.ADCs_menu.clear()
@@ -272,6 +277,8 @@ class ExtTriggersMenu(TriggersMenu):
     def add_trigger(self):
         self.remove_trigger()
         self.trigger_closure.set_trigger_properties(self.selected_ADC)
+        display_name = self.selected_ADC.replace('._tcp.local.', '')
+        self.adc_label.setText(display_name)
         proxy = get_proxy(self.trigger_closure.server_proxy.proxy_addr)
         proxy.add_trigger('external', self.selected_ADC, 0,
                           self.trigger_closure.GUI_name)
@@ -279,8 +286,9 @@ class ExtTriggersMenu(TriggersMenu):
 
 class TriggerInputsLayout(QVBoxLayout):
 
-    def __init__(self):
+    def __init__(self, adc_label):
         super().__init__()
+        self.adc_label = adc_label
         self.menu = None
         self.ADCs = {}
         self.trigger = None
@@ -290,6 +298,7 @@ class TriggerInputsLayout(QVBoxLayout):
             self.menu.deleteLater()
         self.menu = menu
         self.addWidget(self.menu)
+        self.addWidget(self.adc_label)
 
 class TriggerSettingsLayout(QVBoxLayout):
 
