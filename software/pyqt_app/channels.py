@@ -270,7 +270,7 @@ class ChannelTermination(Menu):
 class ChannelOffset(Box):
 
     def __init__(self, idx, unique_ADC_name, server_proxy):
-        super().__init__(idx, unique_ADC_name, "Offset uV")
+        super().__init__(idx, unique_ADC_name, "Offset uV", 'vertical')
         self.server_proxy = server_proxy
         self.box.setMinimum(-5000000)
         self.box.setMaximum(5000000)

@@ -49,11 +49,14 @@ class Menu(QMenuBar):
 
 class Box(QtGui.QWidget):
 
-    def __init__(self, idx, unique_ADC_name, box_name):
+    def __init__(self, idx, unique_ADC_name, box_name, layout='horizontal'):
         super().__init__()
         self.idx = idx
         self.unique_ADC_name = unique_ADC_name
-        self.layout = QtGui.QHBoxLayout()
+        if layout == "horizontal":
+            self.layout = QtGui.QHBoxLayout()
+        else:
+            self.layout = QtGui.QVBoxLayout()
         self.layout.setContentsMargins(0, 0, 0, 0)
         self.layout.setSpacing(0)
         self.box = QSpinBox()
