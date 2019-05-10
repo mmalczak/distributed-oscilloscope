@@ -79,7 +79,7 @@ class Ui_MainWindow(object):
         self.channel_inputs_frame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.channel_inputs_frame.setObjectName("channel_inputs_frame")
         self.horizontalLayoutWidget = QtWidgets.QWidget(self.channel_inputs_frame)
-        self.horizontalLayoutWidget.setGeometry(QtCore.QRect(10, 50, 771, 71))
+        self.horizontalLayoutWidget.setGeometry(QtCore.QRect(10, 30, 771, 91))
         self.horizontalLayoutWidget.setObjectName("horizontalLayoutWidget")
         self.channel_inputs_layout = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget)
         self.channel_inputs_layout.setContentsMargins(0, 0, 0, 0)

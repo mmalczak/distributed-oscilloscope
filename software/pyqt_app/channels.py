@@ -10,9 +10,14 @@ class ChannelClosure:
 
     def __init__(self, channel_inputs_layout, ver_set_layout, server_proxy,
                  plot, GUI_name, channel_count, update_triggers):
-        self.menu = ChannelsMenu(self, channel_count, plot)
+        self.adc_label = QLabel("")
+        self.channel_label = QLabel("")
+        self.menu = ChannelsMenu(self, channel_count, plot, self.adc_label,
+                                 self.channel_label)
         self.channel_count = channel_count
-        self.chan_in_layout = ChannelInputsLayout(self.menu)
+        self.chan_in_layout = ChannelInputsLayout(self.menu, self.adc_label,
+                                                  self.channel_label,
+                                                  channel_count)
         self.chan_set_layout = ChannelSettingsLayout()
         self.plot = plot
         self.GUI_name = GUI_name
@@ -58,7 +63,8 @@ class ChannelClosure:
         contain the information that they are not connected to any of
         the ADCs"""
         self.set_channel_properties(None, 0)
-        self.menu.ADCs_menu.setTitle("Select channel input")
+        self.adc_label.setText('')
+        self.channel_label.setText('')
 
     def channel_exists(self):
         return self.properties.unique_ADC_name is not None
@@ -112,8 +118,11 @@ class ChannelProperties:
 
 class ChannelsMenu(QMenuBar):
 
-    def __init__(self, channel_closure, channel_count, plot):
+    def __init__(self, channel_closure, channel_count, plot, adc_label,
+                 channel_label):
         super().__init__()
+        self.adc_label = adc_label
+        self.channel_label = channel_label
         self.channel_count = channel_count
         self.channel_closure = channel_closure
         self.ADCs_menu = self.addMenu("Select channel input")
@@ -124,7 +133,8 @@ class ChannelsMenu(QMenuBar):
         self.plot = plot
 
     def add_available_ADC(self, name, number_of_channels):
-        ADC = self.ADCs_menu.addMenu(name)
+        display_name = name.replace('._tcp.local.', '')
+        ADC = self.ADCs_menu.addMenu(display_name)
         self.ADCs[name] = ADC
         ADC.menuAction().hovered.connect(self.select_ADC)
         for count in range(0, number_of_channels):
@@ -135,14 +145,16 @@ class ChannelsMenu(QMenuBar):
         self.ADCs_menu.removeAction(self.ADCs[name].menuAction())
 
     def select_ADC(self):
-        self.selected_ADC = self.sender().text()
+        self.selected_ADC = self.sender().text() + '._tcp.local.'
 
     def add_channel(self):
         if self.channel_closure.channel_exists():
             self.remove_channel()
         str_chan = self.sender().text()
         idx = int(str_chan.split()[1])
-        self.ADCs_menu.setTitle(self.selected_ADC + " " + str_chan)
+        display_name = self.selected_ADC.replace('._tcp.local.', '')
+        self.adc_label.setText(display_name)
+        self.channel_label.setText(str_chan)
         self.channel_closure.set_channel_properties(self.selected_ADC,
                                                     idx)
         self.plot.add_channel(self.channel_count)
@@ -156,10 +168,13 @@ class ChannelsMenu(QMenuBar):
 
 class ChannelInputsLayout(QVBoxLayout):
 
-    def __init__(self, menu):
+    def __init__(self, menu, adc_label, channel_label, channel_count):
         super().__init__()
         self.menu = menu
+        self.addWidget(QLabel("Channel " + str(channel_count))) 
         self.addWidget(self.menu)
+        self.addWidget(adc_label)
+        self.addWidget(channel_label)
         self.ADCs = {}
         self.channel = None
 
