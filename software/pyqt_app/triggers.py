@@ -61,6 +61,7 @@ class TriggerClosure:
                 proxy.remove_trigger(self.GUI_name)
         self.set_trigger_properties(None, 0)
         self.adc_label.setText('')
+        self.int_trig_menu.ADCs_menu.setTitle("Select channel to trigger")
 
     def set_trigger_properties(self, unique_ADC_name, idx=0):
         if(self.trigger_type == 'internal'):
@@ -219,12 +220,12 @@ class IntTriggersMenu(TriggersMenu):
 
     def update_triggers(self):
         self.ADCs_menu.clear()
-        none = self.ADCs_menu.addAction("None")
+        none = self.ADCs_menu.addAction("Disconnect")
         none.triggered.connect(self.remove_trigger)
         for channel in self.channels:
             if channel.properties is not None:
-                chan = self.ADCs_menu.addAction("Channel: " +
-                                                str(channel.channel_count))
+                channel_disp = str(channel.channel_count + 1)
+                chan = self.ADCs_menu.addAction("Channel: " + channel_disp)
                 chan.triggered.connect(self.select_trigger)
                 self.actions.append(chan)
         if self.trigger_closure.trigger_exists():
@@ -234,13 +235,17 @@ class IntTriggersMenu(TriggersMenu):
 
     def select_trigger(self):
         str_trigg = self.sender().text()
-        self.GUI_channel_idx = int(str_trigg.split()[1])
+        channel_disp = int(str_trigg.split()[1])
+        self.GUI_channel_idx = channel_disp - 1
         self.add_trigger()
 
     def add_trigger(self):
         self.remove_trigger()
         selected_ADC = self.channels[self.GUI_channel_idx].properties.\
             unique_ADC_name
+        chan_disp = str(self.GUI_channel_idx+1)
+        self.ADCs_menu.setTitle("Channel " + chan_disp)
+        """+1 is beacuse channels are indexed from 0, but displayed from 1"""
         if selected_ADC is not None: 
             ADC_idx = self.channels[self.GUI_channel_idx].properties.idx
             self.trigger_closure.set_trigger_properties(selected_ADC,
