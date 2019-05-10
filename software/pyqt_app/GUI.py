@@ -24,7 +24,7 @@ class GUI_Class:
         self.server_proxy = Proxy()
 
         for count in range(self.number_of_GUI_triggers):
-            trig_clos = TriggerClosure(self.ui.inputs_layout,
+            trig_clos = TriggerClosure(self.ui.trigger_inputs_layout,
                                        self.ui.triggers_settings_layout,
                                        self.server_proxy,
                                        self.plot,
@@ -36,7 +36,7 @@ class GUI_Class:
             self.triggers.append(trig_clos)
 
         for count in range(self.number_of_GUI_channels):
-            chan_clos = ChannelClosure(self.ui.inputs_layout,
+            chan_clos = ChannelClosure(self.ui.channel_inputs_layout,
                                        self.ui.vertical_settings_layout,
                                        self.server_proxy,
                                        self.plot,

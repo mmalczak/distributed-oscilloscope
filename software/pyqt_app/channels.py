@@ -8,7 +8,7 @@ DBG = False
 
 class ChannelClosure:
 
-    def __init__(self, inputs_layout, ver_set_layout, server_proxy,
+    def __init__(self, channel_inputs_layout, ver_set_layout, server_proxy,
                  plot, GUI_name, channel_count, update_triggers):
         self.menu = ChannelsMenu(self, channel_count, plot)
         self.channel_count = channel_count
@@ -16,7 +16,7 @@ class ChannelClosure:
         self.chan_set_layout = ChannelSettingsLayout()
         self.plot = plot
         self.GUI_name = GUI_name
-        inputs_layout.addLayout(self.chan_in_layout)
+        channel_inputs_layout.addLayout(self.chan_in_layout)
         ver_set_layout.addLayout(self.chan_set_layout)
         self.properties = None
         self.server_proxy = server_proxy
