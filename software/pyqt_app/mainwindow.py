@@ -282,9 +282,9 @@ class Ui_MainWindow(object):
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.trigger_settings_label_2.setText(_translate("MainWindow", "Channel Inputs"))
         self.trigger_settings_label_3.setText(_translate("MainWindow", "External Trigger Input"))
-        self.vertical_settings_label.setText(_translate("MainWindow", "Vertical Settings"))
+        self.vertical_settings_label.setText(_translate("MainWindow", "Channel Settings"))
         self.trigger_settings_label.setText(_translate("MainWindow", "Trigger Settings"))
-        self.horizontal_settings_label.setText(_translate("MainWindow", "Horizontal Settings"))
+        self.horizontal_settings_label.setText(_translate("MainWindow", "Acquisition Settings"))
         self.run_control_label.setText(_translate("MainWindow", "Run Control"))
 
 from pyqtgraph import PlotWidget

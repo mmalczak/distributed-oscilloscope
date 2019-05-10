@@ -456,7 +456,7 @@
      <bool>true</bool>
     </property>
     <property name="text">
-     <string>Vertical Settings</string>
+     <string>Channel Settings</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
@@ -636,7 +636,7 @@
      <bool>true</bool>
     </property>
     <property name="text">
-     <string>Horizontal Settings</string>
+     <string>Acquisition Settings</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
