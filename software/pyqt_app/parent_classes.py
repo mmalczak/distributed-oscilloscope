@@ -106,5 +106,5 @@ class ChannelLabel(QLabel):
         self.setAlignment(Qt.AlignCenter | Qt.AlignVCenter)
         self.setMaximumHeight(25)
         color = str((tuple(Colors().get_color(channel_count))))
-        self.setStyleSheet("border: 1px solid rgb" + color + ";")
+        self.setStyleSheet("border: 2px solid rgb" + color + ";")
  
