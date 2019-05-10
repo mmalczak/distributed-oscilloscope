@@ -34,7 +34,7 @@ class PlotMine():
         self.trigger = None
         self.graphics_view = ui.graphicsView
         self.graphics_view.setLabel('left', text='mV')
-        self.graphics_view.setLabel('bottom', text='s')
+        self.graphics_view.setLabel('bottom', text='ns')
         self.graphics_view.setRange(yRange=[-100, 100])
 
     def add_channel(self, GUI_channel):

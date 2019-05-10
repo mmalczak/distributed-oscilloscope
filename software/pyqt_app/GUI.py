@@ -90,7 +90,7 @@ class GUI_Class:
             print('presamples: ' + str(presamples))
             print('postsamples: ' + str(postsamples))
             print('offsets: ' + str(offsets))
-            axis = np.array(range(-presamples, postsamples))/100000000
+            axis = np.array(range(-presamples, postsamples))*10
             channel_idx_str = int(channel_idx_str)
             """to be removed with xmlrpc"""
             self.plot.curves[channel_idx_str].setData(axis,
