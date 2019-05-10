@@ -2,6 +2,8 @@ from PyQt5 import QtGui
 from PyQt5.QtWidgets import QMenuBar
 from PyQt5.QtWidgets import QSpinBox
 from PyQt5.QtWidgets import QLabel
+from colors import Colors
+from PyQt5.QtCore import Qt
 
 
 class Button(QtGui.QPushButton):
@@ -91,3 +93,13 @@ class TriggerPolarity(Menu):
 
     def action(self):
         pass
+
+
+class ChannelLabel(QLabel):
+    def __init__(self, channel_count):
+        super().__init__("Channel " + str(channel_count))
+        self.setAlignment(Qt.AlignCenter | Qt.AlignVCenter)
+        self.setMaximumHeight(25)
+        color = str((tuple(Colors().get_color(channel_count))))
+        self.setStyleSheet("border: 1px solid rgb" + color + ";")
+ 

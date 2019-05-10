@@ -3,7 +3,6 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtCore import QRect
 from parent_classes import *
 from proxy import *
-from colors import Colors
 DBG = False
 
 
@@ -176,14 +175,8 @@ class ChannelInputsLayout(QVBoxLayout):
     def __init__(self, menu, adc_label, channel_label, channel_count):
         super().__init__()
         self.menu = menu
-        GUI_channel_label = QLabel("Channel " + str(channel_count))
-        GUI_channel_label.setAlignment(Qt.AlignCenter | Qt.AlignVCenter)
-        GUI_channel_label.setMaximumHeight(20)
-        GUI_channel_label.resize(50, 50)
-        color = str((tuple(Colors().get_color(channel_count))))
-        GUI_channel_label.setStyleSheet("border: 1px solid rgb" + color + ";\
-                                         height: 10px")
-        self.addWidget(GUI_channel_label)
+        GUI_chan_label = ChannelLabel(channel_count)
+        self.addWidget(GUI_chan_label)
         self.addWidget(self.menu)
         self.addWidget(adc_label)
         self.addWidget(channel_label)
@@ -194,12 +187,8 @@ class ChannelSettingsLayout(QVBoxLayout):
 
     def __init__(self, channel_count):
         super().__init__()
-        GUI_channel_label = QLabel("Channel " + str(channel_count))
-        GUI_channel_label.setAlignment(Qt.AlignCenter | Qt.AlignVCenter)
-        GUI_channel_label.setMaximumHeight(30)
-        color = str((tuple(Colors().get_color(channel_count))))
-        GUI_channel_label.setStyleSheet("border: 1px solid rgb" + color + ";")
-        self.addWidget(GUI_channel_label)
+        GUI_chan_label = ChannelLabel(channel_count)
+        self.addWidget(GUI_chan_label)
 
 
 class ChannelEnableButton(Button):
