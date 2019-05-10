@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import QVBoxLayout
+from PyQt5.QtCore import Qt
 from parent_classes import *
 from proxy import *
-
 
 DBG = False
 
@@ -11,13 +11,16 @@ class ChannelClosure:
     def __init__(self, channel_inputs_layout, ver_set_layout, server_proxy,
                  plot, GUI_name, channel_count, update_triggers):
         self.adc_label = QLabel("")
+        self.adc_label.setAlignment(Qt.AlignCenter | Qt.AlignVCenter)
         self.channel_label = QLabel("")
+        self.channel_label.setAlignment(Qt.AlignCenter | Qt.AlignVCenter)
         self.menu = ChannelsMenu(self, channel_count, plot, self.adc_label,
                                  self.channel_label)
         self.channel_count = channel_count
         self.chan_in_layout = ChannelInputsLayout(self.menu, self.adc_label,
                                                   self.channel_label,
                                                   channel_count)
+        self.chan_in_layout.setAlignment(Qt.AlignCenter | Qt.AlignVCenter)
         self.chan_set_layout = ChannelSettingsLayout()
         self.plot = plot
         self.GUI_name = GUI_name
@@ -115,7 +118,6 @@ class ChannelProperties:
         self.termination_menu.deleteLater()
         self.offset_box.deleteLater()
 
-
 class ChannelsMenu(QMenuBar):
 
     def __init__(self, channel_closure, channel_count, plot, adc_label,
@@ -126,6 +128,8 @@ class ChannelsMenu(QMenuBar):
         self.channel_count = channel_count
         self.channel_closure = channel_closure
         self.ADCs_menu = self.addMenu("Select channel input")
+        menuBr = QMenuBar(self.ADCs_menu)
+        self.setCornerWidget(menuBr, Qt.TopRightCorner)
         self.ADCs = {}
         self.selected_ADC = None
         disconnect = self.ADCs_menu.addAction("Disconnect")
@@ -171,7 +175,9 @@ class ChannelInputsLayout(QVBoxLayout):
     def __init__(self, menu, adc_label, channel_label, channel_count):
         super().__init__()
         self.menu = menu
-        self.addWidget(QLabel("Channel " + str(channel_count))) 
+        GUI_channel_label = QLabel("Channel " + str(channel_count))
+        GUI_channel_label.setAlignment(Qt.AlignCenter | Qt.AlignVCenter)
+        self.addWidget(GUI_channel_label)
         self.addWidget(self.menu)
         self.addWidget(adc_label)
         self.addWidget(channel_label)
