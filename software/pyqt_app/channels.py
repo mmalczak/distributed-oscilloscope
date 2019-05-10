@@ -242,26 +242,29 @@ class ChannelTermination(Menu):
         super().__init__(idx, unique_ADC_name)
         self.server_proxy = server_proxy
         self.termination = self.addMenu("Termination")
-        termination_0 = self.termination.addAction("0")
-        termination_0.setText("0")
+        termination_0 = self.termination.addAction("1M\u03A9")
+        termination_0.setText("1M\u03A9")
         termination_0.triggered.connect(self.action)
-        termination_1 = self.termination.addAction("1")
-        termination_1.setText("1")
+        termination_1 = self.termination.addAction("50\u03A9")
+        termination_1.setText("50\u03A9")
         termination_1.triggered.connect(self.action)
+        self.term_num_map = {"1M\u03A9": "0", "50\u03A9": "1"}
+        self.num_term_map = {"0": "1M\u03A9", "1": "50\u03A9"}
 
     def action(self):
         termination_str = self.sender().text()
         try:
             proxy = get_proxy(self.server_proxy.proxy_addr)
             proxy.set_ADC_parameter('channel_termination',
-                                    termination_str,
+                                    self.term_num_map[termination_str],
                                     self.unique_ADC_name,
                                     self.idx)
         except Exception as e:
             print(e)
 
     def set_value(self, value):
-        self.termination.setTitle("Termination " + str(value))
+        term = self.num_term_map[str(value)]
+        self.termination.setTitle("Term. " + term)
 
 
 class ChannelOffset(Box):
