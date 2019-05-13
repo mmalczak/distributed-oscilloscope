@@ -96,15 +96,3 @@ class TriggerPolarity(Menu):
 
     def action(self):
         pass
-
-
-class ChannelLabel(QLabel):
-    def __init__(self, channel_count):
-        chan_disp = str(channel_count + 1)
-        """+1 is beacuse channels are indexed from 0, but displayed from 1"""
-        super().__init__("Channel " + chan_disp)
-        self.setAlignment(Qt.AlignCenter | Qt.AlignVCenter)
-        self.setMaximumHeight(25)
-        color = str((tuple(Colors().get_color(channel_count))))
-        self.setStyleSheet("border: 2px solid rgb" + color + ";")
- 
