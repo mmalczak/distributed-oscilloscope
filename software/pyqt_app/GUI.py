@@ -46,10 +46,9 @@ class GUI_Class:
 
             self.channels.append(chan_clos)
 
-        self.presamples = Presamples(self.server_proxy, self.GUI_name)
-        self.postsamples = Postsamples(self.server_proxy, self.GUI_name)
-        ui.horizontal_settings_layout.addWidget(self.presamples)
-        ui.horizontal_settings_layout.addWidget(self.postsamples)
+        self.acq_settings = AcquisitionSettings(self.server_proxy,
+                                                self.GUI_name)
+        ui.horizontal_settings_layout.addLayout(self.acq_settings)
 
         self.single_acquisition = SingleAcquisitionButton(self.server_proxy,
                                                           self.GUI_name)
@@ -115,5 +114,5 @@ class GUI_Class:
                              trigger_params['threshold'])
 
     def set_horizontal_params(self, horizontal_params):
-        self.presamples.set_value(horizontal_params['presamples'])
-        self.postsamples.set_value(horizontal_params['postsamples'])
+        self.acq_settings.set_params(horizontal_params['presamples'],
+                                     horizontal_params['postsamples'])
