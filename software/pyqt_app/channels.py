@@ -4,7 +4,7 @@ from PyQt5.QtCore import QRect
 from parent_classes import *
 from proxy import *
 DBG = False
-
+from colors import Colors
 
 class ChannelClosure:
 
@@ -127,7 +127,10 @@ class ChannelsMenu(QMenuBar):
         self.channel_label = channel_label
         self.channel_count = channel_count
         self.channel_closure = channel_closure
-        self.ADCs_menu = self.addMenu("Select channel input")
+        chan_disp = str(channel_count + 1)
+        sp = "                 "
+        """Don't know how ot center the channel menu"""
+        self.ADCs_menu = self.addMenu(sp + "Channel " + chan_disp + sp)
         menuBr = QMenuBar(self.ADCs_menu)
         self.setCornerWidget(menuBr, Qt.TopRightCorner)
         self.ADCs = {}
@@ -135,6 +138,9 @@ class ChannelsMenu(QMenuBar):
         disconnect = self.ADCs_menu.addAction("Disconnect")
         disconnect.triggered.connect(self.remove_channel)
         self.plot = plot
+        """+1 is beacuse channels are indexed from 0, but displayed from 1"""
+        color = str((tuple(Colors().get_color(channel_count))))
+        self.setStyleSheet("border: 2px solid rgb" + color + ";")
 
     def add_available_ADC(self, name, number_of_channels):
         display_name = name.replace('._tcp.local.', '')
@@ -175,8 +181,8 @@ class ChannelInputsLayout(QVBoxLayout):
     def __init__(self, menu, adc_label, channel_label, channel_count):
         super().__init__()
         self.menu = menu
-        GUI_chan_label = ChannelLabel(channel_count)
-        self.addWidget(GUI_chan_label)
+#        GUI_chan_label = ChannelLabel(channel_count)
+#        self.addWidget(GUI_chan_label)
         self.addWidget(self.menu)
         self.addWidget(adc_label)
         self.addWidget(channel_label)
