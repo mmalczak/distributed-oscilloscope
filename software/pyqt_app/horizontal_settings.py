@@ -1,6 +1,6 @@
 from parent_classes import *
 from proxy import *
-from PyQt5.QtWidgets import QVBoxLayout
+from PyQt5.QtWidgets import QHBoxLayout
 
 
 class Presamples(Box):
@@ -32,7 +32,7 @@ class Postsamples(Box):
         proxy = get_proxy(self.server_proxy.proxy_addr)
         proxy.set_postsamples(postsamples, self.GUI_name)
 
-class AcquisitionSettings(QVBoxLayout):
+class AcquisitionSettings(QHBoxLayout):
     def __init__(self, server_proxy, GUI_name):
         super().__init__()
         self.server_proxy = server_proxy
