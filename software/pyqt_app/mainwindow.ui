@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1500</width>
-    <height>900</height>
+    <width>1900</width>
+    <height>1060</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,18 +19,18 @@
      <rect>
       <x>10</x>
       <y>20</y>
-      <width>1021</width>
-      <height>671</height>
+      <width>1411</width>
+      <height>811</height>
      </rect>
     </property>
    </widget>
    <widget class="QFrame" name="vertical_settings_frame">
     <property name="geometry">
      <rect>
-      <x>1050</x>
-      <y>490</y>
+      <x>1450</x>
+      <y>650</y>
       <width>441</width>
-      <height>351</height>
+      <height>341</height>
      </rect>
     </property>
     <property name="frameShape">
@@ -54,10 +54,10 @@
    <widget class="QFrame" name="trigger_settings_frame">
     <property name="geometry">
      <rect>
-      <x>1050</x>
+      <x>1450</x>
       <y>20</y>
-      <width>210</width>
-      <height>281</height>
+      <width>201</width>
+      <height>371</height>
      </rect>
     </property>
     <property name="frameShape">
@@ -81,10 +81,10 @@
    <widget class="QFrame" name="run_control_frame">
     <property name="geometry">
      <rect>
-      <x>1280</x>
+      <x>1680</x>
       <y>20</y>
       <width>210</width>
-      <height>281</height>
+      <height>371</height>
      </rect>
     </property>
     <property name="frameShape">
@@ -108,10 +108,10 @@
    <widget class="QFrame" name="horizontal_settings_frame">
     <property name="geometry">
      <rect>
-      <x>1050</x>
-      <y>340</y>
+      <x>1450</x>
+      <y>460</y>
       <width>441</width>
-      <height>111</height>
+      <height>121</height>
      </rect>
     </property>
     <property name="frameShape">
@@ -136,8 +136,8 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>710</y>
-      <width>201</width>
+      <y>860</y>
+      <width>281</width>
       <height>131</height>
      </rect>
     </property>
@@ -152,7 +152,7 @@
       <rect>
        <x>20</x>
        <y>50</y>
-       <width>151</width>
+       <width>241</width>
        <height>71</height>
       </rect>
      </property>
@@ -162,9 +162,9 @@
    <widget class="QFrame" name="channel_inputs_frame">
     <property name="geometry">
      <rect>
-      <x>229</x>
-      <y>710</y>
-      <width>801</width>
+      <x>319</x>
+      <y>860</y>
+      <width>1101</width>
       <height>131</height>
      </rect>
     </property>
@@ -180,9 +180,9 @@
     <widget class="QWidget" name="horizontalLayoutWidget">
      <property name="geometry">
       <rect>
-       <x>10</x>
+       <x>20</x>
        <y>20</y>
-       <width>771</width>
+       <width>1061</width>
        <height>101</height>
       </rect>
      </property>
@@ -192,8 +192,8 @@
    <widget class="QLabel" name="trigger_settings_label_2">
     <property name="geometry">
      <rect>
-      <x>240</x>
-      <y>700</y>
+      <x>340</x>
+      <y>850</y>
       <width>111</width>
       <height>21</height>
      </rect>
@@ -286,7 +286,7 @@
     <property name="geometry">
      <rect>
       <x>30</x>
-      <y>700</y>
+      <y>850</y>
       <width>161</width>
       <height>21</height>
      </rect>
@@ -375,8 +375,8 @@
    <widget class="QLabel" name="vertical_settings_label">
     <property name="geometry">
      <rect>
-      <x>1060</x>
-      <y>480</y>
+      <x>1460</x>
+      <y>640</y>
       <width>121</width>
       <height>21</height>
      </rect>
@@ -465,7 +465,7 @@
    <widget class="QLabel" name="trigger_settings_label">
     <property name="geometry">
      <rect>
-      <x>1060</x>
+      <x>1460</x>
       <y>10</y>
       <width>121</width>
       <height>21</height>
@@ -555,8 +555,8 @@
    <widget class="QLabel" name="horizontal_settings_label">
     <property name="geometry">
      <rect>
-      <x>1060</x>
-      <y>330</y>
+      <x>1460</x>
+      <y>450</y>
       <width>141</width>
       <height>21</height>
      </rect>
@@ -645,7 +645,7 @@
    <widget class="QLabel" name="trigger_settings_label_4">
     <property name="geometry">
      <rect>
-      <x>1290</x>
+      <x>1690</x>
       <y>10</y>
       <width>91</width>
       <height>21</height>
@@ -738,7 +738,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1500</width>
+     <width>1900</width>
      <height>22</height>
     </rect>
    </property>

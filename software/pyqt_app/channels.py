@@ -128,7 +128,7 @@ class ChannelsMenu(QMenuBar):
         self.channel_count = channel_count
         self.channel_closure = channel_closure
         chan_disp = str(channel_count + 1)
-        sp = "                 "
+        sp = "                            "
         """Don't know how ot center the channel menu"""
         self.ADCs_menu = self.addMenu(sp + "Channel " + chan_disp + sp)
         menuBr = QMenuBar(self.ADCs_menu)
