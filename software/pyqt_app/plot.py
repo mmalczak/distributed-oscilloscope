@@ -5,7 +5,7 @@ class Curve(pg.PlotCurveItem):
     def __init__(self, GUI_channel):
         super().__init__()
         color = Colors().get_color(GUI_channel)
-        self.setPen(color=tuple(color))
+        self.setPen(color=tuple(color), connect="finite", width=1)
 
 
 class Trigger(pg.InfiniteLine):
@@ -33,9 +33,12 @@ class PlotMine():
         self.curves = {}
         self.trigger = None
         self.graphics_view = ui.graphicsView
-        self.graphics_view.setLabel('left', text='mV')
-        self.graphics_view.setLabel('bottom', text='ns')
-        self.graphics_view.setRange(yRange=[-2100, 2100])
+        font_size = 12
+        label_style = {'color': '#FFF', 'font-size': str(font_size)+'px'}
+        self.graphics_view.setLabel('left', units='V', **label_style)
+        self.graphics_view.setLabel('bottom', units='s', **label_style)
+
+        self.graphics_view.setRange(yRange=[-10, 10])
 
     def add_channel(self, GUI_channel):
         curve = Curve(GUI_channel)

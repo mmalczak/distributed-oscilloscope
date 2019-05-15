@@ -47,8 +47,7 @@ class ADC:
             mult = range_multiplier[range]
             data_channel = [value * mult for value in data_channel]
             """conversion to the 10V scale"""
-            data_channel =\
-                [(value / 2**16 * 10000) for value in data_channel]
+            data_channel = [(value / 2**16 * 10) for value in data_channel]
             """conversionfrom raw to V"""
 
             self.channels[int(channel_idx)].timestamp_and_data =\

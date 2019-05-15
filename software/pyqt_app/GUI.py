@@ -7,6 +7,8 @@ from run_control import *
 import numpy as np
 from PyQt5.QtCore import pyqtSlot
 
+SAMP_FREQ = 1e8
+
 class GUI_Class:
 
     def __init__(self, ui, GUI_name):
@@ -89,12 +91,10 @@ class GUI_Class:
             print('presamples: ' + str(presamples))
             print('postsamples: ' + str(postsamples))
             print('offsets: ' + str(offsets))
-            axis = np.array(range(-presamples, postsamples))*10
+            axis = np.array(range(-presamples, postsamples))/SAMP_FREQ
             channel_idx_str = int(channel_idx_str)
             """to be removed with xmlrpc"""
-            self.plot.curves[channel_idx_str].setData(axis,
-                                                      channel_data,
-                                                      connect="finite")
+            self.plot.curves[channel_idx_str].setData(axis, channel_data)
 
     def set_channel_params(self, channel_params):
         for GUI_channel_idx, channel_params in channel_params.items():
