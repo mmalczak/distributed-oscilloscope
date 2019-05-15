@@ -1,6 +1,12 @@
 from ADC import *
 from conversion import *
 from timestamp_operations import *
+import logging
+import logging.config
+from logging_conf import DEFAULT_CONFIG
+
+logging.config.dictConfig(DEFAULT_CONFIG)
+logger = logging.getLogger(__name__)
 
 
 class HorizontalSettingsError(Exception):
@@ -37,15 +43,19 @@ class GUI():
 
     def add_channel(self, oscilloscope_channel_idx, unique_ADC_name,
                     ADC_channel_idx):
-        try:
-            self.set_horizontal_setting_when_add_channel(
-                    unique_ADC_name)
-        except Exception as e:
-            print(e)
+        def set_horizontal_setting_when_add_channel(self, new_ADC):
+            ADC_name = self.ADCs_used[0]
+            ADC = self.available_ADCs[ADC_name]
+            presamples = ADC.acq_conf.presamples
+            postsamples = ADC.acq_conf.postsamples
+            self.set_presamples_ADC(presamples, new_ADC)
+            self.set_postsamples_ADC(postsamples, new_ADC)
+
         channel = self.available_ADCs[unique_ADC_name].channels[
                     ADC_channel_idx]
         self.channels[oscilloscope_channel_idx] = channel
         self.update_ADCs_used()
+        set_horizontal_setting_when_add_channel(self, unique_ADC_name)
         self.update_conf(unique_ADC_name)
 
     def add_trigger(self, type, unique_ADC_name, ADC_trigger_idx):
@@ -84,17 +94,6 @@ class GUI():
                           ADC_proxy_addr)
         proxy.configure_acquisition_async(channels)
 
-    def set_horizontal_setting_when_add_channel(self, new_ADC):
-        ADC = self.ADCs_used[0]
-        ADC = self.available_ADCs[ADC]
-        presamples = ADC.acq_conf.presamples
-        postsamples = ADC.acq_conf.postsamples
-        print('presamples: ' + str(presamples))
-        print('postsamples: ' + str(postsamples))
-        new_ADC = self.available_ADCs[new_ADC]
-        self.set_presamples_ADC(presamples, ADC)
-        self.set_postsamples_ADC(postsamples, ADC)
-
     def set_presamples_ADC(self, value, unique_ADC_name):
         ADC = self.available_ADCs[unique_ADC_name]
         proxy = get_proxy(ADC.ADC_proxy_addr)
@@ -125,10 +124,13 @@ class GUI():
             self.configure_acquisition_ADCs_used()
 
     def configure_acquisition_ADCs_used(self):
-        for unique_ADC_name in self.ADCs_used:
-            if(unique_ADC_name != self.trigger.unique_ADC_name):
-                self.configure_acquisition_ADC(unique_ADC_name)
-        self.configure_acquisition_ADC(self.trigger.unique_ADC_name)
+        if self.trigger is not None:
+            for unique_ADC_name in self.ADCs_used:
+                if(unique_ADC_name != self.trigger.unique_ADC_name):
+                    self.configure_acquisition_ADC(unique_ADC_name)
+            self.configure_acquisition_ADC(self.trigger.unique_ADC_name)
+        else:
+            logger.info("No trigger selected")
 
     def stop_acquisition_ADCs_used(self):
         for unique_ADC_name in self.ADCs_used:
@@ -176,10 +178,7 @@ class GUI():
         ADC.update_conf()
         self.update_channels()
         self.update_trigger()
-        try:
-            self.update_horizontal_settings()
-        except IndexError:
-            pass  # get this exception if no ADC is used at the moment
+        self.update_horizontal_settings()
 
     def check_horizontal_settings(self):
         ADC0 = self.ADCs_used[0]
@@ -203,10 +202,10 @@ class GUI():
             horizontal_params = {'presamples': presamples,
                                  'postsamples': postsamples}
             try:
-                get_proxy(self.GUI_proxy_addr).set_horizontal_params(
-                                                    horizontal_params)
+                proxy = get_proxy(self.GUI_proxy_addr)
+                proxy.set_horizontal_params(horizontal_params)
             except Exception as e:
-                print('Exception = : ' + str(e))
+                logging.error('Exception = : ' + str(e))
 
     def update_channels(self):
         oscilloscope_channels_params = {}
@@ -222,19 +221,19 @@ class GUI():
             proxy = get_proxy(self.GUI_proxy_addr)
             proxy.set_channel_params(oscilloscope_channels_params)
         except Exception as e:
-            print('Exception = : ' + str(e))
+            logging.error('Exception = : ' + str(e))
 
     def update_trigger(self):
         trigger = self.trigger
         if(trigger is None):
             return
         threshold = None
-        try:
+        if trigger.type == 'internal':
             threshold = threshold_raw_to_mV(trigger.threshold,
                                             trigger.unique_ADC_name,
                                             trigger.ADC_trigger_idx,
                                             self.available_ADCs)
-        except:
+        else:
             threshold = 'not_available'
         trigger_params = {'enable': trigger.enable,
                           'polarity': trigger.polarity,
@@ -244,4 +243,4 @@ class GUI():
             proxy = get_proxy(self.GUI_proxy_addr)
             proxy.set_trigger_params(trigger_params)
         except Exception as e:
-            print('Exception = : ' + str(e))
+            logging.error('Exception = : ' + str(e))
