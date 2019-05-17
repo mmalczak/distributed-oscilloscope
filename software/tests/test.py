@@ -10,6 +10,15 @@ from proxy import get_proxy
 
 class OscilloscopeMethods(unittest.TestCase):
 
+    def remove_ADC(self, name):
+        ADC1 = self.ADCs[name]
+        proxy = get_proxy("http://spechost:" + str(ADC1[0]) + "/")
+        try:
+            proxy.exit()
+        except Exception as e:
+            print(e)
+        """There will be error until test programm will implement XMLRPC
+        server"""
 
     def __init__(self, *args, **kwargs):
         super(OscilloscopeMethods, self).__init__(*args, **kwargs)
@@ -27,25 +36,14 @@ class OscilloscopeMethods(unittest.TestCase):
     def __del__(self, *args, **kwargs):
         super(OscilloscopeMethods, self).__init__(*args, **kwargs)
         time.sleep(1)
-        ADC1 = self.ADCs['ADC1']
-        proxy = get_proxy("http://spechost:" + str(ADC1[0]) + "/")
-        try:
-            proxy.exit()
-        except Exception as e:
-            print(e)
-        """There will be error until test programm will implement XMLRPC
-        server"""
+        self.remove_ADC('ADC1')
         time.sleep(1)
-        ADC2 = self.ADCs['ADC2']
-        proxy = get_proxy("http://spechost:" + str(ADC2[0]) + "/")
-        try:
-            proxy.exit()
-        except Exception as e:
-            print(e)
+        self.remove_ADC('ADC2')
         time.sleep(1)
         self.server_handler.terminate()
 
     def test_upper(self):
+        time.sleep(1)
         self.assertEqual("abc", "abc")
        
 
