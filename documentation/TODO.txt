@@ -1,0 +1,10 @@
+add tests
+add logging
+start using zeromq
+move proxy from everywhere to general
+fix wrappers according to wrapper_comments_TODO.txt file
+ 
+
+
+check the python requirements and clean it
+
