@@ -101,6 +101,12 @@ class GUI():
         self.update_conf(unique_ADC_name)
 
     def set_postsamples_ADC(self, value, unique_ADC_name):
+        if value == 1:
+            value = 2
+        """By default the value of postsamples is, but the minimum value that
+        could be written is 2.
+        If I read the configuration after initialization and want to write it
+        back, I cannot, so then instead of writing 1, I write 2"""
         ADC = self.available_ADCs[unique_ADC_name]
         proxy = get_proxy(ADC.ADC_proxy_addr)
         proxy.set_adc_parameter('set_postsamples', value)
