@@ -1,3 +1,5 @@
+import sys
+sys.path.append('../general')
 from oscilloscope import *
 from service_management import *
 from ADC_expose import *

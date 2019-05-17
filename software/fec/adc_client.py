@@ -1,3 +1,5 @@
+import sys
+sys.path.append('../general')
 import numpy as np
 import xmlrpc.client
 import zeroconf

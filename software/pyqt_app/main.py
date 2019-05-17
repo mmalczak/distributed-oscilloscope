@@ -1,3 +1,5 @@
+import sys
+sys.path.append('../general')
 from PyQt5.QtWidgets import QApplication
 from PyQt5.QtWidgets import QMainWindow
 from mainwindow import Ui_MainWindow
