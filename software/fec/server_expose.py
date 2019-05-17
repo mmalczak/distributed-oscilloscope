@@ -2,7 +2,7 @@ import threading
 from xmlrpc.server import SimpleXMLRPCServer
 import sys
 import selectors
-
+import os
 from ADC import *
 
 
@@ -32,6 +32,14 @@ class ServerExpose():
         else:
             self.adc.configure_parameter(function_name, [idx, value])
 
+    def exit(self):
+        """This fucntion is just for testing and will be removed after 
+        addding ZeroMQ"""
+        """doesn'r work with zeroconf"""
+        proxy = get_proxy(self.server_proxy.proxy_addr)
+        proxy.remove_service(self.adc.unique_ADC_name)
+        os._exit(1)
+
     def run(self):
         self.server = SimpleXMLRPCServer((self.addr, self.port),
                                          allow_none=True)
@@ -50,5 +58,7 @@ class ServerExpose():
                                       "set_WRTD_master")
         self.server.register_function(self.adc.stop_acquisition,
                                       "stop_acquisition")
+        self.server.register_function(self.exit, "exit")
+
 
         """self.server.serve_forever()"""
