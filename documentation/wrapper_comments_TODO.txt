@@ -1,0 +1,16 @@
+remove enum comments
+
+add underscores __open, __close
+vmalloc, kmalloc - in the library add functions to change from one to another
+channel range, remove if - use directly the enumerations
+
+ADC_WRTD - don't extend, but use the ADC use ADC
+instead of having the functions configure_parameter, use getattr when needed
+set buffer afetr changing the pre/post samples
+
+
+
+wrtd remove not implemented functions from libary
+im the library add a branch with missing functions
+wrtd tests
+
