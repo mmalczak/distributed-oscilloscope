@@ -57,9 +57,9 @@ class ThreadServerExposeTest():
 
     def __init__(self, GUI, port_GUI):
         super().__init__()
-        self.server_share = ServerExposeTest(GUI, port_GUI)
+        self.server_expose_test = ServerExposeTest(GUI, port_GUI)
         self.thread = multiprocessing.Process(
-                target=self.server_share.monitorSlot)
+                target=self.server_expose_test.monitorSlot)
         """The same as threading.Thread but I can terminate process 
         externally, maybe not perfect solution, but good enough as long as I 
         am using XMLRPC"""
