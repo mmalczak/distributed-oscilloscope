@@ -12,27 +12,26 @@ class ServerExposeTest():
         print("server address set")
 
     def remove_available_ADC(self, *args, **kwargs):
-        pass 
+        print("GUI: available ADC removed")
 
     def add_available_ADC(self, *args, **kwargs):
         print("GUI: available ADC added")
 
     def update_data(self, *args, **kwargs):
-        pass
+        print("GUI: update GUI")
 
     def set_horizontal_params(self, *args, **kwargs):
-        pass
+        print("GUI: set_horizontal_params")
 
     def set_channel_params(self, *args, **kwargs):
-        pass
+        print("GUI: set_channel_params")
 
     def set_trigger_params(self, *args, **kwargs):
-        pass
-
+        print("GUI: set_trigger_params")
 
     def monitorSlot(self):
         server = SimpleXMLRPCServer(("", self.port_GUI),
-                                    allow_none=True)
+                                    allow_none=True, logRequests=False)
         print("Listening on port " + str(self.port_GUI) + "...")
         server.register_function(self.add_available_ADC, "add_available_ADC")
         server.register_function(self.remove_available_ADC,

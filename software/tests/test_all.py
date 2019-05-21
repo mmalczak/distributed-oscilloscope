@@ -7,7 +7,8 @@ import sys
 sys.path.append('../general')
 from proxy import get_proxy
 from server_expose_test import ThreadServerExposeTest
-
+import zeroconf
+import os
 
 class OscilloscopeMethods(unittest.TestCase):
 
@@ -20,6 +21,7 @@ class OscilloscopeMethods(unittest.TestCase):
     def setUpClass(cls):
         cls.start_server(cls)
         cls.create_GUI_interface(cls)
+        cls.start_zeroconf(cls)
         cls.add_ADC_FEC(cls, 'ADC1') 
         cls.add_ADC_FEC(cls, 'ADC2') 
 
@@ -29,6 +31,22 @@ class OscilloscopeMethods(unittest.TestCase):
         cls.remove_ADC_FEC(cls, 'ADC2')
         cls.stop_GUI_interface(cls)
         cls.stop_server(cls)
+
+    def start_zeroconf(self):
+        #addr = os.popen("ifconfig| grep inet").read().split()[1]
+        addr = '128.141.79.50'
+        port = 8001
+        GUI_idx = addr + "_" + str(port)
+        GUI_name = "GUI" + "_" + GUI_idx + "._http._tcp.local."
+        zeroconf_info = zeroconf.ServiceInfo("_http._tcp.local.",
+                                             GUI_name,
+                                             zeroconf.socket.inet_aton(addr),
+                                             8000,
+                                             properties={'addr': addr,
+                                                         'port': str(port)})
+        zeroconf_service = zeroconf.Zeroconf()
+        zeroconf_service.register_service(zeroconf_info)
+        time.sleep(self.delay)
 
     def add_ADC_FEC(self, name):
         ADC = self.ADCs[name]
@@ -41,13 +59,12 @@ class OscilloscopeMethods(unittest.TestCase):
         try:
             proxy.exit()
         except Exception as e:
-            print(e)
-            #if type(e) is ConnectionRefusedError:
-            #    pass
-            #else:
-            #    print(e)
-        """There will be error until test programm will implement XMLRPC
-        server"""
+            if type(e) is ConnectionRefusedError:
+                pass
+            else:
+                print(e)
+        """There will be an error because proxy can never return because 
+        the process exits"""
         time.sleep(self.delay)
 
     def start_server(self):
