@@ -18,6 +18,7 @@ class Oscilloscope():
                                   number_of_channels)
 
     def remove_available_ADC(self, unique_ADC_name):
+        """TODO: Why doesn't call GUI remove_available_ADC"""
         for name_GUI, GUI in self.GUIs.items():
             proxy = get_proxy(GUI.GUI_proxy_addr)
             proxy.remove_available_ADC(unique_ADC_name)
