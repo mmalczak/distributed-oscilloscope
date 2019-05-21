@@ -10,43 +10,60 @@ from server_expose_test import ThreadServerExposeTest
 
 class OscilloscopeMethods(unittest.TestCase):
 
-    def remove_ADC(self, name):
-        ADC1 = self.ADCs[name]
-        proxy = get_proxy("http://spechost:" + str(ADC1[0]) + "/")
-        try:
-            proxy.exit()
-        except Exception as e:
-            print(e)
-        """There will be error until test programm will implement XMLRPC
-        server"""
-
     def __init__(self, *args, **kwargs):
         super(OscilloscopeMethods, self).__init__(*args, **kwargs)
-        self.server_handler = subprocess.Popen(
-                        'python3 ../server/main_server.py', shell=True)
+        self.server_handler = None
+        self.server_expose = None
         self.ADCs = {'ADC1':[8000, 1], 'ADC2':[8001, 2]}
-        time.sleep(0.1)
-        ADC1 = self.ADCs['ADC1']
-        start_adc(ADC1[0], ADC1[1])
-        time.sleep(0.1)
-        ADC2 = self.ADCs['ADC2']
-        start_adc(ADC2[0], ADC2[1])
-        time.sleep(0.1)
-        self.server_expose = ThreadServerExposeTest(None, 8001) 
-        time.sleep(0.1)
+        
+        self.start_server()
+        self.create_GUI_interface()
+        self.add_ADC_FEC('ADC1') 
+        self.add_ADC_FEC('ADC2') 
 
     def __del__(self, *args, **kwargs):
         super(OscilloscopeMethods, self).__init__(*args, **kwargs)
-        time.sleep(0.1)
-        self.remove_ADC('ADC1')
-        time.sleep(0.1)
-        self.remove_ADC('ADC2')
-        time.sleep(0.1)
-        self.server_handler.terminate()
+        self.remove_ADC_FEC('ADC1')
+        self.remove_ADC_FEC('ADC2')
+        self.stop_GUI_interface()
+        self.stop_server()
+
+    def add_ADC_FEC(self, name):
+        ADC = self.ADCs[name]
+        start_adc(ADC[0], ADC[1])
+        time.sleep(0.5)
+
+    def remove_ADC_FEC(self, name):
+        ADC = self.ADCs[name]
+        proxy = get_proxy("http://spechost:" + str(ADC[0]) + "/")
+        try:
+            proxy.exit()
+        except Exception as e:
+            #pass
+            print(e)
+        """There will be error until test programm will implement XMLRPC
+        server"""
+        time.sleep(0.5)
+
+    def start_server(self):
+        command = 'python3 ../server/main_server.py'
+        self.server_handler = subprocess.Popen(command, shell=True)
+        time.sleep(0.5)
+
+    def stop_server(self):
         self.server_expose.thread.terminate()
+        time.sleep(0.5)
+
+    def create_GUI_interface(self):
+        self.server_expose = ThreadServerExposeTest(None, 8001) 
+        time.sleep(0.5)
+
+    def stop_GUI_interface(self):
+        self.server_handler.terminate()
+        time.sleep(0.5)
 
     def test_upper(self):
-        time.sleep(0.1)
+        time.sleep(0.5)
         self.assertEqual("abc", "abc")
        
 
