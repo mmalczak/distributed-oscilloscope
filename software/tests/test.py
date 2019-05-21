@@ -16,13 +16,13 @@ class OscilloscopeMethods(unittest.TestCase):
         self.server_expose = None
         self.ADCs = {'ADC1':[8000, 1], 'ADC2':[8001, 2]}
         
+    def setUp(self):
         self.start_server()
         self.create_GUI_interface()
         self.add_ADC_FEC('ADC1') 
         self.add_ADC_FEC('ADC2') 
 
-    def __del__(self, *args, **kwargs):
-        super(OscilloscopeMethods, self).__init__(*args, **kwargs)
+    def tearDown(self):
         self.remove_ADC_FEC('ADC1')
         self.remove_ADC_FEC('ADC2')
         self.stop_GUI_interface()
