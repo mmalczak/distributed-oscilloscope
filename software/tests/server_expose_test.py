@@ -9,13 +9,13 @@ class ServerExposeTest():
         self.GUI = GUI
 
     def set_server_address(self, addr):
-        pass
+        print("server address set")
 
     def remove_available_ADC(self, *args, **kwargs):
         pass 
 
     def add_available_ADC(self, *args, **kwargs):
-        pass 
+        print("GUI: available ADC added")
 
     def update_data(self, *args, **kwargs):
         pass
