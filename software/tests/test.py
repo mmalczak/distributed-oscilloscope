@@ -40,7 +40,10 @@ class OscilloscopeMethods(unittest.TestCase):
             proxy.exit()
         except Exception as e:
             #pass
-            print(e)
+            if type(e) is ConnectionRefusedError:
+                pass
+            else:
+                print(e)
         """There will be error until test programm will implement XMLRPC
         server"""
         time.sleep(0.5)
