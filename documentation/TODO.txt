@@ -1,10 +1,19 @@
 add tests
 add logging
 start using zeromq
-move proxy from everywhere to general
 fix wrappers according to wrapper_comments_TODO.txt file
- 
+fix imports 
 
 
 check the python requirements and clean it
 
+
+GUI:
+- grid 
+- autocenter
+- zoom rectangle
+- measurements
+- math
+- export values to CSCV
+- change names of ADCs and channels (by the user and when staring FEC)
+- save/retrieve configuration
