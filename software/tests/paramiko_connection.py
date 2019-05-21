@@ -6,6 +6,7 @@ warnings.filterwarnings(action='ignore',module='.*paramiko.*')
 """Workaround for paramiko bug"""
 
 def start_adc(port, pci):
+    warnings.filterwarnings(action='ignore',module='.*paramiko.*')
     host = 'spechost'
     key_filename = '/home/milosz/.ssh/known_hosts'
     client = paramiko.SSHClient()
