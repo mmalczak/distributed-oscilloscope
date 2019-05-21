@@ -19,8 +19,8 @@ class ADC:
         for count in range(0, self.conf['board_conf']['n_chan']):
             channel = conf['chn_conf'][count]
             self.add_channel(channel['channel_range'],
-                             channel['termination'], channel['offset'],
-                             count)
+                             channel['termination'], 
+                             channel['offset'], count)
         for count in range(0, self.conf['board_conf']['n_trg_int']):
             trigger = conf['int_trg_conf'][count]
             self.add_internal_trigger(trigger['enable'],
@@ -53,24 +53,20 @@ class ADC:
             self.channels[int(channel_idx)].timestamp_and_data =\
                 [timestamp, data_channel]
 
-    def add_channel(self, channel_range, termination, offset,
-                    ADC_channel_idx):
-        self.channels.append(Channel(channel_range, termination,
-                                     offset,
+    def add_channel(self, channel_range, termination, offset, ADC_channel_idx):
+        self.channels.append(Channel(channel_range, termination, offset,
                                      self.unique_name, ADC_channel_idx))
         self.number_of_channels += 1
 
-    def add_external_trigger(self, enable, polarity, delay,
-                             ADC_trigger_idx):
-        self.external_triggers.append(ExternalTrigger(enable, polarity,
-                                                      delay,
+    def add_external_trigger(self, enable, polarity, delay, ADC_trigger_idx):
+        self.external_triggers.append(ExternalTrigger(enable, polarity, delay,
                                                       self.unique_name,
                                                       ADC_trigger_idx))
 
     def add_internal_trigger(self, enable, polarity, delay, threshold,
                              ADC_trigger_idx):
-        self.internal_triggers.append(InternalTrigger(enable, polarity,
-                                                      delay, threshold,
+        self.internal_triggers.append(InternalTrigger(enable, polarity, delay,
+                                                      threshold,
                                                       self.unique_name,
                                                       ADC_trigger_idx))
 
@@ -78,23 +74,20 @@ class ADC:
         self.conf = get_proxy(self.ADC_proxy_addr).get_current_conf()
         for count in range(0, self.conf['board_conf']['n_chan']):
             channel = self.conf['chn_conf'][count]
-            self.channels[count].\
-                update_channel_conf(channel['channel_range'],
-                                    channel['termination'],
-                                    channel['offset'])
+            self.channels[count].update_channel_conf(channel['channel_range'],
+                                                     channel['termination'],
+                                                     channel['offset'])
         for count in range(0, self.conf['board_conf']['n_trg_int']):
             trigger = self.conf['int_trg_conf'][count]
-            self.internal_triggers[count].\
-                update_trigger_conf(trigger['enable'],
-                                    trigger['polarity'],
-                                    trigger['delay'],
-                                    trigger['threshold'])
+            self.internal_triggers[count].update_trigger_conf(trigger['enable'],
+                                                              trigger['polarity'],
+                                                              trigger['delay'],
+                                                              trigger['threshold'])
         for count in range(0, self.conf['board_conf']['n_trg_ext']):
             trigger = self.conf['ext_trg_conf'][count]
-            self.external_triggers[count].\
-                update_trigger_conf(trigger['enable'],
-                                    trigger['polarity'],
-                                    trigger['delay'])
+            self.external_triggers[count].update_trigger_conf(trigger['enable'],
+                                                              trigger['polarity'],
+                                                              trigger['delay'])
         self.acq_conf.update_acq_conf(
             self.conf['acq_conf']['presamples'],
             self.conf['acq_conf']['postsamples'])

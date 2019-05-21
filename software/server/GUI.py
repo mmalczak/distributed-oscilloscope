@@ -51,8 +51,7 @@ class GUI():
             self.set_presamples_ADC(presamples, new_ADC)
             self.set_postsamples_ADC(postsamples, new_ADC)
 
-        channel = self.available_ADCs[unique_ADC_name].channels[
-                    ADC_channel_idx]
+        channel = self.available_ADCs[unique_ADC_name].channels[ADC_channel_idx]
         self.channels[oscilloscope_channel_idx] = channel
         self.update_ADCs_used()
         set_horizontal_setting_when_add_channel(self, unique_ADC_name)
@@ -60,12 +59,11 @@ class GUI():
 
     def add_trigger(self, type, unique_ADC_name, ADC_trigger_idx):
         trigger = None
+        ADC = self.available_ADCs[unique_ADC_name]
         if type == 'internal':   # consider dictionary
-            trigger = self.available_ADCs[unique_ADC_name].\
-                        internal_triggers[ADC_trigger_idx]
+            trigger = ADC.internal_triggers[ADC_trigger_idx]
         else:
-            trigger = self.available_ADCs[unique_ADC_name].\
-                        external_triggers[ADC_trigger_idx]
+            trigger = ADC.external_triggers[ADC_trigger_idx]
         self.trigger = trigger
         self.update_ADCs_used()
         self.update_conf(unique_ADC_name)
@@ -90,8 +88,7 @@ class GUI():
             if(channel.unique_ADC_name == unique_ADC_name):
                 channels.append(channel.ADC_channel_idx)
         channels.sort()
-        proxy = get_proxy(self.available_ADCs[unique_ADC_name].
-                          ADC_proxy_addr)
+        proxy = get_proxy(self.available_ADCs[unique_ADC_name].ADC_proxy_addr)
         proxy.configure_acquisition_async(channels)
 
     def set_presamples_ADC(self, value, unique_ADC_name):

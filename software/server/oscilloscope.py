@@ -10,12 +10,10 @@ class Oscilloscope():
     def add_available_ADC(self, unique_ADC_name, number_of_channels,
                           ADC_proxy_addr, conf):
         self.available_ADCs[unique_ADC_name] = ADC(unique_ADC_name,
-                                                   ADC_proxy_addr,
-                                                   conf)
+                                                   ADC_proxy_addr, conf)
         for name_GUI, GUI in self.GUIs.items():
-            get_proxy(GUI.GUI_proxy_addr).\
-                add_available_ADC(unique_ADC_name,
-                                  number_of_channels)
+            proxy = get_proxy(GUI.GUI_proxy_addr)
+            proxy.add_available_ADC(unique_ADC_name, number_of_channels)
 
     def remove_available_ADC(self, unique_ADC_name):
         """TODO: Why doesn't call GUI remove_available_ADC"""
@@ -33,15 +31,13 @@ class Oscilloscope():
                 GUI.remove_channel(channel_idx)
 
 
-
-
     def register_GUI(self, GUI_name, GUI_proxy_addr):
         GUI_ = GUI(self.available_ADCs, GUI_name, GUI_proxy_addr)
         self.GUIs.update({GUI_name: GUI_})
         for unique_ADC_name, ADC in self.available_ADCs.items():
-            get_proxy(GUI_proxy_addr).\
-                add_available_ADC(ADC.unique_name,
-                                  ADC.number_of_channels, ADC.conf)
+            proxy = get_proxy(GUI_proxy_addr)
+            proxy.add_available_ADC(ADC.unique_name, ADC.number_of_channels,
+                                    ADC.conf)
 
     def unregister_GUI(self, name):
         del self.GUIs[name]
@@ -92,8 +88,7 @@ def validate_data(GUI):
             except Exception as e:
                 return False
             if(check_if_not_max(max_timestamp_sec, max_timestamp_tic,
-                                timestamp_sec, timestamp_tic,
-                                max_offset)):
+                                timestamp_sec, timestamp_tic, max_offset)):
                 ADC.timestamp_and_data.pop(0)
         for ADC_name, ADC in GUI.ADCs.items():
             try:
@@ -114,10 +109,8 @@ def validate_data(GUI):
                 information is included in the data, as last sample"""
                 """FIXME offset calculated in ticks, the correction
                 applied in samples"""
-                offset = tic_difference(max_timestamp_sec,
-                                        max_timestamp_tic,
-                                        timestamp_sec,
-                                        timestamp_tic)
+                offset = tic_difference(max_timestamp_sec, max_timestamp_tic,
+                                        timestamp_sec, timestamp_tic)
                 for count in range(0, ADC.number_of_channels):
                     ADC.timestamp_and_data[0][1][count].append(offset)
                 all_the_same = True

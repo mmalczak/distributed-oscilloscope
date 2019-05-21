@@ -1,7 +1,7 @@
 class Channel:
 
-    def __init__(self, channel_range, termination, offset,
-                 unique_ADC_name, ADC_channel_idx):
+    def __init__(self, channel_range, termination, offset, unique_ADC_name, 
+                 ADC_channel_idx):
         self.unique_ADC_name = unique_ADC_name
         self.ADC_channel_idx = ADC_channel_idx
         self.range_conv = {35: 100, 69: 10, 17: 1}
@@ -51,8 +51,8 @@ class Trigger:
 
 class InternalTrigger(Trigger):
 
-    def __init__(self, enable, polarity, delay, threshold,
-                 unique_ADC_name, ADC_trigger_idx):
+    def __init__(self, enable, polarity, delay, threshold, unique_ADC_name, 
+                 ADC_trigger_idx):
         super().__init__(enable, polarity, delay)
         self.unique_ADC_name = unique_ADC_name
         self.ADC_trigger_idx = ADC_trigger_idx

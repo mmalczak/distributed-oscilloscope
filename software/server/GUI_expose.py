@@ -51,8 +51,7 @@ class ThreadGUI_Expose(threading.Thread):
     def add_channel(self, oscilloscope_channel_idx, unique_ADC_name,
                     ADC_channel_idx, GUI_name):
         GUI = self.osc.GUIs[GUI_name]
-        GUI.add_channel(oscilloscope_channel_idx,
-                                            unique_ADC_name,
+        GUI.add_channel(oscilloscope_channel_idx, unique_ADC_name,
                                             ADC_channel_idx)
 
     def remove_channel(self, oscilloscope_channel_idx, GUI_name):
@@ -72,12 +71,10 @@ class ThreadGUI_Expose(threading.Thread):
         trigger = self.osc.GUIs[GUI_name].trigger
         try:
             function_name = 'set_' + trigger.type + '_trigger_enable'
-            self.send_RPC_request(function_name,
-                                  trigger.unique_ADC_name,
-                                  0,
+            self.send_RPC_request(function_name, trigger.unique_ADC_name, 0,
                                   trigger.ADC_trigger_idx)
-            proxy = get_proxy(self.osc.available_ADCs[
-                                trigger.unique_ADC_name].ADC_proxy_addr)
+            ADC = self.osc.available_ADCs[trigger.unique_ADC_name]
+            proxy = get_proxy(ADC.ADC_proxy_addr)
             proxy.set_WRTD_master(False)
         except Exception as e:
             print(e)
@@ -100,8 +97,7 @@ class ThreadGUI_Expose(threading.Thread):
         multiplier = {(10, 10): 1, (10, 1): 10, (10, 100): 100,
                       (1, 10): 1/10, (1, 1): 1, (1, 100): 10,
                       (100, 10): 1/100, (100, 1): 10, (100, 100): 1}
-        threshold = int(curr_threshold*multiplier[(curr_range,
-                                                   new_range)])
+        threshold = int(curr_threshold*multiplier[(curr_range, new_range)])
         if (threshold > 2**15-1 or threshold < -2**15):
             self.send_RPC_request('set_internal_trigger_enable',
                                   unique_ADC_name, 0, channel_idx)
@@ -113,8 +109,7 @@ class ThreadGUI_Expose(threading.Thread):
                 proxy.print("Internal trigger disabled: value out of range")
         else:
             self.send_RPC_request('set_internal_trigger_threshold',
-                                  unique_ADC_name, threshold,
-                                  channel_idx)
+                                  unique_ADC_name, threshold, channel_idx)
 
     @stop_and_retrieve_acquisition
     @update_GUI_after
@@ -123,15 +118,12 @@ class ThreadGUI_Expose(threading.Thread):
         function_name = 'set_' + parameter_name
         mapper_function_name = 'map_' + parameter_name
         mapper_methods_closure = self.MapperMethodsClosure()
-        mapper_function = getattr(mapper_methods_closure,
-                                  mapper_function_name)
+        mapper_function = getattr(mapper_methods_closure, mapper_function_name)
         ADC_value = mapper_function(value, unique_ADC_name, idx,
                                     self.osc.available_ADCs)
-        self.send_RPC_request(function_name, unique_ADC_name,
-                              ADC_value, idx)
+        self.send_RPC_request(function_name, unique_ADC_name, ADC_value, idx)
 
-    def send_RPC_request(self, function_name, unique_ADC_name,
-                         ADC_value, idx):
+    def send_RPC_request(self, function_name, unique_ADC_name, ADC_value, idx):
         proxy = self.get_proxy(unique_ADC_name)
         if(idx == -1):
             proxy.set_adc_parameter(function_name, ADC_value)
@@ -139,8 +131,8 @@ class ThreadGUI_Expose(threading.Thread):
             proxy.set_adc_parameter(function_name, ADC_value, idx)
 
     def get_proxy(self, unique_ADC_name):
-        proxy = get_proxy(self.osc.available_ADCs[
-                                    unique_ADC_name].ADC_proxy_addr)
+        ADC = self.osc.available_ADCs[unique_ADC_name]
+        proxy = get_proxy(ADC.ADC_proxy_addr)
         return proxy
 
     class MapperMethodsClosure():
@@ -173,18 +165,15 @@ class ThreadGUI_Expose(threading.Thread):
         self.osc.GUIs[GUI_name].set_postsamples(value)
 
     def run(self):
-        self.server = SimpleXMLRPCServer(('', 8000),
-                                         allow_none=True,
+        self.server = SimpleXMLRPCServer(('', 8000), allow_none=True,
                                          logRequests=False)
         print("Listening on port 8000...")
 
         self.server.register_function(self.single_acquisition,
                                       "single_acquisition")
-        self.server.register_function(self.run_acquisition,
-                                      "run_acquisition")
+        self.server.register_function(self.run_acquisition, "run_acquisition")
 
-        self.server.register_function(self.remove_service,
-                                      "remove_service")
+        self.server.register_function(self.remove_service, "remove_service")
         self.server.register_function(self.add_service, "add_service")
         self.server.register_function(self.add_channel, "add_channel")
         self.server.register_function(self.add_trigger, "add_trigger")

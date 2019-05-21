@@ -14,8 +14,7 @@ class ThreadZeroConf(threading.Thread):
     def run(self):
         zeroconf = Zeroconf()
         listener = ZeroconfListener(self.osc)
-        browser = ServiceBrowser(zeroconf, "_http._tcp.local.",
-                                 listener)
+        browser = ServiceBrowser(zeroconf, "_http._tcp.local.", listener)
 
 
 class ZeroconfListener:
@@ -33,8 +32,7 @@ class ZeroconfListener:
             conf = info.properties[b'conf']
         try:
             add_service(name, socket.inet_ntoa(info.address),
-                        str(int(info.properties[b'port'])), self.osc,
-                        conf)
+                        str(int(info.properties[b'port'])), self.osc, conf)
         except Exception as e:
             pass
 
@@ -52,8 +50,7 @@ def remove_service(name, osc):
         osc.remove_available_ADC(name)
 
 
-def add_service(name, addr, port, osc, conf=None,
-                server_addr_known=False):
+def add_service(name, addr, port, osc, conf=None, server_addr_known=False):
 
     if name.startswith("ADC"):
         ADC_proxy_addr = "http://" + str(addr) + ":" + str(port) + "/"
