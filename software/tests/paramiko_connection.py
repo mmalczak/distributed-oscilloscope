@@ -1,6 +1,9 @@
 import paramiko
 import os
 import time
+import warnings
+warnings.filterwarnings(action='ignore',module='.*paramiko.*')
+"""Workaround for paramiko bug"""
 
 def start_adc(port, pci):
     host = 'spechost'
