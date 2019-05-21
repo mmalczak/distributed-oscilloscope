@@ -8,30 +8,32 @@ sys.path.append('../general')
 from proxy import get_proxy
 from server_expose_test import ThreadServerExposeTest
 
+
 class OscilloscopeMethods(unittest.TestCase):
 
-    def __init__(self, *args, **kwargs):
-        super(OscilloscopeMethods, self).__init__(*args, **kwargs)
-        self.server_handler = None
-        self.server_expose = None
-        self.ADCs = {'ADC1':[8000, 1], 'ADC2':[8001, 2]}
-        
-    def setUp(self):
-        self.start_server()
-        self.create_GUI_interface()
-        self.add_ADC_FEC('ADC1') 
-        self.add_ADC_FEC('ADC2') 
+    server_handler = None
+    server_expose = None
+    ADCs = {'ADC1':[8000, 1], 'ADC2':[8001, 2]}
+   
 
-    def tearDown(self):
-        self.remove_ADC_FEC('ADC1')
-        self.remove_ADC_FEC('ADC2')
-        self.stop_GUI_interface()
-        self.stop_server()
+    @classmethod
+    def setUpClass(cls):
+        cls.start_server(cls)
+        cls.create_GUI_interface(cls)
+        cls.add_ADC_FEC(cls, 'ADC1') 
+        cls.add_ADC_FEC(cls, 'ADC2') 
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.remove_ADC_FEC(cls, 'ADC1')
+        cls.remove_ADC_FEC(cls, 'ADC2')
+        cls.stop_GUI_interface(cls)
+        cls.stop_server(cls)
 
     def add_ADC_FEC(self, name):
         ADC = self.ADCs[name]
         start_adc(ADC[0], ADC[1])
-        time.sleep(0.5)
+        time.sleep(0.2)
 
     def remove_ADC_FEC(self, name):
         ADC = self.ADCs[name]
@@ -46,28 +48,31 @@ class OscilloscopeMethods(unittest.TestCase):
                 print(e)
         """There will be error until test programm will implement XMLRPC
         server"""
-        time.sleep(0.5)
+        time.sleep(0.2)
 
     def start_server(self):
         command = 'python3 ../server/main_server.py'
         self.server_handler = subprocess.Popen(command, shell=True)
-        time.sleep(0.5)
+        time.sleep(0.2)
 
     def stop_server(self):
         self.server_expose.thread.terminate()
-        time.sleep(0.5)
+        time.sleep(0.2)
 
     def create_GUI_interface(self):
         self.server_expose = ThreadServerExposeTest(None, 8001) 
-        time.sleep(0.5)
+        time.sleep(0.2)
 
     def stop_GUI_interface(self):
         self.server_handler.terminate()
-        time.sleep(0.5)
+        time.sleep(0.2)
 
     def test_upper(self):
-        time.sleep(0.5)
+        time.sleep(0.2)
         self.assertEqual("abc", "abc")
        
-
+    def test_upper2(self):
+        time.sleep(0.2)
+        self.assertEqual("abc", "abc")
+ 
 
