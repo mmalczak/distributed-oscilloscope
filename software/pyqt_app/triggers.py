@@ -248,8 +248,7 @@ class IntTriggersMenu(TriggersMenu):
         """+1 is beacuse channels are indexed from 0, but displayed from 1"""
         if selected_ADC is not None: 
             ADC_idx = self.channels[self.GUI_channel_idx].properties.idx
-            self.trigger_closure.set_trigger_properties(selected_ADC,
-                                                        ADC_idx)
+            self.trigger_closure.set_trigger_properties(selected_ADC, ADC_idx)
             self.plot.add_trigger(self.GUI_channel_idx)
             proxy = get_proxy(self.trigger_closure.server_proxy.proxy_addr)
             proxy.add_trigger('internal', selected_ADC, ADC_idx,
@@ -349,8 +348,8 @@ class TriggerEnableButton(Button):
     def action(self):
         proxy = get_proxy(self.server_proxy.proxy_addr)
         proxy.set_ADC_parameter(self.type + '_trigger_enable',
-                                not self.isChecked(),
-                                self.unique_ADC_name, self.idx)
+                                not self.isChecked(), self.unique_ADC_name, 
+                                self.idx)
 
 
 class TriggerPolarity(TriggerPolarity):
@@ -362,10 +361,10 @@ class TriggerPolarity(TriggerPolarity):
 
     def action(self):
         polarity_str = self.sender().text()
+        polarity = int(polarity_str)
         proxy = get_proxy(self.server_proxy.proxy_addr)
-        proxy.set_ADC_parameter(self.type + '_trigger_polarity',
-                                int(polarity_str), self.unique_ADC_name,
-                                self.idx)
+        proxy.set_ADC_parameter(self.type + '_trigger_polarity', polarity,
+                                self.unique_ADC_name, self.idx)
 
 
 class TriggerDelay(Box):

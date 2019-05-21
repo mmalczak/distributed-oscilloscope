@@ -75,19 +75,16 @@ def main():
     if(args.ip_server is None):
         zeroconf_info = zeroconf.ServiceInfo("_http._tcp.local.",
                                              GUI_name,
-                                             zeroconf.socket.
-                                             inet_aton(addr),
+                                             zeroconf.socket.inet_aton(addr),
                                              8000,
                                              properties={'addr': addr,
-                                                         'port':
-                                                         str(port)})
+                                                         'port': str(port)})
         zeroconf_service = zeroconf.Zeroconf()
         zeroconf_service.register_service(zeroconf_info)
 
     else:
-        xmlrpc.client.ServerProxy("http://" + args.ip_server[0] +
-                                  ":8000/").add_service(GUI_name, addr,
-                                                        port)
+        proxy = xmlrpc.client.ServerProxy("http://" + args.ip_server[0] + ":8000/")
+        proxy.add_service(GUI_name, addr, port)
 
     win.zeroconf_info = zeroconf_info
     win.zeroconf_service = zeroconf_service

@@ -38,8 +38,7 @@ class ServerExpose(QtCore.QObject):
         server.register_function(self.add_available_ADC, "add_available_ADC")
         server.register_function(self.remove_available_ADC,
                                  "remove_available_ADC")
-        server.register_function(self.set_server_address,
-                                 "set_server_address")
+        server.register_function(self.set_server_address, "set_server_address")
         server.register_function(self.show_widgets, "show_widgets")
         server.register_function(self.GUI.update_data, "update_data")
         server.register_function(self.GUI.set_horizontal_params,
@@ -48,8 +47,7 @@ class ServerExpose(QtCore.QObject):
                                  "set_channel_params")
         server.register_function(self.GUI.set_trigger_params,
                                  "set_trigger_params")
-        """server.register_function(self.set_acq_params,
-                                    "set_acq_params")"""
+        """server.register_function(self.set_acq_params, "set_acq_params")"""
         server.register_function(print, "print")
 
         server.serve_forever()
