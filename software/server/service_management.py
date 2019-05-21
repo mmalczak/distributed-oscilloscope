@@ -65,8 +65,7 @@ def add_service(name, addr, port, osc, conf=None,
         server_address was set and assumes that if it was set, server
         is properly configured)"""
         if not server_addr_known:
-            server_addr =\
-                 os.popen("ifconfig| grep inet").read().split()[1]
+            server_addr = os.popen("ifconfig| grep inet").read().split()[1]
             get_proxy(ADC_proxy_addr).set_server_address(server_addr)
         print("Service %s added" % (name))
 
