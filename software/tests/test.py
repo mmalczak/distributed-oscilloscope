@@ -6,7 +6,7 @@ import xmlrpc.client
 import sys
 sys.path.append('../general')
 from proxy import get_proxy
-
+from server_expose_test import ThreadServerExposeTest
 
 class OscilloscopeMethods(unittest.TestCase):
 
@@ -32,6 +32,8 @@ class OscilloscopeMethods(unittest.TestCase):
         ADC2 = self.ADCs['ADC2']
         start_adc(ADC2[0], ADC2[1])
         time.sleep(1)
+        self.server_expose = ThreadServerExposeTest(None, 8001) 
+        time.sleep(1)
 
     def __del__(self, *args, **kwargs):
         super(OscilloscopeMethods, self).__init__(*args, **kwargs)
@@ -41,6 +43,7 @@ class OscilloscopeMethods(unittest.TestCase):
         self.remove_ADC('ADC2')
         time.sleep(1)
         self.server_handler.terminate()
+        self.server_expose.thread.terminate()
 
     def test_upper(self):
         time.sleep(1)
