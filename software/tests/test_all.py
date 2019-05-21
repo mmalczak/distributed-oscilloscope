@@ -14,7 +14,7 @@ class OscilloscopeMethods(unittest.TestCase):
     server_handler = None
     server_expose = None
     ADCs = {'ADC1':[8000, 1], 'ADC2':[8001, 2]}
-   
+    delay = 0.5
 
     @classmethod
     def setUpClass(cls):
@@ -33,7 +33,7 @@ class OscilloscopeMethods(unittest.TestCase):
     def add_ADC_FEC(self, name):
         ADC = self.ADCs[name]
         start_adc(ADC[0], ADC[1])
-        time.sleep(0.2)
+        time.sleep(self.delay)
 
     def remove_ADC_FEC(self, name):
         ADC = self.ADCs[name]
@@ -41,38 +41,38 @@ class OscilloscopeMethods(unittest.TestCase):
         try:
             proxy.exit()
         except Exception as e:
-            #pass
-            if type(e) is ConnectionRefusedError:
-                pass
-            else:
-                print(e)
+            print(e)
+            #if type(e) is ConnectionRefusedError:
+            #    pass
+            #else:
+            #    print(e)
         """There will be error until test programm will implement XMLRPC
         server"""
-        time.sleep(0.2)
+        time.sleep(self.delay)
 
     def start_server(self):
         command = 'python3 ../server/main_server.py'
         self.server_handler = subprocess.Popen(command, shell=True)
-        time.sleep(0.2)
+        time.sleep(self.delay)
 
     def stop_server(self):
         self.server_expose.thread.terminate()
-        time.sleep(0.2)
+        time.sleep(self.delay)
 
     def create_GUI_interface(self):
         self.server_expose = ThreadServerExposeTest(None, 8001) 
-        time.sleep(0.2)
+        time.sleep(self.delay)
 
     def stop_GUI_interface(self):
         self.server_handler.terminate()
-        time.sleep(0.2)
+        time.sleep(self.delay)
 
     def test_upper(self):
-        time.sleep(0.2)
+        time.sleep(self.delay)
         self.assertEqual("abc", "abc")
        
     def test_upper2(self):
-        time.sleep(0.2)
+        time.sleep(self.delay)
         self.assertEqual("abc", "abc")
  
 
