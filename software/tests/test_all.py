@@ -9,13 +9,17 @@ from proxy import get_proxy
 from server_expose_test import ThreadServerExposeTest
 import zeroconf
 import os
+from multiprocessing import Queue
+
+server_addr = '128.141.79.50'
 
 class OscilloscopeMethods(unittest.TestCase):
 
     server_handler = None
     server_expose = None
     ADCs = {'ADC1':[8000, 1], 'ADC2':[8001, 2]}
-    delay = 0.5
+    delay = 0.4
+    return_queue = None
 
     @classmethod
     def setUpClass(cls):
@@ -24,6 +28,8 @@ class OscilloscopeMethods(unittest.TestCase):
         cls.start_zeroconf(cls)
         cls.add_ADC_FEC(cls, 'ADC1') 
         cls.add_ADC_FEC(cls, 'ADC2') 
+        while not cls.return_queue.empty():
+            cls.return_queue.get()
 
     @classmethod
     def tearDownClass(cls):
@@ -76,17 +82,33 @@ class OscilloscopeMethods(unittest.TestCase):
         time.sleep(self.delay)
 
     def create_GUI_interface(self):
-        self.server_expose = ThreadServerExposeTest(None, 8001) 
+
+        self.return_queue = Queue()
+        self.server_expose = ThreadServerExposeTest(None, 8001,
+                                                    self.return_queue)
         time.sleep(self.delay)
 
     def stop_GUI_interface(self):
         self.server_handler.terminate()
         time.sleep(self.delay)
 
-    def test_upper(self):
-        time.sleep(self.delay)
-        self.assertEqual("abc", "abc")
-       
-    def test_upper2(self):
-        time.sleep(self.delay)
+    def test_add_remove_available_ADC(self):
+        self.remove_ADC_FEC('ADC2')
+        expected_port = str(self.ADCs['ADC2'][0])
+
+        removed_ADC_name = self.return_queue.get()
+        self.assertTrue(expected_port in removed_ADC_name)
+        self.assertTrue('ADC' in removed_ADC_name)
+        """Will think of the proper naming in the future, now just checking
+        if at least the port is ok and the name starts with ADC"""
+
+        self.add_ADC_FEC('ADC2')
+        return_values = self.return_queue.get()
+        added_ADC_name = return_values[0]
+        number_of_channels = return_values[1]
+        self.assertTrue(expected_port in added_ADC_name)
+        self.assertTrue('ADC' in added_ADC_name)
+        self.assertEqual(number_of_channels, 4)
+
+    def test_remove_available_ADC(self):
         self.assertEqual("abc", "abc")

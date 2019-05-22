@@ -7,15 +7,16 @@ class ServerExposeTest():
         super().__init__()
         self.port_GUI = port_GUI
         self.GUI = GUI
+        self.return_queue = None
 
     def set_server_address(self, addr):
         print("server address set")
 
-    def remove_available_ADC(self, *args, **kwargs):
-        print("GUI: available ADC removed")
+    def remove_available_ADC(self, unique_ADC_name):
+        self.return_queue.put(unique_ADC_name)
 
-    def add_available_ADC(self, *args, **kwargs):
-        print("GUI: available ADC added")
+    def add_available_ADC(self, unique_ADC_name, number_of_channels):
+        self.return_queue.put((unique_ADC_name, number_of_channels))
 
     def update_data(self, *args, **kwargs):
         print("GUI: update GUI")
@@ -29,7 +30,8 @@ class ServerExposeTest():
     def set_trigger_params(self, *args, **kwargs):
         print("GUI: set_trigger_params")
 
-    def monitorSlot(self):
+    def monitorSlot(self, return_queue):
+        self.return_queue = return_queue
         server = SimpleXMLRPCServer(("", self.port_GUI),
                                     allow_none=True, logRequests=False)
         print("Listening on port " + str(self.port_GUI) + "...")
@@ -54,11 +56,11 @@ class ServerExposeTest():
 
 class ThreadServerExposeTest():
 
-    def __init__(self, GUI, port_GUI):
+    def __init__(self, GUI, port_GUI, return_queue):
         super().__init__()
         self.server_expose_test = ServerExposeTest(GUI, port_GUI)
         self.thread = multiprocessing.Process(
-                target=self.server_expose_test.monitorSlot)
+                target=self.server_expose_test.monitorSlot, args=(return_queue,))
         """The same as threading.Thread but I can terminate process 
         externally, maybe not perfect solution, but good enough as long as I 
         am using XMLRPC"""
