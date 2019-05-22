@@ -12,6 +12,7 @@ import os
 from multiprocessing import Queue
 
 server_addr = '128.141.79.50'
+ADC_addr = '128.141.162.185'
 
 class OscilloscopeMethods(unittest.TestCase):
 
@@ -20,6 +21,7 @@ class OscilloscopeMethods(unittest.TestCase):
     ADCs = {'ADC1':[8000, 1], 'ADC2':[8001, 2]}
     delay = 0.4
     return_queue = None
+    GUI_name = None
 
     @classmethod
     def setUpClass(cls):
@@ -44,6 +46,7 @@ class OscilloscopeMethods(unittest.TestCase):
         port = 8001
         GUI_idx = addr + "_" + str(port)
         GUI_name = "GUI" + "_" + GUI_idx + "._http._tcp.local."
+        self.GUI_name = GUI_name
         zeroconf_info = zeroconf.ServiceInfo("_http._tcp.local.", GUI_name,
                                              zeroconf.socket.inet_aton(addr),
                                              8000,
@@ -114,6 +117,21 @@ class OscilloscopeMethods(unittest.TestCase):
         self.assertTrue(expected_port in added_ADC_name)
         self.assertTrue('ADC' in added_ADC_name)
         self.assertEqual(number_of_channels, 4)
+
+    def test_channels_empty(self):
+        proxy = get_proxy("http://" + server_addr + ":" + str(8000) + "/")
+        channels = proxy.get_GUI_channels(self.GUI_name)
+        self.assertTrue(not channels)
+
+#    def test_add_channel(self):
+#        proxy = get_proxy("http://" + server_addr + ":" + str(8000) + "/")
+#        GUI_channel = 0
+#        ADC_channel = 0
+#        ADC_idx = ADC_addr + "_" + str(self.ADCs['ADC1'][0])
+#        ADC_name = "ADC" + "_" + ADC_idx + "._tcp.local."
+#        proxy.add_channel(GUI_channel, ADC_name, ADC_channel, self.GUI_name)
+#        channels = proxy.get_GUI_channels(self.GUI_name)
+#        print(channels)
 
     def test_remove_available_ADC(self):
         self.assertEqual("abc", "abc")
