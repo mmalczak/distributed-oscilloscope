@@ -165,8 +165,7 @@ class ChannelsMenu(QMenuBar):
         display_name = self.selected_ADC.replace('._tcp.local.', '')
         self.adc_label.setText(display_name)
         self.channel_label.setText(str_chan)
-        self.channel_closure.set_channel_properties(self.selected_ADC,
-                                                    idx)
+        self.channel_closure.set_channel_properties(self.selected_ADC, idx)
         self.plot.add_channel(self.channel_count)
         proxy = get_proxy(self.channel_closure.server_proxy.proxy_addr)
         proxy.add_channel(self.channel_count, self.selected_ADC, idx,
