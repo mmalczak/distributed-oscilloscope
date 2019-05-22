@@ -164,6 +164,14 @@ class ThreadGUI_Expose(threading.Thread):
     def set_postsamples(self, value, GUI_name):
         self.osc.GUIs[GUI_name].set_postsamples(value)
 
+
+    """----------------- TESTING ------------------------------------------"""
+    def get_GUI_channels(self, GUI_name):
+        return self.osc.GUIs[GUI_name].channels
+
+    """----------------- TESTING ------------------------------------------"""
+
+
     def run(self):
         self.server = SimpleXMLRPCServer(('', 8000), allow_none=True,
                                          logRequests=False)
@@ -185,4 +193,8 @@ class ThreadGUI_Expose(threading.Thread):
                                       "set_channel_range")
         self.server.register_function(self.set_ADC_parameter,
                                       "set_ADC_parameter")
+
+        self.server.register_function(self.get_GUI_channels,
+                                      "get_GUI_channels")
+
         self.server.serve_forever()
