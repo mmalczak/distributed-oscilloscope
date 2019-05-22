@@ -53,6 +53,10 @@ class OscilloscopeMethods(unittest.TestCase):
         zeroconf_service.register_service(zeroconf_info)
         time.sleep(self.delay)
 
+    def clean_queue(self):
+        while not self.return_queue.empty():
+            self.return_queue.get()
+
     def add_ADC_FEC(self, name):
         ADC = self.ADCs[name]
         start_adc(ADC[0], ADC[1])
@@ -93,6 +97,7 @@ class OscilloscopeMethods(unittest.TestCase):
         time.sleep(self.delay)
 
     def test_add_remove_available_ADC(self):
+        self.clean_queue()
         self.remove_ADC_FEC('ADC2')
         expected_port = str(self.ADCs['ADC2'][0])
 
