@@ -38,8 +38,7 @@ class OscilloscopeMethods(unittest.TestCase):
         port = 8001
         GUI_idx = addr + "_" + str(port)
         GUI_name = "GUI" + "_" + GUI_idx + "._http._tcp.local."
-        zeroconf_info = zeroconf.ServiceInfo("_http._tcp.local.",
-                                             GUI_name,
+        zeroconf_info = zeroconf.ServiceInfo("_http._tcp.local.", GUI_name,
                                              zeroconf.socket.inet_aton(addr),
                                              8000,
                                              properties={'addr': addr,
@@ -91,5 +90,3 @@ class OscilloscopeMethods(unittest.TestCase):
     def test_upper2(self):
         time.sleep(self.delay)
         self.assertEqual("abc", "abc")
- 
-
