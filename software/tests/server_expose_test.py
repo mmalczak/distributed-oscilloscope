@@ -1,5 +1,6 @@
 import multiprocessing 
 from xmlrpc.server import SimpleXMLRPCServer 
+from timeit import default_timer as timer
 
 class ServerExposeTest():
 
@@ -19,6 +20,8 @@ class ServerExposeTest():
         self.return_queue.put((unique_ADC_name, number_of_channels))
 
     def update_data(self, *args, **kwargs):
+        time_end = timer()
+        self.return_queue.put(time_end)
         print("GUI: update GUI")
 
     def set_horizontal_params(self, *args, **kwargs):

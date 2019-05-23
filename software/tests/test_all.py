@@ -10,6 +10,7 @@ from server_expose_test import ThreadServerExposeTest
 import zeroconf
 import os
 from multiprocessing import Queue
+from timeit import default_timer as timer
 
 server_addr = '128.141.79.50'
 ADC_addr = '128.141.162.185'
@@ -122,6 +123,64 @@ class OscilloscopeMethods(unittest.TestCase):
         proxy = get_proxy("http://" + server_addr + ":" + str(8000) + "/")
         channels = proxy.get_GUI_channels(self.GUI_name)
         self.assertTrue(not channels)
+
+    def test_acquisition(self):
+        results = open("results.txt", "a")
+        proxy = get_proxy("http://" + server_addr + ":" + str(8000) + "/")
+
+        ADC_idx = ADC_addr + "_" + str(self.ADCs['ADC1'][0])
+        unique_ADC_name = "ADC" + "_" + ADC_idx + "._tcp.local."
+
+        oscilloscope_channel_idx = 0
+        ADC_channel = 0
+        proxy.add_channel(oscilloscope_channel_idx, unique_ADC_name,
+                          ADC_channel, self.GUI_name)
+        time.sleep(self.delay)
+
+        oscilloscope_channel_idx = 1
+        ADC_channel = 1
+        proxy.add_channel(oscilloscope_channel_idx, unique_ADC_name,
+                          ADC_channel, self.GUI_name)
+        time.sleep(self.delay)
+
+        oscilloscope_channel_idx = 2
+        ADC_channel = 2
+        proxy.add_channel(oscilloscope_channel_idx, unique_ADC_name,
+                          ADC_channel, self.GUI_name)
+        time.sleep(self.delay)
+
+        oscilloscope_channel_idx = 3
+        ADC_channel = 3
+        proxy.add_channel(oscilloscope_channel_idx, unique_ADC_name,
+                          ADC_channel, self.GUI_name)
+        time.sleep(self.delay)
+
+        ADC_trigger_idx = 3
+        proxy.add_trigger('internal', unique_ADC_name, ADC_trigger_idx,
+                          self.GUI_name)
+
+
+        proxy.set_ADC_parameter('internal_trigger_enable', 1 , unique_ADC_name,
+                                ADC_trigger_idx)
+        time.sleep(self.delay)
+
+        proxy.set_ADC_parameter('postsamples', 2 , unique_ADC_name)
+        time.sleep(self.delay)
+
+        self.clean_queue()
+
+        print("Send acquistion command")
+        results.write("XMLRPC performance")
+        proxy.single_acquisition(self.GUI_name)
+        time_start = timer()
+        time.sleep(self.delay)
+        time_end = self.return_queue.get()
+        time_diff = time_end - time_start
+        time_diff_txt = str(time_diff) + '\n'
+        results.write(time_diff_txt)
+
+        time.sleep(3)
+        results.close()
 
 #    def test_add_channel(self):
 #        proxy = get_proxy("http://" + server_addr + ":" + str(8000) + "/")
