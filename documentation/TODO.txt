@@ -17,3 +17,9 @@ GUI:
 - export values to CSCV
 - change names of ADCs and channels (by the user and when staring FEC)
 - save/retrieve configuration
+
+
+infomration about ports made global
+
+for master thesis: Do the comparison between protocol buffers and pickle
+compare differrent GUI architectures
