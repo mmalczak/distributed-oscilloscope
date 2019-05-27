@@ -1,4 +1,5 @@
 from proxy import *
+from zmq_rpc import *
 from plot import *
 from channels import ChannelClosure
 from triggers import *
@@ -24,6 +25,7 @@ class GUI_Class:
         self.triggers = []
         self.layouts = []
         self.server_proxy = Proxy()
+        self.zmq_rpc = ZMQ_RPC()
 
         for count in range(self.number_of_GUI_triggers):
             trig_clos = TriggerClosure(self.ui.trigger_inputs_layout,
@@ -48,7 +50,7 @@ class GUI_Class:
 
             self.channels.append(chan_clos)
 
-        self.acq_settings = AcquisitionSettings(self.server_proxy,
+        self.acq_settings = AcquisitionSettings(self.zmq_rpc,
                                                 self.GUI_name)
         ui.horizontal_settings_layout.addLayout(self.acq_settings)
 
