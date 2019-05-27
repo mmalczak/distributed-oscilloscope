@@ -19,6 +19,8 @@ GUI:
 - save/retrieve configuration
 
 
+- fix threshold line - add grid, rescale
+
 infomration about ports made global
 
 for master thesis: Do the comparison between protocol buffers and pickle
