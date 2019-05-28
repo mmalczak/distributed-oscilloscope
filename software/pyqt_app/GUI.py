@@ -42,7 +42,7 @@ class GUI_Class:
         for count in range(self.number_of_GUI_channels):
             chan_clos = ChannelClosure(self.ui.channel_inputs_layout,
                                        self.ui.vertical_settings_layout,
-                                       self.server_proxy,
+                                       self.zmq_rpc,
                                        self.plot,
                                        self.GUI_name,
                                        count,

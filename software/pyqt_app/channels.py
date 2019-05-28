@@ -1,14 +1,18 @@
 from PyQt5.QtWidgets import QVBoxLayout
+from PyQt5.QtWidgets import QMenuBar
+from PyQt5.QtWidgets import QLabel
 from PyQt5.QtCore import Qt
 from PyQt5.QtCore import QRect
-from parent_classes import *
-from proxy import *
-DBG = False
 from colors import Colors
+from parent_classes import Button
+from parent_classes import Menu
+from parent_classes import Box
+DBG = False
+
 
 class ChannelClosure:
 
-    def __init__(self, channel_inputs_layout, ver_set_layout, server_proxy,
+    def __init__(self, channel_inputs_layout, ver_set_layout, zmq_rpc,
                  plot, GUI_name, channel_count, update_triggers):
         self.adc_label = QLabel("")
         self.adc_label.setAlignment(Qt.AlignCenter | Qt.AlignVCenter)
@@ -27,7 +31,7 @@ class ChannelClosure:
         channel_inputs_layout.addLayout(self.chan_in_layout)
         ver_set_layout.addLayout(self.chan_set_layout)
         self.properties = None
-        self.server_proxy = server_proxy
+        self.zmq_rpc = zmq_rpc
         """updates the list of channels for the trigger"""
         self.update_triggers = update_triggers
         """adds layout to that is shown to the user, nothing there
@@ -46,7 +50,7 @@ class ChannelClosure:
     def set_channel_properties(self, unique_ADC_name, idx):
         self.properties = ChannelProperties(unique_ADC_name, idx,
                                             self.chan_set_layout,
-                                            self.server_proxy,
+                                            self.zmq_rpc,
                                             self.plot,
                                             self.GUI_name, self)
         self.update_triggers()
@@ -58,8 +62,8 @@ class ChannelClosure:
         if self.properties.unique_ADC_name is not None:
             self.plot.remove_channel(self.channel_count)
             if not remote:
-                proxy = get_proxy(self.server_proxy.proxy_addr)
-                proxy.remove_channel(self.channel_count, self.GUI_name)
+                self.zmq_rpc.send_RPC('remove_channel', self.channel_count,
+                                      self.GUI_name)
         """When the channel is removed the widgets should remain for
         the user, but they are disabled.
         The widgets are deleted and new are created so that they
@@ -76,18 +80,18 @@ class ChannelClosure:
 class ChannelProperties:
 
     def __init__(self, unique_ADC_name, idx, chan_set_layout,
-                 server_proxy, plot, GUI_name, channel_closure):
+                 zmq_rpc, plot, GUI_name, channel_closure):
         self.idx = idx
         self.unique_ADC_name = unique_ADC_name
         self.chan_set_layout = chan_set_layout
-        self.server_proxy = server_proxy
+        self.zmq_rpc = zmq_rpc
         self.channel_closure = channel_closure
-        self.button = ChannelEnableButton(idx, unique_ADC_name, server_proxy,
+        self.button = ChannelEnableButton(idx, unique_ADC_name, zmq_rpc,
                                           plot, GUI_name)
-        self.range_menu = ChannelRange(idx, unique_ADC_name, server_proxy)
+        self.range_menu = ChannelRange(idx, unique_ADC_name, zmq_rpc)
         self.termination_menu = ChannelTermination(idx, unique_ADC_name,
-                                                   server_proxy)
-        self.offset_box = ChannelOffset(idx, unique_ADC_name, server_proxy)
+                                                   zmq_rpc)
+        self.offset_box = ChannelOffset(idx, unique_ADC_name, zmq_rpc)
 
         self.chan_set_layout.addWidget(self.button)
         self.chan_set_layout.addWidget(self.range_menu)
@@ -117,6 +121,7 @@ class ChannelProperties:
         self.range_menu.deleteLater()
         self.termination_menu.deleteLater()
         self.offset_box.deleteLater()
+
 
 class ChannelsMenu(QMenuBar):
 
@@ -167,9 +172,9 @@ class ChannelsMenu(QMenuBar):
         self.channel_label.setText(str_chan)
         self.channel_closure.set_channel_properties(self.selected_ADC, idx)
         self.plot.add_channel(self.channel_count)
-        proxy = get_proxy(self.channel_closure.server_proxy.proxy_addr)
-        proxy.add_channel(self.channel_count, self.selected_ADC, idx,
-                          self.channel_closure.GUI_name)
+        rpc = self.channel_closure.zmq_rpc
+        rpc.send_RPC('add_channel', self.channel_count, self.selected_ADC, idx,
+                     self.channel_closure.GUI_name)
 
     def remove_channel(self):
         self.channel_closure.remove_channel()
@@ -188,6 +193,7 @@ class ChannelInputsLayout(QVBoxLayout):
         self.ADCs = {}
         self.channel = None
 
+
 class ChannelSettingsLayout(QVBoxLayout):
 
     def __init__(self, channel_count):
@@ -198,10 +204,10 @@ class ChannelSettingsLayout(QVBoxLayout):
 
 class ChannelEnableButton(Button):
 
-    def __init__(self, idx, unique_ADC_name, server_proxy,
+    def __init__(self, idx, unique_ADC_name, zmq_rpc,
                  plot, GUI_name):
         super().__init__("Enable", idx, unique_ADC_name)
-        self.server_proxy = server_proxy
+        self.zmq_rpc = zmq_rpc
         self.plot = plot
         self.GUI_name = GUI_name  # probably to be removed
 
@@ -211,9 +217,9 @@ class ChannelEnableButton(Button):
 
 class ChannelRange(Menu):
 
-    def __init__(self, idx, unique_ADC_name, server_proxy):
+    def __init__(self, idx, unique_ADC_name, zmq_rpc):
         super().__init__(idx, unique_ADC_name)
-        self.server_proxy = server_proxy
+        self.zmq_rpc = zmq_rpc
         self.range = self.addMenu("Range")
         range_10V = self.range.addAction("10V")
         range_10V.setText("10V")
@@ -228,9 +234,9 @@ class ChannelRange(Menu):
     def action(self):
         range_value_str = self.sender().text()
         try:
-            proxy = get_proxy(self.server_proxy.proxy_addr)
-            proxy.set_channel_range(range_value_str, self.idx,
-                                    self.unique_ADC_name)
+            rpc = self.zmq_rpc
+            rpc.send_RPC('set_channel_range', range_value_str, self.idx,
+                         self.unique_ADC_name)
         except Exception as e:
             print(e)
 
@@ -243,9 +249,9 @@ class ChannelRange(Menu):
 
 class ChannelTermination(Menu):
 
-    def __init__(self, idx, unique_ADC_name, server_proxy):
+    def __init__(self, idx, unique_ADC_name, zmq_rpc):
         super().__init__(idx, unique_ADC_name)
-        self.server_proxy = server_proxy
+        self.zmq_rpc = zmq_rpc
         self.termination = self.addMenu("Termination")
         termination_0 = self.termination.addAction("1M\u03A9")
         termination_0.setText("1M\u03A9")
@@ -259,11 +265,10 @@ class ChannelTermination(Menu):
     def action(self):
         termination_str = self.sender().text()
         try:
-            proxy = get_proxy(self.server_proxy.proxy_addr)
-            proxy.set_ADC_parameter('channel_termination',
-                                    self.term_num_map[termination_str],
-                                    self.unique_ADC_name,
-                                    self.idx)
+            rpc = self.zmq_rpc
+            rpc.send_RPC('set_ADC_parameter', 'channel_termination',
+                         self.term_num_map[termination_str],
+                         self.unique_ADC_name, self.idx)
         except Exception as e:
             print(e)
 
@@ -274,18 +279,18 @@ class ChannelTermination(Menu):
 
 class ChannelOffset(Box):
 
-    def __init__(self, idx, unique_ADC_name, server_proxy):
+    def __init__(self, idx, unique_ADC_name, zmq_rpc):
         super().__init__(idx, unique_ADC_name, "Offset uV", 'vertical')
-        self.server_proxy = server_proxy
+        self.zmq_rpc = zmq_rpc
         self.box.setMinimum(-5000000)
         self.box.setMaximum(5000000)
 
     def value_change(self):
         offset = self.box.value()
         try:
-            proxy = get_proxy(self.server_proxy.proxy_addr)
-            proxy.set_ADC_parameter('channel_offset', offset,
-                                    self.unique_ADC_name, self.idx)
+            rpc = self.zmq_rpc
+            rpc.send_RPC('set_ADC_parameter', 'channel_offset', offset,
+                         self.unique_ADC_name, self.idx)
         except Exception as e:
             print(e)
 
@@ -299,4 +304,3 @@ class ChannelLabel(QLabel):
         self.setMaximumHeight(25)
         color = str((tuple(Colors().get_color(channel_count))))
         self.setStyleSheet("border: 2px solid rgb" + color + ";")
- 
