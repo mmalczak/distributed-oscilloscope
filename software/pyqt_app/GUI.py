@@ -53,12 +53,11 @@ class GUI_Class:
         self.acq_settings = AcquisitionSettings(self.zmq_rpc, self.GUI_name)
         ui.horizontal_settings_layout.addLayout(self.acq_settings)
 
-        self.single_acquisition = SingleAcquisitionButton(self.server_proxy,
+        self.single_acquisition = SingleAcquisitionButton(self.zmq_rpc,
                                                           self.GUI_name)
         self.ui.run_control_layout.addWidget(self.single_acquisition)
 
-        self.run_stop_acquisition = RunStopButton(self.server_proxy,
-                                                  self.GUI_name)
+        self.run_stop_acquisition = RunStopButton(self.zmq_rpc, self.GUI_name)
         self.ui.run_control_layout.addWidget(self.run_stop_acquisition)
 
     def add_available_ADC(self, unique_ADC_name, number_of_channels):
