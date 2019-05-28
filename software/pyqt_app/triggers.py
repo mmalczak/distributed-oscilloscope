@@ -1,6 +1,10 @@
-from parent_classes import *
+from PyQt5.QtWidgets import QMenuBar
 from PyQt5.QtWidgets import QVBoxLayout
-from zmq_rpc import *
+from PyQt5.QtWidgets import QLabel
+from PyQt5.QtCore import Qt
+from parent_classes import Box
+from parent_classes import Button
+from parent_classes import TriggerPolarity
 
 
 class TriggerClosure:
