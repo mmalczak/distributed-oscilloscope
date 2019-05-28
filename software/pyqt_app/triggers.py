@@ -1,34 +1,33 @@
 from parent_classes import *
 from PyQt5.QtWidgets import QVBoxLayout
-from proxy import *
+from zmq_rpc import *
 
 
 class TriggerClosure:
 
-    def __init__(self, trigger_inputs_layout, trig_set_layout, server_proxy, 
+    def __init__(self, trigger_inputs_layout, trig_set_layout, zmq_rpc,
                  plot, GUI_name, GUI_trigger_idx, channels, available_ADCs):
         self.adc_label = QLabel("")
         self.adc_label.setAlignment(Qt.AlignCenter | Qt.AlignVCenter)
         self.trigger_type = 'internal'  # default one
         self.GUI_trigger_idx = GUI_trigger_idx
         self.menu_type = TriggerTypeMenu(self)
-        self.trig_in_layout = TriggerInputsLayout(self.adc_label) 
+        self.trig_in_layout = TriggerInputsLayout(self.adc_label)
         self.trig_set_layout = TriggerSettingsLayout(self.menu_type)
         self.plot = plot
         self.GUI_name = GUI_name
         trigger_inputs_layout.addLayout(self.trig_in_layout)
         trig_set_layout.addLayout(self.trig_set_layout)
         self.properties = None
-        self.server_proxy = server_proxy
+        self.zmq_rpc = zmq_rpc
         self.channels = channels
         self.available_ADCs = available_ADCs
         self.int_trig_menu = None
         self.ext_trig_menu = None
         self.set_menu()
         self.set_trigger_properties(None, 0)
-        """Adds widgets in the GUI, when unique_ADC_name==None, 
+        """Adds widgets in the GUI, when unique_ADC_name==None,
         widgets are disabled"""
-
 
     def update_triggers(self):
         self.int_trig_menu.update_triggers()
@@ -41,9 +40,9 @@ class TriggerClosure:
 
     def set_menu(self):
         self.int_trig_menu = IntTriggersMenu(self, self.GUI_trigger_idx,
-                                    self.plot, self.channels)
+                                             self.plot, self.channels)
         self.ext_trig_menu = ExtTriggersMenu(self, self.GUI_trigger_idx,
-                                             self.adc_label) 
+                                             self.adc_label)
         if(self.trigger_type == 'internal'):
             self.int_trig_menu.setEnabled(True)
             self.ext_trig_menu.setEnabled(False)
@@ -57,8 +56,7 @@ class TriggerClosure:
         if self.trigger_exists():
             self.plot.remove_trigger()
             if not remote:
-                proxy = get_proxy(self.server_proxy.proxy_addr)
-                proxy.remove_trigger(self.GUI_name)
+                self.zmq_rpc.send_RPC('remove_trigger', self.GUI_name)
         self.set_trigger_properties(None, 0)
         self.adc_label.setText('')
         self.int_trig_menu.ADCs_menu.setTitle("Select channel to trigger")
@@ -67,13 +65,13 @@ class TriggerClosure:
         if(self.trigger_type == 'internal'):
             self.properties = IntTriggerProperties(unique_ADC_name, idx,
                                                    self.trig_set_layout,
-                                                   self.server_proxy,
+                                                   self.zmq_rpc,
                                                    self.plot,
                                                    self.GUI_name)
         else:
             self.properties = ExtTriggerProperties(unique_ADC_name, idx,
                                                    self.trig_set_layout,
-                                                   self.server_proxy,
+                                                   self.zmq_rpc,
                                                    self.plot,
                                                    self.GUI_name)
 
@@ -86,21 +84,19 @@ class TriggerProperties():
     ExtTriggerProperties and IntTriggerProperties create and delete
     threshold trigger conditionally?"""
 
-    def __init__(self, unique_ADC_name, ADC_idx, trig_set_layout, 
-                 server_proxy, plot, GUI_name, type):
+    def __init__(self, unique_ADC_name, ADC_idx, trig_set_layout,
+                 zmq_rpc, plot, GUI_name, type):
         self.ADC_idx = ADC_idx
         self.unique_ADC_name = unique_ADC_name
         self.trig_set_layout = trig_set_layout
         self.plot = plot
 
-        self.button = TriggerEnableButton(ADC_idx, unique_ADC_name,
-                                          server_proxy, type)
-        self.polarity_menu = TriggerPolarity(ADC_idx, unique_ADC_name,
-                                             server_proxy, type)
-        self.delay_box = TriggerDelay(ADC_idx, unique_ADC_name,
-                                      server_proxy, type)
-        self.threshold_box = TriggerThreshold(ADC_idx, unique_ADC_name,
-                                              server_proxy)
+        self.button = TriggerEnableButton(ADC_idx, unique_ADC_name, zmq_rpc,
+                                          type)
+        self.polarity_menu = TriggerPolarity(ADC_idx, unique_ADC_name, zmq_rpc,
+                                             type)
+        self.delay_box = TriggerDelay(ADC_idx, unique_ADC_name, zmq_rpc, type)
+        self.threshold_box = TriggerThreshold(ADC_idx, unique_ADC_name, zmq_rpc)
 
         self.trig_set_layout.addWidget(self.button)
         self.trig_set_layout.addWidget(self.polarity_menu)
@@ -150,17 +146,17 @@ class TriggerProperties():
 
 
 class ExtTriggerProperties(TriggerProperties):
-    def __init__(self, unique_ADC_name, ADC_idx, trig_set_layout, 
-                 server_proxy, plot, GUI_name):
-        super().__init__(unique_ADC_name, ADC_idx, trig_set_layout, 
-                         server_proxy, plot, GUI_name, 'external')
+    def __init__(self, unique_ADC_name, ADC_idx, trig_set_layout, zmq_rpc,
+                 plot, GUI_name):
+        super().__init__(unique_ADC_name, ADC_idx, trig_set_layout, zmq_rpc,
+                         plot, GUI_name, 'external')
 
 
 class IntTriggerProperties(TriggerProperties):
-    def __init__(self, unique_ADC_name, ADC_idx, trig_set_layout, 
-                 server_proxy, plot, GUI_name):
-        super().__init__(unique_ADC_name, ADC_idx, trig_set_layout, 
-                         server_proxy, plot, GUI_name, 'internal')
+    def __init__(self, unique_ADC_name, ADC_idx, trig_set_layout, zmq_rpc,
+                 plot, GUI_name):
+        super().__init__(unique_ADC_name, ADC_idx, trig_set_layout, zmq_rpc,
+                         plot, GUI_name, 'internal')
         self.trig_set_layout.addWidget(self.threshold_box)
 
 
@@ -170,7 +166,7 @@ class TriggerTypeMenu(QMenuBar):
         super().__init__()
         self.trigger_closure = trigger_closure
         print(self.trigger_closure)
-        self.trig_menu = self.addMenu("Trigger Type - " + 
+        self.trig_menu = self.addMenu("Trigger Type - " +
                                self.trigger_closure.trigger_type.capitalize())
         trig = self.trig_menu.addAction("Internal")
         trig.triggered.connect(self.select_type)
@@ -246,13 +242,13 @@ class IntTriggersMenu(TriggersMenu):
         chan_disp = str(self.GUI_channel_idx+1)
         self.ADCs_menu.setTitle("Channel " + chan_disp)
         """+1 is beacuse channels are indexed from 0, but displayed from 1"""
-        if selected_ADC is not None: 
+        if selected_ADC is not None:
             ADC_idx = self.channels[self.GUI_channel_idx].properties.idx
             self.trigger_closure.set_trigger_properties(selected_ADC, ADC_idx)
             self.plot.add_trigger(self.GUI_channel_idx)
-            proxy = get_proxy(self.trigger_closure.server_proxy.proxy_addr)
-            proxy.add_trigger('internal', selected_ADC, ADC_idx,
-                              self.trigger_closure.GUI_name)
+            rpc = self.trigger_closure.zmq_rpc
+            rpc.send_RPC('add_trigger', 'internal', selected_ADC, ADC_idx,
+                         self.trigger_closure.GUI_name)
 
 
 class ExtTriggersMenu(TriggersMenu):
@@ -283,9 +279,9 @@ class ExtTriggersMenu(TriggersMenu):
         self.trigger_closure.set_trigger_properties(self.selected_ADC)
         display_name = self.selected_ADC.replace('._tcp.local.', '')
         self.adc_label.setText(display_name)
-        proxy = get_proxy(self.trigger_closure.server_proxy.proxy_addr)
-        proxy.add_trigger('external', self.selected_ADC, 0,
-                          self.trigger_closure.GUI_name)
+        rpc = self.trigger_closure
+        rpc.zmq_rpc.send_RPC('add_trigger', 'external', selected_ADC, ADC_idx,
+                             self.trigger_closure.GUI_name)
 
 
 class TriggerInputsLayout(QVBoxLayout):
@@ -304,6 +300,7 @@ class TriggerInputsLayout(QVBoxLayout):
         self.addWidget(self.menu)
         self.addWidget(self.adc_label)
 
+
 class TriggerSettingsLayout(QVBoxLayout):
 
     def __init__(self, menu_type):
@@ -311,7 +308,7 @@ class TriggerSettingsLayout(QVBoxLayout):
         self.menu = None
         self.menu_type = menu_type
         self.addWidget(self.menu_type)
- 
+
     def set_menu(self, menu):
         if self.menu is not None:
             self.menu.deleteLater()
@@ -319,12 +316,11 @@ class TriggerSettingsLayout(QVBoxLayout):
         self.addWidget(self.menu)
 
 
-
 class TriggerThreshold(Box):
 
-    def __init__(self, idx, unique_ADC_name, server_proxy):
+    def __init__(self, idx, unique_ADC_name, zmq_rpc):
         super().__init__(idx, unique_ADC_name, "Treshold mV")
-        self.server_proxy = server_proxy
+        self.zmq_rpc = zmq_rpc
         self.unique_ADC_name = unique_ADC_name
         self.idx = idx
         self.box.setMinimum(-5000)
@@ -332,52 +328,52 @@ class TriggerThreshold(Box):
 
     def value_change(self):
         threshold = self.box.value()   # in mV
-        proxy = get_proxy(self.server_proxy.proxy_addr)
-        proxy.set_ADC_parameter('internal_trigger_threshold', threshold,
-                                self.unique_ADC_name, self.idx)
+        self.zmq_rpc.send_RPC('set_ADC_parameter',
+                              'internal_trigger_threshold', threshold,
+                              self.unique_ADC_name, self.idx)
 
 
 class TriggerEnableButton(Button):
 
-    def __init__(self, idx, unique_ADC_name, server_proxy,
+    def __init__(self, idx, unique_ADC_name, zmq_rpc,
                  type):
         super().__init__("Enable", idx, unique_ADC_name)
-        self.server_proxy = server_proxy
+        self.zmq_rpc = zmq_rpc
         self.type = type
 
     def action(self):
-        proxy = get_proxy(self.server_proxy.proxy_addr)
-        proxy.set_ADC_parameter(self.type + '_trigger_enable',
-                                not self.isChecked(), self.unique_ADC_name, 
-                                self.idx)
+        self.zmq_rpc.send_RPC('set_ADC_parameter',
+                              self.type + '_trigger_enable',
+                              not self.isChecked(), self.unique_ADC_name,
+                              self.idx)
 
 
 class TriggerPolarity(TriggerPolarity):
 
-    def __init__(self, idx, unique_ADC_name, server_proxy, type):
+    def __init__(self, idx, unique_ADC_name, zmq_rpc, type):
         super().__init__(idx, unique_ADC_name)
-        self.server_proxy = server_proxy
+        self.zmq_rpc = zmq_rpc
         self.type = type
 
     def action(self):
         polarity_str = self.sender().text()
         polarity = int(polarity_str)
-        proxy = get_proxy(self.server_proxy.proxy_addr)
-        proxy.set_ADC_parameter(self.type + '_trigger_polarity', polarity,
-                                self.unique_ADC_name, self.idx)
+        self.zmq_rpc.send_RPC('set_ADC_parameter',
+                              self.type + '_trigger_polarity', polarity,
+                              self.unique_ADC_name, self.idx)
 
 
 class TriggerDelay(Box):
 
-    def __init__(self, idx, unique_ADC_name, server_proxy, type):
+    def __init__(self, idx, unique_ADC_name, zmq_rpc, type):
         super().__init__(idx, unique_ADC_name, "Delay")
-        self.server_proxy = server_proxy
+        self.zmq_rpc = zmq_rpc
         self.type = type
         self.box.setMinimum(0)
         self.box.setMaximum(65535)
 
     def value_change(self):
         delay = self.box.value()
-        proxy = get_proxy(self.server_proxy.proxy_addr)
-        proxy.set_ADC_parameter(self.type + '_trigger_delay', delay,
-                                self.unique_ADC_name, self.idx)
+        self.zmq_rpc.send_RPC('set_ADC_parameter',
+                              self.type + '_trigger_delay', delay,
+                              self.unique_ADC_name, self.idx)

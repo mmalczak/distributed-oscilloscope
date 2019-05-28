@@ -30,7 +30,7 @@ class GUI_Class:
         for count in range(self.number_of_GUI_triggers):
             trig_clos = TriggerClosure(self.ui.trigger_inputs_layout,
                                        self.ui.triggers_settings_layout,
-                                       self.server_proxy,
+                                       self.zmq_rpc,
                                        self.plot,
                                        self.GUI_name,
                                        count,
@@ -50,8 +50,7 @@ class GUI_Class:
 
             self.channels.append(chan_clos)
 
-        self.acq_settings = AcquisitionSettings(self.zmq_rpc,
-                                                self.GUI_name)
+        self.acq_settings = AcquisitionSettings(self.zmq_rpc, self.GUI_name)
         ui.horizontal_settings_layout.addLayout(self.acq_settings)
 
         self.single_acquisition = SingleAcquisitionButton(self.server_proxy,
