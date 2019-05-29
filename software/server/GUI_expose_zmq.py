@@ -3,8 +3,10 @@ import os
 from service_management import *
 from conversion import *
 import zmq
+from zmq.utils.monitor import recv_monitor_message
+from zmq.utils.monitor import parse_monitor_message
 import pickle
-
+from ipaddr import get_ip
 
 def stop_and_retrieve_acquisition(func):
     def wrapper(self, *args, **kwargs):
@@ -176,17 +178,41 @@ class ThreadGUI_zmq_Expose(threading.Thread):
 
 
     def run(self):
+        EVENT_MAP = {}
+        print("Event names:")
+        for name in dir(zmq):
+            if name.startswith('EVENT_'):
+                value = getattr(zmq, name)
+                print("%21s : %4i" % (name, value))
+                EVENT_MAP[value] = name
+
         context = zmq.Context()
         socket = context.socket(zmq.REP)
-        socket.bind("tcp://*:8003")
+        monitor = socket.get_monitor_socket()
+        #socket.bind("tcp://*:8003")
+        server_ip = get_ip()
+        socket.bind("tcp://" + server_ip  + ":8003")
+
+        poller = zmq.Poller()
+        poller.register(monitor, zmq.POLLIN | zmq.POLLERR)
+        poller.register(socket, zmq.POLLIN | zmq.POLLERR)
 
         while True:
-            message = socket.recv()
-            message = pickle.loads(message)
-            try:
-                func = getattr(self, message[0])
-                func(*message[1:])
-                socket.send(b"Success")
-            except AttributeError:
-                socket.send(b"Error")
+            socks = dict(poller.poll())
+            if socket in socks:
+                message = socket.recv()
+                message = pickle.loads(message)
+                try:
+                    func = getattr(self, message[0])
+                    func(*message[1:])
+                    socket.send(b"Success")
+                except AttributeError:
+                    socket.send(b"Error")
+            if monitor in socks:
+                evt = recv_monitor_message(monitor)
+                evt.update({'description': EVENT_MAP[evt['event']]})
+                print(evt['description'])
+                if evt['description'] == 'EVENT_ACCEPTED':
+                    print(evt['endpoint'])
+                #print("Event: {}".format(evt))
 
