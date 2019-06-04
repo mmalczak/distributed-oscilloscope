@@ -11,3 +11,7 @@ gRPC drawbacks:
 - no direct way to manually poll on the connection - we don't want unnecessary threads, we want one thread to poll on both ADC file descriptor and the connection
 - more complicated with little added value - at this point - certainly it would have many cons if the performance was  taken into account
 
+requierements:
+- monitor the connection
+- possibility of notifications, sync and async messages
+- poll on file descriptor, to avoid threading
