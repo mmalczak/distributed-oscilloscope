@@ -46,10 +46,12 @@ class OscilloscopeMethods(unittest.TestCase):
         cls.stop_server(cls)
 
     def setUp(self):
-        self.results = open("results.txt", "a")
+        if performance_measurements:
+            self.results = open("results.txt", "a")
 
     def tearDown(self):
-        self.results.close()
+        if performance_measurements:
+            self.results.close()
 
     def start_zeroconf(self):
         #addr = os.popen("ifconfig| grep inet").read().split()[1]
