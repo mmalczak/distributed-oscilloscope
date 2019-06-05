@@ -208,8 +208,9 @@ class ThreadGUI_zmq_Expose(threading.Thread):
                 message = pickle.loads(message)
                 try:
                     func = getattr(self, message[0])
-                    func(*message[1:])
-                    socket.send_multipart([identity, b"Success"])
+                    ret = func(*message[1:])
+                    ret = pickle.dumps(ret)
+                    socket.send_multipart([identity, ret])
                 except AttributeError:
                     socket.send_multipart([identity, b"Error"])
             if monitor in socks:

@@ -30,7 +30,9 @@ class ZMQ_RPC():
             """TODO decide what to do: close application, save conf,
             or sth. else"""
             return None
-        if message == b'Success':
-            logger.info(function_name + ' success')
         if message == b'Error':
             logger.error(function_name + ' not available in the server')
+        else:
+            ret = pickle.loads(message)
+            logger.info(function_name + ' success')
+            return ret
