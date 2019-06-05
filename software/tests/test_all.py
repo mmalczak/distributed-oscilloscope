@@ -15,6 +15,10 @@ from test_conf import performance_measurements
 from zmq_rpc import ZMQ_RPC
 from addresses import server_zmq_expose_port
 
+sys.path.append('../server')
+import ADC_configs
+"""TODO is this the rigth thing to do???"""
+
 server_addr = '128.141.79.50'
 ADC_addr = '128.141.162.185'
 
@@ -202,15 +206,18 @@ class OscilloscopeMethods(unittest.TestCase):
         for j in range(3, -1, -1):
             self.remove_channel(j)
 
-#    def test_add_channel(self):
-#        GUI_channel = 0
-#        ADC_channel = 0
-#        ADC_idx = ADC_addr + "_" + str(self.ADCs['ADC1'][0])
-#        ADC_name = "ADC" + "_" + ADC_idx + "._tcp.local."
-#        self.zmq_rpc.send_RPC('add_channel', GUI_channel, ADC_name,
-#                               ADC_channel, self.GUI_name)
-#        channels = self.zmq_rpc.send_RPC('get_GUI_channels', self.GUI_name)
-#        print(channels)
+    def test_add_channel(self):
+        GUI_channel = 0
+        ADC_channel = 0
+        ADC_idx = ADC_addr + "_" + str(self.ADCs['ADC1'][0])
+        ADC_name = "ADC" + "_" + ADC_idx + "._tcp.local."
+        self.zmq_rpc.send_RPC('add_channel', GUI_channel, ADC_name,
+                               ADC_channel, self.GUI_name)
+        channels = self.zmq_rpc.send_RPC('get_GUI_channels', self.GUI_name)
+        self.zmq_rpc.send_RPC('remove_channel', GUI_channel, self.GUI_name)
+        channel = channels[GUI_channel]
+        self.assertEqual(channel.ADC_channel_idx, ADC_channel)
+        self.assertEqual(len(channels), 1)
 
     def test_remove_available_ADC(self):
         self.assertEqual("abc", "abc")
