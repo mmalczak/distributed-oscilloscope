@@ -4,7 +4,6 @@ from PyQt5.QtWidgets import QApplication
 from PyQt5.QtWidgets import QMainWindow
 from mainwindow import Ui_MainWindow
 import os
-import zeroconf
 import argparse
 from PyQt5 import QtGui
 from server_expose import *
@@ -21,18 +20,13 @@ class MainWindow(QMainWindow):
         self.threading_widget = None
         self.zmq_rpc = zmq_rpc
         self.ui = Ui_MainWindow()
-        self.zeroconf_service = None
-        self.zeroconf_info = None
         self.GUI_name = None
         self.ui.setupUi(self)
         self.show()
 
     def closeEvent(self, *args, **kwargs):
         super(QtGui.QMainWindow, self).closeEvent(*args, **kwargs)
-        if(self.zeroconf_service is not None):
-            self.zeroconf_service.unregister_service(self.zeroconf_info)
-        else:
-            self.zmq_rpc.send_RPC("remove_service", self.GUI_name)
+        self.zmq_rpc.send_RPC("remove_service", self.GUI_name)
         self.threading_widget.thread.exit()  # TODO not really working
 
 
@@ -67,24 +61,9 @@ def main():
     threading_widget.setParent(win)
     """remove widgets after close"""
 
-    zeroconf_service = None
-    zeroconf_info = None
 
-    if(args.ip_server is None):
-        zeroconf_info = zeroconf.ServiceInfo("_http._tcp.local.",
-                                             GUI_name,
-                                             zeroconf.socket.inet_aton(addr),
-                                             8000,
-                                             properties={'addr': addr,
-                                                         'port': str(port)})
-        zeroconf_service = zeroconf.Zeroconf()
-        zeroconf_service.register_service(zeroconf_info)
+    zmq_rpc.send_RPC('add_service', GUI_name, addr, port)
 
-    else:
-        zmq_rpc.send_RPC('add_service', GUI_name, addr, port)
-
-    win.zeroconf_info = zeroconf_info
-    win.zeroconf_service = zeroconf_service
     win.GUI_name = GUI_name
     app.exec()
 
