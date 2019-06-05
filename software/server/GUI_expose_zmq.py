@@ -24,7 +24,6 @@ def stop_and_retrieve_acquisition(func):
             try:  # find the name of the ADC in the arguments - fixme
                 if(arg[0:3] == "ADC"):
                     unique_ADC_name = arg
-                    print(arg)
             except:
                 pass
         try:
@@ -45,7 +44,6 @@ def update_GUI_after(func):
             try:    # find the name of the ADC in the arguments - fixme
                 if(arg[0:3] == "ADC"):
                     unique_ADC_name = arg
-                    print(arg)
             except:
                 pass
         for GUI_name, GUI in self.osc.GUIs.items():
@@ -116,7 +114,7 @@ class ThreadGUI_zmq_Expose(threading.Thread):
                                   unique_ADC_name, 0, channel_idx)
             self.send_RPC_request('set_internal_trigger_threshold',
                                   unique_ADC_name, 0, channel_idx)
-            print("Internal trigger disabled: value out of range")
+            logger.warning("Internal trigger disabled: value out of range")
             for GUI_name, GUI in self.osc.GUIs.items():
                 proxy = get_proxy(GUI.GUI_proxy_addr)
                 proxy.print("Internal trigger disabled: value out of range")
@@ -172,7 +170,6 @@ class ThreadGUI_zmq_Expose(threading.Thread):
         self.osc.GUIs[GUI_name].run_acquisition(run)
 
     def set_presamples(self, value, GUI_name):
-        print("method set_presamples")
         self.osc.GUIs[GUI_name].set_presamples(value)
 
     def set_postsamples(self, value, GUI_name):
