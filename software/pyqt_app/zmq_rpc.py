@@ -11,7 +11,8 @@ logger = logging.getLogger(__name__)
 class ZMQ_RPC():
     def __init__(self):
         context = zmq.Context()
-        self.socket = context.socket(zmq.REQ)
+        self.socket = context.socket(zmq.DEALER)
+#        self.socket.setsockopt(zmq.IDENTITY, b'GUI')
 #        self.socket.connect("tcp://localhost:8003")
         self.socket.connect("tcp://128.141.79.50:8003")
 

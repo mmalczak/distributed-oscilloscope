@@ -187,7 +187,7 @@ class ThreadGUI_zmq_Expose(threading.Thread):
                 EVENT_MAP[value] = name
 
         context = zmq.Context()
-        socket = context.socket(zmq.REP)
+        socket = context.socket(zmq.ROUTER)
         monitor = socket.get_monitor_socket()
         #socket.bind("tcp://*:8003")
         server_ip = get_ip()
@@ -200,14 +200,14 @@ class ThreadGUI_zmq_Expose(threading.Thread):
         while True:
             socks = dict(poller.poll())
             if socket in socks:
-                message = socket.recv()
+                [identity, message] = socket.recv_multipart()
                 message = pickle.loads(message)
                 try:
                     func = getattr(self, message[0])
                     func(*message[1:])
-                    socket.send(b"Success")
+                    socket.send_multipart([identity, b"Success"])
                 except AttributeError:
-                    socket.send(b"Error")
+                    socket.send_multipart([identity, b"Error"])
             if monitor in socks:
                 evt = recv_monitor_message(monitor)
                 evt.update({'description': EVENT_MAP[evt['event']]})
