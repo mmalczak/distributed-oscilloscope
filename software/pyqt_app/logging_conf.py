@@ -17,7 +17,7 @@ DEFAULT_CONFIG = {
     },
     'loggers':{
         '': {
-            'level': 'DEBUG',
+            'level': 'INFO',
             'handlers': ['console']
         }
     }
