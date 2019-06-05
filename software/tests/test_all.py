@@ -13,7 +13,7 @@ from multiprocessing import Queue
 from timeit import default_timer as timer
 from test_conf import server_addr
 from test_conf import performance_measurements
-
+from zmq_rpc import ZMQ_RPC
 
 server_addr = '128.141.79.50'
 ADC_addr = '128.141.162.185'
@@ -31,6 +31,7 @@ class OscilloscopeMethods(unittest.TestCase):
     def setUpClass(cls):
         cls.start_server(cls)
         cls.create_GUI_interface(cls)
+        cls.zmq_rpc = ZMQ_RPC()
         cls.start_zeroconf(cls)
         cls.add_ADC_FEC(cls, 'ADC1') 
         cls.add_ADC_FEC(cls, 'ADC2') 
@@ -129,47 +130,43 @@ class OscilloscopeMethods(unittest.TestCase):
         self.assertEqual(number_of_channels, 4)
 
     def test_channels_empty(self):
-        proxy = get_proxy("http://" + server_addr + ":" + str(8000) + "/")
-        channels = proxy.get_GUI_channels(self.GUI_name)
+        channels = self.zmq_rpc.send_RPC('get_GUI_channels', self.GUI_name)
         self.assertTrue(not channels)
 
     def add_channel(self, idx, unique_ADC_name):
         oscilloscope_channel_idx = idx
         ADC_channel = idx
-        proxy = get_proxy("http://" + server_addr + ":" + str(8000) + "/")
-        proxy.add_channel(oscilloscope_channel_idx, unique_ADC_name,
-                          ADC_channel, self.GUI_name)
+        self.zmq_rpc.send_RPC('add_channel', oscilloscope_channel_idx, 
+                              unique_ADC_name, ADC_channel, self.GUI_name)
         time.sleep(self.delay)
 
     def remove_channel(self, idx):
         oscilloscope_channel_idx = idx
         ADC_channel = idx
-        proxy = get_proxy("http://" + server_addr + ":" + str(8000) + "/")
-        proxy.remove_channel(oscilloscope_channel_idx, self.GUI_name)
+        self.zmq_rpc.send_RPC('remove_channel', oscilloscope_channel_idx, 
+                              self.GUI_name)
         time.sleep(self.delay)
 
     def add_internal_trigger(self, idx, unique_ADC_name):
         ADC_trigger_idx = 3
-        proxy = get_proxy("http://" + server_addr + ":" + str(8000) + "/")
-        proxy.add_trigger('internal', unique_ADC_name, ADC_trigger_idx,
-                          self.GUI_name)
-        proxy.set_ADC_parameter('internal_trigger_enable', 1 , unique_ADC_name,
-                                ADC_trigger_idx)
+        self.zmq_rpc.send_RPC('add_trigger', 'internal', unique_ADC_name, 
+                              ADC_trigger_idx, self.GUI_name)
+        self.zmq_rpc.send_RPC('set_ADC_parameter', 'internal_trigger_enable',
+                              1 , unique_ADC_name, ADC_trigger_idx)
         time.sleep(self.delay)
 
     def set_presamples(self, value, unique_ADC_name):
-        proxy = get_proxy("http://" + server_addr + ":" + str(8000) + "/")
-        proxy.set_ADC_parameter('presamples', value , unique_ADC_name)
+        self.zmq_rpc.send_RPC('set_ADC_parameter', 'presamples', value,
+                              unique_ADC_name)
         time.sleep(self.delay)
 
     def set_postsamples(self, value, unique_ADC_name):
-        proxy = get_proxy("http://" + server_addr + ":" + str(8000) + "/")
-        proxy.set_ADC_parameter('postsamples', value , unique_ADC_name)
+        self.zmq_rpc.send_RPC('set_ADC_parameter', 'postsamples', value,
+                              unique_ADC_name)
         time.sleep(self.delay)
 
     def measure_acquisition_time(self):
-        proxy = get_proxy("http://" + server_addr + ":" + str(8000) + "/")
-        proxy.single_acquisition(self.GUI_name)
+        self.zmq_rpc.send_RPC('single_acquisition', self.GUI_name)
         time_start = timer()
         time_end = self.return_queue.get()
         time_diff = time_end - time_start
@@ -209,13 +206,13 @@ class OscilloscopeMethods(unittest.TestCase):
             self.remove_channel(j)
 
 #    def test_add_channel(self):
-#        proxy = get_proxy("http://" + server_addr + ":" + str(8000) + "/")
 #        GUI_channel = 0
 #        ADC_channel = 0
 #        ADC_idx = ADC_addr + "_" + str(self.ADCs['ADC1'][0])
 #        ADC_name = "ADC" + "_" + ADC_idx + "._tcp.local."
-#        proxy.add_channel(GUI_channel, ADC_name, ADC_channel, self.GUI_name)
-#        channels = proxy.get_GUI_channels(self.GUI_name)
+#        self.zmq_rpc.send_RPC('add_channel', GUI_channel, ADC_name,
+#                               ADC_channel, self.GUI_name)
+#        channels = self.zmq_rpc.send_RPC('get_GUI_channels', self.GUI_name)
 #        print(channels)
 
     def test_remove_available_ADC(self):
