@@ -13,6 +13,7 @@ class ZMQ_RPC():
         context = zmq.Context()
         self.socket = context.socket(zmq.DEALER)
 #        self.socket.setsockopt(zmq.IDENTITY, b'GUI')
+        self.socket.setsockopt(zmq.RCVTIMEO, 3000)
 #        self.socket.connect("tcp://localhost:8003")
         self.socket.connect("tcp://128.141.79.50:8003")
 
@@ -21,7 +22,13 @@ class ZMQ_RPC():
         msg = [function_name, *args]
         msg = pickle.dumps(msg)
         self.socket.send(msg)
-        message = self.socket.recv()
+        try:
+            message = self.socket.recv()
+        except Exception as e:
+            logger.error("Server not replying")
+            """TODO decide what to do: close application, save conf,
+            or sth. else"""
+            return None
         if message == b'Success':
             logger.info(function_name + ' success')
         if message == b'Error':
