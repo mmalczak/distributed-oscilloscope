@@ -2,8 +2,11 @@ import paramiko
 import os
 import time
 import warnings
+import logging
 warnings.filterwarnings(action='ignore',module='.*paramiko.*')
 """Workaround for paramiko bug"""
+
+logging.getLogger("paramiko").setLevel(logging.ERROR)
 
 def start_adc(port, pci):
     warnings.filterwarnings(action='ignore',module='.*paramiko.*')
