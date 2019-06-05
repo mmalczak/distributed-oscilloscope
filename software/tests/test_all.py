@@ -7,7 +7,6 @@ import sys
 sys.path.append('../general')
 from proxy import get_proxy
 from server_expose_test import ThreadServerExposeTest
-import zeroconf
 import os
 from multiprocessing import Queue
 from timeit import default_timer as timer
@@ -33,7 +32,7 @@ class OscilloscopeMethods(unittest.TestCase):
         cls.start_server(cls)
         cls.create_GUI_interface(cls)
         cls.zmq_rpc = ZMQ_RPC(server_addr, server_zmq_expose_port)
-        cls.start_zeroconf(cls)
+        cls.connect_to_server(cls)
         cls.add_ADC_FEC(cls, 'ADC1') 
         cls.add_ADC_FEC(cls, 'ADC2') 
         while not cls.return_queue.empty():
@@ -54,20 +53,15 @@ class OscilloscopeMethods(unittest.TestCase):
         if performance_measurements:
             self.results.close()
 
-    def start_zeroconf(self):
+    def connect_to_server(self):
         #addr = os.popen("ifconfig| grep inet").read().split()[1]
         addr = '128.141.79.50'
         port = 8001
         GUI_idx = addr + "_" + str(port)
         GUI_name = "GUI" + "_" + GUI_idx + "._http._tcp.local."
         self.GUI_name = GUI_name
-        zeroconf_info = zeroconf.ServiceInfo("_http._tcp.local.", GUI_name,
-                                             zeroconf.socket.inet_aton(addr),
-                                             8000,
-                                             properties={'addr': addr,
-                                                         'port': str(port)})
-        zeroconf_service = zeroconf.Zeroconf()
-        zeroconf_service.register_service(zeroconf_info)
+        self.zmq_rpc.send_RPC('add_service', GUI_name, addr, port)
+
         time.sleep(self.delay)
 
     def clean_queue(self):
