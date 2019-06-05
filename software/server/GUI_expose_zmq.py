@@ -7,6 +7,15 @@ from zmq.utils.monitor import recv_monitor_message
 from zmq.utils.monitor import parse_monitor_message
 import pickle
 from ipaddr import get_ip
+import logging
+import logging.config
+from logging_conf import DEFAULT_CONFIG
+
+logging.config.dictConfig(DEFAULT_CONFIG)
+logger = logging.getLogger(__name__)
+
+
+
 
 def stop_and_retrieve_acquisition(func):
     def wrapper(self, *args, **kwargs):
@@ -179,11 +188,9 @@ class ThreadGUI_zmq_Expose(threading.Thread):
 
     def run(self):
         EVENT_MAP = {}
-        print("Event names:")
         for name in dir(zmq):
             if name.startswith('EVENT_'):
                 value = getattr(zmq, name)
-                print("%21s : %4i" % (name, value))
                 EVENT_MAP[value] = name
 
         context = zmq.Context()
@@ -211,8 +218,5 @@ class ThreadGUI_zmq_Expose(threading.Thread):
             if monitor in socks:
                 evt = recv_monitor_message(monitor)
                 evt.update({'description': EVENT_MAP[evt['event']]})
-                print(evt['description'])
-                if evt['description'] == 'EVENT_ACCEPTED':
-                    print(evt['endpoint'])
-                #print("Event: {}".format(evt))
+                logger.info("Event: {}".format(evt))
 
