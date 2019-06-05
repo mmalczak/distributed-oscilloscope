@@ -11,6 +11,9 @@ import zeroconf
 import os
 from multiprocessing import Queue
 from timeit import default_timer as timer
+from test_conf import server_addr
+from test_conf import performance_measurements
+
 
 server_addr = '128.141.79.50'
 ADC_addr = '128.141.162.185'
@@ -138,6 +141,13 @@ class OscilloscopeMethods(unittest.TestCase):
                           ADC_channel, self.GUI_name)
         time.sleep(self.delay)
 
+    def remove_channel(self, idx):
+        oscilloscope_channel_idx = idx
+        ADC_channel = idx
+        proxy = get_proxy("http://" + server_addr + ":" + str(8000) + "/")
+        proxy.remove_channel(oscilloscope_channel_idx, self.GUI_name)
+        time.sleep(self.delay)
+
     def add_internal_trigger(self, idx, unique_ADC_name):
         ADC_trigger_idx = 3
         proxy = get_proxy("http://" + server_addr + ":" + str(8000) + "/")
@@ -165,6 +175,7 @@ class OscilloscopeMethods(unittest.TestCase):
         time_diff = time_end - time_start
         return time_diff
 
+    @unittest.skipUnless(performance_measurements, "Only for measurements")
     def test_acquisition_time(self):
         self.clean_queue()
     
@@ -194,6 +205,8 @@ class OscilloscopeMethods(unittest.TestCase):
                         best_result = time_diff
                         best_result_txt = str(best_result) + '\n'
                 self.results.write("Best in 5: " + best_result_txt)
+        for j in range(3, -1, -1):
+            self.remove_channel(j)
 
 #    def test_add_channel(self):
 #        proxy = get_proxy("http://" + server_addr + ":" + str(8000) + "/")
