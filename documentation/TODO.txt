@@ -25,3 +25,5 @@ infomration about ports made global
 
 for master thesis: Do the comparison between protocol buffers and pickle
 compare differrent GUI architectures
+
+implement heartbeating
