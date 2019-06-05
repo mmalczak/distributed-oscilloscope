@@ -1,1 +1,1 @@
-GUI_zmq_expose_port = 8003
+server_zmq_expose_port = 8003

@@ -9,6 +9,7 @@ from PyQt5 import QtGui
 from server_expose import *
 from GUI import *
 from zmq_rpc import ZMQ_RPC
+from addresses import server_zmq_expose_port
 
 """TODO number of ADCs different from data dimension occuring when I
 switch off ADC"""
@@ -46,10 +47,12 @@ def main():
     else:
         port = int(args.port[0])
 
+    ip_server = args.ip_server[0]
+
     addr = os.popen("ifconfig| grep inet").read().split()[1]
     GUI_idx = addr + "_" + str(port)
     GUI_name = "GUI" + "_" + GUI_idx + "._http._tcp.local."
-    zmq_rpc = ZMQ_RPC()
+    zmq_rpc = ZMQ_RPC(ip_server, server_zmq_expose_port)
     app = QApplication([])
     win = MainWindow(zmq_rpc)
     GUI = GUI_Class(win.ui, zmq_rpc, GUI_name)

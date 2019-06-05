@@ -14,6 +14,7 @@ from timeit import default_timer as timer
 from test_conf import server_addr
 from test_conf import performance_measurements
 from zmq_rpc import ZMQ_RPC
+from addresses import server_zmq_expose_port
 
 server_addr = '128.141.79.50'
 ADC_addr = '128.141.162.185'
@@ -31,7 +32,7 @@ class OscilloscopeMethods(unittest.TestCase):
     def setUpClass(cls):
         cls.start_server(cls)
         cls.create_GUI_interface(cls)
-        cls.zmq_rpc = ZMQ_RPC()
+        cls.zmq_rpc = ZMQ_RPC(server_addr, server_zmq_expose_port)
         cls.start_zeroconf(cls)
         cls.add_ADC_FEC(cls, 'ADC1') 
         cls.add_ADC_FEC(cls, 'ADC2') 
