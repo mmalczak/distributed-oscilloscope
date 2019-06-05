@@ -8,33 +8,31 @@ import zeroconf
 import argparse
 from PyQt5 import QtGui
 from server_expose import *
-from proxy import *
 from GUI import *
-
+from zmq_rpc import ZMQ_RPC
 
 """TODO number of ADCs different from data dimension occuring when I
 switch off ADC"""
 
 
 class MainWindow(QMainWindow):
-    def __init__(self):
+    def __init__(self, zmq_rpc):
         super(MainWindow, self).__init__()
         self.threading_widget = None
+        self.zmq_rpc = zmq_rpc
         self.ui = Ui_MainWindow()
         self.zeroconf_service = None
         self.zeroconf_info = None
         self.GUI_name = None
         self.ui.setupUi(self)
         self.show()
-        self.server_proxy = None
 
     def closeEvent(self, *args, **kwargs):
         super(QtGui.QMainWindow, self).closeEvent(*args, **kwargs)
         if(self.zeroconf_service is not None):
             self.zeroconf_service.unregister_service(self.zeroconf_info)
         else:
-            proxy = get_proxy(self.server_proxy.proxy_addr)
-            proxy.remove_service(self.GUI_name)
+            self.zmq_rpc.send_RPC("remove_service", self.GUI_name)
         self.threading_widget.thread.exit()  # TODO not really working
 
 
@@ -57,10 +55,10 @@ def main():
     addr = os.popen("ifconfig| grep inet").read().split()[1]
     GUI_idx = addr + "_" + str(port)
     GUI_name = "GUI" + "_" + GUI_idx + "._http._tcp.local."
+    zmq_rpc = ZMQ_RPC()
     app = QApplication([])
-    win = MainWindow()
-    GUI = GUI_Class(win.ui, GUI_name)
-    win.server_proxy = GUI.server_proxy
+    win = MainWindow(zmq_rpc)
+    GUI = GUI_Class(win.ui, zmq_rpc, GUI_name)
     threading_widget = ThreadServerExpose(GUI, port)
     threading_widget.server_share.app = app
     """So that I can list all widgets"""
@@ -83,8 +81,7 @@ def main():
         zeroconf_service.register_service(zeroconf_info)
 
     else:
-        proxy = xmlrpc.client.ServerProxy("http://" + args.ip_server[0] + ":8000/")
-        proxy.add_service(GUI_name, addr, port)
+        zmq_rpc.send_RPC('add_service', GUI_name, addr, port)
 
     win.zeroconf_info = zeroconf_info
     win.zeroconf_service = zeroconf_service

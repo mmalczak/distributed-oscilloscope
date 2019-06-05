@@ -1,5 +1,3 @@
-from proxy import *
-from zmq_rpc import *
 from plot import *
 from channels import ChannelClosure
 from triggers import *
@@ -12,7 +10,7 @@ SAMP_FREQ = 1e8
 
 class GUI_Class:
 
-    def __init__(self, ui, GUI_name):
+    def __init__(self, ui, zmq_rpc, GUI_name):
         self.numberOfADC = 0
         self.ui = ui
         self.available_ADCs = []
@@ -24,8 +22,7 @@ class GUI_Class:
         self.channels = []
         self.triggers = []
         self.layouts = []
-        self.server_proxy = Proxy()
-        self.zmq_rpc = ZMQ_RPC()
+        self.zmq_rpc = zmq_rpc
 
         for count in range(self.number_of_GUI_triggers):
             trig_clos = TriggerClosure(self.ui.trigger_inputs_layout,

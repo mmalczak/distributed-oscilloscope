@@ -16,10 +16,6 @@ class ServerExpose(QtCore.QObject):
         self.rem_av_ADC_signal.connect(self.GUI.remove_available_ADC)
         self.add_av_ADC_signal.connect(self.GUI.add_available_ADC)
 
-    def set_server_address(self, addr):
-        self.GUI.server_proxy.proxy_addr = "http://" + addr + ":8000/"
-        return True
-
     def show_widgets(self):
         for w in self.app.allWidgets():
             print(w)
@@ -38,7 +34,6 @@ class ServerExpose(QtCore.QObject):
         server.register_function(self.add_available_ADC, "add_available_ADC")
         server.register_function(self.remove_available_ADC,
                                  "remove_available_ADC")
-        server.register_function(self.set_server_address, "set_server_address")
         server.register_function(self.show_widgets, "show_widgets")
         server.register_function(self.GUI.update_data, "update_data")
         server.register_function(self.GUI.set_horizontal_params,
