@@ -4,29 +4,30 @@ import subprocess
 from paramiko_connection import start_adc
 import xmlrpc.client
 import sys
-sys.path.append('../general')
-from proxy import get_proxy
 from server_expose_test import ThreadServerExposeTest
 import os
 from multiprocessing import Queue
 from timeit import default_timer as timer
 from test_conf import server_addr
 from test_conf import performance_measurements
-from zmq_rpc import ZMQ_RPC
-from addresses import server_zmq_expose_port
+sys.path.append('../')
+from general.proxy import get_proxy
+from general.zmq_rpc import ZMQ_RPC
+from general.addresses import server_zmq_expose_port
 
 sys.path.append('../server')
-import ADC_configs
+from server import ADC_configs
 """TODO is this the rigth thing to do???"""
 
 server_addr = '128.141.79.50'
 ADC_addr = '128.141.162.185'
 
+
 class OscilloscopeMethods(unittest.TestCase):
 
     server_handler = None
     server_expose = None
-    ADCs = {'ADC1':[8000, 1], 'ADC2':[8001, 2]}
+    ADCs = {'ADC1': [8000, 1], 'ADC2': [8001, 2]}
     delay = 0.4
     return_queue = None
     GUI_name = None
@@ -53,7 +54,7 @@ class OscilloscopeMethods(unittest.TestCase):
         self.stop_server()
 
     def connect_to_server(self):
-        #addr = os.popen("ifconfig| grep inet").read().split()[1]
+        # addr = os.popen("ifconfig| grep inet").read().split()[1]
         addr = '128.141.79.50'
         port = 8001
         GUI_idx = addr + "_" + str(port)
@@ -138,7 +139,7 @@ class OscilloscopeMethods(unittest.TestCase):
         self.zmq_rpc.send_RPC('add_trigger', 'internal', unique_ADC_name,
                               ADC_trigger_idx, self.GUI_name)
         self.zmq_rpc.send_RPC('set_ADC_parameter', 'internal_trigger_enable',
-                              1 , unique_ADC_name, ADC_trigger_idx)
+                              1, unique_ADC_name, ADC_trigger_idx)
 
     def set_presamples(self, value, unique_ADC_name):
         self.zmq_rpc.send_RPC('set_ADC_parameter', 'presamples', value,
@@ -160,8 +161,8 @@ class OscilloscopeMethods(unittest.TestCase):
         self.clean_queue()
 
         self.results.write("Internal trigger on channel 3\n"
-                            "Sampled signal: 100kHz sine wave Channel 3(0-3)\n"
-                            "number of presamples = 0\n\n")
+                           "Sampled signal: 100kHz sine wave Channel 3(0-3)\n"
+                           "number of presamples = 0\n\n")
 
         ADC_idx = ADC_addr + "_" + str(self.ADCs['ADC1'][0])
         unique_ADC_name = "ADC" + "_" + ADC_idx + "._tcp.local."
@@ -172,10 +173,10 @@ class OscilloscopeMethods(unittest.TestCase):
             if j == 3:
                 self.add_internal_trigger(3, unique_ADC_name)
                 self.set_presamples(0, unique_ADC_name)
-            for i in range(0,6):
+            for i in range(0, 6):
                 postsamples = 10**i
                 if postsamples == 1:
-                    postsamples = 2 # that is the minimum available value
+                    postsamples = 2  # that is the minimum available value
                 self.set_postsamples(postsamples, unique_ADC_name)
                 self.results.write("Postsamples: " + str(postsamples) + "\n")
                 best_result = 100000
@@ -194,7 +195,7 @@ class OscilloscopeMethods(unittest.TestCase):
         ADC_idx = ADC_addr + "_" + str(self.ADCs['ADC1'][0])
         ADC_name = "ADC" + "_" + ADC_idx + "._tcp.local."
         self.zmq_rpc.send_RPC('add_channel', GUI_channel, ADC_name,
-                               ADC_channel, self.GUI_name)
+                              ADC_channel, self.GUI_name)
         channels = self.zmq_rpc.send_RPC('get_GUI_channels', self.GUI_name)
         self.zmq_rpc.send_RPC('remove_channel', GUI_channel, self.GUI_name)
         channel = channels[GUI_channel]
