@@ -10,9 +10,15 @@ from ADC import *
 from server_expose import *
 from commands import *
 import selectors
+import zmq
+from zmq.utils.monitor import recv_monitor_message
+from zmq.utils.monitor import parse_monitor_message
+import pickle
 
 
 def main():
+
+
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--port', nargs=1,
@@ -65,6 +71,25 @@ def main():
     cmd_thread = CommandsThread(cmd)
     cmd_thread.start()
 
+    EVENT_MAP = {}
+    for name in dir(zmq):
+        if name.startswith('EVENT_'):
+            value = getattr(zmq, name)
+            EVENT_MAP[value] = name
+
+    context = zmq.Context()
+    socket = context.socket(zmq.ROUTER)
+    monitor = socket.get_monitor_socket()
+    #socket.bind("tcp://*:8003")
+    ip = '128.141.162.185'
+    port_zmq = str(port + 8)
+    socket.bind("tcp://" + ip  + ":" + port_zmq)
+
+    poller = zmq.Poller()
+    poller.register(monitor, zmq.POLLIN | zmq.POLLERR)
+    poller.register(socket, zmq.POLLIN | zmq.POLLERR)
+
+
     _ServerSelector = selectors.PollSelector
     try:
         with _ServerSelector() as selector:
@@ -72,7 +97,7 @@ def main():
             selector.register(serv_expose.server, selectors.EVENT_READ)
 
             while True:
-                ready = selector.select(0.5)
+                ready = selector.select(0.01)
                 if ready:
                     if ready[0][0] == adc.adc_selector:
                         selector.unregister(adc)
@@ -86,6 +111,25 @@ def main():
                                           adc.unique_ADC_name)
                     else:
                         serv_expose.server._handle_request_noblock()
+
+                socks = dict(poller.poll(10))
+                if socket in socks:
+                    [identity, message] = socket.recv_multipart()
+                    message = pickle.loads(message)
+                    try:
+                        func = getattr(self, message[0])
+                        ret = func(*message[1:])
+                        ret = pickle.dumps(ret)
+                        socket.send_multipart([identity, ret])
+                    except AttributeError:
+                        socket.send_multipart([identity, b"Error"])
+                if monitor in socks:
+                    evt = recv_monitor_message(monitor)
+                    evt.update({'description': EVENT_MAP[evt['event']]})
+                    #logger.info("Event: {}".format(evt))
+
+
+
 
                 serv_expose.server.service_actions()
     finally:
