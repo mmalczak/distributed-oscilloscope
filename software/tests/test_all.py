@@ -39,6 +39,7 @@ class OscilloscopeMethods(unittest.TestCase):
         cls.connect_to_server(cls)
         cls.add_ADC_FEC(cls, 'ADC1') 
         cls.add_ADC_FEC(cls, 'ADC2') 
+        time.sleep(cls.delay)
         while not cls.return_queue.empty():
             cls.return_queue.get()
 
@@ -46,6 +47,7 @@ class OscilloscopeMethods(unittest.TestCase):
     def tearDownClass(cls):
         cls.remove_ADC_FEC(cls, 'ADC1')
         cls.remove_ADC_FEC(cls, 'ADC2')
+        time.sleep(cls.delay)
         cls.stop_GUI_interface(cls)
         cls.stop_server(cls)
 
@@ -66,8 +68,6 @@ class OscilloscopeMethods(unittest.TestCase):
         self.GUI_name = GUI_name
         self.zmq_rpc.send_RPC('add_service', GUI_name, addr, port)
 
-        time.sleep(self.delay)
-
     def clean_queue(self):
         while not self.return_queue.empty():
             self.return_queue.get()
@@ -75,7 +75,6 @@ class OscilloscopeMethods(unittest.TestCase):
     def add_ADC_FEC(self, name):
         ADC = self.ADCs[name]
         start_adc(ADC[0], ADC[1])
-        time.sleep(self.delay)
 
     def remove_ADC_FEC(self, name):
         ADC = self.ADCs[name]
@@ -89,27 +88,22 @@ class OscilloscopeMethods(unittest.TestCase):
                 print(e)
         """There will be an error because proxy can never return because 
         the process exits"""
-        time.sleep(self.delay)
 
     def start_server(self):
         command = 'python3 ../server/main_server.py'
         self.server_handler = subprocess.Popen(command, shell=True)
-        time.sleep(self.delay)
 
     def stop_server(self):
         self.server_expose.thread.terminate()
-        time.sleep(self.delay)
 
     def create_GUI_interface(self):
 
         self.return_queue = Queue()
         self.server_expose = ThreadServerExposeTest(None, 8001,
                                                     self.return_queue)
-        time.sleep(self.delay)
 
     def stop_GUI_interface(self):
         self.server_handler.terminate()
-        time.sleep(self.delay)
 
     def test_add_remove_available_ADC(self):
         self.clean_queue()
@@ -139,14 +133,12 @@ class OscilloscopeMethods(unittest.TestCase):
         ADC_channel = idx
         self.zmq_rpc.send_RPC('add_channel', oscilloscope_channel_idx, 
                               unique_ADC_name, ADC_channel, self.GUI_name)
-        time.sleep(self.delay)
 
     def remove_channel(self, idx):
         oscilloscope_channel_idx = idx
         ADC_channel = idx
         self.zmq_rpc.send_RPC('remove_channel', oscilloscope_channel_idx, 
                               self.GUI_name)
-        time.sleep(self.delay)
 
     def add_internal_trigger(self, idx, unique_ADC_name):
         ADC_trigger_idx = 3
@@ -154,17 +146,14 @@ class OscilloscopeMethods(unittest.TestCase):
                               ADC_trigger_idx, self.GUI_name)
         self.zmq_rpc.send_RPC('set_ADC_parameter', 'internal_trigger_enable',
                               1 , unique_ADC_name, ADC_trigger_idx)
-        time.sleep(self.delay)
 
     def set_presamples(self, value, unique_ADC_name):
         self.zmq_rpc.send_RPC('set_ADC_parameter', 'presamples', value,
                               unique_ADC_name)
-        time.sleep(self.delay)
 
     def set_postsamples(self, value, unique_ADC_name):
         self.zmq_rpc.send_RPC('set_ADC_parameter', 'postsamples', value,
                               unique_ADC_name)
-        time.sleep(self.delay)
 
     def measure_acquisition_time(self):
         self.zmq_rpc.send_RPC('single_acquisition', self.GUI_name)
