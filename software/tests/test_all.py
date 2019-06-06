@@ -79,7 +79,7 @@ class OscilloscopeMethods(unittest.TestCase):
                 pass
             else:
                 print(e)
-        """There will be an error because proxy can never return because 
+        """There will be an error because proxy can never return because
         the process exits"""
 
     def start_server(self):
@@ -124,18 +124,18 @@ class OscilloscopeMethods(unittest.TestCase):
     def add_channel(self, idx, unique_ADC_name):
         oscilloscope_channel_idx = idx
         ADC_channel = idx
-        self.zmq_rpc.send_RPC('add_channel', oscilloscope_channel_idx, 
+        self.zmq_rpc.send_RPC('add_channel', oscilloscope_channel_idx,
                               unique_ADC_name, ADC_channel, self.GUI_name)
 
     def remove_channel(self, idx):
         oscilloscope_channel_idx = idx
         ADC_channel = idx
-        self.zmq_rpc.send_RPC('remove_channel', oscilloscope_channel_idx, 
+        self.zmq_rpc.send_RPC('remove_channel', oscilloscope_channel_idx,
                               self.GUI_name)
 
     def add_internal_trigger(self, idx, unique_ADC_name):
         ADC_trigger_idx = 3
-        self.zmq_rpc.send_RPC('add_trigger', 'internal', unique_ADC_name, 
+        self.zmq_rpc.send_RPC('add_trigger', 'internal', unique_ADC_name,
                               ADC_trigger_idx, self.GUI_name)
         self.zmq_rpc.send_RPC('set_ADC_parameter', 'internal_trigger_enable',
                               1 , unique_ADC_name, ADC_trigger_idx)
@@ -158,7 +158,7 @@ class OscilloscopeMethods(unittest.TestCase):
     @unittest.skipUnless(performance_measurements, "Only for measurements")
     def test_acquisition_time(self):
         self.clean_queue()
-    
+
         self.results.write("Internal trigger on channel 3\n"
                             "Sampled signal: 100kHz sine wave Channel 3(0-3)\n"
                             "number of presamples = 0\n\n")
