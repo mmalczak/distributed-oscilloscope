@@ -1,6 +1,9 @@
 import multiprocessing 
 from xmlrpc.server import SimpleXMLRPCServer 
 from timeit import default_timer as timer
+import matplotlib.pyplot as plt
+from test_conf import plot_data
+from test_conf import performance_measurements
 
 class ServerExposeTest():
 
@@ -20,8 +23,16 @@ class ServerExposeTest():
         self.return_queue.put((unique_ADC_name, number_of_channels))
 
     def update_data(self, *args, **kwargs):
-        time_end = timer()
-        self.return_queue.put(time_end)
+        if plot_data:
+            data = args[0]
+            chan0 = data['0']
+            chan1 = data['1']
+            plt.plot(chan0, linewidth=0.5)
+            plt.plot(chan1, linewidth=0.5)
+            plt.show()
+        if performance_measurements:
+            time_end = timer()
+            self.return_queue.put(time_end)
         print("GUI: update GUI")
 
     def set_horizontal_params(self, *args, **kwargs):

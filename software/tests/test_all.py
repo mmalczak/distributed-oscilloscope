@@ -189,6 +189,40 @@ class OscilloscopeMethods(unittest.TestCase):
         for j in range(3, -1, -1):
             self.remove_channel(j)
 
+    def test_acquisition(self):
+        self.clean_queue()
+
+        ADC_idx = ADC_addr + "_" + str(self.ADCs['ADC1'][0])
+        unique_ADC_name_1 = "ADC" + "_" + ADC_idx + "._tcp.local."
+
+        oscilloscope_channel_idx = 0
+        ADC_channel = 3
+        self.zmq_rpc.send_RPC('add_channel', oscilloscope_channel_idx,
+                          unique_ADC_name_1, ADC_channel, self.GUI_name)
+
+
+        ADC_idx = ADC_addr + "_" + str(self.ADCs['ADC2'][0])
+        unique_ADC_name_2 = "ADC" + "_" + ADC_idx + "._tcp.local."
+
+        oscilloscope_channel_idx = 1
+        ADC_channel = 3
+        self.zmq_rpc.send_RPC('add_channel', oscilloscope_channel_idx,
+                          unique_ADC_name_2, ADC_channel, self.GUI_name)
+
+
+        ADC_trigger_idx = 3
+        self.zmq_rpc.send_RPC('add_trigger', 'internal', unique_ADC_name_1,
+                              ADC_trigger_idx, self.GUI_name)
+        self.zmq_rpc.send_RPC('set_ADC_parameter', 'internal_trigger_enable',
+                              1, unique_ADC_name_1, ADC_trigger_idx)
+
+        self.zmq_rpc.send_RPC('set_presamples', 0, self.GUI_name)
+        self.zmq_rpc.send_RPC('set_postsamples', 1000, self.GUI_name)
+
+        self.zmq_rpc.send_RPC('single_acquisition', self.GUI_name)
+        time.sleep(1)
+
+
     def test_add_channel(self):
         GUI_channel = 0
         ADC_channel = 0
