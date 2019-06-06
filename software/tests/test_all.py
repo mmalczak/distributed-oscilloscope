@@ -31,33 +31,26 @@ class OscilloscopeMethods(unittest.TestCase):
     return_queue = None
     GUI_name = None
 
-    @classmethod
-    def setUpClass(cls):
-        cls.start_server(cls)
-        cls.create_GUI_interface(cls)
-        cls.zmq_rpc = ZMQ_RPC(server_addr, server_zmq_expose_port)
-        cls.connect_to_server(cls)
-        cls.add_ADC_FEC(cls, 'ADC1') 
-        cls.add_ADC_FEC(cls, 'ADC2') 
-        time.sleep(cls.delay)
-        while not cls.return_queue.empty():
-            cls.return_queue.get()
-
-    @classmethod
-    def tearDownClass(cls):
-        cls.remove_ADC_FEC(cls, 'ADC1')
-        cls.remove_ADC_FEC(cls, 'ADC2')
-        time.sleep(cls.delay)
-        cls.stop_GUI_interface(cls)
-        cls.stop_server(cls)
-
     def setUp(self):
         if performance_measurements:
             self.results = open("results.txt", "a")
+        self.start_server()
+        self.create_GUI_interface()
+        self.zmq_rpc = ZMQ_RPC(server_addr, server_zmq_expose_port)
+        self.connect_to_server()
+        self.add_ADC_FEC('ADC1')
+        self.add_ADC_FEC('ADC2')
+        time.sleep(self.delay)
+        self.clean_queue()
 
     def tearDown(self):
         if performance_measurements:
             self.results.close()
+        self.remove_ADC_FEC('ADC1')
+        self.remove_ADC_FEC('ADC2')
+        time.sleep(self.delay)
+        self.stop_GUI_interface()
+        self.stop_server()
 
     def connect_to_server(self):
         #addr = os.popen("ifconfig| grep inet").read().split()[1]
