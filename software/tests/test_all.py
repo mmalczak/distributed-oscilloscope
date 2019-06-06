@@ -10,6 +10,7 @@ from multiprocessing import Queue
 from timeit import default_timer as timer
 from test_conf import server_addr
 from test_conf import performance_measurements
+from test_conf import plot_data
 sys.path.append('../')
 from general.proxy import get_proxy
 from general.zmq_rpc import ZMQ_RPC
@@ -144,6 +145,7 @@ class OscilloscopeMethods(unittest.TestCase):
     @unittest.skipUnless(performance_measurements, "Only for measurements")
     def test_acquisition_time(self):
         self.clean_queue()
+        self.assertFalse(plot_data)
 
         self.results.write("Internal trigger on channel 3\n"
                            "Sampled signal: 100kHz sine wave Channel 3(0-3)\n"
@@ -182,6 +184,7 @@ class OscilloscopeMethods(unittest.TestCase):
 
     def test_acquisition(self):
         self.clean_queue()
+        self.assertFalse(performance_measurements)
 
         ADC_idx = ADC_addr + "_" + str(self.ADCs['ADC1'][0])
         unique_ADC_name_1 = "ADC" + "_" + ADC_idx + "._tcp.local."
