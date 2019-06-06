@@ -134,21 +134,6 @@ class OscilloscopeMethods(unittest.TestCase):
         self.zmq_rpc.send_RPC('remove_channel', oscilloscope_channel_idx,
                               self.GUI_name)
 
-    def add_internal_trigger(self, idx, unique_ADC_name):
-        ADC_trigger_idx = 3
-        self.zmq_rpc.send_RPC('add_trigger', 'internal', unique_ADC_name,
-                              ADC_trigger_idx, self.GUI_name)
-        self.zmq_rpc.send_RPC('set_ADC_parameter', 'internal_trigger_enable',
-                              1, unique_ADC_name, ADC_trigger_idx)
-
-    def set_presamples(self, value, unique_ADC_name):
-        self.zmq_rpc.send_RPC('set_ADC_parameter', 'presamples', value,
-                              unique_ADC_name)
-
-    def set_postsamples(self, value, unique_ADC_name):
-        self.zmq_rpc.send_RPC('set_ADC_parameter', 'postsamples', value,
-                              unique_ADC_name)
-
     def measure_acquisition_time(self):
         self.zmq_rpc.send_RPC('single_acquisition', self.GUI_name)
         time_start = timer()
@@ -171,13 +156,19 @@ class OscilloscopeMethods(unittest.TestCase):
             self.results.write("Number of channels: " + str(4-j) + "\n")
             self.add_channel(j, unique_ADC_name)
             if j == 3:
-                self.add_internal_trigger(3, unique_ADC_name)
-                self.set_presamples(0, unique_ADC_name)
+                ADC_trigger_idx = 3
+                send_RPC = self.zmq_rpc.send_RPC
+                send_RPC('add_trigger', 'internal', unique_ADC_name,
+                         ADC_trigger_idx, self.GUI_name)
+                send_RPC('set_ADC_parameter', 'internal_trigger_enable', 1,
+                         unique_ADC_name, ADC_trigger_idx)
+                self.zmq_rpc.send_RPC('set_presamples', 0, self.GUI_name)
             for i in range(0, 6):
                 postsamples = 10**i
                 if postsamples == 1:
                     postsamples = 2  # that is the minimum available value
-                self.set_postsamples(postsamples, unique_ADC_name)
+                self.zmq_rpc.send_RPC('set_postsamples', postsamples,
+                                      self.GUI_name)
                 self.results.write("Postsamples: " + str(postsamples) + "\n")
                 best_result = 100000
                 for i in range(5):
