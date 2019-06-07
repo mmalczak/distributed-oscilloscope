@@ -14,6 +14,7 @@ from test_conf import plot_data
 sys.path.append('../')
 from general.proxy import get_proxy
 from general.zmq_rpc import ZMQ_RPC
+from general.zmq_rpc import RPC_Error
 from general.addresses import server_zmq_expose_port
 
 sys.path.append('../server')
@@ -73,11 +74,12 @@ class OscilloscopeMethods(unittest.TestCase):
 
     def remove_ADC_FEC(self, name):
         ADC = self.ADCs[name]
-        proxy = get_proxy("http://spechost:" + str(ADC[0]) + "/")
+        zmq_rpc = ZMQ_RPC('spechost', ADC[0] + 8)
+        zmq_rpc.set_timeout(10)
         try:
-            proxy.exit()
+            zmq_rpc.send_RPC('exit')
         except Exception as e:
-            if type(e) is ConnectionRefusedError:
+            if type(e) is RPC_Error:
                 pass
             else:
                 print(e)
@@ -214,6 +216,7 @@ class OscilloscopeMethods(unittest.TestCase):
         self.zmq_rpc.send_RPC('set_postsamples', 1000, self.GUI_name)
 
         self.zmq_rpc.send_RPC('single_acquisition', self.GUI_name)
+        self.return_queue.get()
         time.sleep(1)
 
 

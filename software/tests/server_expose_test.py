@@ -30,6 +30,7 @@ class ServerExposeTest():
             plt.plot(chan0, linewidth=0.5)
             plt.plot(chan1, linewidth=0.5)
             plt.show()
+            self.return_queue.put("Plot closed")
         if performance_measurements:
             time_end = timer()
             self.return_queue.put(time_end)
