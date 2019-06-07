@@ -9,13 +9,6 @@ import threading
 from ADC import *
 from server_expose import *
 from commands import *
-import selectors
-import zmq
-from zmq.utils.monitor import recv_monitor_message
-from zmq.utils.monitor import parse_monitor_message
-import pickle
-
-
 def main():
 
 
@@ -46,7 +39,6 @@ def main():
                                             server_proxy, ADC_name)
     conf = adc.get_current_conf()
     serv_expose = ServerExpose(addr, port, server_proxy, adc)
-    serv_expose.run()
 
     zeroconf_service = None
     zeroconf_info = None
@@ -71,66 +63,6 @@ def main():
     cmd_thread = CommandsThread(cmd)
     cmd_thread.start()
 
-    EVENT_MAP = {}
-    for name in dir(zmq):
-        if name.startswith('EVENT_'):
-            value = getattr(zmq, name)
-            EVENT_MAP[value] = name
-
-    context = zmq.Context()
-    socket = context.socket(zmq.ROUTER)
-    monitor = socket.get_monitor_socket()
-    #socket.bind("tcp://*:8003")
-    ip = '128.141.162.185'
-    port_zmq = str(port + 8)
-    socket.bind("tcp://" + ip  + ":" + port_zmq)
-
-    poller = zmq.Poller()
-    poller.register(monitor, zmq.POLLIN | zmq.POLLERR)
-    poller.register(socket, zmq.POLLIN | zmq.POLLERR)
-
-
-    _ServerSelector = selectors.PollSelector
-    try:
-        with _ServerSelector() as selector:
-            adc.selector = poller
-            selector.register(serv_expose.server, selectors.EVENT_READ)
-
-            while True:
-                ready = selector.select(0.01)
-                if ready:
-                    serv_expose.server._handle_request_noblock()
-
-                socks = dict(poller.poll(10))
-                if socket in socks:
-                    [identity, message] = socket.recv_multipart()
-                    message = pickle.loads(message)
-                    try:
-                        func = getattr(self, message[0])
-                        ret = func(*message[1:])
-                        ret = pickle.dumps(ret)
-                        socket.send_multipart([identity, ret])
-                    except AttributeError:
-                        socket.send_multipart([identity, b"Error"])
-                if monitor in socks:
-                    evt = recv_monitor_message(monitor)
-                    evt.update({'description': EVENT_MAP[evt['event']]})
-                    #logger.info("Event: {}".format(evt))
-
-                if adc.fileno() in socks:
-                    poller.unregister(adc)
-                    timestamp_and_data = adc.retrieve_ADC_timestamp_and_data(
-                                                                adc.channels)
-                    proxy = get_proxy( serv_expose.server_proxy.proxy_addr)
-                    proxy.update_data(timestamp_and_data, adc.unique_ADC_name)
-
-                serv_expose.server.service_actions()
-    finally:
-        pass
-
-    while(True):
-        pass
-
-
+    serv_expose.run()
 if __name__ == '__main__':
     main()
