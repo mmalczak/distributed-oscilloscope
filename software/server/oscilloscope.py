@@ -8,9 +8,9 @@ class Oscilloscope():
         self.available_ADCs = {}
 
     def add_available_ADC(self, unique_ADC_name, number_of_channels,
-                          ADC_proxy_addr, conf):
+                          ADC_proxy_addr, conf, ip, port):
         self.available_ADCs[unique_ADC_name] = ADC(unique_ADC_name,
-                                                   ADC_proxy_addr, conf)
+                                                ADC_proxy_addr, conf, ip, port)
         for name_GUI, GUI in self.GUIs.items():
             proxy = get_proxy(GUI.GUI_proxy_addr)
             proxy.add_available_ADC(unique_ADC_name, number_of_channels)

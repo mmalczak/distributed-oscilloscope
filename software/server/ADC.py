@@ -1,21 +1,26 @@
 from ADC_configs import *
 from proxy import *
-
+import sys
+sys.path.append('../')
+from general.zmq_rpc import ZMQ_RPC
 
 # fixme if your class doesnt inherit, do not add empty () after its declaration
 class ADC:
 
-    def __init__(self, unique_name, ADC_proxy_addr, conf):
+    def __init__(self, unique_name, ADC_proxy_addr, conf, ip, port):
         self.conf = conf
         self.number_of_channels = self.conf['board_conf']['n_chan']
         self.unique_name = unique_name
         self.timestamp_and_data = []
         self.ADC_proxy_addr = ADC_proxy_addr
+        self.ip = ip
+        self.port = port
         self.channels = []
         self.internal_triggers = []
         self.external_triggers = []
         self.acq_conf = None
         self.WRTD_master = True
+        self.zmq_rpc = ZMQ_RPC(ip, port + 8)  # remove +8 after removing xml
         for count in range(0, self.conf['board_conf']['n_chan']):
             channel = conf['chn_conf'][count]
             self.add_channel(channel['channel_range'],
