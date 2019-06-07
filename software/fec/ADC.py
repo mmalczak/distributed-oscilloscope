@@ -5,6 +5,7 @@ from proxy import *
 from WRTD import *
 import selectors
 from ADC_100m14b4cha import *
+import zmq
 
 delay_u = 600
 delay_samples = delay_u * 100
@@ -43,7 +44,6 @@ class ADC_100m14b4cha_extended_API_WRTD(ADC_100m14b4cha_extended_API):
         self.set_buffer()
         self.channels = None
         self.selector = None
-        self.adc_selector = None
 
     def set_WRTD_master(self, WRTD_master):
         print(WRTD_master)
@@ -78,9 +78,11 @@ class ADC_100m14b4cha_extended_API_WRTD(ADC_100m14b4cha_extended_API):
     # overwrites method from ADC_specialized
     def stop_acquisition(self):
         self.adc_acq_stop(self.adc_ptr, 0)
-        if self.adc_selector:
+        try:
             self.selector.unregister(self)
-            self.adc_selector = None
+        except KeyError:
+            pass
+        #TODO after adding logger log it
 
     def poll(self):
         Selector = selectors.PollSelector
@@ -96,7 +98,7 @@ class ADC_100m14b4cha_extended_API_WRTD(ADC_100m14b4cha_extended_API):
         self.stop_acquisition()
 
         self.start_acquisition()
-        self.adc_selector = self.selector.register(self, selectors.EVENT_READ)
+        self.selector.register(self, zmq.POLLIN)
 
     def retrieve_ADC_timestamp_and_data(self, channels):
         try:

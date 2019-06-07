@@ -93,24 +93,13 @@ def main():
     _ServerSelector = selectors.PollSelector
     try:
         with _ServerSelector() as selector:
-            adc.selector = selector
+            adc.selector = poller
             selector.register(serv_expose.server, selectors.EVENT_READ)
 
             while True:
                 ready = selector.select(0.01)
                 if ready:
-                    if ready[0][0] == adc.adc_selector:
-                        selector.unregister(adc)
-                        adc.adc_selector = None
-                        timestamp_and_data =\
-                            adc.retrieve_ADC_timestamp_and_data(
-                                adc.channels)
-                        proxy = get_proxy(
-                                    serv_expose.server_proxy.proxy_addr)
-                        proxy.update_data(timestamp_and_data,
-                                          adc.unique_ADC_name)
-                    else:
-                        serv_expose.server._handle_request_noblock()
+                    serv_expose.server._handle_request_noblock()
 
                 socks = dict(poller.poll(10))
                 if socket in socks:
@@ -128,8 +117,12 @@ def main():
                     evt.update({'description': EVENT_MAP[evt['event']]})
                     #logger.info("Event: {}".format(evt))
 
-
-
+                if adc.fileno() in socks:
+                    poller.unregister(adc)
+                    timestamp_and_data = adc.retrieve_ADC_timestamp_and_data(
+                                                                adc.channels)
+                    proxy = get_proxy( serv_expose.server_proxy.proxy_addr)
+                    proxy.update_data(timestamp_and_data, adc.unique_ADC_name)
 
                 serv_expose.server.service_actions()
     finally:
