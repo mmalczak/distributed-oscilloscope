@@ -109,9 +109,7 @@ class ThreadGUI_zmq_Expose(threading.Thread):
             self.send_RPC_request('set_internal_trigger_threshold',
                                   unique_ADC_name, 0, channel_idx)
             logger.warning("Internal trigger disabled: value out of range")
-            for GUI_name, GUI in self.osc.GUIs.items():
-                proxy = get_proxy(GUI.GUI_proxy_addr)
-                proxy.print("Internal trigger disabled: value out of range")
+            """TODO send information to the GUI"""
         else:
             self.send_RPC_request('set_internal_trigger_threshold',
                                   unique_ADC_name, threshold, channel_idx)

@@ -43,7 +43,6 @@ class ServerExpose(QtCore.QObject):
         server.register_function(self.GUI.set_trigger_params,
                                  "set_trigger_params")
         """server.register_function(self.set_acq_params, "set_acq_params")"""
-        server.register_function(print, "print")
 
         server.serve_forever()
 
