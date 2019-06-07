@@ -84,13 +84,13 @@ class GUI():
             if(channel.unique_ADC_name == unique_ADC_name):
                 channels.append(channel.ADC_channel_idx)
         channels.sort()
-        proxy = get_proxy(self.available_ADCs[unique_ADC_name].ADC_proxy_addr)
-        proxy.configure_acquisition_async(channels)
+        zmq_rpc = self.available_ADCs[unique_ADC_name].zmq_rpc
+        zmq_rpc.send_RPC('configure_acquisition_retrieve_and_send_data', 
+                          channels)
 
     def set_presamples_ADC(self, value, unique_ADC_name):
-        ADC = self.available_ADCs[unique_ADC_name]
-        proxy = get_proxy(ADC.ADC_proxy_addr)
-        proxy.set_adc_parameter('set_presamples', value)
+        zmq_rpc = self.available_ADCs[unique_ADC_name].zmq_rpc
+        zmq_rpc.send_RPC('set_adc_parameter', 'set_presamples', value)
         self.update_conf(unique_ADC_name)
 
     def set_postsamples_ADC(self, value, unique_ADC_name):
@@ -100,9 +100,8 @@ class GUI():
         could be written is 2.
         If I read the configuration after initialization and want to write it
         back, I cannot, so then instead of writing 1, I write 2"""
-        ADC = self.available_ADCs[unique_ADC_name]
-        proxy = get_proxy(ADC.ADC_proxy_addr)
-        proxy.set_adc_parameter('set_postsamples', value)
+        zmq_rpc = self.available_ADCs[unique_ADC_name].zmq_rpc
+        zmq_rpc.send_RPC('set_adc_parameter', 'set_postsamples', value)
         self.update_conf(unique_ADC_name)
 
     @stop_and_retrieve_acquisition
@@ -133,9 +132,8 @@ class GUI():
 
     def stop_acquisition_ADCs_used(self):
         for unique_ADC_name in self.ADCs_used:
-            ADC = self.available_ADCs[unique_ADC_name]
-            proxy = get_proxy(ADC.ADC_proxy_addr)
-            proxy.stop_acquisition()
+            zmq_rpc = self.available_ADCs[unique_ADC_name].zmq_rpc
+            zmq_rpc.send_RPC('stop_acquisition')
         for channel_idx, channel in self.channels.items():
             channel.timestamp_and_data = None
 

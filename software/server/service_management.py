@@ -63,7 +63,9 @@ def add_service(name, addr, port, osc, conf=None, server_addr_known=False):
         is properly configured)"""
         if not server_addr_known:
             server_addr = os.popen("ifconfig| grep inet").read().split()[1]
-            get_proxy(ADC_proxy_addr).set_server_address(server_addr)
+            zmq_rpc = self.osc.available_ADCs[unique_ADC_name].zmq_rpc
+            zmq_rpc.send_RPC('set_server_address', server_addr)
+            """This part is not tested"""
         print("Service %s added" % (name))
 
     if name.startswith("GUI"):
