@@ -99,7 +99,8 @@ class ThreadGUI_zmq_Expose(threading.Thread):
         ADC_proxy_addr = self.osc.available_ADCs[unique_ADC_name].\
             ADC_proxy_addr
         proxy = get_proxy(ADC_proxy_addr)
-        proxy.set_channel_range(channel_ranges[range_value_str], channel_idx)
+        proxy.set_adc_parameter('set_channel_range',
+                                channel_ranges[range_value_str], channel_idx)
         curr_threshold = self.osc.available_ADCs[unique_ADC_name].\
             internal_triggers[channel_idx].threshold
         curr_range = self.osc.available_ADCs[unique_ADC_name].\
