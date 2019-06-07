@@ -4,6 +4,9 @@ import pickle
 import logging
 logger = logging.getLogger(__name__)
 
+class RPC_Error(Exception):
+    pass
+
 class ZMQ_RPC():
     def __init__(self, ip, port):
         context = zmq.Context()
@@ -14,6 +17,9 @@ class ZMQ_RPC():
         addr = str(ip) + ':' + str(port)
         self.socket.connect("tcp://" + addr)
 
+    def set_timeout(self, timeout):
+        self.socket.setsockopt(zmq.RCVTIMEO, timeout)
+
     #def set_GUI_parameter(self, name, value, GUI_name):
     def send_RPC(self, function_name, *args):
         msg = [function_name, *args]
@@ -23,6 +29,7 @@ class ZMQ_RPC():
             message = self.socket.recv()
         except Exception as e:
             logger.error("Server not replying")
+            raise RPC_Error("Timeout of zmq socket.recv()")
             """TODO decide what to do: close application, save conf,
             or sth. else"""
             return None
