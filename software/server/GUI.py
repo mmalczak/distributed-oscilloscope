@@ -2,10 +2,6 @@ from ADC import *
 from conversion import *
 from timestamp_operations import *
 import logging
-import logging.config
-from logging_conf import DEFAULT_CONFIG
-
-logging.config.dictConfig(DEFAULT_CONFIG)
 logger = logging.getLogger(__name__)
 
 

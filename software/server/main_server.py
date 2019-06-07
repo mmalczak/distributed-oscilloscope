@@ -6,6 +6,10 @@ from ADC_expose import *
 from GUI_expose_zmq import *
 
 def main():
+    import logging.config
+    from logging_conf import DEFAULT_CONFIG
+    logging.config.dictConfig(DEFAULT_CONFIG)
+
     osc = Oscilloscope()
     thread_GUI_zmq_expose = ThreadGUI_zmq_Expose(osc)
     thread_GUI_zmq_expose.start()

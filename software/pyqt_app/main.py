@@ -32,6 +32,10 @@ class MainWindow(QMainWindow):
 
 
 def main():
+    import logging.config
+    from logging_conf import DEFAULT_CONFIG
+    logging.config.dictConfig(DEFAULT_CONFIG)
+
     pg.setConfigOption('background', 'k')
     pg.setConfigOption('foreground', 'w')
 

@@ -2,10 +2,6 @@ import zmq
 import pickle
 
 import logging
-import logging.config
-from logging_conf import DEFAULT_CONFIG
-
-logging.config.dictConfig(DEFAULT_CONFIG)
 logger = logging.getLogger(__name__)
 
 class ZMQ_RPC():

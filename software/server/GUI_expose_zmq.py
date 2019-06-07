@@ -8,10 +8,6 @@ from zmq.utils.monitor import parse_monitor_message
 import pickle
 from ipaddr import get_ip
 import logging
-import logging.config
-from logging_conf import DEFAULT_CONFIG
-
-logging.config.dictConfig(DEFAULT_CONFIG)
 logger = logging.getLogger(__name__)
 
 
