@@ -24,6 +24,11 @@ class ServerExpose():
         self.adc = adc
         self.server = None
 
+    def __getattr__(self, function_name):
+        """ If he requered function is not defined here, look for it in the
+        adc object"""
+        return getattr(self.adc, function_name)
+
     def set_server_address(self, addr):
         self.server_proxy.proxy_addr = "http://" + addr + ":7999/"
 
