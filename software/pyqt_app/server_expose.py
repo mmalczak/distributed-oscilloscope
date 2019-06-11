@@ -16,11 +16,6 @@ class ServerExpose(QtCore.QObject):
         self.rem_av_ADC_signal.connect(self.GUI.remove_available_ADC)
         self.add_av_ADC_signal.connect(self.GUI.add_available_ADC)
 
-    def show_widgets(self):
-        for w in self.app.allWidgets():
-            print(w)
-        return True
-
     def remove_available_ADC(self, *args, **kwargs):
         self.rem_av_ADC_signal.emit(*args, **kwargs)
 
@@ -34,15 +29,7 @@ class ServerExpose(QtCore.QObject):
         server.register_function(self.add_available_ADC, "add_available_ADC")
         server.register_function(self.remove_available_ADC,
                                  "remove_available_ADC")
-        server.register_function(self.show_widgets, "show_widgets")
         server.register_function(self.GUI.update_data, "update_data")
-        server.register_function(self.GUI.set_horizontal_params,
-                                 "set_horizontal_params")
-        server.register_function(self.GUI.set_channel_params,
-                                 "set_channel_params")
-        server.register_function(self.GUI.set_trigger_params,
-                                 "set_trigger_params")
-        """server.register_function(self.set_acq_params, "set_acq_params")"""
 
         server.serve_forever()
 
