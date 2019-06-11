@@ -18,7 +18,6 @@ switch off ADC"""
 class MainWindow(QMainWindow):
     def __init__(self, zmq_rpc):
         super(MainWindow, self).__init__()
-        self.threading_widget = None
         self.zmq_rpc = zmq_rpc
         self.ui = Ui_MainWindow()
         self.GUI_name = None
@@ -28,7 +27,6 @@ class MainWindow(QMainWindow):
     def closeEvent(self, *args, **kwargs):
         super(QtGui.QMainWindow, self).closeEvent(*args, **kwargs)
         self.zmq_rpc.send_RPC("remove_service", self.GUI_name)
-        self.threading_widget.thread.exit()  # TODO not really working
 
 
 def main():
@@ -61,12 +59,6 @@ def main():
     win = MainWindow(zmq_rpc)
     GUI = GUI_Class(win.ui, zmq_rpc, GUI_name)
     threading_widget = ThreadServerExpose(GUI, port)
-    threading_widget.server_share.app = app
-    """So that I can list all widgets"""
-    win.threading_widget = threading_widget
-    """I want the thread to be destroyed when I close the window"""
-    threading_widget.setParent(win)
-    """remove widgets after close"""
 
 
     zmq_rpc.send_RPC('add_service', GUI_name, addr, port)
