@@ -51,7 +51,6 @@ class GUI():
         self.channels[oscilloscope_channel_idx] = channel
         self.update_ADCs_used()
         set_horizontal_setting_when_add_channel(self, unique_ADC_name)
-        self.update_conf(unique_ADC_name)
 
     def add_trigger(self, type, unique_ADC_name, ADC_trigger_idx):
         trigger = None
@@ -62,7 +61,6 @@ class GUI():
             trigger = ADC.external_triggers[ADC_trigger_idx]
         self.trigger = trigger
         self.update_ADCs_used()
-        self.update_conf(unique_ADC_name)
 
     def remove_channel(self, oscilloscope_channel_idx):
         del self.channels[oscilloscope_channel_idx]
@@ -91,7 +89,8 @@ class GUI():
     def set_presamples_ADC(self, value, unique_ADC_name):
         zmq_rpc = self.available_ADCs[unique_ADC_name].zmq_rpc
         zmq_rpc.send_RPC('set_adc_parameter', 'set_presamples', value)
-        self.update_conf(unique_ADC_name)
+        ADC = self.available_ADCs[unique_ADC_name]
+        ADC.update_conf()
 
     def set_postsamples_ADC(self, value, unique_ADC_name):
         if value == 1:
@@ -102,7 +101,8 @@ class GUI():
         back, I cannot, so then instead of writing 1, I write 2"""
         zmq_rpc = self.available_ADCs[unique_ADC_name].zmq_rpc
         zmq_rpc.send_RPC('set_adc_parameter', 'set_postsamples', value)
-        self.update_conf(unique_ADC_name)
+        ADC = self.available_ADCs[unique_ADC_name]
+        ADC.update_conf()
 
     @stop_and_retrieve_acquisition
     def set_presamples(self, value):
@@ -173,9 +173,6 @@ class GUI():
     def update_conf(self, unique_ADC_name):
         ADC = self.available_ADCs[unique_ADC_name]
         ADC.update_conf()
-        self.update_channels()
-        self.update_trigger()
-        self.update_horizontal_settings()
 
     def check_horizontal_settings(self):
         ADC0 = self.ADCs_used[0]
@@ -189,58 +186,6 @@ class GUI():
             if (presamples != ADC.acq_conf.presamples) or\
                (postsamples != ADC.acq_conf.postsamples):
                 raise HorizontalSettingsError
-
-    def update_horizontal_settings(self):
-        if self.ADCs_used:
-            ADC0 = self.ADCs_used[0]
-            ADC0 = self.available_ADCs[ADC0]
-            presamples = ADC0.acq_conf.presamples
-            postsamples = ADC0.acq_conf.postsamples
-            horizontal_params = {'presamples': presamples,
-                                 'postsamples': postsamples}
-            try:
-                proxy = get_proxy(self.GUI_proxy_addr)
-                proxy.set_horizontal_params(horizontal_params)
-            except Exception as e:
-                logging.error('Exception = : ' + str(e))
-
-    def update_channels(self):
-        oscilloscope_channels_params = {}
-        for channel_idx, channel in self.channels.items():
-            channel_params = {'active': channel.active,
-                              'range': channel.channel_range,
-                              'termination': channel.termination,
-                              'offset': channel.offset}
-            """converting to str because of xmlrpc bug"""
-            channel_idx = str(channel_idx)  # remove with XMLRPC
-            oscilloscope_channels_params[channel_idx] = channel_params
-        try:
-            proxy = get_proxy(self.GUI_proxy_addr)
-            proxy.set_channel_params(oscilloscope_channels_params)
-        except Exception as e:
-            logger.error('Exception = : ' + str(e))
-
-    def update_trigger(self):
-        trigger = self.trigger
-        if(trigger is None):
-            return
-        threshold = None
-        if trigger.type == 'internal':
-            threshold = threshold_raw_to_mV(trigger.threshold,
-                                            trigger.unique_ADC_name,
-                                            trigger.ADC_trigger_idx,
-                                            self.available_ADCs)
-        else:
-            threshold = 'not_available'
-        trigger_params = {'enable': trigger.enable,
-                          'polarity': trigger.polarity,
-                          'delay': trigger.delay,
-                          'threshold': threshold}
-        try:
-            proxy = get_proxy(self.GUI_proxy_addr)
-            proxy.set_trigger_params(trigger_params)
-        except Exception as e:
-            logger.error('Exception = : ' + str(e))
 
     def get_horizontal_settings(self):
         if self.ADCs_used:
@@ -284,8 +229,6 @@ class GUI():
         return trigger_params
 
     def get_GUI_settings(self):
-        for ADC_name, ADC in self.available_ADCs.items():
-            ADC.update_conf()
         GUI_settings = {'channels': self.get_channels(),
                         'trigger': self.get_trigger(),
                         'horizontal_settings': self.get_horizontal_settings()}

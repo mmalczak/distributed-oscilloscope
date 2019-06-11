@@ -19,7 +19,7 @@ class ChannelClosure:
         self.channel_label = QLabel("")
         self.channel_label.setAlignment(Qt.AlignCenter | Qt.AlignVCenter)
         self.menu = ChannelsMenu(self, channel_count, plot, self.adc_label,
-                                 self.channel_label)
+                                 self.channel_label, GUI)
         self.channel_count = channel_count
         self.chan_in_layout = ChannelInputsLayout(self.menu, self.adc_label,
                                                   self.channel_label,
@@ -130,8 +130,9 @@ class ChannelProperties:
 class ChannelsMenu(QMenuBar):
 
     def __init__(self, channel_closure, channel_count, plot, adc_label,
-                 channel_label):
+                 channel_label, GUI):
         super().__init__()
+        self.GUI = GUI
         self.adc_label = adc_label
         self.channel_label = channel_label
         self.channel_count = channel_count
@@ -179,6 +180,7 @@ class ChannelsMenu(QMenuBar):
         rpc = self.channel_closure.zmq_rpc
         rpc.send_RPC('add_channel', self.channel_count, self.selected_ADC, idx,
                      self.channel_closure.GUI_name)
+        self.GUI.update_GUI_params()
 
     def remove_channel(self):
         self.channel_closure.remove_channel()

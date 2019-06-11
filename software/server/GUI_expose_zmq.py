@@ -94,6 +94,9 @@ class ThreadGUI_zmq_Expose(threading.Thread):
         else:
             self.send_RPC_request('set_internal_trigger_threshold',
                                   unique_ADC_name, threshold, channel_idx)
+        ADC = self.osc.available_ADCs[unique_ADC_name]
+        ADC.update_conf()
+
 
     @stop_and_retrieve_acquisition
     def set_ADC_parameter(self, parameter_name, value, unique_ADC_name,
@@ -105,6 +108,8 @@ class ThreadGUI_zmq_Expose(threading.Thread):
         ADC_value = mapper_function(value, unique_ADC_name, idx,
                                     self.osc.available_ADCs)
         self.send_RPC_request(function_name, unique_ADC_name, ADC_value, idx)
+        ADC = self.osc.available_ADCs[unique_ADC_name]
+        ADC.update_conf()
 
     def send_RPC_request(self, function_name, unique_ADC_name, ADC_value, idx):
         zmq_rpc = self.osc.available_ADCs[unique_ADC_name].zmq_rpc

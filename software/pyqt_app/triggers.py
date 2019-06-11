@@ -21,6 +21,7 @@ class TriggerClosure:
         self.trig_set_layout = TriggerSettingsLayout(self.menu_type)
         self.plot = plot
         self.GUI_name = GUI_name
+        self.GUI = GUI
         trigger_inputs_layout.addLayout(self.trig_in_layout)
         trig_set_layout.addLayout(self.trig_set_layout)
         self.properties = None
@@ -46,9 +47,10 @@ class TriggerClosure:
 
     def set_menu(self):
         self.int_trig_menu = IntTriggersMenu(self, self.GUI_trigger_idx,
-                                             self.plot, self.channels)
+                                             self.plot, self.channels,
+                                             self.GUI)
         self.ext_trig_menu = ExtTriggersMenu(self, self.GUI_trigger_idx,
-                                             self.adc_label)
+                                             self.adc_label, self.GUI)
         if(self.trigger_type == 'internal'):
             self.int_trig_menu.setEnabled(True)
             self.ext_trig_menu.setEnabled(False)
@@ -217,10 +219,11 @@ class TriggersMenu(QMenuBar):
 class IntTriggersMenu(TriggersMenu):
 
     def __init__(self, trigger_closure, GUI_trigger_idx, plot,
-                 channels):
+                 channels, GUI):
         super().__init__(trigger_closure, GUI_trigger_idx)
         self.ADCs_menu = self.addMenu("Select channel to trigger")
         self.plot = plot
+        self.GUI = GUI
         self.channels = channels
         self.actions = []
 
@@ -259,14 +262,16 @@ class IntTriggersMenu(TriggersMenu):
             rpc = self.trigger_closure.zmq_rpc
             rpc.send_RPC('add_trigger', 'internal', selected_ADC, ADC_idx,
                          self.trigger_closure.GUI_name)
+        self.GUI.update_GUI_params()
 
 
 class ExtTriggersMenu(TriggersMenu):
 
-    def __init__(self, trigger_closure, GUI_trigger_idx, adc_label):
+    def __init__(self, trigger_closure, GUI_trigger_idx, adc_label, GUI):
         super().__init__(trigger_closure, GUI_trigger_idx)
         self.ADCs_menu = self.addMenu("Select external trigger")
         self.adc_label = adc_label
+        self.GUI = GUI
 
     def update_triggers(self):
         self.ADCs_menu.clear()
@@ -292,6 +297,7 @@ class ExtTriggersMenu(TriggersMenu):
         rpc = self.trigger_closure
         rpc.zmq_rpc.send_RPC('add_trigger', 'external', selected_ADC, ADC_idx,
                              self.trigger_closure.GUI_name)
+        self.GUI.update_GUI_params()
 
 
 class TriggerInputsLayout(QVBoxLayout):
