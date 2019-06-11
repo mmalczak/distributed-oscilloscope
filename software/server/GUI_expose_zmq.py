@@ -68,7 +68,7 @@ class ThreadGUI_zmq_Expose(threading.Thread):
             print(e)
         self.osc.GUIs[GUI_name].remove_trigger()
 
-    @stop_and_retrieve_acquisition
+    #@stop_and_retrieve_acquisition
     def set_channel_range(self, range_value_str, channel_idx,
                           unique_ADC_name):
         channel_ranges = {'10V': 10, '1V': 1, '100mV': 100}
@@ -98,7 +98,7 @@ class ThreadGUI_zmq_Expose(threading.Thread):
         ADC.update_conf()
 
 
-    @stop_and_retrieve_acquisition
+    #@stop_and_retrieve_acquisition
     def set_ADC_parameter(self, parameter_name, value, unique_ADC_name,
                           idx=-1):
         function_name = 'set_' + parameter_name

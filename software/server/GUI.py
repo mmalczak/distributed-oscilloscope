@@ -104,13 +104,13 @@ class GUI():
         ADC = self.available_ADCs[unique_ADC_name]
         ADC.update_conf()
 
-    @stop_and_retrieve_acquisition
+    #@stop_and_retrieve_acquisition
     def set_presamples(self, value):
         for ADC in self.ADCs_used:
             self.set_presamples_ADC(value, ADC)
         self.check_horizontal_settings()
 
-    @stop_and_retrieve_acquisition
+    #@stop_and_retrieve_acquisition
     def set_postsamples(self, value):
         for ADC in self.ADCs_used:
             self.set_postsamples_ADC(value, ADC)
@@ -168,11 +168,6 @@ class GUI():
         """TODO make sure that the data rate is not too big for plot"""
         if self.run:
             self.configure_acquisition_ADCs_used()
-
-    @stop_and_retrieve_acquisition
-    def update_conf(self, unique_ADC_name):
-        ADC = self.available_ADCs[unique_ADC_name]
-        ADC.update_conf()
 
     def check_horizontal_settings(self):
         ADC0 = self.ADCs_used[0]
