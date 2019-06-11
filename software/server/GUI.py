@@ -218,7 +218,7 @@ class GUI():
             proxy = get_proxy(self.GUI_proxy_addr)
             proxy.set_channel_params(oscilloscope_channels_params)
         except Exception as e:
-            logging.error('Exception = : ' + str(e))
+            logger.error('Exception = : ' + str(e))
 
     def update_trigger(self):
         trigger = self.trigger
@@ -240,4 +240,53 @@ class GUI():
             proxy = get_proxy(self.GUI_proxy_addr)
             proxy.set_trigger_params(trigger_params)
         except Exception as e:
-            logging.error('Exception = : ' + str(e))
+            logger.error('Exception = : ' + str(e))
+
+    def get_horizontal_settings(self):
+        if self.ADCs_used:
+            ADC0 = self.ADCs_used[0]
+            ADC0 = self.available_ADCs[ADC0]
+            presamples = ADC0.acq_conf.presamples
+            postsamples = ADC0.acq_conf.postsamples
+            horizontal_params = {'presamples': presamples,
+                                 'postsamples': postsamples}
+            return horizontal_params
+        else:
+            logger.warning("No ADC used to retrieve the horizontal params")
+
+    def get_channels(self):
+        oscilloscope_channels_params = {}
+        for channel_idx, channel in self.channels.items():
+            channel_params = {'active': channel.active,
+                              'range': channel.channel_range,
+                              'termination': channel.termination,
+                              'offset': channel.offset}
+            oscilloscope_channels_params[channel_idx] = channel_params
+        return oscilloscope_channels_params
+
+    def get_trigger(self):
+        trigger = self.trigger
+        if(trigger is None):
+            logger.warning("No trigger available - trigger settings None")
+            return
+        threshold = None
+        if trigger.type == 'internal':
+            threshold = threshold_raw_to_mV(trigger.threshold,
+                                            trigger.unique_ADC_name,
+                                            trigger.ADC_trigger_idx,
+                                            self.available_ADCs)
+        else:
+            threshold = 'not_available'
+        trigger_params = {'enable': trigger.enable,
+                          'polarity': trigger.polarity,
+                          'delay': trigger.delay,
+                          'threshold': threshold}
+        return trigger_params
+
+    def get_GUI_settings(self):
+        for ADC_name, ADC in self.available_ADCs.items():
+            ADC.update_conf()
+        GUI_settings = {'channels': self.get_channels(),
+                        'trigger': self.get_trigger(),
+                        'horizontal_settings': self.get_horizontal_settings()}
+        return GUI_settings

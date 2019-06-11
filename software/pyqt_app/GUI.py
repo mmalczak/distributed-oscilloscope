@@ -32,7 +32,8 @@ class GUI_Class:
                                        self.GUI_name,
                                        count,
                                        self.channels,
-                                       self.available_ADCs)
+                                       self.available_ADCs,
+                                       self)
 
             self.triggers.append(trig_clos)
 
@@ -43,11 +44,13 @@ class GUI_Class:
                                        self.plot,
                                        self.GUI_name,
                                        count,
-                                       self.triggers[0].update_triggers)
+                                       self.triggers[0].update_triggers,
+                                       self)
 
             self.channels.append(chan_clos)
 
-        self.acq_settings = AcquisitionSettings(self.zmq_rpc, self.GUI_name)
+        self.acq_settings = AcquisitionSettings(self.zmq_rpc, self.GUI_name,
+                                                self)
         ui.horizontal_settings_layout.addLayout(self.acq_settings)
 
         self.single_acquisition = SingleAcquisitionButton(self.zmq_rpc,
@@ -113,3 +116,11 @@ class GUI_Class:
     def set_horizontal_params(self, horizontal_params):
         self.acq_settings.set_params(horizontal_params['presamples'],
                                      horizontal_params['postsamples'])
+
+    def update_GUI_params(self):
+        GUI_settings = self.zmq_rpc.send_RPC('get_GUI_settings', self.GUI_name)
+        self.set_channel_params(GUI_settings['channels'])
+        if GUI_settings['trigger']:
+            self.set_trigger_params(GUI_settings['trigger'])
+        if GUI_settings['horizontal_settings']:
+            self.set_horizontal_params(GUI_settings['horizontal_settings'])

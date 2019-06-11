@@ -32,24 +32,6 @@ def stop_and_retrieve_acquisition(func):
     return wrapper
 
 
-def update_GUI_after(func):
-    def wrapper(self, *args, **kwargs):
-        func(self, *args, **kwargs)
-        unique_ADC_name = None
-        for arg in args:
-            try:    # find the name of the ADC in the arguments - fixme
-                if(arg[0:3] == "ADC"):
-                    unique_ADC_name = arg
-            except:
-                pass
-        for GUI_name, GUI in self.osc.GUIs.items():
-            for channel_dx, channel_GUI in GUI.channels.items():
-                if(channel_GUI.unique_ADC_name == unique_ADC_name):
-                    GUI.update_conf(unique_ADC_name)
-                    break
-    return wrapper
-
-
 class ThreadGUI_zmq_Expose(threading.Thread):
     def __init__(self, osc):
         threading.Thread.__init__(self)
@@ -87,7 +69,6 @@ class ThreadGUI_zmq_Expose(threading.Thread):
         self.osc.GUIs[GUI_name].remove_trigger()
 
     @stop_and_retrieve_acquisition
-    @update_GUI_after
     def set_channel_range(self, range_value_str, channel_idx,
                           unique_ADC_name):
         channel_ranges = {'10V': 10, '1V': 1, '100mV': 100}
@@ -115,7 +96,6 @@ class ThreadGUI_zmq_Expose(threading.Thread):
                                   unique_ADC_name, threshold, channel_idx)
 
     @stop_and_retrieve_acquisition
-    @update_GUI_after
     def set_ADC_parameter(self, parameter_name, value, unique_ADC_name,
                           idx=-1):
         function_name = 'set_' + parameter_name
@@ -166,6 +146,9 @@ class ThreadGUI_zmq_Expose(threading.Thread):
 
     def set_postsamples(self, value, GUI_name):
         self.osc.GUIs[GUI_name].set_postsamples(value)
+
+    def get_GUI_settings(self, GUI_name):
+        return self.osc.GUIs[GUI_name].get_GUI_settings()
 
 
     """----------------- TESTING ------------------------------------------"""

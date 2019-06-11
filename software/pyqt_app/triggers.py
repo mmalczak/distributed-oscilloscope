@@ -10,7 +10,8 @@ from parent_classes import TriggerPolarity
 class TriggerClosure:
 
     def __init__(self, trigger_inputs_layout, trig_set_layout, zmq_rpc,
-                 plot, GUI_name, GUI_trigger_idx, channels, available_ADCs):
+                 plot, GUI_name, GUI_trigger_idx, channels, available_ADCs,
+                 GUI):
         self.adc_label = QLabel("")
         self.adc_label.setAlignment(Qt.AlignCenter | Qt.AlignVCenter)
         self.trigger_type = 'internal'  # default one
@@ -24,6 +25,7 @@ class TriggerClosure:
         trig_set_layout.addLayout(self.trig_set_layout)
         self.properties = None
         self.zmq_rpc = zmq_rpc
+        self.GUI = GUI
         self.channels = channels
         self.available_ADCs = available_ADCs
         self.int_trig_menu = None
@@ -71,12 +73,14 @@ class TriggerClosure:
                                                    self.trig_set_layout,
                                                    self.zmq_rpc,
                                                    self.plot,
+                                                   self.GUI,
                                                    self.GUI_name)
         else:
             self.properties = ExtTriggerProperties(unique_ADC_name, idx,
                                                    self.trig_set_layout,
                                                    self.zmq_rpc,
                                                    self.plot,
+                                                   self.GUI,
                                                    self.GUI_name)
 
     def trigger_exists(self):
@@ -89,18 +93,20 @@ class TriggerProperties():
     threshold trigger conditionally?"""
 
     def __init__(self, unique_ADC_name, ADC_idx, trig_set_layout,
-                 zmq_rpc, plot, GUI_name, type):
+                 zmq_rpc, plot, GUI, GUI_name, type):
         self.ADC_idx = ADC_idx
         self.unique_ADC_name = unique_ADC_name
         self.trig_set_layout = trig_set_layout
         self.plot = plot
 
         self.button = TriggerEnableButton(ADC_idx, unique_ADC_name, zmq_rpc,
-                                          type)
+                                          type, GUI)
         self.polarity_menu = TriggerPolarity(ADC_idx, unique_ADC_name, zmq_rpc,
-                                             type)
-        self.delay_box = TriggerDelay(ADC_idx, unique_ADC_name, zmq_rpc, type)
-        self.threshold_box = TriggerThreshold(ADC_idx, unique_ADC_name, zmq_rpc)
+                                             type, GUI)
+        self.delay_box = TriggerDelay(ADC_idx, unique_ADC_name, zmq_rpc, type,
+                                      GUI)
+        self.threshold_box = TriggerThreshold(ADC_idx, unique_ADC_name,
+                                              zmq_rpc, GUI)
 
         self.trig_set_layout.addWidget(self.button)
         self.trig_set_layout.addWidget(self.polarity_menu)
@@ -151,16 +157,16 @@ class TriggerProperties():
 
 class ExtTriggerProperties(TriggerProperties):
     def __init__(self, unique_ADC_name, ADC_idx, trig_set_layout, zmq_rpc,
-                 plot, GUI_name):
+                 plot, GUI, GUI_name):
         super().__init__(unique_ADC_name, ADC_idx, trig_set_layout, zmq_rpc,
-                         plot, GUI_name, 'external')
+                         plot, GUI, GUI_name, 'external')
 
 
 class IntTriggerProperties(TriggerProperties):
     def __init__(self, unique_ADC_name, ADC_idx, trig_set_layout, zmq_rpc,
-                 plot, GUI_name):
+                 plot, GUI, GUI_name):
         super().__init__(unique_ADC_name, ADC_idx, trig_set_layout, zmq_rpc,
-                         plot, GUI_name, 'internal')
+                         plot, GUI, GUI_name, 'internal')
         self.trig_set_layout.addWidget(self.threshold_box)
 
 
@@ -322,11 +328,12 @@ class TriggerSettingsLayout(QVBoxLayout):
 
 class TriggerThreshold(Box):
 
-    def __init__(self, idx, unique_ADC_name, zmq_rpc):
+    def __init__(self, idx, unique_ADC_name, zmq_rpc, GUI):
         super().__init__(idx, unique_ADC_name, "Treshold mV")
         self.zmq_rpc = zmq_rpc
         self.unique_ADC_name = unique_ADC_name
         self.idx = idx
+        self.GUI = GUI
         self.box.setMinimum(-5000)
         self.box.setMaximum(4999)
 
@@ -335,29 +342,33 @@ class TriggerThreshold(Box):
         self.zmq_rpc.send_RPC('set_ADC_parameter',
                               'internal_trigger_threshold', threshold,
                               self.unique_ADC_name, self.idx)
+        self.GUI.update_GUI_params()
 
 
 class TriggerEnableButton(Button):
 
     def __init__(self, idx, unique_ADC_name, zmq_rpc,
-                 type):
+                 type, GUI):
         super().__init__("Enable", idx, unique_ADC_name)
         self.zmq_rpc = zmq_rpc
         self.type = type
+        self.GUI = GUI
 
     def action(self):
         self.zmq_rpc.send_RPC('set_ADC_parameter',
                               self.type + '_trigger_enable',
                               not self.isChecked(), self.unique_ADC_name,
                               self.idx)
+        self.GUI.update_GUI_params()
 
 
 class TriggerPolarity(TriggerPolarity):
 
-    def __init__(self, idx, unique_ADC_name, zmq_rpc, type):
+    def __init__(self, idx, unique_ADC_name, zmq_rpc, type, GUI):
         super().__init__(idx, unique_ADC_name)
         self.zmq_rpc = zmq_rpc
         self.type = type
+        self.GUI = GUI
 
     def action(self):
         polarity_str = self.sender().text()
@@ -365,14 +376,16 @@ class TriggerPolarity(TriggerPolarity):
         self.zmq_rpc.send_RPC('set_ADC_parameter',
                               self.type + '_trigger_polarity', polarity,
                               self.unique_ADC_name, self.idx)
+        self.GUI.update_GUI_params()
 
 
 class TriggerDelay(Box):
 
-    def __init__(self, idx, unique_ADC_name, zmq_rpc, type):
+    def __init__(self, idx, unique_ADC_name, zmq_rpc, type, GUI):
         super().__init__(idx, unique_ADC_name, "Delay")
         self.zmq_rpc = zmq_rpc
         self.type = type
+        self.GUI = GUI
         self.box.setMinimum(0)
         self.box.setMaximum(65535)
 
@@ -381,3 +394,4 @@ class TriggerDelay(Box):
         self.zmq_rpc.send_RPC('set_ADC_parameter',
                               self.type + '_trigger_delay', delay,
                               self.unique_ADC_name, self.idx)
+        self.GUI.update_GUI_params()
