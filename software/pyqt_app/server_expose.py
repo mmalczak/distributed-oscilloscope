@@ -12,7 +12,6 @@ class ServerExpose(QtCore.QObject):
         super().__init__()
         self.port_GUI = port_GUI
         self.GUI = GUI
-        self.app = None
         self.rem_av_ADC_signal.connect(self.GUI.remove_available_ADC)
         self.add_av_ADC_signal.connect(self.GUI.add_available_ADC)
 
