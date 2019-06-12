@@ -69,7 +69,6 @@ def add_service(name, addr, port, osc, conf=None, server_addr_known=False):
         print("Service %s added" % (name))
 
     if name.startswith("GUI"):
-        GUI_proxy_addr = "http://" + str(addr) + ":" + str(port) + "/"
         server_addr = os.popen("ifconfig| grep inet").read().split()[1]
-        osc.register_GUI(name, GUI_proxy_addr)
+        osc.register_GUI(name, str(addr), str(port))
         print("Service %s added" % (name))

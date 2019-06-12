@@ -12,14 +12,17 @@ class Oscilloscope():
         self.available_ADCs[unique_ADC_name] = ADC(unique_ADC_name,
                                                 ADC_proxy_addr, conf, ip, port)
         for name_GUI, GUI in self.GUIs.items():
-            proxy = get_proxy(GUI.GUI_proxy_addr)
-            proxy.add_available_ADC(unique_ADC_name, number_of_channels)
+            data = {'function_name': 'add_available_ADC',
+                    'args': [unique_ADC_name, number_of_channels]}
+            GUI.publisher.send_message(data)
+
 
     def remove_available_ADC(self, unique_ADC_name):
         """TODO: Why doesn't call GUI remove_available_ADC"""
         for name_GUI, GUI in self.GUIs.items():
-            proxy = get_proxy(GUI.GUI_proxy_addr)
-            proxy.remove_available_ADC(unique_ADC_name)
+            data = {'function_name': 'remove_available_ADC',
+                    'args': [unique_ADC_name]}
+            GUI.publisher.send_message(data)
         """wait until there are no more users"""
         del self.available_ADCs[unique_ADC_name]
         channels_to_delete = []
@@ -31,13 +34,14 @@ class Oscilloscope():
                 GUI.remove_channel(channel_idx)
 
 
-    def register_GUI(self, GUI_name, GUI_proxy_addr):
-        GUI_ = GUI(self.available_ADCs, GUI_name, GUI_proxy_addr)
+    def register_GUI(self, GUI_name, GUI_addr, GUI_port):
+        GUI_ = GUI(self.available_ADCs, GUI_name, GUI_addr, GUI_port)
         self.GUIs.update({GUI_name: GUI_})
         for unique_ADC_name, ADC in self.available_ADCs.items():
-            proxy = get_proxy(GUI_proxy_addr)
-            proxy.add_available_ADC(ADC.unique_name, ADC.number_of_channels,
-                                    ADC.conf)
+            data = {'function_name': 'add_available_ADC',
+                    'args': [unique_ADC_name, ADC.number_of_channels]}
+            GUI_.publisher.send_message(data)
+
 
     def unregister_GUI(self, name):
         del self.GUIs[name]

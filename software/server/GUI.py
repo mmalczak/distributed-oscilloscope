@@ -2,8 +2,8 @@ from ADC import *
 from conversion import *
 from timestamp_operations import *
 import logging
+from publisher import Publisher
 logger = logging.getLogger(__name__)
-
 
 class HorizontalSettingsError(Exception):
     def __str__(self):
@@ -20,14 +20,16 @@ def stop_and_retrieve_acquisition(func):
 
 class GUI():
 
-    def __init__(self, available_ADCs, name, GUI_proxy_addr):
+    def __init__(self, available_ADCs, name, GUI_addr, GUI_port):
         self.name = name
         self.channels = {}
         self.trigger = None
         self.ADCs_used = []
         self.available_ADCs = available_ADCs
-        self.GUI_proxy_addr = GUI_proxy_addr
+        self.GUI_addr = GUI_addr
+        self.GUI_port = GUI_port
         self.run = False
+        self.publisher = Publisher(self.GUI_addr, self.GUI_port)
 
     def contains_ADC(self, unique_ADC_name):
         return unique_ADC_name in self.ADCs_used
@@ -163,8 +165,9 @@ class GUI():
             pre_post_samples[channel_idx] = [ADC.acq_conf.  presamples,
                                              ADC.acq_conf.postsamples]
             channel.timestamp_and_data = None
-        proxy = get_proxy(self.GUI_proxy_addr)
-        proxy.update_data(data, pre_post_samples, offsets)
+        data = {'function_name': 'update_data',
+                'args': [data, pre_post_samples, offsets]}
+        self.publisher.send_message(data)
         """TODO make sure that the data rate is not too big for plot"""
         if self.run:
             self.configure_acquisition_ADCs_used()

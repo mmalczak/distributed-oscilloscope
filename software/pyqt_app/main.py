@@ -58,7 +58,7 @@ def main():
     app = QApplication([])
     win = MainWindow(zmq_rpc)
     GUI = GUI_Class(win.ui, zmq_rpc, GUI_name)
-    threading_widget = ThreadServerExpose(GUI, port)
+    threading_widget_zmq = ThreadServerExposeZMQ(GUI, port)
 
 
     zmq_rpc.send_RPC('add_service', GUI_name, addr, port)

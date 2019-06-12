@@ -5,6 +5,7 @@ from horizontal_settings import *
 from run_control import *
 import numpy as np
 from PyQt5.QtCore import pyqtSlot
+import pickle
 
 SAMP_FREQ = 1e8
 
@@ -124,3 +125,7 @@ class GUI_Class:
             self.set_trigger_params(GUI_settings['trigger'])
         if GUI_settings['horizontal_settings']:
             self.set_horizontal_params(GUI_settings['horizontal_settings'])
+
+    def socket_communication(self, data):
+        data = pickle.loads(data)
+        getattr(self, data['function_name'])(*data['args'])

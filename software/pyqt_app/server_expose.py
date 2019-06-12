@@ -1,43 +1,40 @@
 from PyQt5 import QtCore
 from PyQt5 import QtGui
 from proxy import *
+from ipaddr import get_ip
+import zmq
 
+class ServerExposeZMQ(QtCore.QObject):
 
-class ServerExpose(QtCore.QObject):
-
-    rem_av_ADC_signal = QtCore.pyqtSignal(['QString'])
-    add_av_ADC_signal = QtCore.pyqtSignal(['QString', int])
+    signal = QtCore.pyqtSignal(['QByteArray'])
 
     def __init__(self, GUI, port_GUI):
         super().__init__()
-        self.port_GUI = port_GUI
         self.GUI = GUI
-        self.rem_av_ADC_signal.connect(self.GUI.remove_available_ADC)
-        self.add_av_ADC_signal.connect(self.GUI.add_available_ADC)
-
-    def remove_available_ADC(self, *args, **kwargs):
-        self.rem_av_ADC_signal.emit(*args, **kwargs)
-
-    def add_available_ADC(self, *args, **kwargs):
-        self.add_av_ADC_signal.emit(*args, **kwargs)
+        self.port_GUI = port_GUI
+        self.signal.connect(self.GUI.socket_communication)
 
     def monitorSlot(self):
-        server = SimpleXMLRPCServer(("", self.port_GUI),
-                                    allow_none=True)
-        print("Listening on port " + str(self.port_GUI) + "...")
-        server.register_function(self.add_available_ADC, "add_available_ADC")
-        server.register_function(self.remove_available_ADC,
-                                 "remove_available_ADC")
-        server.register_function(self.GUI.update_data, "update_data")
+        context = zmq.Context()
+        socket = context.socket(zmq.ROUTER)
+        ip = get_ip()
+        socket.bind("tcp://" + ip  + ":" + str(self.port_GUI))
 
-        server.serve_forever()
+        poller = zmq.Poller()
+        poller.register(socket, zmq.POLLIN | zmq.POLLERR)
+
+        while True:
+            socks = dict(poller.poll())
+            if socket in socks:
+                [identity, message] = socket.recv_multipart()
+                self.signal.emit(message)
 
 
-class ThreadServerExpose(QtGui.QWidget):
+class ThreadServerExposeZMQ(QtGui.QWidget):
 
     def __init__(self, GUI, port_GUI):
         super().__init__()
-        self.server_share = ServerExpose(GUI, port_GUI)
+        self.server_share = ServerExposeZMQ(GUI, port_GUI)
         self.thread = QtCore.QThread(self)
         self.server_share.moveToThread(self.thread)
         self.thread.started.connect(self.server_share.monitorSlot)
