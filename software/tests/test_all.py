@@ -12,7 +12,6 @@ from test_conf import server_addr
 from test_conf import performance_measurements
 from test_conf import plot_data
 sys.path.append('../')
-from general.proxy import get_proxy
 from general.zmq_rpc import ZMQ_RPC
 from general.zmq_rpc import RPC_Error
 from general.addresses import server_zmq_expose_port
@@ -86,7 +85,7 @@ class OscilloscopeMethods(unittest.TestCase):
                 pass
             else:
                 print(e)
-        """There will be an error because proxy can never return because
+        """There will be an error because RPC can never return because
         the process exits"""
 
     def start_server(self):

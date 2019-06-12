@@ -7,10 +7,10 @@ class Oscilloscope():
         self.GUIs = dict()
         self.available_ADCs = {}
 
-    def add_available_ADC(self, unique_ADC_name, number_of_channels,
-                          ADC_proxy_addr, conf, ip, port):
-        self.available_ADCs[unique_ADC_name] = ADC(unique_ADC_name,
-                                                ADC_proxy_addr, conf, ip, port)
+    def add_available_ADC(self, unique_ADC_name, number_of_channels, conf,
+                          ip, port):
+        self.available_ADCs[unique_ADC_name] = ADC(unique_ADC_name, conf, 
+                                                   ip, port)
         for name_GUI, GUI in self.GUIs.items():
             data = {'function_name': 'add_available_ADC',
                     'args': [unique_ADC_name, number_of_channels]}

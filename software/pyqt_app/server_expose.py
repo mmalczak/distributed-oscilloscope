@@ -1,6 +1,5 @@
 from PyQt5 import QtCore
 from PyQt5 import QtGui
-from proxy import *
 from ipaddr import get_ip
 import zmq
 

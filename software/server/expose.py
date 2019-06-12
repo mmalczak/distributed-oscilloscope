@@ -118,11 +118,6 @@ class ThreadGUI_zmq_Expose(threading.Thread):
         else:
             zmq_rpc.send_RPC('set_adc_parameter', function_name, ADC_value, idx)
 
-    def get_proxy(self, unique_ADC_name):
-        ADC = self.osc.available_ADCs[unique_ADC_name]
-        proxy = get_proxy(ADC.ADC_proxy_addr)
-        return proxy
-
     class MapperMethodsClosure():
 
         def __getattr__(self, *args):
