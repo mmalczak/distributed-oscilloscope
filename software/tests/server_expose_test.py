@@ -4,17 +4,17 @@ from timeit import default_timer as timer
 import matplotlib.pyplot as plt
 from test_conf import plot_data
 from test_conf import performance_measurements
+from ipaddr import get_ip
+import zmq
+import pickle
+
 
 class ServerExposeTest():
 
     def __init__(self, GUI, port_GUI):
-        super().__init__()
         self.port_GUI = port_GUI
         self.GUI = GUI
         self.return_queue = None
-
-    def set_server_address(self, addr):
-        print("server address set")
 
     def remove_available_ADC(self, unique_ADC_name):
         self.return_queue.put(unique_ADC_name)
@@ -36,37 +36,22 @@ class ServerExposeTest():
             self.return_queue.put(time_end)
         print("GUI: update GUI")
 
-    def set_horizontal_params(self, *args, **kwargs):
-        print("GUI: set_horizontal_params")
-
-    def set_channel_params(self, *args, **kwargs):
-        print("GUI: set_channel_params")
-
-    def set_trigger_params(self, *args, **kwargs):
-        print("GUI: set_trigger_params")
-
     def monitorSlot(self, return_queue):
         self.return_queue = return_queue
-        server = SimpleXMLRPCServer(("", self.port_GUI),
-                                    allow_none=True, logRequests=False)
-        print("Listening on port " + str(self.port_GUI) + "...")
-        server.register_function(self.add_available_ADC, "add_available_ADC")
-        server.register_function(self.remove_available_ADC,
-                                 "remove_available_ADC")
-        server.register_function(self.set_server_address,
-                                 "set_server_address")
-        server.register_function(self.update_data, "update_data")
-        server.register_function(self.set_horizontal_params,
-                                 "set_horizontal_params")
-        server.register_function(self.set_channel_params,
-                                 "set_channel_params")
-        server.register_function(self.set_trigger_params,
-                                 "set_trigger_params")
-        """server.register_function(self.set_acq_params,
-                                    "set_acq_params")"""
-        server.register_function(print, "print")
+        context = zmq.Context() 
+        socket = context.socket(zmq.ROUTER) 
+        ip = get_ip()    
+        socket.bind("tcp://" + ip  + ":" + str(self.port_GUI)) 
+        poller = zmq.Poller()  
+        poller.register(socket, zmq.POLLIN | zmq.POLLERR) 
+        while True:
+            socks = dict(poller.poll())   
+            if socket in socks:  
+                [identity, message] = socket.recv_multipart() 
+                data = pickle.loads(message)    
+                getattr(self, data['function_name'])(*data['args']) 
 
-        server.serve_forever()
+
 
 
 class ThreadServerExposeTest():
