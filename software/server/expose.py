@@ -134,12 +134,6 @@ class ThreadGUI_zmq_Expose(threading.Thread):
         def map_channel_termination(self, value, *args):
             return int(value)
 
-    def add_service(self, name, addr, port):
-        add_service(name, addr, port, self.osc)
-
-    def remove_service(self, name):
-        remove_service(name, self.osc)
-
     def single_acquisition(self, GUI_name):
         self.osc.GUIs[GUI_name].configure_acquisition_ADCs_used()
 
@@ -156,10 +150,29 @@ class ThreadGUI_zmq_Expose(threading.Thread):
         return self.osc.GUIs[GUI_name].get_GUI_settings()
 
 
+    """---------------------------ADC--------------------------------------"""
+    def update_data(self, timestamp_and_data, unique_ADC_name):
+        self.osc.update_data(timestamp_and_data, unique_ADC_name)
+        return True
+    """---------------------------ADC--------------------------------------"""
+
+    """---------------------COMMON TO ADC AND GUI--------------------------"""
+    def add_service(self, name, addr, port, conf=None):
+        """TODO get rid of conf"""
+        if conf:  # ADC version
+            add_service(name, addr, port, self.osc, conf,
+                        server_addr_known=True)
+        else:  # GUI version
+            add_service(name, addr, port, self.osc)
+
+    def remove_service(self, name):
+        remove_service(name, self.osc)
+    """---------------------COMMON TO ADC AND GUI--------------------------"""
+
+
     """----------------- TESTING ------------------------------------------"""
     def get_GUI_channels(self, GUI_name):
         return self.osc.GUIs[GUI_name].channels
-
     """----------------- TESTING ------------------------------------------"""
 
 
@@ -173,13 +186,16 @@ class ThreadGUI_zmq_Expose(threading.Thread):
         context = zmq.Context()
         socket = context.socket(zmq.ROUTER)
         monitor = socket.get_monitor_socket()
+        socket_ADC_listener = context.socket(zmq.ROUTER)
         #socket.bind("tcp://*:8003")
         server_ip = get_ip()
         socket.bind("tcp://" + server_ip  + ":8003")
+        socket_ADC_listener.bind("tcp://" + server_ip  + ":8023")
 
         poller = zmq.Poller()
         poller.register(monitor, zmq.POLLIN | zmq.POLLERR)
         poller.register(socket, zmq.POLLIN | zmq.POLLERR)
+        poller.register(socket_ADC_listener, zmq.POLLIN | zmq.POLLERR)
 
         while True:
             socks = dict(poller.poll())
@@ -197,4 +213,10 @@ class ThreadGUI_zmq_Expose(threading.Thread):
                 evt = recv_monitor_message(monitor)
                 evt.update({'description': EVENT_MAP[evt['event']]})
                 logger.info("Event: {}".format(evt))
-
+            if socket_ADC_listener in socks:
+                [identity, message] = socket_ADC_listener.recv_multipart()
+                data = pickle.loads(message)
+                try:
+                    getattr(self, data['function_name'])(*data['args'])
+                except AttributeError:
+                    logger.error("Attribute error")
