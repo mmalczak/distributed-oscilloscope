@@ -61,7 +61,6 @@ class ADC:
     def add_channel(self, channel_range, termination, offset, ADC_channel_idx):
         self.channels.append(Channel(channel_range, termination, offset,
                                      self.unique_name, ADC_channel_idx))
-        self.number_of_channels += 1
 
     def add_external_trigger(self, enable, polarity, delay, ADC_trigger_idx):
         self.external_triggers.append(ExternalTrigger(enable, polarity, delay,
