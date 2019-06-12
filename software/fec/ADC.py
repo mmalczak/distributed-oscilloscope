@@ -17,14 +17,13 @@ NCHAN = 4
 
 class ADC_100m14b4cha_extended_API_WRTD(ADC_100m14b4cha_extended_API):
 
-    def __init__(self, pci_addr, trtl, server_proxy, unique_ADC_name):
+    def __init__(self, pci_addr, trtl, unique_ADC_name):
         super().__init__(pci_addr)
         self.buf_ptr = 0
         self.WRTD = WRTD(trtl)
         self.WRTD_master = False
         self.trtl = trtl
         self.required_presamples = 0
-        self.server_proxy = server_proxy
         self.unique_ADC_name = unique_ADC_name
         for count in range(4):
             self.set_internal_trigger_enable(count, 0)

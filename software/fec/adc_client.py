@@ -8,7 +8,10 @@ import argparse
 import threading
 from ADC import *
 from server_expose import *
-from commands import *
+from publisher import Publisher
+import time
+
+
 def main():
 
 
@@ -35,13 +38,14 @@ def main():
     server_proxy = Proxy()
     pci_addr = pci_addr
     trtl = 'trtl-000' + str(pci_addr)
-    adc = ADC_100m14b4cha_extended_API_WRTD(pci_addr, trtl,
-                                            server_proxy, ADC_name)
+    adc = ADC_100m14b4cha_extended_API_WRTD(pci_addr, trtl, ADC_name)
     conf = adc.get_current_conf()
-    serv_expose = ServerExpose(addr, port, server_proxy, adc)
+    ip_server = {'addr':args.ip_server[0]}
+    serv_expose = ServerExpose(addr, port, adc, ip_server)
 
     zeroconf_service = None
     zeroconf_info = None
+    server_publisher = None
     if(args.ip_server is None):
         zeroconf_info = zeroconf.ServiceInfo("_http._tcp.local.",
                             ADC_name, zeroconf.socket.inet_aton(addr),
@@ -49,23 +53,32 @@ def main():
                             'port': str(port), 'conf': conf})
         zeroconf_service = zeroconf.Zeroconf()
         zeroconf_service.register_service(zeroconf_info)
+        while ip_server['addr'] == None:
+            pass
         """TODO check if it is working, if it will not block until the
         registration is finished(during registration the server will
         try to set it's own addres in the ADC"""
+        server_publisher = Publisher(ip_server['addr'], 8023)
     else:
-        serv_expose.set_server_address(args.ip_server[0])
-        xmlrpc.client.ServerProxy("http://" + args.ip_server[0] + ":7999/").\
-                                  add_service(ADC_name, addr, port, conf)
+        serv_expose.set_server_address(ip_server['addr'])
+        server_publisher = Publisher(ip_server['addr'], 8023)
+        data = {'function_name': 'add_service',
+                                 'args': [ADC_name, addr, port, conf]}
+        server_publisher.send_message(data)
+
+    serv_expose.server_publisher = server_publisher
 
     try:
         print("Application starting")
         serv_expose.run()
-    finally:
+    except KeyboardInterrupt:
         if(zeroconf_service is not None):
             zeroconf_service.unregister_service(zeroconf_info)
         else:
-            proxy = get_proxy(server_proxy.proxy_addr)
-            proxy.remove_service(ADC_name)
+            data = {'function_name': 'remove_service', 'args': [ADC_name]}
+            server_publisher.send_message(data)
+            time.sleep(0.1)  #otherwise the message is lost
+
         os._exit(1)
 
 if __name__ == '__main__':

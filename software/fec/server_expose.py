@@ -15,12 +15,13 @@ thismodule = sys.modules[__name__]
 class ServerExpose():
     adc = None
 
-    def __init__(self, addr, port, server_proxy, adc):
+    def __init__(self, addr, port, adc, ip_server):
         self.addr = addr
         self.port = port
-        self.server_proxy = server_proxy
+        self.server_publisher = None
         self.adc = adc
         self.server = None
+        self.ip_server = ip_server
 
     def __getattr__(self, function_name):
         """ If he requered function is not defined here, look for it in the
@@ -28,7 +29,7 @@ class ServerExpose():
         return getattr(self.adc, function_name)
 
     def set_server_address(self, addr):
-        self.server_proxy.proxy_addr = "http://" + addr + ":7999/"
+        self.ip_server['addr'] = addr
 
     def set_adc_parameter(self, function_name, value, idx=-1):
         if(idx == -1):
@@ -40,8 +41,9 @@ class ServerExpose():
         """This fucntion is just for testing and will be removed after 
         addding ZeroMQ"""
         """doesn'r work with zeroconf"""
-        proxy = get_proxy(self.server_proxy.proxy_addr)
-        proxy.remove_service(self.adc.unique_ADC_name)
+        data = {'function_name': 'remove_service',
+                                 'args': [self.adc.unique_ADC_name]}
+        server_publisher.send_message(data)
         os._exit(1)
 
     def run(self):
@@ -107,5 +109,6 @@ class ServerExpose():
                 poller.unregister(self.adc)
                 timestamp_and_data = self.adc.retrieve_ADC_timestamp_and_data(
                                                             self.adc.channels)
-                proxy = get_proxy(self.server_proxy.proxy_addr)
-                proxy.update_data(timestamp_and_data, self.adc.unique_ADC_name)
+                data = {'function_name': 'update_data',
+                        'args': [timestamp_and_data, self.adc.unique_ADC_name]}
+                self.server_publisher.send_message(data)
