@@ -54,15 +54,19 @@ def main():
         try to set it's own addres in the ADC"""
     else:
         serv_expose.set_server_address(args.ip_server[0])
-        xmlrpc.client.ServerProxy("http://" + args.ip_server[0] +
-                                  ":7999/").add_service(ADC_name, addr,
-                                                        port, conf)
+        xmlrpc.client.ServerProxy("http://" + args.ip_server[0] + ":7999/").\
+                                  add_service(ADC_name, addr, port, conf)
 
-    cmd = Commands(zeroconf_service, zeroconf_info, ADC_name,
-                   server_proxy)
-    cmd_thread = CommandsThread(cmd)
-    cmd_thread.start()
+    try:
+        print("Application starting")
+        serv_expose.run()
+    finally:
+        if(zeroconf_service is not None):
+            zeroconf_service.unregister_service(zeroconf_info)
+        else:
+            proxy = get_proxy(server_proxy.proxy_addr)
+            proxy.remove_service(ADC_name)
+        os._exit(1)
 
-    serv_expose.run()
 if __name__ == '__main__':
     main()
