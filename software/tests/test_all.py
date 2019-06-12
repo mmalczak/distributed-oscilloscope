@@ -16,6 +16,7 @@ from general.proxy import get_proxy
 from general.zmq_rpc import ZMQ_RPC
 from general.zmq_rpc import RPC_Error
 from general.addresses import server_zmq_expose_port
+import timeout_decorator
 
 sys.path.append('../server')
 from server import ADC_configs
@@ -104,6 +105,7 @@ class OscilloscopeMethods(unittest.TestCase):
     def stop_GUI_interface(self):
         self.server_handler.terminate()
 
+    @timeout_decorator.timeout(5)
     def test_add_remove_available_ADC(self):
         self.clean_queue()
         self.remove_ADC_FEC('ADC2')
@@ -123,6 +125,7 @@ class OscilloscopeMethods(unittest.TestCase):
         self.assertTrue('ADC' in added_ADC_name)
         self.assertEqual(number_of_channels, 4)
 
+    @timeout_decorator.timeout(5)
     def test_channels_empty(self):
         channels = self.zmq_rpc.send_RPC('get_GUI_channels', self.GUI_name)
         self.assertTrue(not channels)
@@ -221,7 +224,7 @@ class OscilloscopeMethods(unittest.TestCase):
         self.return_queue.get()
         time.sleep(1)
 
-
+    @timeout_decorator.timeout(5)
     def test_add_channel(self):
         GUI_channel = 0
         ADC_channel = 0
@@ -235,5 +238,6 @@ class OscilloscopeMethods(unittest.TestCase):
         self.assertEqual(channel.ADC_channel_idx, ADC_channel)
         self.assertEqual(len(channels), 1)
 
+    @timeout_decorator.timeout(5)
     def test_remove_available_ADC(self):
         self.assertEqual("abc", "abc")
