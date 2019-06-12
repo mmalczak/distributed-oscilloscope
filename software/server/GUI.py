@@ -29,7 +29,7 @@ class GUI():
         self.GUI_addr = GUI_addr
         self.GUI_port = GUI_port
         self.run = False
-        self.publisher = Publisher(self.GUI_addr, self.GUI_port)
+        self.GUI_publisher = Publisher(self.GUI_addr, self.GUI_port)
 
     def contains_ADC(self, unique_ADC_name):
         return unique_ADC_name in self.ADCs_used
@@ -167,7 +167,7 @@ class GUI():
             channel.timestamp_and_data = None
         data = {'function_name': 'update_data',
                 'args': [data, pre_post_samples, offsets]}
-        self.publisher.send_message(data)
+        self.GUI_publisher.send_message(data)
         """TODO make sure that the data rate is not too big for plot"""
         if self.run:
             self.configure_acquisition_ADCs_used()

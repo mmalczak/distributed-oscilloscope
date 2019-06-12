@@ -14,7 +14,7 @@ class Oscilloscope():
         for name_GUI, GUI in self.GUIs.items():
             data = {'function_name': 'add_available_ADC',
                     'args': [unique_ADC_name, number_of_channels]}
-            GUI.publisher.send_message(data)
+            GUI.GUI_publisher.send_message(data)
 
 
     def remove_available_ADC(self, unique_ADC_name):
@@ -22,7 +22,7 @@ class Oscilloscope():
         for name_GUI, GUI in self.GUIs.items():
             data = {'function_name': 'remove_available_ADC',
                     'args': [unique_ADC_name]}
-            GUI.publisher.send_message(data)
+            GUI.GUI_publisher.send_message(data)
         """wait until there are no more users"""
         del self.available_ADCs[unique_ADC_name]
         channels_to_delete = []
@@ -40,7 +40,7 @@ class Oscilloscope():
         for unique_ADC_name, ADC in self.available_ADCs.items():
             data = {'function_name': 'add_available_ADC',
                     'args': [unique_ADC_name, ADC.number_of_channels]}
-            GUI_.publisher.send_message(data)
+            GUI_.GUI_publisher.send_message(data)
 
 
     def unregister_GUI(self, name):
