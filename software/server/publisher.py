@@ -5,6 +5,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
+"""TODO should I add some logging here or some error handling?"""
 class Publisher():
     def __init__(self, ip, port):
         context = zmq.Context()
