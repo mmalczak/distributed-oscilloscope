@@ -7,7 +7,7 @@ import zmq
 from zmq.utils.monitor import recv_monitor_message
 from zmq.utils.monitor import parse_monitor_message
 import pickle
-
+import time
 
 thismodule = sys.modules[__name__]
 
@@ -43,7 +43,8 @@ class ServerExpose():
         """doesn'r work with zeroconf"""
         data = {'function_name': 'remove_service',
                                  'args': [self.adc.unique_ADC_name]}
-        server_publisher.send_message(data)
+        self.server_publisher.send_message(data)
+        time.sleep(0.1)  # otherwise the message is lost
         os._exit(1)
 
     def run(self):
