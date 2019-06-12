@@ -1,7 +1,6 @@
 import threading
 import subprocess
 import ctypes
-from proxy import *
 from WRTD import *
 import selectors
 from ADC_100m14b4cha import *

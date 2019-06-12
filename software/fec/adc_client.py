@@ -35,7 +35,6 @@ def main():
     ADC_idx = addr + '_' +  str(port)
     ADC_name = 'ADC' + '_' + ADC_idx + '._tcp.local.'
 
-    server_proxy = Proxy()
     pci_addr = pci_addr
     trtl = 'trtl-000' + str(pci_addr)
     adc = ADC_100m14b4cha_extended_API_WRTD(pci_addr, trtl, ADC_name)
