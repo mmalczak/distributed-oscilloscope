@@ -1,5 +1,7 @@
 import pyqtgraph as pg
 from colors import Colors
+from PyQt5 import QtCore
+
 
 class Curve(pg.PlotCurveItem):
     def __init__(self, GUI_channel):
@@ -14,7 +16,7 @@ class Trigger(pg.InfiniteLine):
         super().__init__()
         self.setAngle(0)
         color = Colors().get_color(GUI_channel)
-        self.setPen(color=tuple(color))
+        self.setPen(color=tuple(color), style=QtCore.Qt.DotLine)
 
     def set_value(self, value):
         try:
