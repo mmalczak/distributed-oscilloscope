@@ -155,7 +155,6 @@ class GUI():
         timestamps = []
         offsets = {}
         for channel_idx, channel in self.channels.items():
-            channel_idx = str(channel_idx)  # remove with XMLRPC
             ADC = self.available_ADCs[channel.unique_ADC_name]
             data[channel_idx] = channel.timestamp_and_data[1]
             timestamps.append(channel.timestamp_and_data[0])

@@ -81,9 +81,9 @@ class GUI_Class:
         return True
 
     def update_data(self, data, pre_post_samples, offsets):
-        for channel_idx_str, channel_data in data.items():
-            [presamples, postsamples] = pre_post_samples[channel_idx_str]
-            offset = int(offsets[channel_idx_str])*4/5
+        for channel_idx, channel_data in data.items():
+            [presamples, postsamples] = pre_post_samples[channel_idx]
+            offset = int(offsets[channel_idx])*4/5
             offset = int(offset)
 #            if(offset>10 and offset < 14):
 #                offset = 12
@@ -93,9 +93,8 @@ class GUI_Class:
             print('postsamples: ' + str(postsamples))
             print('offsets: ' + str(offsets))
             axis = np.array(range(-presamples, postsamples))/SAMP_FREQ
-            channel_idx_str = int(channel_idx_str)
             """to be removed with xmlrpc"""
-            self.plot.curves[channel_idx_str].setData(axis, channel_data)
+            self.plot.curves[channel_idx].setData(axis, channel_data)
 
     def set_channel_params(self, channel_params):
         for GUI_channel_idx, channel_params in channel_params.items():
