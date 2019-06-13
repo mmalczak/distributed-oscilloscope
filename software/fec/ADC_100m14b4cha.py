@@ -130,6 +130,12 @@ class ADC_100m14b4cha_extended_API(ADC_100m14b4cha):
         self.set_conf(self.ADC_CONF_CHN_RANGE, ch_range)
         self.apply_config(0)
 
+    def set_buffer_type(self, channel, type):
+        self.adc_conf.type = self.ADC_CONF_TYPE_CUS
+        self.adc_conf.route_to = channel
+        self.set_conf(self.ADC_CONF_100M14B4CHA_BUF_TYPE, type)
+        self.apply_config(0)
+
     def set_channel_termination(self, channel, termination):
         self.adc_conf.type = self.ADC_CONF_TYPE_CHN
         self.adc_conf.route_to = channel
