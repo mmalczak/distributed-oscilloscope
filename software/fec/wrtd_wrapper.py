@@ -147,7 +147,7 @@ class WRTD_wrapper():
 
     __WRTD_MAX_LOG_TYPE_NUMBER = 0
 
-    def __init_lib(self):
+    def __init__(self, resource_name):
         self.wrtd_lib = CDLL("libwrtd.so")
 
         self.wrtd_init = self.wrtd_lib.wrtd_init
@@ -318,8 +318,6 @@ class WRTD_wrapper():
            self.wrtd_reset_rule_stats.errcheck = self.__errcheck_int
            self.wrtd_reset_rule_stats.argtypes = [c_void_p, c_char_p]"""
 
-    def __init__(self, resource_name):
-        self.__init_lib()
         self.resource_name = resource_name.encode('utf-8')
         self.wrtd_p = POINTER(wrtd)()
         self.__init(0, None)
