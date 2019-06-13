@@ -322,17 +322,19 @@ class WRTD_wrapper():
         self.__init_lib()
         self.resource_name = resource_name.encode('utf-8')
         self.wrtd_p = POINTER(wrtd)()
-        self.init(0, None)
+        self.__init(0, None)
 
     def __del__(self):
-        self.close()
+        self.__close()
 
-    def init(self, reset, options_str):
+    def __init(self, reset, options_str):
         self.wrtd_init(self.resource_name, reset, options_str,
                        self.wrtd_p)
 
-    def close(self):
-        self.wrtd_close(self.wrtd_p)
+    def __close(self):
+        if not self.wrtd_p:
+            self.wrtd_close(self.wrtd_p)
+            self.wrtd_p = 0
 
     def reset(self):
         self.wrtd_reset(self.wrtd_p)
