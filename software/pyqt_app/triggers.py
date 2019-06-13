@@ -123,9 +123,10 @@ class TriggerProperties():
     def set_polarity(self, polarity):
         self.polarity_menu.set_value(polarity)
 
-    def set_threshold(self, threshold):
+    def set_threshold(self, threshold_mv):
+        threshold_V = threshold_mv/1000
         try:
-            self.threshold_box.set_value(threshold)
+            self.threshold_box.set_value(threshold_mv)
         except TypeError:
             pass
             """for external trigger there is not threshold, the value
@@ -134,7 +135,7 @@ class TriggerProperties():
             print(type(e))
 
         try:
-            self.plot.trigger.set_value(threshold)
+            self.plot.trigger.set_value(threshold_V)
         except AttributeError:
             pass
             """for external trigger the plot does not exist"""
