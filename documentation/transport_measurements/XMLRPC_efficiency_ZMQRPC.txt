@@ -1,0 +1,56 @@
+Internal trigger on channel 3
+Sampled signal: 100kHz sine wave Channel 3(0-3)
+number of presamples = 0
+
+Number of channels: 1
+Postsamples: 2
+Best in 5: 0.0011538169346749783
+Postsamples: 10
+Best in 5: 0.0012263120152056217
+Postsamples: 100
+Best in 5: 0.0022186829010024667
+Postsamples: 1000
+Best in 5: 0.012332783080637455
+Postsamples: 10000
+Best in 5: 0.1130908370250836
+Postsamples: 100000
+Best in 5: 1.082254572887905
+Number of channels: 2
+Postsamples: 2
+Best in 5: 0.0013254780787974596
+Postsamples: 10
+Best in 5: 0.0013402390759438276
+Postsamples: 100
+Best in 5: 0.003322386066429317
+Postsamples: 1000
+Best in 5: 0.024204846005886793
+Postsamples: 10000
+Best in 5: 0.22563576407264918
+Postsamples: 100000
+Best in 5: 2.1148849849123508
+Number of channels: 3
+Postsamples: 2
+Best in 5: 0.0014166970504447818
+Postsamples: 10
+Best in 5: 0.0016310550272464752
+Postsamples: 100
+Best in 5: 0.004608402960002422
+Postsamples: 1000
+Best in 5: 0.035545097081921995
+Postsamples: 10000
+Best in 5: 0.33521235699299723
+Postsamples: 100000
+Best in 5: 3.152974330005236
+Number of channels: 4
+Postsamples: 2
+Best in 5: 0.0014173390809446573
+Postsamples: 10
+Best in 5: 0.0017534319777041674
+Postsamples: 100
+Best in 5: 0.005721945897676051
+Postsamples: 1000
+Best in 5: 0.047198454034514725
+Postsamples: 10000
+Best in 5: 0.44660817505791783
+Postsamples: 100000
+Best in 5: 4.200266608968377
