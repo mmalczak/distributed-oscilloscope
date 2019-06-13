@@ -110,8 +110,27 @@ class ADC_Generic():
     ADC_CONF_TYPE_TRG_TIM = 6
     __ADC_CONF_TYPE_LAST_INDEX = 7
 
-    def __init_lib(self):
+    def __errcheck_int(self, ret, func, args):
+        """Generic error checker for functions returning 0 as success
+        and -1 as error"""
+        if ret < 0:
+            raise OSError(get_errno(),
+                          self.strerror(get_errno()), "")
+        else:
+            return ret
 
+    def __errcheck_pointer(self, ret, func, args):
+        """Generic error handler for functions returning pointers"""
+        if ret is None:
+            raise OSError(get_errno(),
+                          self.strerror(get_errno()), "")
+        else:
+            return ret
+
+    def print_version(self):
+        self.adc_print_version()
+
+    def __init__(self, pci_addr):
         self.__ADC_CONF_LEN = 64
         """number of allocated items in each structure"""
 
@@ -260,28 +279,6 @@ class ADC_Generic():
         self.adc_set_conf_mask_all.restype = None
         self.adc_set_conf_mask_all.argtypes = [c_void_p, c_void_p]
 
-    def __errcheck_int(self, ret, func, args):
-        """Generic error checker for functions returning 0 as success
-        and -1 as error"""
-        if ret < 0:
-            raise OSError(get_errno(),
-                          self.strerror(get_errno()), "")
-        else:
-            return ret
-
-    def __errcheck_pointer(self, ret, func, args):
-        """Generic error handler for functions returning pointers"""
-        if ret is None:
-            raise OSError(get_errno(),
-                          self.strerror(get_errno()), "")
-        else:
-            return ret
-
-    def print_version(self):
-        self.adc_print_version()
-
-    def __init__(self, pci_addr):
-        self.__init_lib()
         self.__init()
         self.__adc_ptr = self.__open(b"fmc-adc-100m14b4cha", pci_addr,
                                  0, 0, self.ADC_F_FLUSH)
