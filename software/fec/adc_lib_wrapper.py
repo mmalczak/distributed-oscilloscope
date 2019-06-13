@@ -282,33 +282,36 @@ class ADC_Generic():
 
     def __init__(self, pci_addr):
         self.__init_lib()
-        self.adc_init()
-        self.adc_ptr = self.open(b"fmc-adc-100m14b4cha", pci_addr,
+        self.__init()
+        self.__adc_ptr = self.__open(b"fmc-adc-100m14b4cha", pci_addr,
                                  0, 0, self.ADC_F_FLUSH)
         self.adc_conf = adc_conf()
 
     def __del__(self):
-        self.close()
-        self.exit()
+        self.__close()
+        self.__exit()
 
-    def exit(self):
+    def __init(self):
+        self.adc_init()
+
+    def __exit(self):
         self.adc_exit()
 
     def strerror(self, errnum):
         return self.adc_strerror(errnum)
 
     def get_driver_type(self):
-        return self.adc_get_driver_type(self.adc_ptr)
+        return self.adc_get_driver_type(self.__adc_ptr)
 
-    def open(self, name, dev_id, totalsamples, nbuffer, flags):
+    def __open(self, name, dev_id, totalsamples, nbuffer, flags):
         return self.adc_open(name, dev_id, totalsamples, nbuffer, flags)
 
-    def open_by_lun(self, name, lun, totalsamples, nbuffer, flags):
+    def __open_by_lun(self, name, lun, totalsamples, nbuffer, flags):
         return self.adc_open_by_lun(name, lun, totalsamples, nbuffer,
                                     flags)
 
     def request_buffer(self, nsamples, alloc, flags):
-        return self.adc_request_buffer(self.adc_ptr, nsamples,
+        return self.adc_request_buffer(self.__adc_ptr, nsamples,
                                        alloc, flags)
 
     def set_conf(self, conf_index, val):
@@ -321,53 +324,53 @@ class ADC_Generic():
         self.adc_get_conf(byref(self.adc_conf), conf_index, val)
 
     def acq_start(self, flags, timeout):
-        self.adc_acq_start(self.adc_ptr, flags, timeout)
+        self.adc_acq_start(self.__adc_ptr, flags, timeout)
 
     # NON API
     def zio_get_file_descriptor(self):
-        return self.adc_zio_get_file_descriptor(self.adc_ptr)
+        return self.adc_zio_get_file_descriptor(self.__adc_ptr)
 
     def acq_poll(self, flags, timeout):
-        self.adc_acq_poll(self.adc_ptr, flags, timeout)
+        self.adc_acq_poll(self.__adc_ptr, flags, timeout)
 
     def fill_buffer(self, buf, flags, timeout):
-        self.adc_fill_buffer(self.adc_ptr, buf, flags, timeout)
+        self.adc_fill_buffer(self.__adc_ptr, buf, flags, timeout)
 
     def acq_stop(self, flags):
-        self.adc_acq_stop(self.adc_ptr, flags)
+        self.adc_acq_stop(self.__adc_ptr, flags)
 
     def tstamp_buffer(self, buf, ts):
         self.adc_tstamp_buffer(buf, ts)
 
     def release_buffer(self, buf, free):
-        self.adc_release_buffer(self.adc_ptr, buf, free)
+        self.adc_release_buffer(self.__adc_ptr, buf, free)
 
-    def close(self):
-        if not self.adc_ptr:
-            self.adc_close(self.adc_ptr)
-            self.adc_ptr = 0
+    def __close(self):
+        if not self.__adc_ptr:
+            self.adc_close(self.__adc_ptr)
+            self.__adc_ptr = 0
 
     def trigger_fire(self):
-        self.adc_trigger_fire(self.adc_ptr)
+        self.adc_trigger_fire(self.__adc_ptr)
 
     def has_trigger_fire(self):
-        return self.adc_has_trigger_fire(self.adc_ptr)
+        return self.adc_has_trigger_fire(self.__adc_ptr)
 
     def apply_config(self, flags):
-        self.adc_apply_config(self.adc_ptr, flags, byref(self.adc_conf))
+        self.adc_apply_config(self.__adc_ptr, flags, byref(self.adc_conf))
         memset(byref(self.adc_conf), 0, sizeof(adc_conf))
 
     def retrieve_config(self):
-        self.adc_retrieve_config(self.adc_ptr, byref(self.adc_conf))
+        self.adc_retrieve_config(self.__adc_ptr, byref(self.adc_conf))
 
     def get_capabilities(self, type):
-        self.adc_get_capabilities(self.adc_ptr, type)
+        self.adc_get_capabilities(self.__adc_ptr, type)
 
     def get_param(self, name, sptr, iptr):
-        self.adc_get_param(self.adc_ptr, name, sptr, iptr)
+        self.adc_get_param(self.__adc_ptr, name, sptr, iptr)
 
     def set_param(self, name, sptr, iptr):
-        self.adc_set_param(self.adc_ptr, name, sptr, iptr)
+        self.adc_set_param(self.__adc_ptr, name, sptr, iptr)
 
     def set_conf_mask_all(self):
-        self.adc_set_conf_mask_all(byref(self.adc_conf), self.adc_ptr)
+        self.adc_set_conf_mask_all(byref(self.adc_conf), self.__adc_ptr)
