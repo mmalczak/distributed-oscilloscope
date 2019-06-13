@@ -62,9 +62,6 @@ class ADC_100m14b4cha_extended_API_WRTD(ADC_100m14b4cha_extended_API):
             self.required_presamples = args[0]
             args[0] += delay_samples
         getattr(self, function_name)(*args)
-        if(function_name == 'set_presamples' or
-                function_name == 'set_postsamples'):
-            self.set_buffer()
 
     # overwrites method from ADC_specialized
     def get_current_conf(self):

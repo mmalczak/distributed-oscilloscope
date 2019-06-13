@@ -64,9 +64,6 @@ class ADC_100m14b4cha_extended_API(ADC_100m14b4cha):
 
     def configure_parameter(self, function_name, args):
         getattr(self, function_name)(*args)
-        if(function_name == 'set_presamples' or
-                function_name == 'set_postsamples'):
-            self.set_buffer()
 
     def fill_buf(self):
         self.fill_buffer(self.buf_ptr, 0, None)
@@ -78,11 +75,13 @@ class ADC_100m14b4cha_extended_API(ADC_100m14b4cha):
         self.adc_conf.type = self.ADC_CONF_TYPE_ACQ
         self.set_conf(self.ADC_CONF_ACQ_PRE_SAMP, presamples)
         self.apply_config(0)
+        self.set_buffer()
 
     def set_postsamples(self, postsamples):
         self.adc_conf.type = self.ADC_CONF_TYPE_ACQ
         self.set_conf(self.ADC_CONF_ACQ_POST_SAMP, postsamples)
         self.apply_config(0)
+        self.set_buffer()
 
     def set_number_of_shots(self, n_shots):
         self.adc_conf.type = self.ADC_CONF_TYPE_ACQ
