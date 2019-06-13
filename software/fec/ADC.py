@@ -75,7 +75,7 @@ class ADC_100m14b4cha_extended_API_WRTD(ADC_100m14b4cha_extended_API):
 
     # overwrites method from ADC_specialized
     def stop_acquisition(self):
-        self.adc_acq_stop(self.adc_ptr, 0)
+        self.acq_stop(0)
         try:
             self.selector.unregister(self)
         except KeyError:
@@ -124,5 +124,5 @@ class ADC_100m14b4cha_extended_API_WRTD(ADC_100m14b4cha_extended_API):
             timestamp = self.get_timestamp(self.buf_ptr, delay_tics)
         else:
             timestamp = self.get_timestamp(self.buf_ptr, 0)
-        self.adc_acq_stop(self.adc_ptr, 0)
+        self.acq_stop(0)
         return [timestamp, data_dict]
