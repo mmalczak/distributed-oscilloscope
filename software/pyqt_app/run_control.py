@@ -30,4 +30,4 @@ class RunStopButton(QtGui.QPushButton):
 
     def action(self):
         rpc = self.zmq_rpc
-        rpc.send_PRC('run_acquisition', self.is_active(), self.GUI_name)
+        rpc.send_RPC('run_acquisition', self.is_active(), self.GUI_name)
