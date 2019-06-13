@@ -113,10 +113,7 @@ class ThreadGUI_zmq_Expose(threading.Thread):
 
     def send_RPC_request(self, function_name, unique_ADC_name, ADC_value, idx):
         zmq_rpc = self.osc.available_ADCs[unique_ADC_name].zmq_rpc
-        if(idx == -1):
-            zmq_rpc.send_RPC('set_adc_parameter', function_name, ADC_value)
-        else:
-            zmq_rpc.send_RPC('set_adc_parameter', function_name, ADC_value, idx)
+        zmq_rpc.send_RPC('set_adc_parameter', function_name, ADC_value, idx)
 
     class MapperMethodsClosure():
 
