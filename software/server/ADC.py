@@ -40,9 +40,6 @@ class ADC:
 
     def update_data(self, timestamp_and_data, unique_ADC_name):
         timestamp = timestamp_and_data[0]
-        secs = timestamp[0] + timestamp[1]*2**24 + timestamp[2]*2**48
-        ticks = timestamp[3] + timestamp[4]*2**24 + timestamp[5]*2**48
-        timestamp = [secs, ticks]
         range_multiplier = {10: 1, 1: 1/10, 100: 1/100}
         data = timestamp_and_data[1]
         for channel_idx, data_channel in data.items():

@@ -127,15 +127,7 @@ class ADC_100m14b4cha_extended_API(ADC_100m14b4cha):
             ticks = ticks + 125000000-16
         else:
             ticks = ticks - 16
-        print('secs = ' + str(secs) + ' ticks = ' + str(ticks))
-        secs_low = secs & 0x0000000000ffffff
-        secs_middle = (secs >> 24) & 0x0000000000ffffff
-        secs_high = (secs >> 48) & 0x0000000000ffffff
-        ticks_low = ticks & 0x0000000000ffffff
-        ticks_middle = (ticks >> 24) & 0x0000000000ffffff
-        ticks_high = (ticks >> 48) & 0x0000000000ffffff
-        timestamp = [secs_low, secs_middle,
-                     secs_high, ticks_low, ticks_middle, ticks_high]
+        timestamp = [secs, ticks]
         return timestamp
 
     def set_channel_range(self, channel, channel_range):
