@@ -146,6 +146,15 @@ class ThreadGUI_zmq_Expose(threading.Thread):
     def update_data(self, timestamp_and_data, unique_ADC_name):
         self.osc.update_data(timestamp_and_data, unique_ADC_name)
         return True
+
+    def register_ADC(self, unique_ADC_name, addr, port, conf):
+        self.osc.register_ADC(unique_ADC_name, conf['board_conf']['n_chan'],
+                              conf, str(addr), port)
+
+    def unregister_ADC(self, unique_ADC_name):
+        self.osc.unregister_ADC(unique_ADC_name)
+
+
     """---------------------------ADC--------------------------------------"""
 
     """---------------------COMMON TO ADC AND GUI--------------------------"""

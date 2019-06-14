@@ -27,11 +27,11 @@ def main():
     number_of_channels = 4  # TODO
     addr = os.popen("ifconfig| grep inet").read().split()[1]
     ADC_idx = addr + '_' + str(port)
-    ADC_name = 'ADC' + '_' + ADC_idx + '._tcp.local.'
+    unique_ADC_name = 'ADC' + '_' + ADC_idx + '._tcp.local.'
 
     pci_addr = pci_addr
     trtl = 'trtl-000' + str(pci_addr)
-    devices_access = DevicesAccess(pci_addr, trtl, ADC_name)
+    devices_access = DevicesAccess(pci_addr, trtl, unique_ADC_name)
     conf = devices_access.get_current_adc_conf()
     ip_server = {'addr': args.ip_server[0]}
     serv_expose = ServerExpose(addr, port, devices_access, ip_server)
@@ -41,7 +41,7 @@ def main():
     server_publisher = None
     if(args.ip_server is None):
         zeroconf_info = zeroconf.ServiceInfo("_http._tcp.local.",
-                            ADC_name, zeroconf.socket.inet_aton(addr),
+                            unique_ADC_name, zeroconf.socket.inet_aton(addr),
                             8000, properties={'addr': addr,
                             'port': str(port), 'conf': conf})
         zeroconf_service = zeroconf.Zeroconf()
@@ -55,8 +55,8 @@ def main():
     else:
         serv_expose.set_server_address(ip_server['addr'])
         server_publisher = Publisher(ip_server['addr'], 8023)
-        data = {'function_name': 'add_service',
-                                 'args': [ADC_name, addr, port, conf]}
+        data = {'function_name': 'register_ADC',
+                                 'args': [unique_ADC_name, addr, port, conf]}
         server_publisher.send_message(data)
 
     serv_expose.server_publisher = server_publisher
@@ -68,7 +68,8 @@ def main():
         if(zeroconf_service is not None):
             zeroconf_service.unregister_service(zeroconf_info)
         else:
-            data = {'function_name': 'remove_service', 'args': [ADC_name]}
+            data = {'function_name': 'unregister_ADC',
+                    'args': [unique_ADC_name]}
             server_publisher.send_message(data)
             time.sleep(0.1)  # otherwise the message is lost
 
