@@ -62,7 +62,7 @@ class OscilloscopeMethods(unittest.TestCase):
         GUI_idx = addr + "_" + str(port)
         GUI_name = "GUI" + "_" + GUI_idx + "._http._tcp.local."
         self.GUI_name = GUI_name
-        self.zmq_rpc.send_RPC('add_service', GUI_name, addr, port)
+        self.zmq_rpc.send_RPC('register_GUI', GUI_name, addr, port)
 
     def clean_queue(self):
         while not self.return_queue.empty():

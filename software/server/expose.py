@@ -141,6 +141,12 @@ class ThreadGUI_zmq_Expose(threading.Thread):
     def get_GUI_settings(self, GUI_name):
         return self.osc.GUIs[GUI_name].get_GUI_settings()
 
+    def register_GUI(self, GUI_name, addr, port):
+        self.osc.register_GUI(GUI_name, str(addr), port)
+
+    def unregister_GUI(self, GUI_name):
+        self.osc.unregister_GUI(GUI_name)
+
 
     """---------------------------ADC--------------------------------------"""
     def update_data(self, timestamp_and_data, unique_ADC_name):

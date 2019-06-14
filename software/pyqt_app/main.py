@@ -26,7 +26,7 @@ class MainWindow(QMainWindow):
 
     def closeEvent(self, *args, **kwargs):
         super(QtGui.QMainWindow, self).closeEvent(*args, **kwargs)
-        self.zmq_rpc.send_RPC("remove_service", self.GUI_name)
+        self.zmq_rpc.send_RPC("unregister_GUI", self.GUI_name)
 
 
 def main():
@@ -61,7 +61,7 @@ def main():
     threading_widget_zmq = ThreadServerExposeZMQ(GUI, port)
 
 
-    zmq_rpc.send_RPC('add_service', GUI_name, addr, port)
+    zmq_rpc.send_RPC('register_GUI', GUI_name, addr, port)
 
     win.GUI_name = GUI_name
     app.exec()
