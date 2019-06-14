@@ -10,6 +10,7 @@ from server_expose import *
 from GUI import *
 from zmq_rpc import ZMQ_RPC
 from addresses import server_zmq_expose_port
+from ipaddr import get_ip
 
 """TODO number of ADCs different from data dimension occuring when I
 switch off ADC"""
@@ -51,7 +52,7 @@ def main():
 
     ip_server = args.ip_server[0]
 
-    addr = os.popen("ifconfig| grep inet").read().split()[1]
+    addr = get_ip()
     GUI_idx = addr + "_" + str(port)
     GUI_name = "GUI" + "_" + GUI_idx + "._http._tcp.local."
     zmq_rpc = ZMQ_RPC(ip_server, server_zmq_expose_port)
