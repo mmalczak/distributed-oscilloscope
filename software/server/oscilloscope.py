@@ -9,12 +9,12 @@ class Oscilloscope():
         self.GUIs = dict()
         self.available_ADCs = {}
 
-    def add_available_ADC(self, unique_ADC_name, number_of_channels, conf,
+    def register_ADC(self, unique_ADC_name, number_of_channels, conf,
                           ip, port):
         self.available_ADCs[unique_ADC_name] = ADC(unique_ADC_name, conf, 
                                                    ip, port)
         for name_GUI, GUI in self.GUIs.items():
-            data = {'function_name': 'add_available_ADC',
+            data = {'function_name': 'register_ADC',
                     'args': [unique_ADC_name, number_of_channels]}
             GUI.GUI_publisher.send_message(data)
         logger.info("ADC {} registered".format(unique_ADC_name))
@@ -42,7 +42,7 @@ class Oscilloscope():
         GUI_ = GUI(self.available_ADCs, GUI_name, GUI_addr, GUI_port)
         self.GUIs.update({GUI_name: GUI_})
         for unique_ADC_name, ADC in self.available_ADCs.items():
-            data = {'function_name': 'add_available_ADC',
+            data = {'function_name': 'register_ADC',
                     'args': [unique_ADC_name, ADC.number_of_channels]}
             GUI_.GUI_publisher.send_message(data)
         logger.info("GUI {} registered".format(GUI_name))

@@ -39,8 +39,8 @@ class ChannelClosure:
         should be active, None is unique_ADC_name"""
         self.set_channel_properties(None, 0)
 
-    def add_available_ADC(self, name, number_of_channels):
-        self.menu.add_available_ADC(name, number_of_channels)
+    def register_ADC(self, name, number_of_channels):
+        self.menu.register_ADC(name, number_of_channels)
 
     def unregister_ADC(self, name, remote=False):
         self.menu.unregister_ADC(name)
@@ -152,7 +152,7 @@ class ChannelsMenu(QMenuBar):
         color = str((tuple(Colors().get_color(channel_count))))
         self.setStyleSheet("border: 2px solid rgb" + color + ";")
 
-    def add_available_ADC(self, name, number_of_channels):
+    def register_ADC(self, name, number_of_channels):
         display_name = name.replace('._tcp.local.', '')
         ADC = self.ADCs_menu.addMenu(display_name)
         self.ADCs[name] = ADC

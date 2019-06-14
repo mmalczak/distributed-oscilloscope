@@ -61,10 +61,10 @@ class GUI_Class:
         self.run_stop_acquisition = RunStopButton(self.zmq_rpc, self.GUI_name)
         self.ui.run_control_layout.addWidget(self.run_stop_acquisition)
 
-    def add_available_ADC(self, unique_ADC_name, number_of_channels):
+    def register_ADC(self, unique_ADC_name, number_of_channels):
         self.available_ADCs.append(unique_ADC_name)
         for count in range(0, self.number_of_GUI_channels):
-            self.channels[count].add_available_ADC(unique_ADC_name,
+            self.channels[count].register_ADC(unique_ADC_name,
                                                    number_of_channels)
         for count in range(0, self.number_of_GUI_triggers):
             self.triggers[count].update_triggers()

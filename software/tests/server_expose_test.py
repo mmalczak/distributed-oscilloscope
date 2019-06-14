@@ -19,7 +19,7 @@ class ServerExposeTest():
     def unregister_ADC(self, unique_ADC_name):
         self.return_queue.put(unique_ADC_name)
 
-    def add_available_ADC(self, unique_ADC_name, number_of_channels):
+    def register_ADC(self, unique_ADC_name, number_of_channels):
         self.return_queue.put((unique_ADC_name, number_of_channels))
 
     def update_data(self, *args, **kwargs):

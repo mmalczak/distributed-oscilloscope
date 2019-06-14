@@ -54,7 +54,7 @@ def add_service(name, addr, port, osc, conf=None, server_addr_known=False):
     if name.startswith("ADC"):
         """name provided by zeroconf ihas to be unique and is not user
         friendly, thats why user selected name is passed in properties"""
-        osc.add_available_ADC(name, conf['board_conf']['n_chan'], conf,
+        osc.register_ADC(name, conf['board_conf']['n_chan'], conf,
                               str(addr), port)
         """server_address should be set at the end, (ADC checks if
         server_address was set and assumes that if it was set, server
