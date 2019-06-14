@@ -3,7 +3,7 @@ sys.path.append('../general')
 import zeroconf
 import os
 import argparse
-from ADC import *
+from devices_access import DevicesAccess
 from server_expose import *
 from publisher import Publisher
 import time
