@@ -160,7 +160,7 @@ class GUI():
             tic_diff = tic_difference(*channel.timestamp_and_data[0],
                                       *timestamps[0])
             offsets[channel_idx] = str(int(tic_diff))
-            pre_post_samples[channel_idx] = [ADC.acq_conf.  presamples,
+            pre_post_samples[channel_idx] = [ADC.acq_conf.presamples,
                                              ADC.acq_conf.postsamples]
             channel.timestamp_and_data = None
         data = {'function_name': 'update_data',
