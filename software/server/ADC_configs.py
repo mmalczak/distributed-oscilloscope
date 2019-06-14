@@ -9,7 +9,7 @@ class Channel:
         self.channel_range = self.range_conv[channel_range]
         self.termination = termination
         self.offset = offset
-        self.timestamp_and_data = None
+        self.timestamp_pre_post_data = None
 
     def set_channel_range(self, channel_range):
         self.channel_range = self.range_conv[channel_range]

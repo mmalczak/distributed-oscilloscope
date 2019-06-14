@@ -82,8 +82,9 @@ class ServerExpose():
             if self.devices_access.fileno() in socks:
                 dev_ac = self.devices_access
                 poller.unregister(dev_ac)
-                timestamp_and_data = dev_ac.retrieve_ADC_timestamp_and_data(
+                [timestamp, pre_post, data] = dev_ac.retrieve_ADC_data(
                                                             dev_ac.channels)
                 data = {'function_name': 'update_data',
-                        'args': [timestamp_and_data, dev_ac.unique_ADC_name]}
+                        'args': [timestamp, pre_post, data,
+                                 dev_ac.unique_ADC_name]}
                 self.server_publisher.send_message(data)

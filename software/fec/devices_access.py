@@ -48,6 +48,14 @@ class DevicesAccess():
         postsamples = acq_conf['postsamples']
         return presamples + postsamples
 
+    def get_pre_post_samples(self):
+        conf = self.get_current_adc_conf()
+        acq_conf = conf['acq_conf']
+        presamples = acq_conf['presamples']
+        postsamples = acq_conf['postsamples']
+        return {'presamples': presamples, 'postsamples': postsamples}
+
+
     def set_WRTD_master(self, WRTD_master):
         print(WRTD_master)
         self.WRTD_master = WRTD_master
@@ -99,11 +107,11 @@ class DevicesAccess():
     def fileno(self):
         return self.ADC.fileno()
 
-    def retrieve_ADC_timestamp_and_data(self, channels):
+    def retrieve_ADC_data(self, channels):
         try:
             self.ADC.fill_buf()
         except Exception as e:
-            return [0, 0]
+            return [0, 0, 0]
             print(e)
 
         try:
@@ -111,7 +119,7 @@ class DevicesAccess():
                                          (self.get_buffer_size(), 4))
         except Exception as e:
             print(e)
-            return([0, 0])
+            return([0, 0, 0])
 
         data = np.transpose(data)
         data = data.tolist()
@@ -124,4 +132,5 @@ class DevicesAccess():
         else:
             timestamp = self.ADC.get_timestamp(self.ADC.buf_ptr, 0)
         self.ADC.acq_stop(0)
-        return [timestamp, data_dict]
+        pre_post_samples_dict = self.get_pre_post_samples()
+        return [timestamp, pre_post_samples_dict, data_dict]

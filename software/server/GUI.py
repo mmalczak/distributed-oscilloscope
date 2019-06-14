@@ -136,7 +136,7 @@ class GUI():
             zmq_rpc = self.available_ADCs[unique_ADC_name].zmq_rpc
             zmq_rpc.send_RPC('stop_acquisition')
         for channel_idx, channel in self.channels.items():
-            channel.timestamp_and_data = None
+            channel.timestamp_pre_post_data = None
 
     def retrieve_acquisition_ADCs_used(self):
         if(self.run):
@@ -145,9 +145,8 @@ class GUI():
     def check_if_ready_and_send_data(self):
         """this function is called by the oscilloscope"""
         """TODo check if data is aligned"""
-
         for channel_idx, channel in self.channels.items():
-            if (channel.timestamp_and_data is None):
+            if (channel.timestamp_pre_post_data is None):
                 return
         data = {}
         pre_post_samples = {}
@@ -155,14 +154,16 @@ class GUI():
         offsets = {}
         for channel_idx, channel in self.channels.items():
             ADC = self.available_ADCs[channel.unique_ADC_name]
-            data[channel_idx] = channel.timestamp_and_data[1]
-            timestamps.append(channel.timestamp_and_data[0])
-            tic_diff = tic_difference(*channel.timestamp_and_data[0],
-                                      *timestamps[0])
+            data[channel_idx] = channel.timestamp_pre_post_data['data_channel']
+            timestamps.append(channel.timestamp_pre_post_data['timestamp'])
+
+            tic_diff = tic_difference(*channel.timestamp_pre_post_data[
+                                            'timestamp'], *timestamps[0])
             offsets[channel_idx] = str(int(tic_diff))
-            pre_post_samples[channel_idx] = [ADC.acq_conf.presamples,
-                                             ADC.acq_conf.postsamples]
-            channel.timestamp_and_data = None
+            pre_post = channel.timestamp_pre_post_data['pre_post']
+            pre_post_samples[channel_idx] = [pre_post['presamples'],
+                                             pre_post['postsamples']]
+            channel.timestamp_pre_post_data = None
         data = {'function_name': 'update_data',
                 'args': [data, pre_post_samples, offsets]}
         self.GUI_publisher.send_message(data)

@@ -149,8 +149,8 @@ class ThreadGUI_zmq_Expose(threading.Thread):
 
 
     """---------------------------ADC--------------------------------------"""
-    def update_data(self, timestamp_and_data, unique_ADC_name):
-        self.osc.update_data(timestamp_and_data, unique_ADC_name)
+    def update_data(self, timestamp, pre_post, data, unique_ADC_name):
+        self.osc.update_data(timestamp, pre_post, data, unique_ADC_name)
         return True
 
     def register_ADC(self, unique_ADC_name, addr, port, conf):

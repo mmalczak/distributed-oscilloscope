@@ -10,7 +10,7 @@ class ADC:
         self.conf = conf
         self.number_of_channels = self.conf['board_conf']['n_chan']
         self.unique_name = unique_name
-        self.timestamp_and_data = []
+        self.timestamp_pre_post_data = []
         self.ip = ip
         self.port = port
         self.channels = []
@@ -38,10 +38,11 @@ class ADC:
         self.acq_conf = AcqConf(conf['acq_conf']['presamples'],
                                 conf['acq_conf']['postsamples'])
 
-    def update_data(self, timestamp_and_data, unique_ADC_name):
-        timestamp = timestamp_and_data[0]
+    def update_data(self, timestamp, pre_post, data, unique_ADC_name):
+        """the value of pre and postsamples is passed together with the data
+        because if it is read from the ADC structure in the server it could
+        be outdated"""
         range_multiplier = {10: 1, 1: 1/10, 100: 1/100}
-        data = timestamp_and_data[1]
         for channel_idx, data_channel in data.items():
             range = self.channels[int(channel_idx)].channel_range
             mult = range_multiplier[range]
@@ -50,8 +51,9 @@ class ADC:
             data_channel = [(value / 2**16 * 10) for value in data_channel]
             """conversionfrom raw to V"""
 
-            self.channels[int(channel_idx)].timestamp_and_data =\
-                [timestamp, data_channel]
+            self.channels[int(channel_idx)].timestamp_pre_post_data =\
+                    {'timestamp': timestamp, 'pre_post': pre_post,
+                     'data_channel': data_channel}
 
     def add_channel(self, channel_range, termination, offset, ADC_channel_idx):
         self.channels.append(Channel(channel_range, termination, offset,

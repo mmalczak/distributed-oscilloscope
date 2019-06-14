@@ -51,12 +51,13 @@ class Oscilloscope():
         del self.GUIs[GUI_name]
         logger.info("GUI {} unregistered".format(GUI_name))
 
-    def update_data(self, timestamp_and_data, unique_ADC_name):
-        if(timestamp_and_data == [0, 0]):
+    def update_data(self, timestamp, pre_post, data, unique_ADC_name):
+        if(data ==  0):
             self.stop_acquisition_if_GUI_contains_ADC(unique_ADC_name)
             return
+        """TODO add logging, do sth"""
         self.available_ADCs[unique_ADC_name].\
-            update_data(timestamp_and_data, unique_ADC_name)
+            update_data(timestamp, pre_post, data, unique_ADC_name)
         for GUI_name, GUI in self.GUIs.items():
             GUI.check_if_ready_and_send_data()
 
@@ -79,7 +80,7 @@ def validate_data(GUI):
     while(all_the_same is False):
         for ADC_name, ADC in GUI.ADCs.items():
             try:
-                timestamp = ADC.timestamp_and_data[0][0]
+                timestamp = ADC.timestamp_pre_post_data['timestamp'][0]
                 print(ADC_name + str(timestamp))
             except Exception as e:
                 return False
@@ -91,18 +92,18 @@ def validate_data(GUI):
                 max_timestamp_tic = max_timestamp[1]
         for ADC_name, ADC in GUI.ADCs.items():
             try:
-                timestamp = ADC.timestamp_and_data[0][0]
+                timestamp = ADC.timestamp_pre_post_data['timestamp'][0]
                 timestamp_sec = timestamp[0]
                 timestamp_tic = timestamp[1]
             except Exception as e:
                 return False
             if(check_if_not_max(max_timestamp_sec, max_timestamp_tic,
                                 timestamp_sec, timestamp_tic, max_offset)):
-                ADC.timestamp_and_data.pop(0)
+                ADC.timestamp_pre_post_data.pop(0)
         for ADC_name, ADC in GUI.ADCs.items():
             try:
 
-                timestamp = ADC.timestamp_and_data[0][0]
+                timestamp = ADC.timestamp_pre_post_data['timestamp'][0]
                 timestamp_sec = timestamp[0]
                 timestamp_tic = timestamp[1]
             except Exception as e:
@@ -121,6 +122,7 @@ def validate_data(GUI):
                 offset = tic_difference(max_timestamp_sec, max_timestamp_tic,
                                         timestamp_sec, timestamp_tic)
                 for count in range(0, ADC.number_of_channels):
-                    ADC.timestamp_and_data[0][1][count].append(offset)
+                    ADC.timestamp_pre_post_data['timestamp'][1][count].append(
+                                                                        offset)
                 all_the_same = True
     return True
