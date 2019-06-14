@@ -1,13 +1,14 @@
 import numpy as np
-from adc_lib_wrapper import ADC_Generic 
-from adc_lib_wrapper import adc_conf 
+from adc_lib_wrapper import ADC_Generic
+from adc_lib_wrapper import adc_conf
 from adc_lib_wrapper import timeval
 from adc_lib_wrapper import adc_timestamp
 from ctypes import c_uint
 from ctypes import c_int
-from ctypes import byref 
-from ctypes import memset 
-from ctypes import sizeof 
+from ctypes import byref
+from ctypes import memset
+from ctypes import sizeof
+
 
 class ADC_100m14b4cha(ADC_Generic):
     ADC_CONF_100M14B4CHA_CHN_RANGE_N = 3
@@ -19,7 +20,6 @@ class ADC_100m14b4cha(ADC_Generic):
     ADC_CONF_100M14B4CHA_CHN_RANGE_100mV_CAL = 0x42
     ADC_CONF_100M14B4CHA_CHN_RANGE_1V_CAL = 0x40
     ADC_CONF_100M14B4CHA_CHN_RANGE_10V_CAL = 0x44
-
 
     ADC_CONF_100M14B4CHA_BUF_KMALLOC = 0
     ADC_CONF_100M14B4CHA_BUF_VMALLOC = 1

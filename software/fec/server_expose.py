@@ -32,7 +32,7 @@ class ServerExpose():
         self.devices_access.configure_adc_parameter(function_name, [*args])
 
     def exit(self):
-        """This fucntion is just for testing and will be removed after 
+        """This fucntion is just for testing and will be removed after
         addding ZeroMQ"""
         """doesn'r work with zeroconf"""
         data = {'function_name': 'remove_service',
@@ -46,15 +46,15 @@ class ServerExpose():
         context = zmq.Context()
         socket = context.socket(zmq.ROUTER)
         monitor = socket.get_monitor_socket()
-        #socket.bind("tcp://*:8003")
+        # socket.bind("tcp://*:8003")
         ip = '128.141.162.185'
         port_zmq = str(self.port + 8)
-        socket.bind("tcp://" + ip  + ":" + port_zmq)
+        socket.bind("tcp://" + ip + ":" + port_zmq)
 
         poller = zmq.Poller()
         poller.register(monitor, zmq.POLLIN | zmq.POLLERR)
         poller.register(socket, zmq.POLLIN | zmq.POLLERR)
-        
+
         EVENT_MAP = {}
         for name in dir(zmq):
             if name.startswith('EVENT_'):
@@ -77,7 +77,7 @@ class ServerExpose():
             if monitor in socks:
                 evt = recv_monitor_message(monitor)
                 evt.update({'description': EVENT_MAP[evt['event']]})
-                #logger.info("Event: {}".format(evt))
+                # logger.info("Event: {}".format(evt))
 
             if self.devices_access.fileno() in socks:
                 dev_ac = self.devices_access

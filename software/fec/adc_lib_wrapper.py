@@ -5,12 +5,12 @@ from ctypes import c_char_p
 from ctypes import c_long
 from ctypes import c_ulong
 from ctypes import c_short
-from ctypes import byref 
-from ctypes import memset 
-from ctypes import sizeof 
-from ctypes import Structure 
-from ctypes import POINTER 
-from ctypes import CDLL 
+from ctypes import byref
+from ctypes import memset
+from ctypes import sizeof
+from ctypes import Structure
+from ctypes import POINTER
+from ctypes import CDLL
 import errno
 
 
@@ -286,8 +286,8 @@ class ADC_Generic():
         self.adc_set_conf_mask_all.argtypes = [c_void_p, c_void_p]
 
         self.__init()
-        self.__adc_ptr = self.__open(b"fmc-adc-100m14b4cha", pci_addr,
-                                 0, 0, self.ADC_F_FLUSH)
+        self.__adc_ptr = self.__open(b"fmc-adc-100m14b4cha", pci_addr, 0, 0,
+                                     self.ADC_F_FLUSH)
         self.adc_conf = adc_conf()
 
     def __del__(self):

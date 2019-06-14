@@ -4,15 +4,12 @@ import zeroconf
 import os
 import argparse
 from devices_access import DevicesAccess
-from server_expose import ServerExpose 
+from server_expose import ServerExpose
 from publisher import Publisher
 import time
 
 
 def main():
-
-
-
     parser = argparse.ArgumentParser()
     parser.add_argument('--port', nargs=1,
                         help='port used on the current machine',
@@ -29,14 +26,14 @@ def main():
 
     number_of_channels = 4  # TODO
     addr = os.popen("ifconfig| grep inet").read().split()[1]
-    ADC_idx = addr + '_' +  str(port)
+    ADC_idx = addr + '_' + str(port)
     ADC_name = 'ADC' + '_' + ADC_idx + '._tcp.local.'
 
     pci_addr = pci_addr
     trtl = 'trtl-000' + str(pci_addr)
     devices_access = DevicesAccess(pci_addr, trtl, ADC_name)
     conf = devices_access.get_current_adc_conf()
-    ip_server = {'addr':args.ip_server[0]}
+    ip_server = {'addr': args.ip_server[0]}
     serv_expose = ServerExpose(addr, port, devices_access, ip_server)
 
     zeroconf_service = None
@@ -49,7 +46,7 @@ def main():
                             'port': str(port), 'conf': conf})
         zeroconf_service = zeroconf.Zeroconf()
         zeroconf_service.register_service(zeroconf_info)
-        while ip_server['addr'] == None:
+        while ip_server['addr'] is None:
             pass
         """TODO check if it is working, if it will not block until the
         registration is finished(during registration the server will
@@ -73,9 +70,10 @@ def main():
         else:
             data = {'function_name': 'remove_service', 'args': [ADC_name]}
             server_publisher.send_message(data)
-            time.sleep(0.1)  #otherwise the message is lost
+            time.sleep(0.1)  # otherwise the message is lost
 
         os._exit(1)
+
 
 if __name__ == '__main__':
     main()

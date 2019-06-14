@@ -111,7 +111,6 @@ class WRTD_wrapper():
     WRTD_ERROR_CANT_REMOVE_RESERVED_REP_CAP = 0xBFFA3021
     __WRTD_ERROR_MAX_NUMBER = 0xBFFA3022
 
-
     __WRTD_ATTR_BASE = 950000
     WRTD_MAJOR_VERSION = 950001
     WRTD_MINOR_VERSION = 950002
@@ -155,7 +154,6 @@ class WRTD_wrapper():
 
     WRTD_GLOBAL_REP_CAP_ID = 'WGRCI'
 
-
     __WRTD_MAX_LOG_TYPE_NUMBER = 0
 
     def __init__(self, resource_name):
@@ -197,7 +195,7 @@ class WRTD_wrapper():
         self.wrtd_set_attr_int32 = self.wrtd_lib.wrtd_set_attr_int32
         self.wrtd_set_attr_int32.restype = c_uint
         self.wrtd_set_attr_int32.errcheck = self.__errcheck_int
-        self.wrtd_set_attr_int32.argtypes = [c_void_p, c_char_p,c_uint, c_int]
+        self.wrtd_set_attr_int32.argtypes = [c_void_p, c_char_p, c_uint, c_int]
 
         """self.wrtd_set_attr_int64 = self.wrtd_lib.wrtd_set_attr_int64
            self.wrtd_set_attr_int64.restype = c_uint

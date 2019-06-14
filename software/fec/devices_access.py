@@ -86,7 +86,7 @@ class DevicesAccess():
             self.selector.unregister(self)
         except KeyError:
             pass
-        #TODO after adding logger log it
+        # TODO after adding logger log it
 
     def configure_acquisition(self, channels):
 
