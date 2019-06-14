@@ -1,6 +1,8 @@
-from WRTD import *
-from ADC_100m14b4cha import *
+from WRTD import WRTD
+from ADC_100m14b4cha import ADC_100m14b4cha_extended_API
 import zmq
+import numpy as np
+
 
 delay_u = 600
 delay_samples = delay_u * 100
