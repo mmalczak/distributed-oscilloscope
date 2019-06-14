@@ -71,7 +71,7 @@ class ADC:
 
     def update_conf(self):
         zmq_rpc = self.zmq_rpc
-        self.conf = zmq_rpc.send_RPC('get_current_conf')
+        self.conf = zmq_rpc.send_RPC('get_current_adc_conf')
         for count in range(0, self.conf['board_conf']['n_chan']):
             channel = self.conf['chn_conf'][count]
             self.channels[count].update_channel_conf(channel['channel_range'],

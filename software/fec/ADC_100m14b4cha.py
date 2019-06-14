@@ -48,14 +48,14 @@ class ADC_100m14b4cha_extended_API(ADC_100m14b4cha):
 
     def set_buffer(self):
         self.release_buffer(self.buf_ptr, None)
-        conf = self.get_current_conf()
+        conf = self.get_current_adc_conf()
         acq_conf = conf['acq_conf']
         self.presamples = acq_conf['presamples']
         self.postsamples = acq_conf['postsamples']
         self.buf_ptr = self.request_buffer(
                 self.presamples + self.postsamples, None, 0)
 
-    def get_current_conf(self):
+    def get_current_adc_conf(self):
         conf = self.current_config()
         return conf
 

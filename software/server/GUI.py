@@ -85,8 +85,7 @@ class GUI():
                 channels.append(channel.ADC_channel_idx)
         channels.sort()
         zmq_rpc = self.available_ADCs[unique_ADC_name].zmq_rpc
-        zmq_rpc.send_RPC('configure_acquisition_retrieve_and_send_data', 
-                          channels)
+        zmq_rpc.send_RPC('configure_acquisition', channels)
 
     def set_presamples_ADC(self, value, unique_ADC_name):
         zmq_rpc = self.available_ADCs[unique_ADC_name].zmq_rpc

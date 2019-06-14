@@ -38,7 +38,7 @@ def main():
     pci_addr = pci_addr
     trtl = 'trtl-000' + str(pci_addr)
     adc = ADC_100m14b4cha_extended_API_WRTD(pci_addr, trtl, ADC_name)
-    conf = adc.get_current_conf()
+    conf = adc.get_current_adc_conf()
     ip_server = {'addr':args.ip_server[0]}
     serv_expose = ServerExpose(addr, port, adc, ip_server)
 

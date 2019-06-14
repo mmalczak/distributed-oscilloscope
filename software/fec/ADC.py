@@ -64,7 +64,7 @@ class ADC_100m14b4cha_extended_API_WRTD(ADC_100m14b4cha_extended_API):
         getattr(self, function_name)(*args)
 
     # overwrites method from ADC_specialized
-    def get_current_conf(self):
+    def get_current_adc_conf(self):
         conf = self.current_config()
         if(not self.WRTD_master):
             conf['acq_conf']['presamples'] -= delay_samples
@@ -87,7 +87,7 @@ class ADC_100m14b4cha_extended_API_WRTD(ADC_100m14b4cha_extended_API):
         finally:
             pass
 
-    def configure_acquisition_retrieve_and_send_data(self, channels):
+    def configure_acquisition(self, channels):
 
         self.channels = channels
         self.stop_acquisition()
