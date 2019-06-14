@@ -1,4 +1,6 @@
 from GUI import *
+import logging
+logger = logging.getLogger(__name__)
 
 
 class Oscilloscope():
@@ -15,6 +17,7 @@ class Oscilloscope():
             data = {'function_name': 'add_available_ADC',
                     'args': [unique_ADC_name, number_of_channels]}
             GUI.GUI_publisher.send_message(data)
+        logger.info("ADC {} registered".format(unique_ADC_name))
 
 
     def remove_available_ADC(self, unique_ADC_name):
@@ -32,6 +35,7 @@ class Oscilloscope():
                     channels_to_delete.append(channel_idx)
             for channel_idx in channels_to_delete:
                 GUI.remove_channel(channel_idx)
+        logger.info("ADC {} unregistered".format(unique_ADC_name))
 
 
     def register_GUI(self, GUI_name, GUI_addr, GUI_port):
@@ -41,10 +45,11 @@ class Oscilloscope():
             data = {'function_name': 'add_available_ADC',
                     'args': [unique_ADC_name, ADC.number_of_channels]}
             GUI_.GUI_publisher.send_message(data)
+        logger.info("GUI {} registered".format(GUI_name))
 
-
-    def unregister_GUI(self, name):
-        del self.GUIs[name]
+    def unregister_GUI(self, GUI_name):
+        del self.GUIs[GUI_name]
+        logger.info("GUI {} unregistered".format(GUI_name))
 
     def update_data(self, timestamp_and_data, unique_ADC_name):
         if(timestamp_and_data == [0, 0]):
