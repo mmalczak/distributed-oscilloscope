@@ -169,8 +169,8 @@ class WRTD_wrapper():
 
         self.wrtd_get_error = self.wrtd_lib.wrtd_get_error
         self.wrtd_get_error.restype = c_uint
-        self.wrtd_get_error.argtypes = [c_void_p, POINTER(c_uint32),
-                                        c_uint, c_char_p]
+        self.wrtd_get_error.argtypes = [c_void_p, POINTER(c_uint32), c_uint,
+                                        c_char_p]
 
         self.wrtd_error_message = self.wrtd_lib.wrtd_error_message
         self.wrtd_error_message.restype = c_uint
@@ -180,14 +180,13 @@ class WRTD_wrapper():
         self.wrtd_get_attr_int32 = self.wrtd_lib.wrtd_get_attr_int32
         self.wrtd_get_attr_int32.restype = c_uint
         self.wrtd_get_attr_int32.errcheck = self.__errcheck_int
-        self.wrtd_get_attr_int32.argtypes = [c_void_p, c_char_p,
-                                             c_uint, POINTER(c_int32)]
+        self.wrtd_get_attr_int32.argtypes = [c_void_p, c_char_p, c_uint,
+                                             POINTER(c_int32)]
 
         self.wrtd_set_attr_int32 = self.wrtd_lib.wrtd_set_attr_int32
         self.wrtd_set_attr_int32.restype = c_uint
         self.wrtd_set_attr_int32.errcheck = self.__errcheck_int
-        self.wrtd_set_attr_int32.argtypes = [c_void_p, c_char_p,
-                                             c_uint, c_int]
+        self.wrtd_set_attr_int32.argtypes = [c_void_p, c_char_p,c_uint, c_int]
 
         """self.wrtd_set_attr_int64 = self.wrtd_lib.wrtd_set_attr_int64
            self.wrtd_set_attr_int64.restype = c_uint
@@ -198,14 +197,13 @@ class WRTD_wrapper():
         self.wrtd_get_attr_bool = self.wrtd_lib.wrtd_get_attr_bool
         self.wrtd_get_attr_bool.restype = c_uint
         self.wrtd_get_attr_bool.errcheck = self.__errcheck_int
-        self.wrtd_get_attr_bool.argtypes = [c_void_p, c_char_p,
-                                            c_uint, c_void_p]
+        self.wrtd_get_attr_bool.argtypes = [c_void_p, c_char_p, c_uint,
+                                            c_void_p]
 
         self.wrtd_set_attr_bool = self.wrtd_lib.wrtd_set_attr_bool
         self.wrtd_set_attr_bool.restype = c_uint
         self.wrtd_set_attr_bool.errcheck = self.__errcheck_int
-        self.wrtd_set_attr_bool.argtypes = [c_void_p, c_char_p,
-                                            c_uint, c_int]
+        self.wrtd_set_attr_bool.argtypes = [c_void_p, c_char_p, c_uint, c_int]
 
         """self.wrtd_get_attr_tstamp =\
              self.wrtd_lib.wrtd_get_attr_tstamp
@@ -217,14 +215,14 @@ class WRTD_wrapper():
         self.wrtd_set_attr_tstamp = self.wrtd_lib.wrtd_set_attr_tstamp
         self.wrtd_set_attr_tstamp.restype = c_uint
         self.wrtd_set_attr_tstamp.errcheck = self.__errcheck_int
-        self.wrtd_set_attr_tstamp.argtypes = [c_void_p, c_char_p,
-                                              c_uint, c_void_p]
+        self.wrtd_set_attr_tstamp.argtypes = [c_void_p, c_char_p, c_uint,
+                                              c_void_p]
 
         self.wrtd_set_attr_string = self.wrtd_lib.wrtd_set_attr_string
         self.wrtd_set_attr_string.restype = c_uint
         self.wrtd_set_attr_string.errcheck = self.__errcheck_int
-        self.wrtd_set_attr_string.argtypes = [c_void_p, c_char_p,
-                                              c_uint, c_char_p]
+        self.wrtd_set_attr_string.argtypes = [c_void_p, c_char_p, c_uint,
+                                              c_char_p]
 
         """self.wrtd_get_attr_int64 = self.wrtd_lib.wrtd_get_attr_int64
            self.wrtd_get_attr_int64.restype = c_uint
@@ -235,8 +233,8 @@ class WRTD_wrapper():
         self.wrtd_get_attr_string = self.wrtd_lib.wrtd_get_attr_string
         self.wrtd_get_attr_string.restype = c_uint
         self.wrtd_get_attr_string.errcheck = self.__errcheck_int
-        self.wrtd_get_attr_string.argtypes = [c_void_p, c_char_p,
-                                              c_uint, c_int, c_char_p]
+        self.wrtd_get_attr_string.argtypes = [c_void_p, c_char_p, c_uint,
+                                              c_int, c_char_p]
 
         self.wrtd_get_sys_time = self.wrtd_lib.wrtd_get_sys_time
         self.wrtd_get_sys_time.restype = c_uint
@@ -258,8 +256,7 @@ class WRTD_wrapper():
         self.wrtd_add_alarm.errcheck = self.__errcheck_int
         self.wrtd_add_alarm.argtypes = [c_void_p, c_char_p]
 
-        self.wrtd_disable_all_alarms =\
-            self.wrtd_lib.wrtd_disable_all_alarms
+        self.wrtd_disable_all_alarms = self.wrtd_lib.wrtd_disable_all_alarms
         self.wrtd_disable_all_alarms.restype = c_uint
         self.wrtd_disable_all_alarms.errcheck = self.__errcheck_int
         self.wrtd_disable_all_alarms.argtypes = [c_void_p]
@@ -269,8 +266,7 @@ class WRTD_wrapper():
         self.wrtd_remove_alarm.errcheck = self.__errcheck_int
         self.wrtd_remove_alarm.argtypes = [c_void_p, c_char_p]
 
-        self.wrtd_remove_all_alarms =\
-            self.wrtd_lib.wrtd_remove_all_alarms
+        self.wrtd_remove_all_alarms = self.wrtd_lib.wrtd_remove_all_alarms
         self.wrtd_remove_all_alarms.restype = c_uint
         self.wrtd_remove_all_alarms.errcheck = self.__errcheck_int
         self.wrtd_remove_all_alarms.argtypes = [c_void_p]
@@ -278,8 +274,7 @@ class WRTD_wrapper():
         self.wrtd_get_alarm_id = self.wrtd_lib.wrtd_get_alarm_id
         self.wrtd_get_alarm_id.restype = c_uint
         self.wrtd_get_alarm_id.errcheck = self.__errcheck_int
-        self.wrtd_get_alarm_id.argtypes = [c_void_p, c_int,
-                                           c_int, c_char_p]
+        self.wrtd_get_alarm_id.argtypes = [c_void_p, c_int, c_int, c_char_p]
 
         """rule sources can be a) reserved event ids, b) alarm
            c) any other string which will be interpreted as a net
@@ -289,8 +284,7 @@ class WRTD_wrapper():
         self.wrtd_add_rule.errcheck = self.__errcheck_int
         self.wrtd_add_rule.argtypes = [c_void_p, c_char_p]
 
-        self.wrtd_disable_all_rules =\
-            self.wrtd_lib.wrtd_disable_all_rules
+        self.wrtd_disable_all_rules = self.wrtd_lib.wrtd_disable_all_rules
         self.wrtd_disable_all_rules.restype = c_uint
         self.wrtd_disable_all_rules.errcheck = self.__errcheck_int
         self.wrtd_disable_all_rules.argtypes = [c_void_p]
@@ -300,8 +294,7 @@ class WRTD_wrapper():
         self.wrtd_remove_rule.errcheck = self.__errcheck_int
         self.wrtd_remove_rule.argtypes = [c_void_p, c_char_p]
 
-        self.wrtd_remove_all_rules =\
-            self.wrtd_lib.wrtd_remove_all_rules
+        self.wrtd_remove_all_rules = self.wrtd_lib.wrtd_remove_all_rules
         self.wrtd_remove_all_rules.restype = c_uint
         self.wrtd_remove_all_rules.errcheck = self.__errcheck_int
         self.wrtd_remove_all_rules.argtypes = [c_void_p]
@@ -309,8 +302,7 @@ class WRTD_wrapper():
         self.wrtd_get_rule_id = self.wrtd_lib.wrtd_get_rule_id
         self.wrtd_get_rule_id.restype = c_uint
         self.wrtd_get_rule_id.errcheck = self.__errcheck_int
-        self.wrtd_get_rule_id.argtypes = [c_void_p, c_int, c_int,
-                                          c_char_p]
+        self.wrtd_get_rule_id.argtypes = [c_void_p, c_int, c_int, c_char_p]
 
         """self.wrtd_reset_rule_stats =
              self.wrtd_lib.wrtd_reset_rule_stats
@@ -347,15 +339,13 @@ class WRTD_wrapper():
 
     def error_message(self, err_code):
         error_message = create_string_buffer(256)
-        self.wrtd_error_message(self.wrtd_p, err_code,
-                                error_message)
+        self.wrtd_error_message(self.wrtd_p, err_code, error_message)
         return error_message.value
 
     @encode_arguments
     def get_attr_int32(self, rep_cap_id, id):
         value = c_int32()
-        self.wrtd_get_attr_int32(self.wrtd_p, rep_cap_id, id,
-                                 byref(value))
+        self.wrtd_get_attr_int32(self.wrtd_p, rep_cap_id, id, byref(value))
         return value.value
 
     @encode_arguments
@@ -365,8 +355,7 @@ class WRTD_wrapper():
     @encode_arguments
     def get_attr_bool(self, rep_cap_id, id):
         value = c_bool()
-        self.wrtd_get_attr_bool(self.wrtd_p, rep_cap_id, id,
-                                byref(value))
+        self.wrtd_get_attr_bool(self.wrtd_p, rep_cap_id, id, byref(value))
         return value.value
 
     @encode_arguments
@@ -381,8 +370,8 @@ class WRTD_wrapper():
     @encode_arguments
     def get_attr_string(self, rep_cap_id, id, value_buf_size):
         value = create_string_buffer(value_buf_size)
-        self.wrtd_get_attr_string(self.wrtd_p, rep_cap_id, id,
-                                  value_buf_size, value)
+        self.wrtd_get_attr_string(self.wrtd_p, rep_cap_id, id, value_buf_size,
+                                  value)
         return value.value
 
     @encode_arguments
@@ -441,8 +430,7 @@ class WRTD_wrapper():
 
     def get_rule_id(self, index, name_buffer_size):
         rep_cap_id = create_string_buffer(name_buffer_size)
-        self.wrtd_get_rule_id(self.wrtd_p, index, name_buffer_size,
-                              rep_cap_id)
+        self.wrtd_get_rule_id(self.wrtd_p, index, name_buffer_size, rep_cap_id)
         return rep_cap_id.value
 
     # TODO check if works correctly
@@ -454,7 +442,6 @@ class WRTD_wrapper():
             error_description = create_string_buffer(256)
             self.wrtd_get_error(self.wrtd_p, byref(error_code), 256,
                                 error_description)
-            raise OSError(ret, str(error_description.value),
-                          "")
+            raise OSError(ret, str(error_description.value), "")
         else:
             return ret

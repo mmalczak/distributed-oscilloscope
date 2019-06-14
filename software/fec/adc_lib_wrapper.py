@@ -159,20 +159,18 @@ class ADC_Generic():
 
         self.adc_open = self.libc.adc_open
         self.adc_open.restype = c_void_p
-        self.adc_open.argtypes = [c_char_p, c_uint, c_ulong,
-                                  c_uint, c_ulong]
+        self.adc_open.argtypes = [c_char_p, c_uint, c_ulong, c_uint, c_ulong]
         self.adc_open.errcheck = self.__errcheck_pointer
 
         self.adc_open_by_lun = self.libc.adc_open_by_lun
         self.adc_open_by_lun.restype = c_void_p
-        self.adc_open_by_lun.argtypes = [c_char_p, c_int,
-                                         c_ulong, c_uint, c_ulong]
+        self.adc_open_by_lun.argtypes = [c_char_p, c_int, c_ulong, c_uint,
+                                         c_ulong]
         self.adc_open_by_lun.errcheck = self.__errcheck_pointer
 
         self.adc_request_buffer = self.libc.adc_request_buffer
         self.adc_request_buffer.restype = POINTER(adc_buf)
-        self.adc_request_buffer.argtypes = [c_void_p, c_int, c_void_p,
-                                            c_uint]
+        self.adc_request_buffer.argtypes = [c_void_p, c_int, c_void_p, c_uint]
         self.adc_request_buffer.errcheck = self.__errcheck_pointer
 
         self.adc_set_conf = self.libc.adc_set_conf
@@ -213,8 +211,7 @@ class ADC_Generic():
 
         self.adc_fill_buffer = self.libc.adc_fill_buffer
         self.adc_fill_buffer.restype = c_int
-        self.adc_fill_buffer.argtypes = [c_void_p, c_void_p,
-                                         c_uint, c_void_p]
+        self.adc_fill_buffer.argtypes = [c_void_p, c_void_p, c_uint, c_void_p]
         self.adc_fill_buffer.errcheck = self.__errcheck_int
 
         self.adc_acq_stop = self.libc.adc_acq_stop
@@ -229,8 +226,7 @@ class ADC_Generic():
 
         self.adc_release_buffer = self.libc.adc_release_buffer
         self.adc_release_buffer.restype = c_int
-        self.adc_release_buffer.argtypes = [c_void_p, c_void_p,
-                                            c_void_p]
+        self.adc_release_buffer.argtypes = [c_void_p, c_void_p, c_void_p]
         self.adc_release_buffer.errcheck = self.__errcheck_int
 
         self.adc_close = self.libc.adc_close
@@ -265,14 +261,12 @@ class ADC_Generic():
 
         self.adc_get_param = self.libc.adc_get_param
         self.adc_get_param.restype = c_int
-        self.adc_get_param.argtypes = [c_void_p, c_char_p,
-                                       c_char_p, c_void_p]
+        self.adc_get_param.argtypes = [c_void_p, c_char_p, c_char_p, c_void_p]
         self.adc_get_param.errcheck = self.__errcheck_int
 
         self.adc_set_param = self.libc.adc_set_param
         self.adc_set_param.restype = c_int
-        self.adc_set_param.argtypes = [c_void_p, c_char_p,
-                                       c_char_p, c_void_p]
+        self.adc_set_param.argtypes = [c_void_p, c_char_p, c_char_p, c_void_p]
         self.adc_set_param.errcheck = self.__errcheck_int
 
         self.adc_set_conf_mask_all = self.libc.adc_set_conf_mask_all
@@ -304,12 +298,10 @@ class ADC_Generic():
         return self.adc_open(name, dev_id, totalsamples, nbuffer, flags)
 
     def __open_by_lun(self, name, lun, totalsamples, nbuffer, flags):
-        return self.adc_open_by_lun(name, lun, totalsamples, nbuffer,
-                                    flags)
+        return self.adc_open_by_lun(name, lun, totalsamples, nbuffer, flags)
 
     def request_buffer(self, nsamples, alloc, flags):
-        return self.adc_request_buffer(self.__adc_ptr, nsamples,
-                                       alloc, flags)
+        return self.adc_request_buffer(self.__adc_ptr, nsamples, alloc, flags)
 
     def set_conf(self, conf_index, val):
         self.adc_set_conf(byref(self.adc_conf), conf_index, val)
