@@ -10,7 +10,7 @@ NSHOT = 1
 NCHAN = 4
 
 
-class ADC_100m14b4cha_extended_API_WRTD():
+class DevicesAccess():
 
     def __init__(self, pci_addr, trtl, unique_ADC_name):
         self.WRTD = WRTD(trtl)
