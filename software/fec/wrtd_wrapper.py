@@ -1,4 +1,15 @@
-from ctypes import *
+from ctypes import c_int
+from ctypes import c_uint
+from ctypes import c_void_p
+from ctypes import c_char_p
+from ctypes import c_char
+from ctypes import c_long
+from ctypes import c_uint32
+from ctypes import c_int32
+from ctypes import byref
+from ctypes import Structure
+from ctypes import POINTER
+from ctypes import CDLL
 import numpy as np
 
 

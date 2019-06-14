@@ -1,6 +1,13 @@
 import numpy as np
-from adc_lib_wrapper import *
-
+from adc_lib_wrapper import ADC_Generic 
+from adc_lib_wrapper import adc_conf 
+from adc_lib_wrapper import timeval
+from adc_lib_wrapper import adc_timestamp
+from ctypes import c_uint
+from ctypes import c_int
+from ctypes import byref 
+from ctypes import memset 
+from ctypes import sizeof 
 
 class ADC_100m14b4cha(ADC_Generic):
     ADC_CONF_100M14B4CHA_CHN_RANGE_N = 3

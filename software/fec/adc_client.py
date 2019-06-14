@@ -4,7 +4,7 @@ import zeroconf
 import os
 import argparse
 from devices_access import DevicesAccess
-from server_expose import *
+from server_expose import ServerExpose 
 from publisher import Publisher
 import time
 
