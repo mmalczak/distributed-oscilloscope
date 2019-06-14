@@ -1,8 +1,4 @@
-import threading
-import subprocess
-import ctypes
 from WRTD import *
-import selectors
 from ADC_100m14b4cha import *
 import zmq
 
@@ -89,14 +85,6 @@ class ADC_100m14b4cha_extended_API_WRTD():
         except KeyError:
             pass
         #TODO after adding logger log it
-
-    def poll(self):
-        Selector = selectors.PollSelector
-        try:
-            with Selector() as selector:
-                print(selector.register(self, selectors.EVENT_READ))
-        finally:
-            pass
 
     def configure_acquisition(self, channels):
 

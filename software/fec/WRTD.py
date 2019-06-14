@@ -1,5 +1,4 @@
 from wrtd_wrapper import *
-import os
 
 
 class WRTD(WRTD_wrapper):

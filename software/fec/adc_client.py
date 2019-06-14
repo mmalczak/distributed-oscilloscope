@@ -1,11 +1,8 @@
 import sys
 sys.path.append('../general')
-import numpy as np
-import xmlrpc.client
 import zeroconf
 import os
 import argparse
-import threading
 from ADC import *
 from server_expose import *
 from publisher import Publisher
