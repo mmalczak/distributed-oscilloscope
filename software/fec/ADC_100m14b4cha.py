@@ -78,21 +78,21 @@ class ADC_100m14b4cha_extended_API(ADC_100m14b4cha):
         return self.zio_get_file_descriptor()
 
     def set_presamples(self, presamples):
-        self.adc_conf.type = self.ADC_CONF_TYPE_ACQ
+        self._adc_conf.type = self.ADC_CONF_TYPE_ACQ
         self.set_conf(self.ADC_CONF_ACQ_PRE_SAMP, presamples)
         self.apply_config(0)
         buf_size = self.get_buffer_size()
         self.set_buffer(buf_size)
 
     def set_postsamples(self, postsamples):
-        self.adc_conf.type = self.ADC_CONF_TYPE_ACQ
+        self._adc_conf.type = self.ADC_CONF_TYPE_ACQ
         self.set_conf(self.ADC_CONF_ACQ_POST_SAMP, postsamples)
         self.apply_config(0)
         buf_size = self.get_buffer_size()
         self.set_buffer(buf_size)
 
     def set_number_of_shots(self, n_shots):
-        self.adc_conf.type = self.ADC_CONF_TYPE_ACQ
+        self._adc_conf.type = self.ADC_CONF_TYPE_ACQ
         self.set_conf(self.ADC_CONF_ACQ_N_SHOTS, n_shots)
         self.apply_config(0)
 
@@ -121,8 +121,8 @@ class ADC_100m14b4cha_extended_API(ADC_100m14b4cha):
             1 V        - 1
             10V        - 10
             open input - 0"""
-        self.adc_conf.type = self.ADC_CONF_TYPE_CHN
-        self.adc_conf.route_to = channel
+        self._adc_conf.type = self.ADC_CONF_TYPE_CHN
+        self._adc_conf.route_to = channel
         if(channel_range == 100):
             ch_range = self.ADC_CONF_100M14B4CHA_CHN_RANGE_100mV
         elif(channel_range == 1):
@@ -138,81 +138,81 @@ class ADC_100m14b4cha_extended_API(ADC_100m14b4cha):
         self.apply_config(0)
 
     def set_buffer_type(self, channel, type):
-        self.adc_conf.type = self.ADC_CONF_TYPE_CUS
-        self.adc_conf.route_to = channel
+        self._adc_conf.type = self.ADC_CONF_TYPE_CUS
+        self._adc_conf.route_to = channel
         self.set_conf(self.ADC_CONF_100M14B4CHA_BUF_TYPE, type)
         self.apply_config(0)
 
     def set_channel_termination(self, channel, termination):
-        self.adc_conf.type = self.ADC_CONF_TYPE_CHN
-        self.adc_conf.route_to = channel
+        self._adc_conf.type = self.ADC_CONF_TYPE_CHN
+        self._adc_conf.route_to = channel
         self.set_conf(self.ADC_CONF_CHN_TERMINATION, termination)
         self.apply_config(0)
 
     def set_channel_offset(self, channel, offset):
         """value of offset given in uV"""
-        self.adc_conf.type = self.ADC_CONF_TYPE_CHN
-        self.adc_conf.route_to = channel
+        self._adc_conf.type = self.ADC_CONF_TYPE_CHN
+        self._adc_conf.route_to = channel
         self.set_conf(self.ADC_CONF_CHN_OFFSET, offset)
         self.apply_config(0)
 
     def set_channel_saturation(self, channel, saturation):
-        self.adc_conf.type = self.ADC_CONF_TYPE_CHN
-        self.adc_conf.route_to = channel
+        self._adc_conf.type = self.ADC_CONF_TYPE_CHN
+        self._adc_conf.route_to = channel
         self.set_conf(self.ADC_CONF_CHN_SATURATION, saturation)
-        self.apply_config(0, byref(self.adc_conf))
+        self.apply_config(0, byref(self._adc_conf))
 
     def set_channel_gain(self, channel, gain):
-        self.adc_conf.type = self.ADC_CONF_TYPE_CHN
-        self.adc_conf.route_to = channel
+        self._adc_conf.type = self.ADC_CONF_TYPE_CHN
+        self._adc_conf.route_to = channel
         self.set_conf(self.ADC_CONF_CHN_GAIN, gain)
         self.apply_config(0)
 
     def set_external_trigger_enable(self, channel, enable):
-        self.adc_conf.type = self.ADC_CONF_TYPE_TRG_EXT
-        self.adc_conf.route_to = channel
+        self._adc_conf.type = self.ADC_CONF_TYPE_TRG_EXT
+        self._adc_conf.route_to = channel
         self.set_conf(self.ADC_CONF_TRG_EXT_ENABLE, enable)
         self.apply_config(0)
 
     def set_external_trigger_polarity(self, channel, polarity):
-        self.adc_conf.type = self.ADC_CONF_TYPE_TRG_EXT
-        self.adc_conf.route_to = channel
+        self._adc_conf.type = self.ADC_CONF_TYPE_TRG_EXT
+        self._adc_conf.route_to = channel
         self.set_conf(self.ADC_CONF_TRG_EXT_POLARITY, polarity)
         self.apply_config(0)
 
     def set_external_trigger_delay(self, channel, delay):
-        self.adc_conf.type = self.ADC_CONF_TYPE_TRG_EXT
-        self.adc_conf.route_to = channel
+        self._adc_conf.type = self.ADC_CONF_TYPE_TRG_EXT
+        self._adc_conf.route_to = channel
         self.set_conf(self.ADC_CONF_TRG_EXT_DELAY, delay)
         self.apply_config(0)
 
     def set_internal_trigger_enable(self, channel, enable):
-        self.adc_conf.type = self.ADC_CONF_TYPE_TRG_THR
-        self.adc_conf.route_to = channel
+        self._adc_conf.type = self.ADC_CONF_TYPE_TRG_THR
+        self._adc_conf.route_to = channel
         self.set_conf(self.ADC_CONF_TRG_THR_ENABLE, enable)
         self.apply_config(0)
 
     def set_internal_trigger_polarity(self, channel, polarity):
-        self.adc_conf.type = self.ADC_CONF_TYPE_TRG_THR
-        self.adc_conf.route_to = channel
+        self._adc_conf.type = self.ADC_CONF_TYPE_TRG_THR
+        self._adc_conf.route_to = channel
         self.set_conf(self.ADC_CONF_TRG_THR_POLARITY, polarity)
         self.apply_config(0)
 
     def set_internal_trigger_delay(self, channel, delay):
-        self.adc_conf.type = self.ADC_CONF_TYPE_TRG_THR
-        self.adc_conf.route_to = channel
+        self._adc_conf.type = self.ADC_CONF_TYPE_TRG_THR
+        self._adc_conf.route_to = channel
         self.set_conf(self.ADC_CONF_TRG_THR_DELAY, delay)
         self.apply_config(0)
 
     def set_internal_trigger_threshold(self, channel, threshold):
-        self.adc_conf.type = self.ADC_CONF_TYPE_TRG_THR
-        self.adc_conf.route_to = channel
+        self._adc_conf.type = self.ADC_CONF_TYPE_TRG_THR
+        self._adc_conf.route_to = channel
         self.set_conf(self.ADC_CONF_TRG_THR_THRESHOLD, threshold)
         self.apply_config(0)
 
     def set_internal_trigger_hysteresis(self, channel, hysteresis):
-        self.adc_conf.type = self.ADC_CONF_TYPE_TRG_THR
-        self.adc_conf.route_to = channel
+        self._adc_conf.type = self.ADC_CONF_TYPE_TRG_THR
+        self._adc_conf.route_to = channel
         self.set_conf(self.ADC_CONF_TRG_THR_HYSTERESIS, hysteresis)
         self.apply_config(0)
 
@@ -224,7 +224,7 @@ class ADC_100m14b4cha_extended_API(ADC_100m14b4cha):
         freq = c_uint()
         n_bits = c_uint()
 
-        self.adc_conf.type = self.ADC_CONF_TYPE_ACQ
+        self._adc_conf.type = self.ADC_CONF_TYPE_ACQ
 
         self.set_conf_mask(self.ADC_CONF_ACQ_N_SHOTS)
         self.set_conf_mask(self.ADC_CONF_ACQ_POST_SAMP)
@@ -247,7 +247,7 @@ class ADC_100m14b4cha_extended_API(ADC_100m14b4cha):
                     'freq': freq.value,
                     'n_bits': n_bits.value}
 
-        memset(byref(self.adc_conf), 0, sizeof(adc_conf))
+        memset(byref(self._adc_conf), 0, sizeof(adc_conf))
         return acq_conf
 
     def current_config_channel(self, channel):
@@ -257,8 +257,8 @@ class ADC_100m14b4cha_extended_API(ADC_100m14b4cha):
         saturation = c_uint()
         gain = c_uint()
 
-        self.adc_conf.type = self.ADC_CONF_TYPE_CHN
-        self.adc_conf.route_to = channel
+        self._adc_conf.type = self.ADC_CONF_TYPE_CHN
+        self._adc_conf.route_to = channel
 
         self.set_conf_mask(self.ADC_CONF_CHN_RANGE)
         self.set_conf_mask(self.ADC_CONF_CHN_TERMINATION)
@@ -277,7 +277,7 @@ class ADC_100m14b4cha_extended_API(ADC_100m14b4cha):
                     'termination': termination.value,
                     'offset': offset.value,
                     'saturation': saturation.value}
-        memset(byref(self.adc_conf), 0, sizeof(adc_conf))
+        memset(byref(self._adc_conf), 0, sizeof(adc_conf))
         return chn_conf
 
     def current_config_ext_trigger(self, channel):
@@ -285,8 +285,8 @@ class ADC_100m14b4cha_extended_API(ADC_100m14b4cha):
         polarity = c_uint()
         delay = c_uint()
 
-        self.adc_conf.type = self.ADC_CONF_TYPE_TRG_EXT
-        self.adc_conf.route_to = channel
+        self._adc_conf.type = self.ADC_CONF_TYPE_TRG_EXT
+        self._adc_conf.route_to = channel
 
         self.set_conf_mask(self.ADC_CONF_TRG_EXT_ENABLE)
         self.set_conf_mask(self.ADC_CONF_TRG_EXT_POLARITY)
@@ -299,7 +299,7 @@ class ADC_100m14b4cha_extended_API(ADC_100m14b4cha):
         ext_trg_conf = {'enable': enable.value,
                         'polarity': polarity.value,
                         'delay': delay.value}
-        memset(byref(self.adc_conf), 0, sizeof(adc_conf))
+        memset(byref(self._adc_conf), 0, sizeof(adc_conf))
         return ext_trg_conf
 
     def current_config_int_trigger(self, channel):
@@ -309,8 +309,8 @@ class ADC_100m14b4cha_extended_API(ADC_100m14b4cha):
         threshold = c_uint()
         hysteresis = c_uint()
 
-        self.adc_conf.type = self.ADC_CONF_TYPE_TRG_THR
-        self.adc_conf.route_to = channel
+        self._adc_conf.type = self.ADC_CONF_TYPE_TRG_THR
+        self._adc_conf.route_to = channel
 
         self.set_conf_mask(self.ADC_CONF_TRG_THR_ENABLE)
         self.set_conf_mask(self.ADC_CONF_TRG_THR_POLARITY)
@@ -332,7 +332,7 @@ class ADC_100m14b4cha_extended_API(ADC_100m14b4cha):
                         'polarity': polarity.value,
                         'delay': delay.value,
                         'threshold': threshold}
-        memset(byref(self.adc_conf), 0, sizeof(adc_conf))
+        memset(byref(self._adc_conf), 0, sizeof(adc_conf))
         return int_trg_conf
 
     def current_config_board(self):
@@ -340,7 +340,7 @@ class ADC_100m14b4cha_extended_API(ADC_100m14b4cha):
         n_trg_ext = c_uint()
         n_trg_int = c_uint()
 
-        self.adc_conf.type = self.ADC_CONF_TYPE_BRD
+        self._adc_conf.type = self.ADC_CONF_TYPE_BRD
 
         self.set_conf_mask(self.ADC_CONF_BRD_N_CHAN)
         self.set_conf_mask(self.ADC_CONF_BRD_N_TRG_EXT)
@@ -353,7 +353,7 @@ class ADC_100m14b4cha_extended_API(ADC_100m14b4cha):
         board_conf = {'n_chan': n_chan.value,
                       'n_trg_ext': n_trg_ext.value,
                       'n_trg_int': n_trg_int.value}
-        memset(byref(self.adc_conf), 0, sizeof(adc_conf))
+        memset(byref(self._adc_conf), 0, sizeof(adc_conf))
         return board_conf
 
     def current_config(self):
@@ -379,5 +379,5 @@ class ADC_100m14b4cha_extended_API(ADC_100m14b4cha):
                   'chn_conf': chn_conf,
                   'ext_trg_conf': ext_trg_conf,
                   'int_trg_conf': int_trg_conf}
-        memset(byref(self.adc_conf), 0, sizeof(adc_conf))
+        memset(byref(self._adc_conf), 0, sizeof(adc_conf))
         return config

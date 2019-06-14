@@ -288,7 +288,7 @@ class ADC_Generic():
         self.__init()
         self.__adc_ptr = self.__open(b"fmc-adc-100m14b4cha", pci_addr, 0, 0,
                                      self.ADC_F_FLUSH)
-        self.adc_conf = adc_conf()
+        self._adc_conf = adc_conf()
 
     def __del__(self):
         self.__close()
@@ -316,13 +316,13 @@ class ADC_Generic():
         return self.adc_request_buffer(self.__adc_ptr, nsamples, alloc, flags)
 
     def set_conf(self, conf_index, val):
-        self.adc_set_conf(byref(self.adc_conf), conf_index, val)
+        self.adc_set_conf(byref(self._adc_conf), conf_index, val)
 
     def set_conf_mask(self, conf_index):
-        self.adc_set_conf_mask(byref(self.adc_conf), conf_index)
+        self.adc_set_conf_mask(byref(self._adc_conf), conf_index)
 
     def get_conf(self, conf_index, val):
-        self.adc_get_conf(byref(self.adc_conf), conf_index, val)
+        self.adc_get_conf(byref(self._adc_conf), conf_index, val)
 
     def acq_start(self, flags, timeout):
         self.adc_acq_start(self.__adc_ptr, flags, timeout)
@@ -358,11 +358,11 @@ class ADC_Generic():
         return self.adc_has_trigger_fire(self.__adc_ptr)
 
     def apply_config(self, flags):
-        self.adc_apply_config(self.__adc_ptr, flags, byref(self.adc_conf))
-        memset(byref(self.adc_conf), 0, sizeof(adc_conf))
+        self.adc_apply_config(self.__adc_ptr, flags, byref(self._adc_conf))
+        memset(byref(self._adc_conf), 0, sizeof(adc_conf))
 
     def retrieve_config(self):
-        self.adc_retrieve_config(self.__adc_ptr, byref(self.adc_conf))
+        self.adc_retrieve_config(self.__adc_ptr, byref(self._adc_conf))
 
     def get_capabilities(self, type):
         self.adc_get_capabilities(self.__adc_ptr, type)
@@ -374,4 +374,4 @@ class ADC_Generic():
         self.adc_set_param(self.__adc_ptr, name, sptr, iptr)
 
     def set_conf_mask_all(self):
-        self.adc_set_conf_mask_all(byref(self.adc_conf), self.__adc_ptr)
+        self.adc_set_conf_mask_all(byref(self._adc_conf), self.__adc_ptr)
