@@ -72,7 +72,7 @@ class ADC_100m14b4cha_extended_API_WRTD():
             self.required_presamples = args[0]
             args[0] += delay_samples
         getattr(self.ADC, function_name)(*args)
-        if(function_name == 'set_presamples' and self.WRTD_master is False):
+        if(function_name == ('set_presamples' or 'set_postsamples')):
             buf_size = self.get_buffer_size()
             self.ADC.set_buffer(buf_size)
 
@@ -117,9 +117,8 @@ class ADC_100m14b4cha_extended_API_WRTD():
             print(e)
 
         try:
-            data = np.ctypeslib.as_array(
-                    self.ADC.buf_ptr.contents.data,
-                    (self.get_buffer_size(), 4))
+            data = np.ctypeslib.as_array(self.ADC.buf_ptr.contents.data,
+                                         (self.get_buffer_size(), 4))
         except Exception as e:
             print(e)
             return([0, 0])
