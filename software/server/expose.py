@@ -74,7 +74,7 @@ class ThreadGUI_zmq_Expose(threading.Thread):
         channel_ranges = {'10V': 10, '1V': 1, '100mV': 100}
         zmq_rpc = self.osc.available_ADCs[unique_ADC_name].zmq_rpc
         ret = zmq_rpc.send_RPC('set_adc_parameter', 'set_channel_range',
-                         channel_ranges[range_value_str], channel_idx)
+                               channel_idx,  channel_ranges[range_value_str])
         curr_threshold = self.osc.available_ADCs[unique_ADC_name].\
             internal_triggers[channel_idx].threshold
         curr_range = self.osc.available_ADCs[unique_ADC_name].\
@@ -113,7 +113,7 @@ class ThreadGUI_zmq_Expose(threading.Thread):
 
     def send_RPC_request(self, function_name, unique_ADC_name, ADC_value, idx):
         zmq_rpc = self.osc.available_ADCs[unique_ADC_name].zmq_rpc
-        zmq_rpc.send_RPC('set_adc_parameter', function_name, ADC_value, idx)
+        zmq_rpc.send_RPC('set_adc_parameter', function_name, idx, ADC_value)
 
     class MapperMethodsClosure():
 

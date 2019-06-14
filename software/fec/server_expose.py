@@ -31,11 +31,8 @@ class ServerExpose():
     def set_server_address(self, addr):
         self.ip_server['addr'] = addr
 
-    def set_adc_parameter(self, function_name, value, idx=-1):
-        if(idx == -1):
-            self.adc.configure_parameter(function_name, [value])
-        else:
-            self.adc.configure_parameter(function_name, [idx, value])
+    def set_adc_parameter(self, function_name, *args):
+        self.adc.configure_parameter(function_name, [*args])
 
     def exit(self):
         """This fucntion is just for testing and will be removed after 
