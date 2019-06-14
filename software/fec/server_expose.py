@@ -80,9 +80,10 @@ class ServerExpose():
                 #logger.info("Event: {}".format(evt))
 
             if self.devices_access.fileno() in socks:
-                poller.unregister(self.devices_access)
-                timestamp_and_data = self.devices_access.retrieve_ADC_timestamp_and_data(
-                                                            self.devices_access.channels)
+                dev_ac = self.devices_access
+                poller.unregister(dev_ac)
+                timestamp_and_data = dev_ac.retrieve_ADC_timestamp_and_data(
+                                                            dev_ac.channels)
                 data = {'function_name': 'update_data',
-                        'args': [timestamp_and_data, self.devices_access.unique_ADC_name]}
+                        'args': [timestamp_and_data, dev_ac.unique_ADC_name]}
                 self.server_publisher.send_message(data)
