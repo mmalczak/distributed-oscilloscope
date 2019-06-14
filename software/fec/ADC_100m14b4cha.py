@@ -46,14 +46,16 @@ class ADC_100m14b4cha_extended_API(ADC_100m14b4cha):
         tv = timeval()
         self.acq_start(self.ADC_F_FLUSH, byref(tv))
 
-    def set_buffer(self):
+    def set_buffer(self, buf_size):
         self.release_buffer(self.buf_ptr, None)
+        self.buf_ptr = self.request_buffer(buf_size, None, 0)
+
+    def get_buffer_size(self):
         conf = self.get_current_adc_conf()
         acq_conf = conf['acq_conf']
-        self.presamples = acq_conf['presamples']
-        self.postsamples = acq_conf['postsamples']
-        self.buf_ptr = self.request_buffer(
-                self.presamples + self.postsamples, None, 0)
+        presamples = acq_conf['presamples']
+        postsamples = acq_conf['postsamples']
+        return presamples + postsamples
 
     def get_current_adc_conf(self):
         conf = self.current_config()
@@ -75,13 +77,15 @@ class ADC_100m14b4cha_extended_API(ADC_100m14b4cha):
         self.adc_conf.type = self.ADC_CONF_TYPE_ACQ
         self.set_conf(self.ADC_CONF_ACQ_PRE_SAMP, presamples)
         self.apply_config(0)
-        self.set_buffer()
+        buf_size = self.get_buffer_size()
+        self.set_buffer(buf_size)
 
     def set_postsamples(self, postsamples):
         self.adc_conf.type = self.ADC_CONF_TYPE_ACQ
         self.set_conf(self.ADC_CONF_ACQ_POST_SAMP, postsamples)
         self.apply_config(0)
-        self.set_buffer()
+        buf_size = self.get_buffer_size()
+        self.set_buffer(buf_size)
 
     def set_number_of_shots(self, n_shots):
         self.adc_conf.type = self.ADC_CONF_TYPE_ACQ
