@@ -10,11 +10,10 @@ def main():
     logging.config.dictConfig(DEFAULT_CONFIG)
 
     osc = Oscilloscope()
-    thread_GUI_zmq_expose = ThreadGUI_zmq_Expose(osc)
-    thread_GUI_zmq_expose.start()
     thread_zero_conf = ThreadZeroConf(osc)
     thread_zero_conf.start()
-
+    thread_GUI_zmq_expose = ThreadGUI_zmq_Expose(osc)
+    thread_GUI_zmq_expose.start()
 
 if __name__ == '__main__':
     main()
