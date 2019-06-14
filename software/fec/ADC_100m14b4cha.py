@@ -64,9 +64,6 @@ class ADC_100m14b4cha_extended_API(ADC_100m14b4cha):
     def stop_acquisition(self):
         self.acq_stop(0)
 
-    def configure_parameter(self, function_name, args):
-        getattr(self, function_name)(*args)
-
     def fill_buf(self):
         self.fill_buffer(self.buf_ptr, 0, None)
 

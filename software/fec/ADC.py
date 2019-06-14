@@ -67,7 +67,7 @@ class ADC_100m14b4cha_extended_API_WRTD():
             self.WRTD.disable_rule_mult_src('dist_triggers', 5)
             self.WRTD.enable_rule('receive_trigger')
 
-    def configure_parameter(self, function_name, args):
+    def configure_adc_parameter(self, function_name, args):
         if(function_name == 'set_presamples' and self.WRTD_master is False):
             self.required_presamples = args[0]
             args[0] += delay_samples
