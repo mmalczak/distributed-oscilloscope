@@ -105,7 +105,7 @@ class OscilloscopeMethods(unittest.TestCase):
         self.server_handler.terminate()
 
     @timeout_decorator.timeout(5)
-    def test_add_remove_available_ADC(self):
+    def test_register_unregister_ADC(self):
         self.clean_queue()
         self.remove_ADC_FEC('ADC2')
         expected_port = str(self.ADCs['ADC2'][0])
@@ -238,5 +238,5 @@ class OscilloscopeMethods(unittest.TestCase):
         self.assertEqual(len(channels), 1)
 
     @timeout_decorator.timeout(5)
-    def test_remove_available_ADC(self):
+    def test_unregister_ADC(self):
         self.assertEqual("abc", "abc")

@@ -16,7 +16,7 @@ class ServerExposeTest():
         self.GUI = GUI
         self.return_queue = None
 
-    def remove_available_ADC(self, unique_ADC_name):
+    def unregister_ADC(self, unique_ADC_name):
         self.return_queue.put(unique_ADC_name)
 
     def add_available_ADC(self, unique_ADC_name, number_of_channels):

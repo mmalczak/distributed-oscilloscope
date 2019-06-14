@@ -20,10 +20,10 @@ class Oscilloscope():
         logger.info("ADC {} registered".format(unique_ADC_name))
 
 
-    def remove_available_ADC(self, unique_ADC_name):
-        """TODO: Why doesn't call GUI remove_available_ADC"""
+    def unregister_ADC(self, unique_ADC_name):
+        """TODO: Why doesn't call GUI unregister_ADC"""
         for name_GUI, GUI in self.GUIs.items():
-            data = {'function_name': 'remove_available_ADC',
+            data = {'function_name': 'unregister_ADC',
                     'args': [unique_ADC_name]}
             GUI.GUI_publisher.send_message(data)
         """wait until there are no more users"""

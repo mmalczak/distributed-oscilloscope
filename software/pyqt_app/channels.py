@@ -42,8 +42,8 @@ class ChannelClosure:
     def add_available_ADC(self, name, number_of_channels):
         self.menu.add_available_ADC(name, number_of_channels)
 
-    def remove_available_ADC(self, name, remote=False):
-        self.menu.remove_available_ADC(name)
+    def unregister_ADC(self, name, remote=False):
+        self.menu.unregister_ADC(name)
         if self.channel_exists():
             if(self.properties.unique_ADC_name == name):
                 self.remove_channel(remote)
@@ -161,7 +161,7 @@ class ChannelsMenu(QMenuBar):
             chan = ADC.addAction("Chan " + str(count))
             chan.triggered.connect(self.add_channel)
 
-    def remove_available_ADC(self, name):
+    def unregister_ADC(self, name):
         self.ADCs_menu.removeAction(self.ADCs[name].menuAction())
 
     def select_ADC(self):

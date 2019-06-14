@@ -46,7 +46,7 @@ def remove_service(name, osc):
 
     if name.startswith("ADC"):
         print("Service %s removed" % (name,))
-        osc.remove_available_ADC(name)
+        osc.unregister_ADC(name)
 
 
 def add_service(name, addr, port, osc, conf=None, server_addr_known=False):

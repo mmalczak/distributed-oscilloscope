@@ -283,7 +283,7 @@ class ExtTriggersMenu(TriggersMenu):
             self.ADCs[ADC_name] = ADC
             ADC.triggered.connect(self.select_trigger)
 
-    def remove_available_ADC(self, name):
+    def unregister_ADC(self, name):
         self.ADCs_menu.removeAction(self.ADCs[name].menuAction())
 
     def select_trigger(self):
