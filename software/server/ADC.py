@@ -50,22 +50,6 @@ class ADC:
                     {'timestamp': timestamp, 'pre_post': pre_post,
                      'data_channel': data_channel}
 
-    def add_channel(self, channel_range, termination, offset, ADC_channel_idx):
-        self.channels.append(Channel(channel_range, termination, offset,
-                                     self.unique_name, ADC_channel_idx))
-
-    def add_external_trigger(self, enable, polarity, delay, ADC_trigger_idx):
-        self.external_triggers.append(ExternalTrigger(enable, polarity, delay,
-                                                      self.unique_name,
-                                                      ADC_trigger_idx))
-
-    def add_internal_trigger(self, enable, polarity, delay, threshold,
-                             ADC_trigger_idx):
-        self.internal_triggers.append(InternalTrigger(enable, polarity, delay,
-                                                      threshold,
-                                                      self.unique_name,
-                                                      ADC_trigger_idx))
-
     def update_conf(self):
         zmq_rpc = self.zmq_rpc
         conf = zmq_rpc.send_RPC('get_current_adc_conf')
