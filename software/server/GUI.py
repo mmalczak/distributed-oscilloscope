@@ -25,13 +25,13 @@ class GUI():
 
     """TODO number of channels shouldn't be sent here"""
     def register_ADC(self, unique_ADC_name, number_of_channels):
-        data = {'function_name': 'register_ADC',
+        message = {'function_name': 'register_ADC',
                 'args': [unique_ADC_name, number_of_channels]}
-        self.GUI_publisher.send_message(data)
+        self.GUI_publisher.send_message(message)
 
     def unregister_ADC(self, unique_ADC_name):
-        data = {'function_name': 'unregister_ADC', 'args': [unique_ADC_name]}
-        self.GUI_publisher.send_message(data)
+        message = {'function_name': 'unregister_ADC', 'args': [unique_ADC_name]}
+        self.GUI_publisher.send_message(message)
         channels_to_delete = []
         for channel_idx, channel in self.channels.items():
             if channel.unique_ADC_name == unique_ADC_name:
