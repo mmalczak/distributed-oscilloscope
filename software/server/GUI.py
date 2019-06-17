@@ -53,13 +53,13 @@ class GUI():
             acq_conf = ADC.get_acq_conf()
             presamples = acq_conf.presamples
             postsamples = acq_conf.postsamples
-            self.set_presamples_ADC(presamples, new_ADC)
-            self.set_postsamples_ADC(postsamples, new_ADC)
+            self.__set_presamples_ADC(presamples, new_ADC)
+            self.__set_postsamples_ADC(postsamples, new_ADC)
 
         ADC = self.__osc.get_ADC(unique_ADC_name)
         channel = ADC.get_channel(ADC_channel_idx)
         self.__channels[oscilloscope_channel_idx] = channel
-        self.update_ADCs_used()
+        self.__update_ADCs_used()
         set_horizontal_setting_when_add_channel(self, unique_ADC_name)
 
     def add_trigger(self, type, unique_ADC_name, ADC_trigger_idx):
@@ -70,23 +70,23 @@ class GUI():
         else:
             trigger = ADC.get_external_trigger(ADC_trigger_idx)
         self.__trigger = trigger
-        self.update_ADCs_used()
+        self.__update_ADCs_used()
 
     def remove_channel(self, oscilloscope_channel_idx):
         del self.__channels[oscilloscope_channel_idx]
-        self.update_ADCs_used()
+        self.__update_ADCs_used()
 
     def remove_trigger(self):
         self.__trigger = None
-        self.update_ADCs_used()
+        self.__update_ADCs_used()
 
-    def update_ADCs_used(self):
+    def __update_ADCs_used(self):
         self.__ADCs_used = []
         for channel_idx, channel in self.__channels.items():
             if not(channel.unique_ADC_name in self.__ADCs_used):
                 self.__ADCs_used.append(channel.unique_ADC_name)
 
-    def configure_acquisition_ADC(self, unique_ADC_name):
+    def __configure_acquisition_ADC(self, unique_ADC_name):
         channels = []
         for channel_idx, channel in self.__channels.items():
             if(channel.unique_ADC_name == unique_ADC_name):
@@ -96,13 +96,13 @@ class GUI():
         zmq_rpc = ADC.zmq_rpc
         zmq_rpc.send_RPC('configure_acquisition', channels)
 
-    def set_presamples_ADC(self, value, unique_ADC_name):
+    def __set_presamples_ADC(self, value, unique_ADC_name):
         ADC = self.__osc.get_ADC(unique_ADC_name)
         ADC.set_adc_parameter_remote('set_presamples', value)
 
         ADC.update_conf()
 
-    def set_postsamples_ADC(self, value, unique_ADC_name):
+    def __set_postsamples_ADC(self, value, unique_ADC_name):
         if value == 1:
             value = 2
         """By default the value of postsamples is, but the minimum value that
@@ -116,13 +116,13 @@ class GUI():
 
     def set_presamples(self, value):
         for ADC in self.__ADCs_used:
-            self.set_presamples_ADC(value, ADC)
-        self.check_horizontal_settings()
+            self.__set_presamples_ADC(value, ADC)
+        self.__check_horizontal_settings()
 
     def set_postsamples(self, value):
         for ADC in self.__ADCs_used:
-            self.set_postsamples_ADC(value, ADC)
-        self.check_horizontal_settings()
+            self.__set_postsamples_ADC(value, ADC)
+        self.__check_horizontal_settings()
 
     def run_acquisition(self, run):
         self.__run = run
@@ -133,8 +133,8 @@ class GUI():
         if self.__trigger is not None:
             for unique_ADC_name in self.__ADCs_used:
                 if(unique_ADC_name != self.__trigger.unique_ADC_name):
-                    self.configure_acquisition_ADC(unique_ADC_name)
-            self.configure_acquisition_ADC(self.__trigger.unique_ADC_name)
+                    self.__configure_acquisition_ADC(unique_ADC_name)
+            self.__configure_acquisition_ADC(self.__trigger.unique_ADC_name)
         else:
             logger.info("No trigger selected")
 
@@ -175,7 +175,7 @@ class GUI():
         if self.__run:
             self.configure_acquisition_ADCs_used()
 
-    def check_horizontal_settings(self):
+    def __check_horizontal_settings(self):
         ADC0 = self.__ADCs_used[0]
         ADC0 = self.__osc.get_ADC(ADC0)
         acq_conf = ADC0.get_acq_conf()
