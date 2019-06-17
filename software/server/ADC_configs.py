@@ -1,14 +1,13 @@
 class Channel:
 
-    def __init__(self, channel_range, termination, offset, unique_ADC_name,
-                 ADC_channel_idx):
+    def __init__(self, unique_ADC_name, ADC_channel_idx):
         self.unique_ADC_name = unique_ADC_name
         self.ADC_channel_idx = ADC_channel_idx
         self.range_conv = {35: 100, 69: 10, 17: 1}
         self.active = True  # TO BE REMOVED
-        self.channel_range = self.range_conv[channel_range]
-        self.termination = termination
-        self.offset = offset
+        self.channel_range = None
+        self.termination = None
+        self.offset = None
         self.timestamp_pre_post_data = None
 
     def set_channel_range(self, channel_range):
@@ -28,10 +27,10 @@ class Channel:
 
 class Trigger:
 
-    def __init__(self, enable, polarity, delay):
-        self.enable = enable
-        self.polarity = polarity
-        self.delay = delay
+    def __init__(self):
+        self.enable = None
+        self.polarity = None
+        self.delay = None
         self.type = None
 
     def set_enable(self, enable):
@@ -51,12 +50,11 @@ class Trigger:
 
 class InternalTrigger(Trigger):
 
-    def __init__(self, enable, polarity, delay, threshold, unique_ADC_name,
-                 ADC_trigger_idx):
-        super().__init__(enable, polarity, delay)
+    def __init__(self, unique_ADC_name, ADC_trigger_idx):
+        super().__init__()
         self.unique_ADC_name = unique_ADC_name
         self.ADC_trigger_idx = ADC_trigger_idx
-        self.threshold = threshold
+        self.threshold = None
         self.type = 'internal'
 
     def set_threshold(self, threshold):
@@ -71,9 +69,8 @@ class InternalTrigger(Trigger):
 
 class ExternalTrigger(Trigger):
 
-    def __init__(self, enable, polarity, delay, unique_ADC_name,
-                 ADC_trigger_idx):
-        super().__init__(enable, polarity, delay)
+    def __init__(self, unique_ADC_name, ADC_trigger_idx):
+        super().__init__()
         self.type = 'external'
         self.unique_ADC_name = unique_ADC_name
         self.ADC_trigger_idx = ADC_trigger_idx
@@ -81,9 +78,9 @@ class ExternalTrigger(Trigger):
 
 class AcqConf:
 
-    def __init__(self, presamples, postsamples):
-        self.presamples = presamples
-        self.postsamples = postsamples
+    def __init__(self):
+        self.presamples = None
+        self.postsamples = None
 
     def set_presamples(self, presamples):
         self.presamples = presamples

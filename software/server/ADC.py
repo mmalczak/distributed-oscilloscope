@@ -22,24 +22,18 @@ class ADC:
         self.acq_conf = None
         self.WRTD_master = True
         self.zmq_rpc = ZMQ_RPC(ip, port + 8)  # remove +8 after removing xml
+        conf = self.zmq_rpc.send_RPC('get_current_adc_conf')
+
         for count in range(0, self.conf['board_conf']['n_chan']):
-            channel = conf['chn_conf'][count]
-            self.add_channel(channel['channel_range'],
-                             channel['termination'],
-                             channel['offset'], count)
+            self.channels.append(Channel(self.unique_name, count))
         for count in range(0, self.conf['board_conf']['n_trg_int']):
-            trigger = conf['int_trg_conf'][count]
-            self.add_internal_trigger(trigger['enable'],
-                                      trigger['polarity'],
-                                      trigger['delay'],
-                                      trigger['threshold'], count)
+            self.internal_triggers.append(InternalTrigger(self.unique_name,
+                                                          count))
         for count in range(0, self.conf['board_conf']['n_trg_ext']):
-            trigger = conf['ext_trg_conf'][count]
-            self.add_external_trigger(trigger['enable'],
-                                      trigger['polarity'],
-                                      trigger['delay'], count)
-        self.acq_conf = AcqConf(conf['acq_conf']['presamples'],
-                                conf['acq_conf']['postsamples'])
+            self.external_triggers.append(ExternalTrigger(self.unique_name,
+                                                          count))
+        self.acq_conf = AcqConf()
+        self.update_conf()
 
     def update_data(self, timestamp, pre_post, data, unique_ADC_name):
         """the value of pre and postsamples is passed together with the data
