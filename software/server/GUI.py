@@ -50,8 +50,9 @@ class GUI():
         def set_horizontal_setting_when_add_channel(self, new_ADC):
             ADC_name = self.__ADCs_used[0]
             ADC = self.__osc.get_ADC(ADC_name)
-            presamples = ADC.acq_conf.presamples
-            postsamples = ADC.acq_conf.postsamples
+            acq_conf = ADC.get_acq_conf()
+            presamples = acq_conf.presamples
+            postsamples = acq_conf.postsamples
             self.set_presamples_ADC(presamples, new_ADC)
             self.set_postsamples_ADC(postsamples, new_ADC)
 
@@ -177,22 +178,23 @@ class GUI():
     def check_horizontal_settings(self):
         ADC0 = self.__ADCs_used[0]
         ADC0 = self.__osc.get_ADC(ADC0)
-        presamples = ADC0.acq_conf.presamples
-        postsamples = ADC0.acq_conf.postsamples
+        acq_conf = ADC0.get_acq_conf()
+        presamples = acq_conf.presamples
+        postsamples = acq_conf.postsamples
         for ADC in self.__ADCs_used:
+            acq_conf = ADC.get_acq_conf()
             ADC = self.__osc.get_ADC(ADC)
-            print(ADC.acq_conf.presamples)
-            print(ADC.acq_conf.postsamples)
-            if (presamples != ADC.acq_conf.presamples) or\
-               (postsamples != ADC.acq_conf.postsamples):
+            if (presamples != acq_conf.presamples) or\
+               (postsamples != acq_conf.postsamples):
                 raise HorizontalSettingsError
 
     def get_horiz_settings_copy(self):
         if self.__ADCs_used:
             ADC0 = self.__ADCs_used[0]
             ADC0 = self.__osc.get_ADC(ADC0)
-            presamples = ADC0.acq_conf.presamples
-            postsamples = ADC0.acq_conf.postsamples
+            acq_conf = ADC0.get_acq_conf()
+            presamples = acq_conf.presamples
+            postsamples = acq_conf.postsamples
             horizontal_params = {'presamples': presamples,
                                  'postsamples': postsamples}
             return horizontal_params

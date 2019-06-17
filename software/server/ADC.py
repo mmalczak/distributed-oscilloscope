@@ -16,7 +16,7 @@ class ADC:
         self.__channels = []
         self.__internal_triggers = []
         self.__external_triggers = []
-        self.acq_conf = None
+        self.__acq_conf = None
         self.__WRTD_master = True
         self.zmq_rpc = ZMQ_RPC(ip, port + 8)  # remove +8 after removing xml
         conf = self.zmq_rpc.send_RPC('get_current_adc_conf')
@@ -29,7 +29,7 @@ class ADC:
         for count in range(0, conf['board_conf']['n_trg_ext']):
             self.__external_triggers.append(ExternalTrigger(self.__unique_ADC_name,
                                                           count))
-        self.acq_conf = AcqConf()
+        self.__acq_conf = AcqConf()
         self.update_conf()
 
     def update_data(self, timestamp, pre_post, data, unique_ADC_name):
@@ -68,7 +68,7 @@ class ADC:
             self.__external_triggers[count].update_trigger_conf(trigger['enable'],
                                                               trigger['polarity'],
                                                               trigger['delay'])
-        self.acq_conf.update_acq_conf(
+        self.__acq_conf.update_acq_conf(
             conf['acq_conf']['presamples'],
             conf['acq_conf']['postsamples'])
 
@@ -80,6 +80,9 @@ class ADC:
     
     def get_external_trigger(self, trigger_idx):
         return self.__external_triggers[trigger_idx]
+
+    def get_acq_conf(self):
+        return self.__acq_conf
 
     def set_WRTD_master(self, WRTD_master):
         self.__WRTD_master = WRTD_master
