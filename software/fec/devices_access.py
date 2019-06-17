@@ -41,6 +41,9 @@ class DevicesAccess():
         self.channels = None
         self.selector = None
 
+        """Used to retrieve the acquisition when modyfing the parameters"""
+        self.acquisition_configured = False
+
     def get_buffer_size(self):
         conf = self.get_current_adc_conf()
         acq_conf = conf['acq_conf']
@@ -82,6 +85,9 @@ class DevicesAccess():
             buf_size = self.get_buffer_size()
             self.ADC.set_buffer(buf_size)
 
+        if self.acquisition_configured:
+            self.configure_acquisition(self.channels)
+
     def get_current_adc_conf(self):
         conf = self.ADC.current_config()
         if(not self.WRTD_master):
@@ -96,6 +102,8 @@ class DevicesAccess():
             pass
         # TODO after adding logger log it
 
+        self.acquisition_configured = False
+
     def configure_acquisition(self, channels):
 
         self.channels = channels
@@ -103,6 +111,9 @@ class DevicesAccess():
 
         self.ADC.start_acquisition()
         self.selector.register(self, zmq.POLLIN)
+
+        self.acquisition_configured = True
+
 
     def fileno(self):
         return self.ADC.fileno()
@@ -133,4 +144,7 @@ class DevicesAccess():
             timestamp = self.ADC.get_timestamp(self.ADC.buf_ptr, 0)
         self.ADC.acq_stop(0)
         pre_post_samples_dict = self.get_pre_post_samples()
+
+        self.acquisition_configured = False
+
         return [timestamp, pre_post_samples_dict, data_dict]
