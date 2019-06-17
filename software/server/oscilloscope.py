@@ -21,20 +21,9 @@ class Oscilloscope():
 
 
     def unregister_ADC(self, unique_ADC_name):
-        """TODO: Why doesn't call GUI unregister_ADC"""
-        for name_GUI, GUI in self.__GUIs.items():
-            data = {'function_name': 'unregister_ADC',
-                    'args': [unique_ADC_name]}
-            GUI.GUI_publisher.send_message(data)
-        """wait until there are no more users"""
         del self.__available_ADCs[unique_ADC_name]
-        channels_to_delete = []
         for GUI_name, GUI in self.__GUIs.items():
-            for channel_idx, channel in GUI.channels.items():
-                if channel.unique_ADC_name == unique_ADC_name:
-                    channels_to_delete.append(channel_idx)
-            for channel_idx in channels_to_delete:
-                GUI.remove_channel(channel_idx)
+            GUI.unregister_ADC(unique_ADC_name)
         logger.info("ADC {} unregistered".format(unique_ADC_name))
 
 

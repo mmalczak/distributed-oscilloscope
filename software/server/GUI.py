@@ -23,6 +23,18 @@ class GUI():
         self.GUI_publisher = Publisher(self.__GUI_addr, self.__GUI_port)
         self.osc = osc
 
+
+    def unregister_ADC(self, unique_ADC_name):
+        data = {'function_name': 'unregister_ADC', 'args': [unique_ADC_name]}
+        self.GUI_publisher.send_message(data)
+        channels_to_delete = []
+        for channel_idx, channel in self.channels.items():
+            if channel.unique_ADC_name == unique_ADC_name:
+                channels_to_delete.append(channel_idx)
+        for channel_idx in channels_to_delete:
+            self.remove_channel(channel_idx)
+
+
     def contains_ADC(self, unique_ADC_name):
         return unique_ADC_name in self.__ADCs_used
 
