@@ -28,7 +28,7 @@ class Oscilloscope():
         GUI_ = GUI(self, GUI_name, GUI_addr, GUI_port)
         self.__GUIs.update({GUI_name: GUI_})
         for unique_ADC_name, ADC in self.__available_ADCs.items():
-            GUI.register_ADC(unique_ADC_name, ADC.number_of_channels)
+            GUI_.register_ADC(unique_ADC_name, ADC.number_of_channels)
             GUI_.GUI_publisher.send_message(data)
         logger.info("GUI {} registered".format(GUI_name))
 
