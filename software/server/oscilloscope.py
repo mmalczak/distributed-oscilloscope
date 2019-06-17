@@ -7,11 +7,11 @@ class Oscilloscope():
 
     def __init__(self):
         self.GUIs = dict()
-        self.available_ADCs = {}
+        self.__available_ADCs = {}
 
     def register_ADC(self, unique_ADC_name, number_of_channels, conf,
                           ip, port):
-        self.available_ADCs[unique_ADC_name] = ADC(unique_ADC_name, conf, 
+        self.__available_ADCs[unique_ADC_name] = ADC(unique_ADC_name, conf, 
                                                    ip, port)
         for name_GUI, GUI in self.GUIs.items():
             data = {'function_name': 'register_ADC',
@@ -27,7 +27,7 @@ class Oscilloscope():
                     'args': [unique_ADC_name]}
             GUI.GUI_publisher.send_message(data)
         """wait until there are no more users"""
-        del self.available_ADCs[unique_ADC_name]
+        del self.__available_ADCs[unique_ADC_name]
         channels_to_delete = []
         for GUI_name, GUI in self.GUIs.items():
             for channel_idx, channel in GUI.channels.items():
@@ -39,9 +39,9 @@ class Oscilloscope():
 
 
     def register_GUI(self, GUI_name, GUI_addr, GUI_port):
-        GUI_ = GUI(self.available_ADCs, GUI_name, GUI_addr, GUI_port)
+        GUI_ = GUI(self, GUI_name, GUI_addr, GUI_port)
         self.GUIs.update({GUI_name: GUI_})
-        for unique_ADC_name, ADC in self.available_ADCs.items():
+        for unique_ADC_name, ADC in self.__available_ADCs.items():
             data = {'function_name': 'register_ADC',
                     'args': [unique_ADC_name, ADC.number_of_channels]}
             GUI_.GUI_publisher.send_message(data)
@@ -56,8 +56,8 @@ class Oscilloscope():
             self.stop_acquisition_if_GUI_contains_ADC(unique_ADC_name)
             return
         """TODO add logging, do sth"""
-        self.available_ADCs[unique_ADC_name].\
-            update_data(timestamp, pre_post, data, unique_ADC_name)
+        ADC = self.get_ADC(unique_ADC_name)
+        ADC.update_data(timestamp, pre_post, data, unique_ADC_name)
         for GUI_name, GUI in self.GUIs.items():
             GUI.check_if_ready_and_send_data()
 
@@ -71,6 +71,11 @@ class Oscilloscope():
             if GUI.contains_ADC(unique_ADC_name):
                 GUI.retrieve_acquisition_ADCs_used()
 
+    def get_ADC(self, unique_ADC_name):
+        return self.__available_ADCs[unique_ADC_name]
+
+    def get_GUI(self, GUI_name):
+        return self.GUIs[GUI_name]
 
 def validate_data(GUI):
     """check if data from all ADCs is properly aligned"""
