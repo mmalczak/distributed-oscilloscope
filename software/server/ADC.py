@@ -9,8 +9,8 @@ from general.zmq_rpc import ZMQ_RPC
 # fixme if your class doesnt inherit, do not add empty () after its declaration
 class ADC:
 
-    def __init__(self, unique_name, ip, port):
-        self.unique_name = unique_name
+    def __init__(self, unique_ADC_name, ip, port):
+        self.unique_ADC_name = unique_ADC_name
         self.timestamp_pre_post_data = []
         self.ip = ip
         self.port = port
@@ -23,12 +23,12 @@ class ADC:
         conf = self.zmq_rpc.send_RPC('get_current_adc_conf')
 
         for count in range(0, conf['board_conf']['n_chan']):
-            self.channels.append(Channel(self.unique_name, count))
+            self.channels.append(Channel(self.unique_ADC_name, count))
         for count in range(0, conf['board_conf']['n_trg_int']):
-            self.internal_triggers.append(InternalTrigger(self.unique_name,
+            self.internal_triggers.append(InternalTrigger(self.unique_ADC_name,
                                                           count))
         for count in range(0, conf['board_conf']['n_trg_ext']):
-            self.external_triggers.append(ExternalTrigger(self.unique_name,
+            self.external_triggers.append(ExternalTrigger(self.unique_ADC_name,
                                                           count))
         self.acq_conf = AcqConf()
         self.update_conf()
