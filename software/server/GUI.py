@@ -23,6 +23,11 @@ class GUI():
         self.GUI_publisher = Publisher(self.__GUI_addr, self.__GUI_port)
         self.osc = osc
 
+    """TODO number of channels shouldn't be sent here"""
+    def register_ADC(self, unique_ADC_name, number_of_channels):
+        data = {'function_name': 'register_ADC',
+                'args': [unique_ADC_name, number_of_channels]}
+        self.GUI_publisher.send_message(data)
 
     def unregister_ADC(self, unique_ADC_name):
         data = {'function_name': 'unregister_ADC', 'args': [unique_ADC_name]}
