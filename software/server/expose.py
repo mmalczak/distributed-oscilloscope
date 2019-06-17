@@ -57,7 +57,7 @@ class ThreadGUI_zmq_Expose(threading.Thread):
 
         internal_trigger = ADC.get_internal_trigger(channel_idx)
         curr_threshold = internal_trigger.threshold
-        channel = ADC.get_channel(idx)
+        channel = ADC.get_channel(channel_idx)
         curr_range = channel.channel_range
         new_range = channel_ranges[range_value_str]
         multiplier = {(10, 10): 1, (10, 1): 10, (10, 100): 100,
