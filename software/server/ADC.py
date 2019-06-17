@@ -72,4 +72,3 @@ class ADC:
         self.acq_conf.update_acq_conf(
             conf['acq_conf']['presamples'],
             conf['acq_conf']['postsamples'])
-        """TODO for time triggers"""
