@@ -10,14 +10,6 @@ class HorizontalSettingsError(Exception):
         return "Presamples or postsampls not equal in the ADCs"
 
 
-def stop_and_retrieve_acquisition(func):
-    def wrapper(self, *args, **kwargs):
-        self.stop_acquisition_ADCs_used()
-        func(self, *args, **kwargs)
-        self.retrieve_acquisition_ADCs_used()
-    return wrapper
-
-
 class GUI():
 
     def __init__(self, osc, name, GUI_addr, GUI_port):
@@ -107,13 +99,11 @@ class GUI():
         zmq_rpc.send_RPC('set_adc_parameter', 'set_postsamples', value)
         ADC.update_conf()
 
-    #@stop_and_retrieve_acquisition
     def set_presamples(self, value):
         for ADC in self.ADCs_used:
             self.set_presamples_ADC(value, ADC)
         self.check_horizontal_settings()
 
-    #@stop_and_retrieve_acquisition
     def set_postsamples(self, value):
         for ADC in self.ADCs_used:
             self.set_postsamples_ADC(value, ADC)
@@ -140,10 +130,6 @@ class GUI():
             zmq_rpc.send_RPC('stop_acquisition')
         for channel_idx, channel in self.channels.items():
             channel.timestamp_pre_post_data = None
-
-    def retrieve_acquisition_ADCs_used(self):
-        if(self.run):
-            self.configure_acquisition_ADCs_used()
 
     def check_if_ready_and_send_data(self):
         """this function is called by the oscilloscope"""

@@ -66,11 +66,6 @@ class Oscilloscope():
             if GUI.contains_ADC(unique_ADC_name):
                 GUI.stop_acquisition_ADCs_used()
 
-    def retrieve_acquisition_if_GUI_contains_ADC(self, unique_ADC_name):
-        for GUI_name, GUI in self.__GUIs.items():
-            if GUI.contains_ADC(unique_ADC_name):
-                GUI.retrieve_acquisition_ADCs_used()
-
     def get_ADC(self, unique_ADC_name):
         return self.__available_ADCs[unique_ADC_name]
 

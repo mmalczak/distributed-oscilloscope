@@ -11,27 +11,6 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-
-
-def stop_and_retrieve_acquisition(func):
-    def wrapper(self, *args, **kwargs):
-        unique_ADC_name = None
-        for arg in args:
-            try:  # find the name of the ADC in the arguments - fixme
-                if(arg[0:3] == "ADC"):
-                    unique_ADC_name = arg
-            except:
-                pass
-        try:
-            self.osc.stop_acquisition_if_GUI_contains_ADC(unique_ADC_name)
-            func(self, *args, **kwargs)
-            self.osc.retrieve_acquisition_if_GUI_contains_ADC(unique_ADC_name)
-        except Exception as e:
-            print(type(e))
-            print(e)
-    return wrapper
-
-
 class ThreadGUI_zmq_Expose(threading.Thread):
     def __init__(self, osc):
         threading.Thread.__init__(self)
@@ -71,7 +50,6 @@ class ThreadGUI_zmq_Expose(threading.Thread):
             print(e)
         GUI.remove_trigger()
 
-    #@stop_and_retrieve_acquisition
     def set_channel_range(self, range_value_str, channel_idx,
                           unique_ADC_name):
         channel_ranges = {'10V': 10, '1V': 1, '100mV': 100}
@@ -99,7 +77,6 @@ class ThreadGUI_zmq_Expose(threading.Thread):
         ADC.update_conf()
 
 
-    #@stop_and_retrieve_acquisition
     def set_ADC_parameter(self, parameter_name, value, unique_ADC_name,
                           idx=-1):
         function_name = 'set_' + parameter_name
