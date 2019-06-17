@@ -22,13 +22,15 @@ class ADC:
         conf = self.zmq_rpc.send_RPC('get_current_adc_conf')
 
         for count in range(0, conf['board_conf']['n_chan']):
-            self.__channels.append(Channel(self.__unique_ADC_name, count))
+            channel = Channel(self.__unique_ADC_name, count)
+            self.__channels.append(channel)
         for count in range(0, conf['board_conf']['n_trg_int']):
-            self.__internal_triggers.append(InternalTrigger(self.__unique_ADC_name,
-                                                          count))
+            int_trig = InternalTrigger(self.__unique_ADC_name, count)
+            self.__internal_triggers.append(int_trig)
+
         for count in range(0, conf['board_conf']['n_trg_ext']):
-            self.__external_triggers.append(ExternalTrigger(self.__unique_ADC_name,
-                                                          count))
+            ext_trig = ExternalTrigger(self.__unique_ADC_name, count)
+            self.__external_triggers.append(ext_trig)
         self.__acq_conf = AcqConf()
         self.update_conf()
 
@@ -54,20 +56,23 @@ class ADC:
         conf = zmq_rpc.send_RPC('get_current_adc_conf')
         for count in range(0, conf['board_conf']['n_chan']):
             channel = conf['chn_conf'][count]
-            self.__channels[count].update_channel_conf(channel['channel_range'],
-                                                     channel['termination'],
-                                                     channel['offset'])
+            self.__channels[count].update_channel_conf(
+                                                channel['channel_range'],
+                                                channel['termination'],
+                                                channel['offset'])
         for count in range(0, conf['board_conf']['n_trg_int']):
             trigger = conf['int_trg_conf'][count]
-            self.__internal_triggers[count].update_trigger_conf(trigger['enable'],
-                                                              trigger['polarity'],
-                                                              trigger['delay'],
-                                                              trigger['threshold'])
+            self.__internal_triggers[count].update_trigger_conf(
+                                                    trigger['enable'],
+                                                    trigger['polarity'],
+                                                    trigger['delay'],
+                                                    trigger['threshold'])
         for count in range(0, conf['board_conf']['n_trg_ext']):
             trigger = conf['ext_trg_conf'][count]
-            self.__external_triggers[count].update_trigger_conf(trigger['enable'],
-                                                              trigger['polarity'],
-                                                              trigger['delay'])
+            self.__external_triggers[count].update_trigger_conf(
+                                                    trigger['enable'],
+                                                    trigger['polarity'],
+                                                    trigger['delay'])
         self.__acq_conf.update_acq_conf(
             conf['acq_conf']['presamples'],
             conf['acq_conf']['postsamples'])
