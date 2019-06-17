@@ -164,7 +164,7 @@ class ThreadGUI_zmq_Expose(threading.Thread):
     """----------------- TESTING ------------------------------------------"""
     def get_GUI_channels(self, GUI_name):
         GUI = self.osc.get_GUI(GUI_name)
-        return GUI.channels
+        return GUI.get_channels_copy()
     """----------------- TESTING ------------------------------------------"""
 
 

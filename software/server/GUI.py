@@ -168,7 +168,7 @@ class GUI():
                (postsamples != ADC.acq_conf.postsamples):
                 raise HorizontalSettingsError
 
-    def get_horizontal_settings(self):
+    def get_horiz_settings_copy(self):
         if self.ADCs_used:
             ADC0 = self.ADCs_used[0]
             ADC0 = self.osc.get_ADC(ADC0)
@@ -180,17 +180,18 @@ class GUI():
         else:
             logger.warning("No ADC used to retrieve the horizontal params")
 
-    def get_channels(self):
+    def get_channels_copy(self):
         oscilloscope_channels_params = {}
         for channel_idx, channel in self.channels.items():
             channel_params = {'active': channel.active,
                               'range': channel.channel_range,
                               'termination': channel.termination,
-                              'offset': channel.offset}
+                              'offset': channel.offset,
+                              'ADC_channel_idx': channel.ADC_channel_idx}
             oscilloscope_channels_params[channel_idx] = channel_params
         return oscilloscope_channels_params
 
-    def get_trigger(self):
+    def get_trigger_copy(self):
         trigger = self.trigger
         if(trigger is None):
             logger.warning("No trigger available - trigger settings None")
@@ -209,9 +210,9 @@ class GUI():
         return trigger_params
 
     def get_GUI_settings(self):
-        GUI_settings = {'channels': self.get_channels(),
-                        'trigger': self.get_trigger(),
-                        'horizontal_settings': self.get_horizontal_settings()}
+        GUI_settings = {'channels': self.get_channels_copy(),
+                        'trigger': self.get_trigger_copy(),
+                        'horizontal_settings': self.get_horiz_settings_copy()}
         return GUI_settings
 
     def validate_data(self):

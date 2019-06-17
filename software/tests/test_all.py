@@ -234,7 +234,7 @@ class OscilloscopeMethods(unittest.TestCase):
         channels = self.zmq_rpc.send_RPC('get_GUI_channels', self.GUI_name)
         self.zmq_rpc.send_RPC('remove_channel', GUI_channel, self.GUI_name)
         channel = channels[GUI_channel]
-        self.assertEqual(channel.ADC_channel_idx, ADC_channel)
+        self.assertEqual(channel['ADC_channel_idx'], ADC_channel)
         self.assertEqual(len(channels), 1)
 
     @timeout_decorator.timeout(5)
