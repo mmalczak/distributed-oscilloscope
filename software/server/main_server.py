@@ -1,6 +1,6 @@
 import sys
 sys.path.append('../general')
-from oscilloscope import Oscilloscope 
+from oscilloscope import Oscilloscope
 from service_management import ThreadZeroConf
 from expose import ThreadGUI_zmq_Expose
 

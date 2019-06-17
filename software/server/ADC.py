@@ -1,4 +1,4 @@
-from ADC_configs import Channel 
+from ADC_configs import Channel
 from ADC_configs import InternalTrigger
 from ADC_configs import ExternalTrigger
 from ADC_configs import AcqConf
@@ -25,7 +25,7 @@ class ADC:
         for count in range(0, self.conf['board_conf']['n_chan']):
             channel = conf['chn_conf'][count]
             self.add_channel(channel['channel_range'],
-                             channel['termination'], 
+                             channel['termination'],
                              channel['offset'], count)
         for count in range(0, self.conf['board_conf']['n_trg_int']):
             trigger = conf['int_trg_conf'][count]

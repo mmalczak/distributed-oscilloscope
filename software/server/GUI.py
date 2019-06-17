@@ -1,6 +1,6 @@
 from ADC import ADC
 from conversion import threshold_raw_to_mV
-from timestamp_operations import check_if_not_max 
+from timestamp_operations import check_if_not_max
 from timestamp_operations import tic_difference
 from timestamp_operations import check_if_equal
 import logging
@@ -264,7 +264,7 @@ class GUI():
                     ADC.timestamp_pre_post_data.pop(0)
             for ADC_name, ADC in self.ADCs.items():
                 try:
-    
+
                     timestamp = ADC.timestamp_pre_post_data['timestamp'][0]
                     timestamp_sec = timestamp[0]
                     timestamp_tic = timestamp[1]
@@ -281,7 +281,7 @@ class GUI():
                     information is included in the data, as last sample"""
                     """FIXME offset calculated in ticks, the correction
                     applied in samples"""
-                    offset = tic_difference(max_timestamp_sec, 
+                    offset = tic_difference(max_timestamp_sec,
                                             max_timestamp_tic,
                                             timestamp_sec, timestamp_tic)
                     for count in range(0, ADC.number_of_channels):

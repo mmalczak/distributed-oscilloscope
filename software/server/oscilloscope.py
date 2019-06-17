@@ -12,7 +12,7 @@ class Oscilloscope():
 
     def register_ADC(self, unique_ADC_name, number_of_channels, conf,
                           ip, port):
-        self.__available_ADCs[unique_ADC_name] = ADC(unique_ADC_name, conf, 
+        self.__available_ADCs[unique_ADC_name] = ADC(unique_ADC_name, conf,
                                                    ip, port)
         for name_GUI, GUI in self.__GUIs.items():
             GUI.register_ADC(unique_ADC_name, number_of_channels)
