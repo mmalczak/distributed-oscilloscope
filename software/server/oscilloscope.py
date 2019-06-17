@@ -10,10 +10,8 @@ class Oscilloscope():
         self.__GUIs = dict()
         self.__available_ADCs = {}
 
-    def register_ADC(self, unique_ADC_name, number_of_channels, conf,
-                          ip, port):
-        self.__available_ADCs[unique_ADC_name] = ADC(unique_ADC_name, conf,
-                                                   ip, port)
+    def register_ADC(self, unique_ADC_name, number_of_channels, ip, port):
+        self.__available_ADCs[unique_ADC_name] = ADC(unique_ADC_name, ip, port)
         for name_GUI, GUI in self.__GUIs.items():
             GUI.register_ADC(unique_ADC_name, number_of_channels)
         logger.info("ADC {} registered".format(unique_ADC_name))

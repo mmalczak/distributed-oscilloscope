@@ -9,9 +9,7 @@ from general.zmq_rpc import ZMQ_RPC
 # fixme if your class doesnt inherit, do not add empty () after its declaration
 class ADC:
 
-    def __init__(self, unique_name, conf, ip, port):
-        self.conf = conf
-        self.number_of_channels = self.conf['board_conf']['n_chan']
+    def __init__(self, unique_name, ip, port):
         self.unique_name = unique_name
         self.timestamp_pre_post_data = []
         self.ip = ip
@@ -24,12 +22,12 @@ class ADC:
         self.zmq_rpc = ZMQ_RPC(ip, port + 8)  # remove +8 after removing xml
         conf = self.zmq_rpc.send_RPC('get_current_adc_conf')
 
-        for count in range(0, self.conf['board_conf']['n_chan']):
+        for count in range(0, conf['board_conf']['n_chan']):
             self.channels.append(Channel(self.unique_name, count))
-        for count in range(0, self.conf['board_conf']['n_trg_int']):
+        for count in range(0, conf['board_conf']['n_trg_int']):
             self.internal_triggers.append(InternalTrigger(self.unique_name,
                                                           count))
-        for count in range(0, self.conf['board_conf']['n_trg_ext']):
+        for count in range(0, conf['board_conf']['n_trg_ext']):
             self.external_triggers.append(ExternalTrigger(self.unique_name,
                                                           count))
         self.acq_conf = AcqConf()
@@ -70,24 +68,24 @@ class ADC:
 
     def update_conf(self):
         zmq_rpc = self.zmq_rpc
-        self.conf = zmq_rpc.send_RPC('get_current_adc_conf')
-        for count in range(0, self.conf['board_conf']['n_chan']):
-            channel = self.conf['chn_conf'][count]
+        conf = zmq_rpc.send_RPC('get_current_adc_conf')
+        for count in range(0, conf['board_conf']['n_chan']):
+            channel = conf['chn_conf'][count]
             self.channels[count].update_channel_conf(channel['channel_range'],
                                                      channel['termination'],
                                                      channel['offset'])
-        for count in range(0, self.conf['board_conf']['n_trg_int']):
-            trigger = self.conf['int_trg_conf'][count]
+        for count in range(0, conf['board_conf']['n_trg_int']):
+            trigger = conf['int_trg_conf'][count]
             self.internal_triggers[count].update_trigger_conf(trigger['enable'],
                                                               trigger['polarity'],
                                                               trigger['delay'],
                                                               trigger['threshold'])
-        for count in range(0, self.conf['board_conf']['n_trg_ext']):
-            trigger = self.conf['ext_trg_conf'][count]
+        for count in range(0, conf['board_conf']['n_trg_ext']):
+            trigger = conf['ext_trg_conf'][count]
             self.external_triggers[count].update_trigger_conf(trigger['enable'],
                                                               trigger['polarity'],
                                                               trigger['delay'])
         self.acq_conf.update_acq_conf(
-            self.conf['acq_conf']['presamples'],
-            self.conf['acq_conf']['postsamples'])
+            conf['acq_conf']['presamples'],
+            conf['acq_conf']['postsamples'])
         """TODO for time triggers"""
