@@ -39,16 +39,17 @@ class ThreadGUI_zmq_Expose(threading.Thread):
 
     def add_channel(self, oscilloscope_channel_idx, unique_ADC_name,
                     ADC_channel_idx, GUI_name):
-        GUI = self.osc.GUIs[GUI_name]
+        GUI = self.osc.get_GUI(GUI_name)
         GUI.add_channel(oscilloscope_channel_idx, unique_ADC_name,
                                             ADC_channel_idx)
 
     def remove_channel(self, oscilloscope_channel_idx, GUI_name):
-        self.osc.GUIs[GUI_name].remove_channel(oscilloscope_channel_idx)
+        GUI = self.osc.get_GUI(GUI_name)
+        GUI.remove_channel(oscilloscope_channel_idx)
 
     def add_trigger(self, type, unique_ADC_name, ADC_trigger_idx, GUI_name):
-        self.osc.GUIs[GUI_name].add_trigger(type, unique_ADC_name,
-                                            ADC_trigger_idx)
+        GUI = self.osc.get_GUI(GUI_name)
+        GUI.add_trigger(type, unique_ADC_name, ADC_trigger_idx)
         try:
             ADC = self.osc.get_ADC(unique_ADC_name)
             zmq_rpc = ADC.zmq_rpc
@@ -57,7 +58,8 @@ class ThreadGUI_zmq_Expose(threading.Thread):
             print(e)
 
     def remove_trigger(self, GUI_name):
-        trigger = self.osc.GUIs[GUI_name].trigger
+        GUI = self.osc.get_GUI(GUI_name)
+        trigger = GUI.trigger
         try:
             function_name = 'set_' + trigger.type + '_trigger_enable'
             self.send_RPC_request(function_name, trigger.unique_ADC_name, 0,
@@ -67,7 +69,7 @@ class ThreadGUI_zmq_Expose(threading.Thread):
             zmq_rpc.send_RPC('set_WRTD_master', False)
         except Exception as e:
             print(e)
-        self.osc.GUIs[GUI_name].remove_trigger()
+        GUI.remove_trigger()
 
     #@stop_and_retrieve_acquisition
     def set_channel_range(self, range_value_str, channel_idx,
@@ -127,19 +129,24 @@ class ThreadGUI_zmq_Expose(threading.Thread):
             return int(value)
 
     def single_acquisition(self, GUI_name):
-        self.osc.GUIs[GUI_name].configure_acquisition_ADCs_used()
+        GUI = self.osc.get_GUI(GUI_name)
+        GUI.configure_acquisition_ADCs_used()
 
     def run_acquisition(self, run, GUI_name):
-        self.osc.GUIs[GUI_name].run_acquisition(run)
+        GUI = self.osc.get_GUI(GUI_name)
+        GUI.run_acquisition(run)
 
     def set_presamples(self, value, GUI_name):
-        self.osc.GUIs[GUI_name].set_presamples(value)
+        GUI = self.osc.get_GUI(GUI_name)
+        GUI.set_presamples(value)
 
     def set_postsamples(self, value, GUI_name):
-        self.osc.GUIs[GUI_name].set_postsamples(value)
+        GUI = self.osc.get_GUI(GUI_name)
+        GUI.set_postsamples(value)
 
     def get_GUI_settings(self, GUI_name):
-        return self.osc.GUIs[GUI_name].get_GUI_settings()
+        GUI = self.osc.get_GUI(GUI_name)
+        return GUI.get_GUI_settings()
 
     def register_GUI(self, GUI_name, addr, port):
         self.osc.register_GUI(GUI_name, str(addr), port)
@@ -179,7 +186,8 @@ class ThreadGUI_zmq_Expose(threading.Thread):
 
     """----------------- TESTING ------------------------------------------"""
     def get_GUI_channels(self, GUI_name):
-        return self.osc.GUIs[GUI_name].channels
+        GUI = self.osc.get_GUI(GUI_name)
+        return GUI.channels
     """----------------- TESTING ------------------------------------------"""
 
 
