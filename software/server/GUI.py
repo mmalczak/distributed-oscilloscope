@@ -14,7 +14,7 @@ class GUI():
 
     def __init__(self, osc, name, GUI_addr, GUI_port):
         self.name = name
-        self.channels = {}
+        self.__channels = {}
         self.trigger = None
         self.ADCs_used = []
         self.GUI_addr = GUI_addr
@@ -38,7 +38,7 @@ class GUI():
 
         ADC = self.osc.get_ADC(unique_ADC_name)
         channel = ADC.channels[ADC_channel_idx]
-        self.channels[oscilloscope_channel_idx] = channel
+        self.__channels[oscilloscope_channel_idx] = channel
         self.update_ADCs_used()
         set_horizontal_setting_when_add_channel(self, unique_ADC_name)
 
@@ -53,7 +53,7 @@ class GUI():
         self.update_ADCs_used()
 
     def remove_channel(self, oscilloscope_channel_idx):
-        del self.channels[oscilloscope_channel_idx]
+        del self.__channels[oscilloscope_channel_idx]
         self.update_ADCs_used()
 
     def remove_trigger(self):
@@ -62,13 +62,13 @@ class GUI():
 
     def update_ADCs_used(self):
         self.ADCs_used = []
-        for channel_idx, channel in self.channels.items():
+        for channel_idx, channel in self.__channels.items():
             if not(channel.unique_ADC_name in self.ADCs_used):
                 self.ADCs_used.append(channel.unique_ADC_name)
 
     def configure_acquisition_ADC(self, unique_ADC_name):
         channels = []
-        for channel_idx, channel in self.channels.items():
+        for channel_idx, channel in self.__channels.items():
             if(channel.unique_ADC_name == unique_ADC_name):
                 channels.append(channel.ADC_channel_idx)
         channels.sort()
@@ -123,20 +123,20 @@ class GUI():
             ADC = self.osc.get_ADC(unique_ADC_name)
             zmq_rpc = ADC.zmq_rpc
             zmq_rpc.send_RPC('stop_acquisition')
-        for channel_idx, channel in self.channels.items():
+        for channel_idx, channel in self.__channels.items():
             channel.timestamp_pre_post_data = None
 
     def check_if_ready_and_send_data(self):
         """this function is called by the oscilloscope"""
         """TODo check if data is aligned"""
-        for channel_idx, channel in self.channels.items():
+        for channel_idx, channel in self.__channels.items():
             if (channel.timestamp_pre_post_data is None):
                 return
         data = {}
         pre_post_samples = {}
         timestamps = []
         offsets = {}
-        for channel_idx, channel in self.channels.items():
+        for channel_idx, channel in self.__channels.items():
             ADC = self.osc.get_ADC(channel.unique_ADC_name)
             data[channel_idx] = channel.timestamp_pre_post_data['data_channel']
             timestamps.append(channel.timestamp_pre_post_data['timestamp'])
@@ -182,7 +182,7 @@ class GUI():
 
     def get_channels_copy(self):
         oscilloscope_channels_params = {}
-        for channel_idx, channel in self.channels.items():
+        for channel_idx, channel in self.__channels.items():
             channel_params = {'active': channel.active,
                               'range': channel.channel_range,
                               'termination': channel.termination,
