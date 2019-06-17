@@ -31,6 +31,7 @@ class ThreadGUI_zmq_Expose(threading.Thread):
         GUI.add_trigger(type, unique_ADC_name, ADC_trigger_idx)
         try:
             ADC = self.osc.get_ADC(unique_ADC_name)
+            ADC.set_WRTD_master(True)
             zmq_rpc = ADC.zmq_rpc
             zmq_rpc.send_RPC('set_WRTD_master', True)
         except Exception as e:
@@ -44,6 +45,7 @@ class ThreadGUI_zmq_Expose(threading.Thread):
             self.send_RPC_request(function_name, trigger.unique_ADC_name, 0,
                                   trigger.ADC_trigger_idx)
             ADC = self.osc.get_ADC(trigger.unique_ADC_name)
+            ADC.set_WRTD_master(False)
             zmq_rpc = ADC.zmq_rpc
             zmq_rpc.send_RPC('set_WRTD_master', False)
         except Exception as e:
@@ -57,8 +59,10 @@ class ThreadGUI_zmq_Expose(threading.Thread):
         zmq_rpc = ADC.zmq_rpc
         ret = zmq_rpc.send_RPC('set_adc_parameter', 'set_channel_range',
                                channel_idx,  channel_ranges[range_value_str])
-        curr_threshold = ADC.internal_triggers[channel_idx].threshold
-        curr_range = ADC.channels[channel_idx].channel_range
+        internal_trigger = ADC.get_internal_trigger(channel_idx)
+        curr_threshold = internal_trigger.threshold
+        channel = ADC.get_channel(idx)
+        curr_range = channel.channel_range
         new_range = channel_ranges[range_value_str]
         multiplier = {(10, 10): 1, (10, 1): 10, (10, 100): 100,
                       (1, 10): 1/10, (1, 1): 1, (1, 100): 10,

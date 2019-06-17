@@ -56,7 +56,7 @@ class GUI():
             self.set_postsamples_ADC(postsamples, new_ADC)
 
         ADC = self.__osc.get_ADC(unique_ADC_name)
-        channel = ADC.channels[ADC_channel_idx]
+        channel = ADC.get_channel(ADC_channel_idx)
         self.__channels[oscilloscope_channel_idx] = channel
         self.update_ADCs_used()
         set_horizontal_setting_when_add_channel(self, unique_ADC_name)
@@ -65,9 +65,9 @@ class GUI():
         trigger = None
         ADC = self.__osc.get_ADC(unique_ADC_name)
         if type == 'internal':   # consider dictionary
-            trigger = ADC.internal_triggers[ADC_trigger_idx]
+            trigger = ADC.get_internal_trigger(ADC_trigger_idx)
         else:
-            trigger = ADC.external_triggers[ADC_trigger_idx]
+            trigger = ADC.get_external_trigger(ADC_trigger_idx)
         self.__trigger = trigger
         self.update_ADCs_used()
 
