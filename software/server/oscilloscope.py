@@ -53,7 +53,7 @@ class Oscilloscope():
 
     def update_data(self, timestamp, pre_post, data, unique_ADC_name):
         if(data ==  0):
-            self.stop_acquisition_if_GUI_contains_ADC(unique_ADC_name)
+            self.__stop_acquisition_if_GUI_contains_ADC(unique_ADC_name)
             return
         """TODO add logging, do sth"""
         ADC = self.get_ADC(unique_ADC_name)
@@ -61,7 +61,7 @@ class Oscilloscope():
         for GUI_name, GUI in self.__GUIs.items():
             GUI.check_if_ready_and_send_data()
 
-    def stop_acquisition_if_GUI_contains_ADC(self, unique_ADC_name):
+    def __stop_acquisition_if_GUI_contains_ADC(self, unique_ADC_name):
         for GUI_name, GUI in self.__GUIs.items():
             if GUI.contains_ADC(unique_ADC_name):
                 GUI.stop_acquisition_ADCs_used()
