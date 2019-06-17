@@ -20,18 +20,18 @@ class GUI():
         self.__GUI_addr = GUI_addr
         self.__GUI_port = GUI_port
         self.__run = False
-        self.GUI_publisher = Publisher(self.__GUI_addr, self.__GUI_port)
-        self.osc = osc
+        self.__GUI_publisher = Publisher(self.__GUI_addr, self.__GUI_port)
+        self.__osc = osc
 
     """TODO number of channels shouldn't be sent here"""
     def register_ADC(self, unique_ADC_name, number_of_channels):
         message = {'function_name': 'register_ADC',
                 'args': [unique_ADC_name, number_of_channels]}
-        self.GUI_publisher.send_message(message)
+        self.__GUI_publisher.send_message(message)
 
     def unregister_ADC(self, unique_ADC_name):
         message = {'function_name': 'unregister_ADC', 'args': [unique_ADC_name]}
-        self.GUI_publisher.send_message(message)
+        self.__GUI_publisher.send_message(message)
         channels_to_delete = []
         for channel_idx, channel in self.channels.items():
             if channel.unique_ADC_name == unique_ADC_name:
@@ -47,13 +47,13 @@ class GUI():
                     ADC_channel_idx):
         def set_horizontal_setting_when_add_channel(self, new_ADC):
             ADC_name = self.__ADCs_used[0]
-            ADC = self.osc.get_ADC(ADC_name)
+            ADC = self.__osc.get_ADC(ADC_name)
             presamples = ADC.acq_conf.presamples
             postsamples = ADC.acq_conf.postsamples
             self.set_presamples_ADC(presamples, new_ADC)
             self.set_postsamples_ADC(postsamples, new_ADC)
 
-        ADC = self.osc.get_ADC(unique_ADC_name)
+        ADC = self.__osc.get_ADC(unique_ADC_name)
         channel = ADC.channels[ADC_channel_idx]
         self.__channels[oscilloscope_channel_idx] = channel
         self.update_ADCs_used()
@@ -61,7 +61,7 @@ class GUI():
 
     def add_trigger(self, type, unique_ADC_name, ADC_trigger_idx):
         trigger = None
-        ADC = self.osc.get_ADC(unique_ADC_name)
+        ADC = self.__osc.get_ADC(unique_ADC_name)
         if type == 'internal':   # consider dictionary
             trigger = ADC.internal_triggers[ADC_trigger_idx]
         else:
@@ -89,12 +89,12 @@ class GUI():
             if(channel.unique_ADC_name == unique_ADC_name):
                 channels.append(channel.ADC_channel_idx)
         channels.sort()
-        ADC = self.osc.get_ADC(unique_ADC_name)
+        ADC = self.__osc.get_ADC(unique_ADC_name)
         zmq_rpc = ADC.zmq_rpc
         zmq_rpc.send_RPC('configure_acquisition', channels)
 
     def set_presamples_ADC(self, value, unique_ADC_name):
-        ADC = self.osc.get_ADC(unique_ADC_name)
+        ADC = self.__osc.get_ADC(unique_ADC_name)
         zmq_rpc = ADC.zmq_rpc
         zmq_rpc.send_RPC('set_adc_parameter', 'set_presamples', value)
         ADC.update_conf()
@@ -106,7 +106,7 @@ class GUI():
         could be written is 2.
         If I read the configuration after initialization and want to write it
         back, I cannot, so then instead of writing 1, I write 2"""
-        ADC = self.osc.get_ADC(unique_ADC_name)
+        ADC = self.__osc.get_ADC(unique_ADC_name)
         zmq_rpc = ADC.zmq_rpc
         zmq_rpc.send_RPC('set_adc_parameter', 'set_postsamples', value)
         ADC.update_conf()
@@ -137,7 +137,7 @@ class GUI():
 
     def stop_acquisition_ADCs_used(self):
         for unique_ADC_name in self.__ADCs_used:
-            ADC = self.osc.get_ADC(unique_ADC_name)
+            ADC = self.__osc.get_ADC(unique_ADC_name)
             zmq_rpc = ADC.zmq_rpc
             zmq_rpc.send_RPC('stop_acquisition')
         for channel_idx, channel in self.__channels.items():
@@ -154,7 +154,7 @@ class GUI():
         timestamps = []
         offsets = {}
         for channel_idx, channel in self.__channels.items():
-            ADC = self.osc.get_ADC(channel.unique_ADC_name)
+            ADC = self.__osc.get_ADC(channel.unique_ADC_name)
             data[channel_idx] = channel.timestamp_pre_post_data['data_channel']
             timestamps.append(channel.timestamp_pre_post_data['timestamp'])
 
@@ -167,18 +167,18 @@ class GUI():
             channel.timestamp_pre_post_data = None
         data = {'function_name': 'update_data',
                 'args': [data, pre_post_samples, offsets]}
-        self.GUI_publisher.send_message(data)
+        self.__GUI_publisher.send_message(data)
         """TODO make sure that the data rate is not too big for plot"""
         if self.__run:
             self.configure_acquisition_ADCs_used()
 
     def check_horizontal_settings(self):
         ADC0 = self.__ADCs_used[0]
-        ADC0 = self.osc.get_ADC(ADC0)
+        ADC0 = self.__osc.get_ADC(ADC0)
         presamples = ADC0.acq_conf.presamples
         postsamples = ADC0.acq_conf.postsamples
         for ADC in self.__ADCs_used:
-            ADC = self.osc.get_ADC(ADC)
+            ADC = self.__osc.get_ADC(ADC)
             print(ADC.acq_conf.presamples)
             print(ADC.acq_conf.postsamples)
             if (presamples != ADC.acq_conf.presamples) or\
@@ -188,7 +188,7 @@ class GUI():
     def get_horiz_settings_copy(self):
         if self.__ADCs_used:
             ADC0 = self.__ADCs_used[0]
-            ADC0 = self.osc.get_ADC(ADC0)
+            ADC0 = self.__osc.get_ADC(ADC0)
             presamples = ADC0.acq_conf.presamples
             postsamples = ADC0.acq_conf.postsamples
             horizontal_params = {'presamples': presamples,
@@ -215,7 +215,7 @@ class GUI():
             return
         threshold = None
         if trigger.type == 'internal':
-            ADC = self.osc.get_ADC(trigger.unique_ADC_name)
+            ADC = self.__osc.get_ADC(trigger.unique_ADC_name)
             threshold = threshold_raw_to_mV(trigger.threshold, ADC,
                                             trigger.ADC_trigger_idx)
         else:
