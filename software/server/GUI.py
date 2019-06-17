@@ -97,8 +97,8 @@ class GUI():
 
     def set_presamples_ADC(self, value, unique_ADC_name):
         ADC = self.__osc.get_ADC(unique_ADC_name)
-        zmq_rpc = ADC.zmq_rpc
-        zmq_rpc.send_RPC('set_adc_parameter', 'set_presamples', value)
+        ADC.set_adc_parameter_remote('set_presamples', value)
+
         ADC.update_conf()
 
     def set_postsamples_ADC(self, value, unique_ADC_name):
@@ -109,8 +109,8 @@ class GUI():
         If I read the configuration after initialization and want to write it
         back, I cannot, so then instead of writing 1, I write 2"""
         ADC = self.__osc.get_ADC(unique_ADC_name)
-        zmq_rpc = ADC.zmq_rpc
-        zmq_rpc.send_RPC('set_adc_parameter', 'set_postsamples', value)
+        ADC.set_adc_parameter_remote('set_postsamples', value)
+
         ADC.update_conf()
 
     def set_presamples(self, value):

@@ -32,8 +32,6 @@ class ThreadGUI_zmq_Expose(threading.Thread):
         try:
             ADC = self.osc.get_ADC(unique_ADC_name)
             ADC.set_WRTD_master(True)
-            zmq_rpc = ADC.zmq_rpc
-            zmq_rpc.send_RPC('set_WRTD_master', True)
         except Exception as e:
             print(e)
 
@@ -46,8 +44,6 @@ class ThreadGUI_zmq_Expose(threading.Thread):
                                   trigger.ADC_trigger_idx)
             ADC = self.osc.get_ADC(trigger.unique_ADC_name)
             ADC.set_WRTD_master(False)
-            zmq_rpc = ADC.zmq_rpc
-            zmq_rpc.send_RPC('set_WRTD_master', False)
         except Exception as e:
             print(e)
         GUI.remove_trigger()
@@ -56,9 +52,9 @@ class ThreadGUI_zmq_Expose(threading.Thread):
                           unique_ADC_name):
         channel_ranges = {'10V': 10, '1V': 1, '100mV': 100}
         ADC = self.osc.get_ADC(unique_ADC_name)
-        zmq_rpc = ADC.zmq_rpc
-        ret = zmq_rpc.send_RPC('set_adc_parameter', 'set_channel_range',
-                               channel_idx,  channel_ranges[range_value_str])
+        ADC.set_adc_parameter_remote('set_channel_range', channel_idx,
+                              channel_ranges[range_value_str])
+
         internal_trigger = ADC.get_internal_trigger(channel_idx)
         curr_threshold = internal_trigger.threshold
         channel = ADC.get_channel(idx)
@@ -95,8 +91,7 @@ class ThreadGUI_zmq_Expose(threading.Thread):
 
     def send_RPC_request(self, function_name, unique_ADC_name, ADC_value, idx):
         ADC = self.osc.get_ADC(unique_ADC_name)
-        zmq_rpc = ADC.zmq_rpc
-        zmq_rpc.send_RPC('set_adc_parameter', function_name, idx, ADC_value)
+        ADC.set_adc_parameter_remote(function_name, idx, ADC_value)
 
     class MapperMethodsClosure():
 
