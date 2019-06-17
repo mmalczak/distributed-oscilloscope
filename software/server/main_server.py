@@ -1,8 +1,8 @@
 import sys
 sys.path.append('../general')
-from oscilloscope import *
-from service_management import *
-from expose import *
+from oscilloscope import Oscilloscope 
+from service_management import ThreadZeroConf
+from expose import ThreadGUI_zmq_Expose
 
 def main():
     import logging.config

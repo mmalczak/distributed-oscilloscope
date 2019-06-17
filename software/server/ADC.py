@@ -1,4 +1,7 @@
-from ADC_configs import *
+from ADC_configs import Channel 
+from ADC_configs import InternalTrigger
+from ADC_configs import ExternalTrigger
+from ADC_configs import AcqConf
 import sys
 sys.path.append('../')
 from general.zmq_rpc import ZMQ_RPC

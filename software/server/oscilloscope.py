@@ -1,4 +1,5 @@
-from GUI import *
+from GUI import GUI
+from ADC import ADC
 import logging
 logger = logging.getLogger(__name__)
 
@@ -30,6 +31,7 @@ class Oscilloscope():
         self.__GUIs.update({GUI_name: GUI_})
         for unique_ADC_name, ADC in self.__available_ADCs.items():
             GUI.register_ADC(unique_ADC_name, ADC.number_of_channels)
+            GUI_.GUI_publisher.send_message(data)
         logger.info("GUI {} registered".format(GUI_name))
 
     def unregister_GUI(self, GUI_name):

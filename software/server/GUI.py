@@ -1,6 +1,8 @@
-from ADC import *
-from conversion import *
-from timestamp_operations import *
+from ADC import ADC
+from conversion import threshold_raw_to_mV
+from timestamp_operations import check_if_not_max 
+from timestamp_operations import tic_difference
+from timestamp_operations import check_if_equal
 import logging
 from publisher import Publisher
 logger = logging.getLogger(__name__)
