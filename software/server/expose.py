@@ -19,8 +19,8 @@ class ThreadGUI_zmq_Expose(threading.Thread):
     def add_channel(self, oscilloscope_channel_idx, unique_ADC_name,
                     ADC_channel_idx, GUI_name):
         GUI = self.osc.get_GUI(GUI_name)
-        GUI.add_channel(oscilloscope_channel_idx, unique_ADC_name,
-                                            ADC_channel_idx)
+        ADC = self.osc.get_ADC(unique_ADC_name)
+        GUI.add_channel(oscilloscope_channel_idx, ADC, ADC_channel_idx)
 
     def remove_channel(self, oscilloscope_channel_idx, GUI_name):
         GUI = self.osc.get_GUI(GUI_name)
@@ -28,9 +28,9 @@ class ThreadGUI_zmq_Expose(threading.Thread):
 
     def add_trigger(self, type, unique_ADC_name, ADC_trigger_idx, GUI_name):
         GUI = self.osc.get_GUI(GUI_name)
-        GUI.add_trigger(type, unique_ADC_name, ADC_trigger_idx)
+        ADC = self.osc.get_ADC(unique_ADC_name)
+        GUI.add_trigger(type, ADC, ADC_trigger_idx)
         try:
-            ADC = self.osc.get_ADC(unique_ADC_name)
             ADC.set_is_WRTD_master(True)
         except Exception as e:
             print(e)

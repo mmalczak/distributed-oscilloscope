@@ -41,31 +41,29 @@ class GUI():
         for channel_idx in channels_to_delete:
             self.remove_channel(channel_idx)
 
-
     def contains_ADC(self, unique_ADC_name):
-        return unique_ADC_name in self.__ADCs_used
+        for ADC in self.__ADCs_used:
+            if unique_ADC_name == ADC.unique_ADC_name:
+                return True
+        return False
 
-    def add_channel(self, oscilloscope_channel_idx, unique_ADC_name,
-                    ADC_channel_idx):
+    def add_channel(self, oscilloscope_channel_idx, ADC, ADC_channel_idx):
         def set_horizontal_setting_when_add_channel(self, new_ADC):
-            ADC_name = self.__ADCs_used[0]
-            ADC = self.__osc.get_ADC(ADC_name)
+            ADC = self.__ADCs_used[0]
             acq_conf = ADC.get_acq_conf()
             presamples = acq_conf.presamples
             postsamples = acq_conf.postsamples
             self.__set_presamples_ADC(presamples, new_ADC)
             self.__set_postsamples_ADC(postsamples, new_ADC)
 
-        ADC = self.__osc.get_ADC(unique_ADC_name)
         ADC.add_used_channel(ADC_channel_idx)
         channel = ADC.get_channel(ADC_channel_idx)
         self.__channels[oscilloscope_channel_idx] = channel
         self.__update_ADCs_used()
-        set_horizontal_setting_when_add_channel(self, unique_ADC_name)
+        set_horizontal_setting_when_add_channel(self, ADC)
 
-    def add_trigger(self, type, unique_ADC_name, ADC_trigger_idx):
+    def add_trigger(self, type, ADC, ADC_trigger_idx):
         trigger = None
-        ADC = self.__osc.get_ADC(unique_ADC_name)
         if type == 'internal':   # consider dictionary
             trigger = ADC.get_internal_trigger(ADC_trigger_idx)
         else:
@@ -85,32 +83,21 @@ class GUI():
         self.__ADCs_used = []
         for channel_idx, channel in self.__channels.items():
             if not(channel.unique_ADC_name in self.__ADCs_used):
-                self.__ADCs_used.append(channel.unique_ADC_name)
+                ADC = self.__osc.get_ADC(channel.unique_ADC_name)
+                self.__ADCs_used.append(ADC)
 
-    def __configure_acquisition_ADC(self, unique_ADC_name):
-        channels = []
-        for channel_idx, channel in self.__channels.items():
-            if(channel.unique_ADC_name == unique_ADC_name):
-                channels.append(channel.ADC_channel_idx)
-        channels.sort()
-        ADC = self.__osc.get_ADC(unique_ADC_name)
-        zmq_rpc = ADC.zmq_rpc
-        zmq_rpc.send_RPC('configure_acquisition', channels)
-
-    def __set_presamples_ADC(self, value, unique_ADC_name):
-        ADC = self.__osc.get_ADC(unique_ADC_name)
+    def __set_presamples_ADC(self, value, ADC):
         ADC.set_adc_parameter_remote('set_presamples', value)
 
         ADC.update_conf()
 
-    def __set_postsamples_ADC(self, value, unique_ADC_name):
+    def __set_postsamples_ADC(self, value, ADC):
         if value == 1:
             value = 2
         """By default the value of postsamples is, but the minimum value that
         could be written is 2.
         If I read the configuration after initialization and want to write it
         back, I cannot, so then instead of writing 1, I write 2"""
-        ADC = self.__osc.get_ADC(unique_ADC_name)
         ADC.set_adc_parameter_remote('set_postsamples', value)
 
         ADC.update_conf()
@@ -132,8 +119,7 @@ class GUI():
 
     def configure_acquisition_ADCs_used(self):
         if self.__trigger is not None:
-            for unique_ADC_name in self.__ADCs_used:
-                ADC = self.__osc.get_ADC(unique_ADC_name)
+            for ADC in self.__ADCs_used:
                 if(not ADC.get_is_WRTD_master()):
                     ADC.configure_acquisition()
             ADC = self.__osc.get_ADC(self.__trigger.unique_ADC_name)
@@ -143,8 +129,7 @@ class GUI():
             logger.info("No trigger selected")
 
     def stop_acquisition_ADCs_used(self):
-        for unique_ADC_name in self.__ADCs_used:
-            ADC = self.__osc.get_ADC(unique_ADC_name)
+        for ADC in self.__ADCs_used:
             zmq_rpc = ADC.zmq_rpc
             zmq_rpc.send_RPC('stop_acquisition')
         for channel_idx, channel in self.__channels.items():
@@ -181,13 +166,11 @@ class GUI():
 
     def __check_horizontal_settings(self):
         ADC0 = self.__ADCs_used[0]
-        ADC0 = self.__osc.get_ADC(ADC0)
         acq_conf = ADC0.get_acq_conf()
         presamples = acq_conf.presamples
         postsamples = acq_conf.postsamples
         for ADC in self.__ADCs_used:
             acq_conf = ADC.get_acq_conf()
-            ADC = self.__osc.get_ADC(ADC)
             if (presamples != acq_conf.presamples) or\
                (postsamples != acq_conf.postsamples):
                 raise HorizontalSettingsError
@@ -195,7 +178,6 @@ class GUI():
     def get_horiz_settings_copy(self):
         if self.__ADCs_used:
             ADC0 = self.__ADCs_used[0]
-            ADC0 = self.__osc.get_ADC(ADC0)
             acq_conf = ADC0.get_acq_conf()
             presamples = acq_conf.presamples
             postsamples = acq_conf.postsamples
