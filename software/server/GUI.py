@@ -135,7 +135,7 @@ class GUI():
         return True
 
 
-    def check_if_ready_and_send_data(self):
+    def if_ready_send_data(self):
         self.__data_timer_start = int(time.time()*1000)
         if not self.check_if_all_data_ready():
             return
