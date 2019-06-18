@@ -57,6 +57,7 @@ class GUI():
             self.__set_postsamples_ADC(postsamples, new_ADC)
 
         ADC = self.__osc.get_ADC(unique_ADC_name)
+        ADC.add_used_channel(ADC_channel_idx)
         channel = ADC.get_channel(ADC_channel_idx)
         self.__channels[oscilloscope_channel_idx] = channel
         self.__update_ADCs_used()
@@ -134,9 +135,10 @@ class GUI():
             for unique_ADC_name in self.__ADCs_used:
                 ADC = self.__osc.get_ADC(unique_ADC_name)
                 if(not ADC.get_is_WRTD_master()):
-                    self.__configure_acquisition_ADC(unique_ADC_name)
-            self.__configure_acquisition_ADC(self.__trigger.unique_ADC_name)
+                    ADC.configure_acquisition()
+            ADC = self.__osc.get_ADC(self.__trigger.unique_ADC_name)
             """This is the WRTD master"""
+            ADC.configure_acquisition()
         else:
             logger.info("No trigger selected")
 

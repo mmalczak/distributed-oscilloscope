@@ -14,6 +14,7 @@ class ADC:
         self.__ip = ip
         self.__port = port
         self.__channels = []
+        self.__used_channels = []
         self.__internal_triggers = []
         self.__external_triggers = []
         self.__acq_conf = None
@@ -99,3 +100,10 @@ class ADC:
 
     def set_adc_parameter_remote(self, function_name, *args):
         self.zmq_rpc.send_RPC('set_adc_parameter', function_name, *args)
+
+    def add_used_channel(self, channel):
+        self.__used_channels.append(channel)
+        self.__used_channels.sort()
+
+    def configure_acquisition(self):
+        self.zmq_rpc.send_RPC('configure_acquisition', self.__used_channels)
