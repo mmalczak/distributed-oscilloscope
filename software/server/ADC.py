@@ -113,7 +113,7 @@ class ADC:
         self.zmq_rpc.send_RPC('stop_acquisition')
 
     def set_presamples(self, value):
-        self.set_adc_parameter_remote('set_presamples', value)
+        self.set_adc_parameter('set_presamples', value)
         self.update_conf()
 
     def set_postsamples(self, value):
@@ -123,5 +123,5 @@ class ADC:
         could be written is 2.
         If I read the configuration after initialization and want to write it
         back, I cannot, so then instead of writing 1, I write 2"""
-        self.set_adc_parameter_remote('set_postsamples', value)
+        self.set_adc_parameter('set_postsamples', value)
         self.update_conf()
