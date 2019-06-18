@@ -243,8 +243,8 @@ class ChannelRange(Menu):
         range_value_str = self.sender().text()
         try:
             rpc = self.zmq_rpc
-            rpc.send_RPC('set_channel_range', range_value_str, self.idx,
-                         self.unique_ADC_name)
+            rpc.send_RPC('set_ADC_parameter', 'channel_range', range_value_str,
+                         self.unique_ADC_name, self.idx)
         except Exception as e:
             print(e)
         self.GUI.update_GUI_params()

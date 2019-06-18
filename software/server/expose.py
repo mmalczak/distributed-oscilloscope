@@ -35,42 +35,18 @@ class ThreadGUI_zmq_Expose(threading.Thread):
         GUI = self.osc.get_GUI(GUI_name)
         GUI.remove_trigger()
 
-    def set_channel_range(self, range_value_str, channel_idx,
-                          unique_ADC_name):
-        channel_ranges = {'10V': 10, '1V': 1, '100mV': 100}
-        ADC = self.osc.get_ADC(unique_ADC_name)
-        ADC.set_adc_parameter_remote('set_channel_range', channel_idx,
-                              channel_ranges[range_value_str])
-
-        internal_trigger = ADC.get_internal_trigger(channel_idx)
-        curr_threshold = internal_trigger.threshold
-        channel = ADC.get_channel(channel_idx)
-        curr_range = channel.channel_range
-        new_range = channel_ranges[range_value_str]
-        multiplier = {(10, 10): 1, (10, 1): 10, (10, 100): 100,
-                      (1, 10): 1/10, (1, 1): 1, (1, 100): 10,
-                      (100, 10): 1/100, (100, 1): 10, (100, 100): 1}
-        threshold = int(curr_threshold*multiplier[(curr_range, new_range)])
-        if (threshold > 2**15-1 or threshold < -2**15):
-            self.set_adc_parameter('set_internal_trigger_enable',
-                                   channel_idx, 0)
-            self.set_adc_parameter('set_internal_trigger_threshold',
-                                   channel_idx, 0)
-            logger.warning("Internal trigger disabled: value out of range")
-            """TODO send information to the GUI"""
-        else:
-            self.set_adc_parameter('set_internal_trigger_threshold',
-                                  unique_ADC_name, threshold, channel_idx)
-        ADC.update_conf()
-
-
     def set_ADC_parameter(self, parameter_name, value, unique_ADC_name,
                           idx=-1):
         function_name = 'set_' + parameter_name
         mapper_function_name = 'map_' + parameter_name
+        preprocess_function_name = 'preprocess_' + parameter_name
         mapper_methods_closure = self.MapperMethodsClosure()
+        preprocess_closure = self.PreprocessClosure()
+        preprocess_function = getattr(preprocess_closure,
+                                            preprocess_function_name)
         mapper_function = getattr(mapper_methods_closure, mapper_function_name)
         ADC = self.osc.get_ADC(unique_ADC_name)
+        preprocess_function(value, ADC, idx)
         ADC_value = mapper_function(value, ADC, idx)
         ADC.set_adc_parameter(function_name, idx, ADC_value)
         ADC = self.osc.get_ADC(unique_ADC_name)
@@ -79,13 +55,51 @@ class ThreadGUI_zmq_Expose(threading.Thread):
     class MapperMethodsClosure():
 
         def __getattr__(self, *args):
+            """if there is not mapper function defined, return the value
+            without mapping"""
             return lambda *x: x[0]
 
-        def map_internal_trigger_threshold(self, value, *args):
-            return threshold_mV_to_raw(value, *args)
+        def map_internal_trigger_threshold(self, value, ADC, idx):
+            return threshold_mV_to_raw(value, ADC, idx)
 
-        def map_channel_termination(self, value, *args):
+        def map_channel_termination(self, value, ADC, idx):
             return int(value)
+
+        def map_channel_range(self, value, *args):
+            channel_ranges = {'10V': 10, '1V': 1, '100mV': 100}
+            return channel_ranges[value]
+
+    class PreprocessClosure():
+
+        def __getattr__(self, *args):
+            """if the preprocess function not defined, do nothing"""
+            return lambda *x: None
+
+        def preprocess_channel_range(self, range_value_str, ADC, channel_idx):
+            """ The threshold value is given with respect to range,
+            therefore if range is changed, the value in mv has to be
+            recalculated"""
+            channel = ADC.get_channel(channel_idx)
+            previous_range = channel.channel_range
+            internal_trigger = ADC.get_internal_trigger(channel_idx)
+            curr_threshold = internal_trigger.threshold
+            channel_ranges = {'10V': 10, '1V': 1, '100mV': 100}
+            new_range = channel_ranges[range_value_str]
+            multiplier = {(10, 10): 1, (10, 1): 10, (10, 100): 100,
+                          (1, 10): 1/10, (1, 1): 1, (1, 100): 10,
+                          (100, 10): 1/100, (100, 1): 10, (100, 100): 1}
+            multiplication = multiplier[(previous_range, new_range)]
+            threshold = int(curr_threshold * multiplication)
+            if (threshold > 2**15-1 or threshold < -2**15):
+                ADC.set_adc_parameter('set_internal_trigger_enable',
+                                       channel_idx, 0)
+                ADC.set_adc_parameter('set_internal_trigger_threshold',
+                                       channel_idx, 0)
+                logger.warning("Internal trigger disabled: value out of range")
+                """TODO send information to the GUI"""
+            else:
+                ADC.set_adc_parameter('set_internal_trigger_threshold',
+                                      channel_idx, threshold)
 
     def single_acquisition(self, GUI_name):
         GUI = self.osc.get_GUI(GUI_name)
