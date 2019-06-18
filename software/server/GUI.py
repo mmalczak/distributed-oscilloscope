@@ -132,9 +132,11 @@ class GUI():
     def configure_acquisition_ADCs_used(self):
         if self.__trigger is not None:
             for unique_ADC_name in self.__ADCs_used:
-                if(unique_ADC_name != self.__trigger.unique_ADC_name):
+                ADC = self.__osc.get_ADC(unique_ADC_name)
+                if(not ADC.get_is_WRTD_master()):
                     self.__configure_acquisition_ADC(unique_ADC_name)
             self.__configure_acquisition_ADC(self.__trigger.unique_ADC_name)
+            """This is the WRTD master"""
         else:
             logger.info("No trigger selected")
 

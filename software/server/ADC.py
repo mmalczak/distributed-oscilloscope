@@ -94,5 +94,8 @@ class ADC:
         self.__is_WRTD_master = WRTD_master
         self.zmq_rpc.send_RPC('set_WRTD_master', WRTD_master)
 
+    def get_is_WRTD_master(self):
+        return self.__is_WRTD_master
+
     def set_adc_parameter_remote(self, function_name, *args):
         self.zmq_rpc.send_RPC('set_adc_parameter', function_name, *args)
