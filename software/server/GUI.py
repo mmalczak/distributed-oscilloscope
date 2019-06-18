@@ -128,13 +128,17 @@ class GUI():
             if self.__run:
                 self.configure_acquisition_ADCs_used()
 
-    def check_if_ready_and_send_data(self):
-        """this function is called by the oscilloscope"""
-        """TODo check if data is aligned"""
-        self.__data_timer_start = int(time.time()*1000)
+    def check_if_all_data_ready(self):
         for channel_idx, channel in self.__channels.items():
             if (channel.timestamp_pre_post_data is None):
-                return
+                return False
+        return True
+
+
+    def check_if_ready_and_send_data(self):
+        self.__data_timer_start = int(time.time()*1000)
+        if not self.check_if_all_data_ready():
+            return
         data = {}
         pre_post_samples = {}
         timestamps = []
