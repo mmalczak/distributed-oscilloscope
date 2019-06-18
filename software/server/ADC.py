@@ -155,7 +155,7 @@ class ADC:
                 ADC.set_adc_parameter('set_internal_trigger_threshold',
                                       channel_idx, threshold)
 
-    def set_ADC_parameter(self, parameter_name, idx, value):
+    def set_ADC_parameter(self, parameter_name, value, idx):
         function_name = 'set_' + parameter_name
         mapper_function_name = 'map_' + parameter_name
         preprocess_function_name = 'preprocess_' + parameter_name

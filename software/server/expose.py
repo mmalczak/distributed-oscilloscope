@@ -38,7 +38,7 @@ class ThreadGUI_zmq_Expose(threading.Thread):
                           idx=-1):
         ADC = self.osc.get_ADC(unique_ADC_name)
         try:
-            ADC.set_ADC_parameter(parameter_name, idx, value)
+            ADC.set_ADC_parameter(parameter_name, value, idx)
         except Exception as e:
             print("Set_ADC_parameter error {}".format(e))
 
