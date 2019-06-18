@@ -24,19 +24,19 @@ class ADC:
         self.number_of_channels = conf['board_conf']['n_chan']
 
         for count in range(0, conf['board_conf']['n_chan']):
-            channel = Channel(self.__unique_ADC_name, count)
+            channel = Channel(self, count)
             self.__channels.append(channel)
         for count in range(0, conf['board_conf']['n_trg_int']):
-            int_trig = InternalTrigger(self.__unique_ADC_name, count)
+            int_trig = InternalTrigger(self, count)
             self.__internal_triggers.append(int_trig)
 
         for count in range(0, conf['board_conf']['n_trg_ext']):
-            ext_trig = ExternalTrigger(self.__unique_ADC_name, count)
+            ext_trig = ExternalTrigger(self, count)
             self.__external_triggers.append(ext_trig)
         self.__acq_conf = AcqConf()
         self.update_conf()
 
-    def update_data(self, timestamp, pre_post, data, unique_ADC_name):
+    def update_data(self, timestamp, pre_post, data):
         """the value of pre and postsamples is passed together with the data
         because if it is read from the ADC structure in the server it could
         be outdated"""

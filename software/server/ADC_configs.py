@@ -1,7 +1,7 @@
 class Channel:
 
-    def __init__(self, unique_ADC_name, ADC_channel_idx):
-        self.unique_ADC_name = unique_ADC_name
+    def __init__(self, ADC, ADC_channel_idx):
+        self.ADC = ADC
         self.ADC_channel_idx = ADC_channel_idx
         self.range_conv = {35: 100, 69: 10, 17: 1}
         self.active = True  # TO BE REMOVED
@@ -50,9 +50,9 @@ class Trigger:
 
 class InternalTrigger(Trigger):
 
-    def __init__(self, unique_ADC_name, ADC_trigger_idx):
+    def __init__(self, ADC, ADC_trigger_idx):
         super().__init__()
-        self.unique_ADC_name = unique_ADC_name
+        self.ADC = ADC
         self.ADC_trigger_idx = ADC_trigger_idx
         self.threshold = None
         self.type = 'internal'
@@ -69,10 +69,10 @@ class InternalTrigger(Trigger):
 
 class ExternalTrigger(Trigger):
 
-    def __init__(self, unique_ADC_name, ADC_trigger_idx):
+    def __init__(self, ADC, ADC_trigger_idx):
         super().__init__()
         self.type = 'external'
-        self.unique_ADC_name = unique_ADC_name
+        self.ADC = ADC
         self.ADC_trigger_idx = ADC_trigger_idx
 
 

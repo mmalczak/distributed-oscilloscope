@@ -42,7 +42,7 @@ class Oscilloscope():
             return
         """TODO add logging, do sth"""
         ADC = self.get_ADC(unique_ADC_name)
-        ADC.update_data(timestamp, pre_post, data, unique_ADC_name)
+        ADC.update_data(timestamp, pre_post, data)
         for GUI_name, GUI in self.__GUIs.items():
             GUI.check_if_ready_and_send_data()
 

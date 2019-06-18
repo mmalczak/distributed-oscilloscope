@@ -36,7 +36,7 @@ class GUI():
         self.__GUI_publisher.send_message(message)
         channels_to_delete = []
         for channel_idx, channel in self.channels.items():
-            if channel.unique_ADC_name == unique_ADC_name:
+            if channel.ADC.unique_ADC_name == unique_ADC_name:
                 channels_to_delete.append(channel_idx)
         for channel_idx in channels_to_delete:
             self.remove_channel(channel_idx)
@@ -82,9 +82,8 @@ class GUI():
     def __update_ADCs_used(self):
         self.__ADCs_used = []
         for channel_idx, channel in self.__channels.items():
-            if not(channel.unique_ADC_name in self.__ADCs_used):
-                ADC = self.__osc.get_ADC(channel.unique_ADC_name)
-                self.__ADCs_used.append(ADC)
+            if not(channel.ADC in self.__ADCs_used):
+                self.__ADCs_used.append(channel.ADC)
 
     def __set_presamples_ADC(self, value, ADC):
         ADC.set_adc_parameter_remote('set_presamples', value)
@@ -122,9 +121,8 @@ class GUI():
             for ADC in self.__ADCs_used:
                 if(not ADC.get_is_WRTD_master()):
                     ADC.configure_acquisition()
-            ADC = self.__osc.get_ADC(self.__trigger.unique_ADC_name)
+            self.__trigger.ADC.configure_acquisition()
             """This is the WRTD master"""
-            ADC.configure_acquisition()
         else:
             logger.info("No trigger selected")
 
@@ -146,7 +144,7 @@ class GUI():
         timestamps = []
         offsets = {}
         for channel_idx, channel in self.__channels.items():
-            ADC = self.__osc.get_ADC(channel.unique_ADC_name)
+            ADC = channel.ADC
             data[channel_idx] = channel.timestamp_pre_post_data['data_channel']
             timestamps.append(channel.timestamp_pre_post_data['timestamp'])
 
@@ -205,7 +203,7 @@ class GUI():
             return
         threshold = None
         if trigger.type == 'internal':
-            ADC = self.__osc.get_ADC(trigger.unique_ADC_name)
+            ADC = trigger.ADC
             threshold = threshold_raw_to_mV(trigger.threshold, ADC,
                                             trigger.ADC_trigger_idx)
         else:
