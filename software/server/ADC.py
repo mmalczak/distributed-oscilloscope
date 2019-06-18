@@ -5,6 +5,10 @@ from ADC_configs import AcqConf
 import sys
 sys.path.append('../')
 from general.zmq_rpc import ZMQ_RPC
+from conversion import threshold_mV_to_raw
+import logging
+logger = logging.getLogger(__name__)
+
 
 # fixme if your class doesnt inherit, do not add empty () after its declaration
 class ADC:
@@ -101,6 +105,81 @@ class ADC:
     def set_adc_parameter(self, function_name, *args):
         self.zmq_rpc.send_RPC('set_adc_parameter', function_name, *args)
         self.update_conf()
+
+    class MapperMethodsClosure():
+
+        def __getattr__(self, *args):
+            """if there is not mapper function defined, return the value
+            without mapping"""
+            return lambda *x: x[0]
+
+        def map_internal_trigger_threshold(self, value, ADC, idx):
+            return threshold_mV_to_raw(value, ADC, idx)
+
+        def map_channel_termination(self, value, ADC, idx):
+            return int(value)
+
+        def map_channel_range(self, value, *args):
+            channel_ranges = {'10V': 10, '1V': 1, '100mV': 100}
+            return channel_ranges[value]
+
+    class PreprocessClosure():
+
+        def __getattr__(self, *args):
+            """if the preprocess function not defined, do nothing"""
+            return lambda *x: None
+
+        def preprocess_channel_range(self, range_value_str, ADC, channel_idx):
+            """ The threshold value is given with respect to range,
+            therefore if range is changed, the value in mv has to be
+            recalculated"""
+            channel = ADC.get_channel(channel_idx)
+            previous_range = channel.channel_range
+            internal_trigger = ADC.get_internal_trigger(channel_idx)
+            curr_threshold = internal_trigger.threshold
+            channel_ranges = {'10V': 10, '1V': 1, '100mV': 100}
+            new_range = channel_ranges[range_value_str]
+            multiplier = {(10, 10): 1, (10, 1): 10, (10, 100): 100,
+                          (1, 10): 1/10, (1, 1): 1, (1, 100): 10,
+                          (100, 10): 1/100, (100, 1): 10, (100, 100): 1}
+            multiplication = multiplier[(previous_range, new_range)]
+            threshold = int(curr_threshold * multiplication)
+            if (threshold > 2**15-1 or threshold < -2**15):
+                ADC.set_adc_parameter('set_internal_trigger_enable',
+                                       channel_idx, 0)
+                ADC.set_adc_parameter('set_internal_trigger_threshold',
+                                       channel_idx, 0)
+                logger.warning("Internal trigger disabled: value out of range")
+                """TODO send information to the GUI"""
+            else:
+                ADC.set_adc_parameter('set_internal_trigger_threshold',
+                                      channel_idx, threshold)
+
+    def set_ADC_parameter(self, parameter_name, idx, value):
+        function_name = 'set_' + parameter_name
+        mapper_function_name = 'map_' + parameter_name
+        preprocess_function_name = 'preprocess_' + parameter_name
+        mapper_methods_closure = self.MapperMethodsClosure()
+        preprocess_closure = self.PreprocessClosure()
+        preprocess_function = getattr(preprocess_closure,
+                                            preprocess_function_name)
+        mapper_function = getattr(mapper_methods_closure, mapper_function_name)
+        mapped_value = None
+        try:
+            preprocess_function(value, self, idx)
+        except Exception as e:
+            logger.error("Preprocessing error {}".format(e))
+        try:
+            mapped_value = mapper_function(value, self, idx)
+        except Exception as e:
+            logger.error("Mapping error {}".format(e))
+        try:
+            self.zmq_rpc.send_RPC('set_adc_parameter', function_name, idx,
+                                  mapped_value)
+        except Exception as e:
+            logger.error("Function invocation error {}".format(e))
+        self.update_conf()
+
 
     def add_used_channel(self, channel):
         self.__used_channels.append(channel)
