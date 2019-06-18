@@ -31,7 +31,7 @@ class ThreadGUI_zmq_Expose(threading.Thread):
         GUI.add_trigger(type, unique_ADC_name, ADC_trigger_idx)
         try:
             ADC = self.osc.get_ADC(unique_ADC_name)
-            ADC.set_WRTD_master(True)
+            ADC.set_is_WRTD_master(True)
         except Exception as e:
             print(e)
 
@@ -43,7 +43,7 @@ class ThreadGUI_zmq_Expose(threading.Thread):
             self.send_RPC_request(function_name, trigger.unique_ADC_name, 0,
                                   trigger.ADC_trigger_idx)
             ADC = self.osc.get_ADC(trigger.unique_ADC_name)
-            ADC.set_WRTD_master(False)
+            ADC.set_is_WRTD_master(False)
         except Exception as e:
             print(e)
         GUI.remove_trigger()

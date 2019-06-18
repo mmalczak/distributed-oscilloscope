@@ -17,7 +17,7 @@ class ADC:
         self.__internal_triggers = []
         self.__external_triggers = []
         self.__acq_conf = None
-        self.__WRTD_master = True
+        self.__is_WRTD_master = True
         self.zmq_rpc = ZMQ_RPC(ip, port + 8)  # remove +8 after removing xml
         conf = self.zmq_rpc.send_RPC('get_current_adc_conf')
         self.number_of_channels = conf['board_conf']['n_chan']
@@ -90,8 +90,8 @@ class ADC:
     def get_acq_conf(self):
         return self.__acq_conf
 
-    def set_WRTD_master(self, WRTD_master):
-        self.__WRTD_master = WRTD_master
+    def set_is_WRTD_master(self, WRTD_master):
+        self.__is_WRTD_master = WRTD_master
         self.zmq_rpc.send_RPC('set_WRTD_master', WRTD_master)
 
     def set_adc_parameter_remote(self, function_name, *args):
