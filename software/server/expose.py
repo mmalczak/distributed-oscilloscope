@@ -40,8 +40,8 @@ class ThreadGUI_zmq_Expose(threading.Thread):
         trigger = GUI.trigger
         try:
             function_name = 'set_' + trigger.type + '_trigger_enable'
-            self.send_RPC_request(function_name, trigger.unique_ADC_name, 0,
-                                  trigger.ADC_trigger_idx)
+            ADC = GUI.trigger.ADC
+            ADC.set_adc_parameter(function_name, trigger.ADC_trigger_idx, 0)
             ADC = self.osc.get_ADC(trigger.unique_ADC_name)
             ADC.set_is_WRTD_master(False)
         except Exception as e:
@@ -65,14 +65,14 @@ class ThreadGUI_zmq_Expose(threading.Thread):
                       (100, 10): 1/100, (100, 1): 10, (100, 100): 1}
         threshold = int(curr_threshold*multiplier[(curr_range, new_range)])
         if (threshold > 2**15-1 or threshold < -2**15):
-            self.send_RPC_request('set_internal_trigger_enable',
-                                  unique_ADC_name, 0, channel_idx)
-            self.send_RPC_request('set_internal_trigger_threshold',
-                                  unique_ADC_name, 0, channel_idx)
+            self.set_adc_parameter('set_internal_trigger_enable',
+                                   channel_idx, 0)
+            self.set_adc_parameter('set_internal_trigger_threshold',
+                                   channel_idx, 0)
             logger.warning("Internal trigger disabled: value out of range")
             """TODO send information to the GUI"""
         else:
-            self.send_RPC_request('set_internal_trigger_threshold',
+            self.set_adc_parameter('set_internal_trigger_threshold',
                                   unique_ADC_name, threshold, channel_idx)
         ADC.update_conf()
 
@@ -85,13 +85,9 @@ class ThreadGUI_zmq_Expose(threading.Thread):
         mapper_function = getattr(mapper_methods_closure, mapper_function_name)
         ADC = self.osc.get_ADC(unique_ADC_name)
         ADC_value = mapper_function(value, ADC, idx)
-        self.send_RPC_request(function_name, unique_ADC_name, ADC_value, idx)
+        ADC.set_adc_parameter(function_name, idx, ADC_value)
         ADC = self.osc.get_ADC(unique_ADC_name)
         ADC.update_conf()
-
-    def send_RPC_request(self, function_name, unique_ADC_name, ADC_value, idx):
-        ADC = self.osc.get_ADC(unique_ADC_name)
-        ADC.set_adc_parameter_remote(function_name, idx, ADC_value)
 
     class MapperMethodsClosure():
 
