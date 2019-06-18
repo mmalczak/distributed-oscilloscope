@@ -14,7 +14,7 @@ class HorizontalSettingsError(Exception):
 
 class GUI():
 
-    def __init__(self, osc, name, GUI_addr, GUI_port):
+    def __init__(self, name, GUI_addr, GUI_port):
         self.name = name
         self.__channels = {}
         self.__trigger = None
@@ -23,7 +23,6 @@ class GUI():
         self.__GUI_port = GUI_port
         self.__run = False
         self.__GUI_publisher = Publisher(self.__GUI_addr, self.__GUI_port)
-        self.__osc = osc
 
     """TODO number of channels shouldn't be sent here"""
     def register_ADC(self, unique_ADC_name, number_of_channels):
