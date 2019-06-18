@@ -55,8 +55,8 @@ class GUI():
             acq_conf = ADC.get_acq_conf()
             presamples = acq_conf.presamples
             postsamples = acq_conf.postsamples
-            self.__set_presamples_ADC(presamples, new_ADC)
-            self.__set_postsamples_ADC(postsamples, new_ADC)
+            new_ADC.set_presamples(presamples)
+            new_ADC.set_postsamples(postsamples)
 
         ADC.add_used_channel(ADC_channel_idx)
         channel = ADC.get_channel(ADC_channel_idx)

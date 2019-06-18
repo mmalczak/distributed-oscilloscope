@@ -1,7 +1,6 @@
 import threading
 import os
 from service_management import *
-from conversion import threshold_mV_to_raw
 import zmq
 from zmq.utils.monitor import recv_monitor_message
 from zmq.utils.monitor import parse_monitor_message
