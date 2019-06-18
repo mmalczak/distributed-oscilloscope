@@ -128,7 +128,7 @@ class GUI():
             if self.__run:
                 self.configure_acquisition_ADCs_used()
 
-    def check_if_all_data_ready(self):
+    def __check_if_all_data_ready(self):
         for channel_idx, channel in self.__channels.items():
             if (channel.timestamp_pre_post_data is None):
                 return False
@@ -137,7 +137,7 @@ class GUI():
 
     def if_ready_send_data(self):
         self.__data_timer_start = int(time.time()*1000)
-        if not self.check_if_all_data_ready():
+        if not self.__check_if_all_data_ready():
             return
         data = {}
         pre_post_samples = {}
