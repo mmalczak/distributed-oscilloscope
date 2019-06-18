@@ -84,30 +84,14 @@ class GUI():
             if not(channel.ADC in self.__ADCs_used):
                 self.__ADCs_used.append(channel.ADC)
 
-    def __set_presamples_ADC(self, value, ADC):
-        ADC.set_adc_parameter_remote('set_presamples', value)
-
-        ADC.update_conf()
-
-    def __set_postsamples_ADC(self, value, ADC):
-        if value == 1:
-            value = 2
-        """By default the value of postsamples is, but the minimum value that
-        could be written is 2.
-        If I read the configuration after initialization and want to write it
-        back, I cannot, so then instead of writing 1, I write 2"""
-        ADC.set_adc_parameter_remote('set_postsamples', value)
-
-        ADC.update_conf()
-
     def set_presamples(self, value):
         for ADC in self.__ADCs_used:
-            self.__set_presamples_ADC(value, ADC)
+            ADC.set_presamples(value)
         self.__check_horizontal_settings()
 
     def set_postsamples(self, value):
         for ADC in self.__ADCs_used:
-            self.__set_postsamples_ADC(value, ADC)
+            ADC.set_postsamples(value)
         self.__check_horizontal_settings()
 
     def run_acquisition(self, run):

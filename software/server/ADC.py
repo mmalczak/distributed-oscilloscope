@@ -110,3 +110,17 @@ class ADC:
 
     def stop_acquisition(self):
         self.zmq_rpc.send_RPC('stop_acquisition')
+
+    def set_presamples(self, value):
+        self.set_adc_parameter_remote('set_presamples', value)
+        self.update_conf()
+
+    def set_postsamples(self, value):
+        if value == 1:
+            value = 2
+        """By default the value of postsamples is, but the minimum value that
+        could be written is 2.
+        If I read the configuration after initialization and want to write it
+        back, I cannot, so then instead of writing 1, I write 2"""
+        self.set_adc_parameter_remote('set_postsamples', value)
+        self.update_conf()
