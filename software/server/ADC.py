@@ -107,3 +107,6 @@ class ADC:
 
     def configure_acquisition(self):
         self.zmq_rpc.send_RPC('configure_acquisition', self.__used_channels)
+
+    def stop_acquisition(self):
+        self.zmq_rpc.send_RPC('stop_acquisition')

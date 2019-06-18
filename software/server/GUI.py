@@ -127,8 +127,7 @@ class GUI():
 
     def stop_acquisition_ADCs_used(self):
         for ADC in self.__ADCs_used:
-            zmq_rpc = ADC.zmq_rpc
-            zmq_rpc.send_RPC('stop_acquisition')
+            ADC.stop_acquisition()
         for channel_idx, channel in self.__channels.items():
             channel.timestamp_pre_post_data = None
 
