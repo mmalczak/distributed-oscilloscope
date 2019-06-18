@@ -30,22 +30,9 @@ class ThreadGUI_zmq_Expose(threading.Thread):
         GUI = self.osc.get_GUI(GUI_name)
         ADC = self.osc.get_ADC(unique_ADC_name)
         GUI.add_trigger(type, ADC, ADC_trigger_idx)
-        try:
-            ADC.set_is_WRTD_master(True)
-        except Exception as e:
-            print(e)
 
     def remove_trigger(self, GUI_name):
         GUI = self.osc.get_GUI(GUI_name)
-        trigger = GUI.trigger
-        try:
-            function_name = 'set_' + trigger.type + '_trigger_enable'
-            ADC = GUI.trigger.ADC
-            ADC.set_adc_parameter(function_name, trigger.ADC_trigger_idx, 0)
-            ADC = self.osc.get_ADC(trigger.unique_ADC_name)
-            ADC.set_is_WRTD_master(False)
-        except Exception as e:
-            print(e)
         GUI.remove_trigger()
 
     def set_channel_range(self, range_value_str, channel_idx,

@@ -70,6 +70,7 @@ class GUI():
             trigger = ADC.get_internal_trigger(ADC_trigger_idx)
         else:
             trigger = ADC.get_external_trigger(ADC_trigger_idx)
+        ADC.set_is_WRTD_master(True)
         self.__trigger = trigger
         self.__update_ADCs_used()
 
@@ -78,6 +79,12 @@ class GUI():
         self.__update_ADCs_used()
 
     def remove_trigger(self):
+        ADC = self.__trigger.ADC
+        trigger = self.__trigger
+        function_name = 'set_' + trigger.type + '_trigger_enable'
+        ADC.set_adc_parameter(function_name, trigger.ADC_trigger_idx, 0)
+
+        ADC.set_is_WRTD_master(False)
         self.__trigger = None
         self.__update_ADCs_used()
 
