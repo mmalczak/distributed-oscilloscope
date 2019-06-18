@@ -46,6 +46,10 @@ class Oscilloscope():
         for GUI_name, GUI in self.__GUIs.items():
             GUI.check_if_ready_and_send_data()
 
+    def check_timing(self):
+        for GUI_name, GUI in self.__GUIs.items():
+            GUI.check_timing()
+
     def __stop_acquisition_if_GUI_contains_ADC(self, unique_ADC_name):
         for GUI_name, GUI in self.__GUIs.items():
             if GUI.contains_ADC(unique_ADC_name):

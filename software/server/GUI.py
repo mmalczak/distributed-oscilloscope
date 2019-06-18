@@ -6,6 +6,8 @@ from timestamp_operations import check_if_equal
 import logging
 from publisher import Publisher
 logger = logging.getLogger(__name__)
+import time
+
 
 class HorizontalSettingsError(Exception):
     def __str__(self):
@@ -23,6 +25,7 @@ class GUI():
         self.__GUI_port = GUI_port
         self.__run = False
         self.__GUI_publisher = Publisher(self.__GUI_addr, self.__GUI_port)
+        self.__data_timer_start = 0
 
     """TODO number of channels shouldn't be sent here"""
     def register_ADC(self, unique_ADC_name, number_of_channels):
@@ -100,6 +103,7 @@ class GUI():
             self.configure_acquisition_ADCs_used()
 
     def configure_acquisition_ADCs_used(self):
+        self.__data_timer_start = int(time.time()*1000)
         if self.__trigger is not None:
             for ADC in self.__ADCs_used:
                 if(not ADC.get_is_WRTD_master()):
@@ -115,9 +119,19 @@ class GUI():
         for channel_idx, channel in self.__channels.items():
             channel.timestamp_pre_post_data = None
 
+    def check_timing(self):
+        """If during 300 ms the data does not arrive, discard te existing data and
+        start new acquisition"""
+        if (int(time.time()*1000) - self.__data_timer_start) > 300:
+            for channel_idx, channel in self.__channels.items():
+                channel.timestamp_pre_post_data = None
+            if self.__run:
+                self.configure_acquisition_ADCs_used()
+
     def check_if_ready_and_send_data(self):
         """this function is called by the oscilloscope"""
         """TODo check if data is aligned"""
+        self.__data_timer_start = int(time.time()*1000)
         for channel_idx, channel in self.__channels.items():
             if (channel.timestamp_pre_post_data is None):
                 return

@@ -189,7 +189,7 @@ class ThreadGUI_zmq_Expose(threading.Thread):
         poller.register(socket_ADC_listener, zmq.POLLIN | zmq.POLLERR)
 
         while True:
-            socks = dict(poller.poll())
+            socks = dict(poller.poll(100))
             if socket in socks:
                 [identity, message] = socket.recv_multipart()
                 message = pickle.loads(message)
@@ -211,3 +211,4 @@ class ThreadGUI_zmq_Expose(threading.Thread):
                     getattr(self, data['function_name'])(*data['args'])
                 except AttributeError:
                     logger.error("Attribute error")
+            self.osc.check_timing()
