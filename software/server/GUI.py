@@ -37,7 +37,7 @@ class GUI():
         message = {'function_name': 'unregister_ADC', 'args': [unique_ADC_name]}
         self.__GUI_publisher.send_message(message)
         channels_to_delete = []
-        for channel_idx, channel in self.channels.items():
+        for channel_idx, channel in self.__channels.items():
             if channel.ADC.unique_ADC_name == unique_ADC_name:
                 channels_to_delete.append(channel_idx)
         for channel_idx in channels_to_delete:
