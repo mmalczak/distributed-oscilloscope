@@ -90,6 +90,7 @@ class DevicesAccess():
 
     def get_current_adc_conf(self):
         conf = self.ADC.current_config()
+        conf['is_WRTD_master'] = self.WRTD_master
         if(not self.WRTD_master):
             conf['acq_conf']['presamples'] -= delay_samples
         return conf

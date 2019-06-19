@@ -9,7 +9,6 @@ from conversion import threshold_mV_to_raw
 import logging
 logger = logging.getLogger(__name__)
 
-
 # fixme if your class doesnt inherit, do not add empty () after its declaration
 class ADC:
 
@@ -22,7 +21,7 @@ class ADC:
         self.__internal_triggers = []
         self.__external_triggers = []
         self.__acq_conf = None
-        self.__is_WRTD_master = False
+        self.__is_WRTD_master = None
         self.zmq_rpc = ZMQ_RPC(ip, port + 8)  # remove +8 after removing xml
         conf = self.zmq_rpc.send_RPC('get_current_adc_conf')
         self.number_of_channels = conf['board_conf']['n_chan']
@@ -82,6 +81,7 @@ class ADC:
         self.__acq_conf.update_acq_conf(
             conf['acq_conf']['presamples'],
             conf['acq_conf']['postsamples'])
+        self.__is_WRTD_master = conf['is_WRTD_master']
 
     def get_channel(self, channel_idx):
         return self.__channels[channel_idx]
@@ -96,7 +96,6 @@ class ADC:
         return self.__acq_conf
 
     def set_is_WRTD_master(self, WRTD_master):
-        self.__is_WRTD_master = WRTD_master
         self.zmq_rpc.send_RPC('set_WRTD_master', WRTD_master)
 
     def get_is_WRTD_master(self):
