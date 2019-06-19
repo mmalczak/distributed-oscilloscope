@@ -40,10 +40,6 @@ def remove_service(name, osc):
     """adding and removing service could be done either by zeroconf,
     or directly by the client using RPC call"""
 
-    if name.startswith("GUI"):
-        print("Service %s removed" % (name,))
-        osc.unregister_GUI(name)
-
     if name.startswith("ADC"):
         print("Service %s removed" % (name,))
         osc.unregister_ADC(name)
@@ -64,9 +60,4 @@ def add_service(name, addr, port, osc, conf=None, server_addr_known=False):
             zmq_rpc = ADC.zmq_rpc
             zmq_rpc.send_RPC('set_server_address', server_addr)
             """This part is not tested"""
-        print("Service %s added" % (name))
-
-    if name.startswith("GUI"):
-        server_addr = os.popen("ifconfig| grep inet").read().split()[1]
-        osc.register_GUI(name, str(addr), str(port))
         print("Service %s added" % (name))
