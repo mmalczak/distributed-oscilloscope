@@ -35,7 +35,7 @@ class ThreadGUI_zmq_Expose(threading.Thread):
         GUI.remove_trigger()
 
     def set_ADC_parameter(self, parameter_name, value, unique_ADC_name,
-                          idx=-1):
+                          idx=None):
         ADC = self.osc.get_ADC(unique_ADC_name)
         try:
             ADC.set_ADC_parameter(parameter_name, value, idx)
