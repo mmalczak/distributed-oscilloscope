@@ -96,12 +96,12 @@ class GUI():
 
     def set_presamples(self, value):
         for ADC in self.__ADCs_used:
-            ADC.set_presamples(value)
+            ADC.set_ADC_parameter('presamples', value)
         self.__check_horizontal_settings()
 
     def set_postsamples(self, value):
         for ADC in self.__ADCs_used:
-            ADC.set_postsamples(value)
+            ADC.set_ADC_parameter('postsamples', value)
         self.__check_horizontal_settings()
 
     def run_acquisition(self, run):
