@@ -102,10 +102,6 @@ class ADC:
     def get_is_WRTD_master(self):
         return self.__is_WRTD_master
 
-    def set_adc_parameter(self, function_name, *args):
-        self.zmq_rpc.send_RPC('set_adc_parameter', function_name, *args)
-        self.update_conf()
-
     class MapperMethodsClosure():
 
         def __getattr__(self, *args):
@@ -154,15 +150,18 @@ class ADC:
             multiplication = multiplier[(previous_range, new_range)]
             threshold = int(curr_threshold * multiplication)
             if (threshold > 2**15-1 or threshold < -2**15):
-                ADC.set_adc_parameter('set_internal_trigger_enable',
-                                       channel_idx, 0)
-                ADC.set_adc_parameter('set_internal_trigger_threshold',
-                                       channel_idx, 0)
+                ADC.zmq_rpc.send_RPC('set_adc_parameter',
+                                     'set_internal_trigger_enable', 0,
+                                      channel_idx)
+                ADC.zmq_rpc.send_RPC('set_adc_parameter',
+                                     'set_internal_trigger_threshold', 0,
+                                      channel_idx)
                 logger.warning("Internal trigger disabled: value out of range")
                 """TODO send information to the GUI"""
             else:
-                ADC.set_adc_parameter('set_internal_trigger_threshold',
-                                      channel_idx, threshold)
+                ADC.zmq_rpc.send_RPC('set_adc_parameter',
+                                     'set_internal_trigger_threshold',
+                                      threshold, channel_idx)
 
     def set_ADC_parameter(self, parameter_name, value, idx=None):
         function_name = 'set_' + parameter_name

@@ -81,8 +81,8 @@ class GUI():
     def remove_trigger(self):
         ADC = self.__trigger.ADC
         trigger = self.__trigger
-        function_name = 'set_' + trigger.type + '_trigger_enable'
-        ADC.set_adc_parameter(function_name, trigger.ADC_trigger_idx, 0)
+        parameter_name = trigger.type + '_trigger_enable'
+        ADC.set_ADC_parameter(parameter_name, 0, trigger.ADC_trigger_idx)
 
         ADC.set_is_WRTD_master(False)
         self.__trigger = None
