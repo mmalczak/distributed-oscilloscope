@@ -22,7 +22,7 @@ class DevicesAccess():
         self.required_presamples = 0
         self.unique_ADC_name = unique_ADC_name
         for count in range(4):
-            self.ADC.set_internal_trigger_enable(count, 0)
+            self.ADC.set_internal_trigger_enable(0, count)
         self.ADC.set_external_trigger_enable(0, 0)
         if(not self.WRTD_master):
             self.ADC.set_presamples(delay_samples)

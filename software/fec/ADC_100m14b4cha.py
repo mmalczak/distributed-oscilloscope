@@ -115,7 +115,7 @@ class ADC_100m14b4cha_extended_API(ADC_100m14b4cha):
         timestamp = [secs, ticks]
         return timestamp
 
-    def set_channel_range(self, channel, channel_range):
+    def set_channel_range(self, channel_range, channel):
         """ possible values :
             100 mV     - 100
             1 V        - 1
@@ -137,80 +137,80 @@ class ADC_100m14b4cha_extended_API(ADC_100m14b4cha):
         self.set_conf(self.ADC_CONF_CHN_RANGE, ch_range)
         self.apply_config(0)
 
-    def set_buffer_type(self, channel, type):
+    def set_buffer_type(self, type, channel):
         self._adc_conf.type = self.ADC_CONF_TYPE_CUS
         self._adc_conf.route_to = channel
         self.set_conf(self.ADC_CONF_100M14B4CHA_BUF_TYPE, type)
         self.apply_config(0)
 
-    def set_channel_termination(self, channel, termination):
+    def set_channel_termination(self, termination, channel):
         self._adc_conf.type = self.ADC_CONF_TYPE_CHN
         self._adc_conf.route_to = channel
         self.set_conf(self.ADC_CONF_CHN_TERMINATION, termination)
         self.apply_config(0)
 
-    def set_channel_offset(self, channel, offset):
+    def set_channel_offset(self, offset, channel):
         """value of offset given in uV"""
         self._adc_conf.type = self.ADC_CONF_TYPE_CHN
         self._adc_conf.route_to = channel
         self.set_conf(self.ADC_CONF_CHN_OFFSET, offset)
         self.apply_config(0)
 
-    def set_channel_saturation(self, channel, saturation):
+    def set_channel_saturation(self, saturation, channel):
         self._adc_conf.type = self.ADC_CONF_TYPE_CHN
         self._adc_conf.route_to = channel
         self.set_conf(self.ADC_CONF_CHN_SATURATION, saturation)
         self.apply_config(0, byref(self._adc_conf))
 
-    def set_channel_gain(self, channel, gain):
+    def set_channel_gain(self, gain, channel):
         self._adc_conf.type = self.ADC_CONF_TYPE_CHN
         self._adc_conf.route_to = channel
         self.set_conf(self.ADC_CONF_CHN_GAIN, gain)
         self.apply_config(0)
 
-    def set_external_trigger_enable(self, channel, enable):
+    def set_external_trigger_enable(self, enable, channel):
         self._adc_conf.type = self.ADC_CONF_TYPE_TRG_EXT
         self._adc_conf.route_to = channel
         self.set_conf(self.ADC_CONF_TRG_EXT_ENABLE, enable)
         self.apply_config(0)
 
-    def set_external_trigger_polarity(self, channel, polarity):
+    def set_external_trigger_polarity(self, polarity, channel):
         self._adc_conf.type = self.ADC_CONF_TYPE_TRG_EXT
         self._adc_conf.route_to = channel
         self.set_conf(self.ADC_CONF_TRG_EXT_POLARITY, polarity)
         self.apply_config(0)
 
-    def set_external_trigger_delay(self, channel, delay):
+    def set_external_trigger_delay(self, delay, channel):
         self._adc_conf.type = self.ADC_CONF_TYPE_TRG_EXT
         self._adc_conf.route_to = channel
         self.set_conf(self.ADC_CONF_TRG_EXT_DELAY, delay)
         self.apply_config(0)
 
-    def set_internal_trigger_enable(self, channel, enable):
+    def set_internal_trigger_enable(self, enable, channel):
         self._adc_conf.type = self.ADC_CONF_TYPE_TRG_THR
         self._adc_conf.route_to = channel
         self.set_conf(self.ADC_CONF_TRG_THR_ENABLE, enable)
         self.apply_config(0)
 
-    def set_internal_trigger_polarity(self, channel, polarity):
+    def set_internal_trigger_polarity(self, polarity, channel):
         self._adc_conf.type = self.ADC_CONF_TYPE_TRG_THR
         self._adc_conf.route_to = channel
         self.set_conf(self.ADC_CONF_TRG_THR_POLARITY, polarity)
         self.apply_config(0)
 
-    def set_internal_trigger_delay(self, channel, delay):
+    def set_internal_trigger_delay(self, delay, channel):
         self._adc_conf.type = self.ADC_CONF_TYPE_TRG_THR
         self._adc_conf.route_to = channel
         self.set_conf(self.ADC_CONF_TRG_THR_DELAY, delay)
         self.apply_config(0)
 
-    def set_internal_trigger_threshold(self, channel, threshold):
+    def set_internal_trigger_threshold(self, threshold, channel):
         self._adc_conf.type = self.ADC_CONF_TYPE_TRG_THR
         self._adc_conf.route_to = channel
         self.set_conf(self.ADC_CONF_TRG_THR_THRESHOLD, threshold)
         self.apply_config(0)
 
-    def set_internal_trigger_hysteresis(self, channel, hysteresis):
+    def set_internal_trigger_hysteresis(self, hysteresis, channel):
         self._adc_conf.type = self.ADC_CONF_TYPE_TRG_THR
         self._adc_conf.route_to = channel
         self.set_conf(self.ADC_CONF_TRG_THR_HYSTERESIS, hysteresis)

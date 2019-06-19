@@ -174,8 +174,8 @@ class ADC:
         except Exception as e:
             logger.error("Mapping error {}".format(e))
         try:
-            self.zmq_rpc.send_RPC('set_adc_parameter', function_name, idx,
-                                  mapped_value)
+            self.zmq_rpc.send_RPC('set_adc_parameter', function_name,
+                                  mapped_value, idx)
         except Exception as e:
             logger.error("Function invocation error {}".format(e))
         self.update_conf()
