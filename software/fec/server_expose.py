@@ -35,7 +35,7 @@ class ServerExpose():
         """This fucntion is just for testing and will be removed after
         addding ZeroMQ"""
         """doesn'r work with zeroconf"""
-        data = {'function_name': 'remove_service',
+        data = {'function_name': 'unregister_ADC',
                                  'args': [self.devices_access.unique_ADC_name]}
         self.server_publisher.send_message(data)
         time.sleep(0.1)  # otherwise the message is lost

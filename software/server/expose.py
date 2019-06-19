@@ -84,19 +84,6 @@ class ThreadGUI_zmq_Expose(threading.Thread):
 
     """---------------------------ADC--------------------------------------"""
 
-    """---------------------COMMON TO ADC AND GUI--------------------------"""
-    def add_service(self, name, addr, port, conf=None):
-        """TODO get rid of conf"""
-        if conf:  # ADC version
-            add_service(name, addr, port, self.osc, conf,
-                        server_addr_known=True)
-        else:  # GUI version
-            add_service(name, addr, port, self.osc)
-
-    def remove_service(self, name):
-        remove_service(name, self.osc)
-    """---------------------COMMON TO ADC AND GUI--------------------------"""
-
 
     """----------------- TESTING ------------------------------------------"""
     def get_GUI_channels(self, GUI_name):
@@ -147,6 +134,6 @@ class ThreadGUI_zmq_Expose(threading.Thread):
                 data = pickle.loads(message)
                 try:
                     getattr(self, data['function_name'])(*data['args'])
-                except AttributeError:
-                    logger.error("Attribute error")
+                except AttributeError as e:
+                    logger.error("Attribute error: {}".format(e))
             self.osc.check_timing()
