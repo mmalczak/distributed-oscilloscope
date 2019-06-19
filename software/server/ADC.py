@@ -155,7 +155,7 @@ class ADC:
                 ADC.set_adc_parameter('set_internal_trigger_threshold',
                                       channel_idx, threshold)
 
-    def set_ADC_parameter(self, parameter_name, value, idx):
+    def set_ADC_parameter(self, parameter_name, value, idx=None):
         function_name = 'set_' + parameter_name
         mapper_function_name = 'map_' + parameter_name
         preprocess_function_name = 'preprocess_' + parameter_name
@@ -174,8 +174,12 @@ class ADC:
         except Exception as e:
             logger.error("Mapping error {}".format(e))
         try:
-            self.zmq_rpc.send_RPC('set_adc_parameter', function_name,
-                                  mapped_value, idx)
+            if idx:
+                self.zmq_rpc.send_RPC('set_adc_parameter', function_name,
+                                      mapped_value, idx)
+            else:
+                self.zmq_rpc.send_RPC('set_adc_parameter', function_name,
+                                      mapped_value)
         except Exception as e:
             logger.error("Function invocation error {}".format(e))
         self.update_conf()
