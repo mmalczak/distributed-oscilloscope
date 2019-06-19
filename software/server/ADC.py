@@ -9,6 +9,7 @@ from conversion import threshold_mV_to_raw
 import logging
 logger = logging.getLogger(__name__)
 
+
 # fixme if your class doesnt inherit, do not add empty () after its declaration
 class ADC:
 
@@ -97,6 +98,7 @@ class ADC:
 
     def set_is_WRTD_master(self, WRTD_master):
         self.zmq_rpc.send_RPC('set_WRTD_master', WRTD_master)
+        self.update_conf()
 
     def get_is_WRTD_master(self):
         return self.__is_WRTD_master
