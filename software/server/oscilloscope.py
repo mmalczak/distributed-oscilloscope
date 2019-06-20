@@ -59,3 +59,7 @@ class Oscilloscope():
 
     def get_GUI(self, GUI_name):
         return self.__GUIs[GUI_name]
+
+    def set_server_address(self, unique_ADC_name, addr):
+        ADC = self.get_ADC(unique_ADC_name)
+        ADC.set_server_address(addr)
