@@ -40,6 +40,9 @@ class ADC:
         self.__acq_conf = AcqConf()
         self.update_conf()
 
+    def get_unique_ADC_name(self):
+        return self.__unique_ADC_name
+
     def update_data(self, timestamp, pre_post, data):
         """the value of pre and postsamples is passed together with the data
         because if it is read from the ADC structure in the server it could
