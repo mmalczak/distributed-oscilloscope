@@ -103,7 +103,7 @@ class ADC:
 
     def get_internal_trigger(self, trigger_idx):
         return self.__internal_triggers[trigger_idx]
-    
+
     def get_external_trigger(self, trigger_idx):
         return self.__external_triggers[trigger_idx]
 
@@ -166,17 +166,15 @@ class ADC:
             threshold = int(curr_threshold * multiplication)
             if (threshold > 2**15-1 or threshold < -2**15):
                 ADC.send_RPC('set_adc_parameter',
-                                     'set_internal_trigger_enable', 0,
-                                      channel_idx)
+                             'set_internal_trigger_enable', 0, channel_idx)
                 ADC.send_RPC('set_adc_parameter',
-                                     'set_internal_trigger_threshold', 0,
-                                      channel_idx)
+                             'set_internal_trigger_threshold', 0, channel_idx)
                 logger.warning("Internal trigger disabled: value out of range")
                 """TODO send information to the GUI"""
             else:
                 ADC.send_RPC('set_adc_parameter',
-                                     'set_internal_trigger_threshold',
-                                      threshold, channel_idx)
+                             'set_internal_trigger_threshold', threshold,
+                             channel_idx)
 
     def set_ADC_parameter(self, parameter_name, value, idx=None):
         function_name = 'set_' + parameter_name
@@ -185,7 +183,7 @@ class ADC:
         mapper_methods_closure = self.MapperMethodsClosure()
         preprocess_closure = self.PreprocessClosure()
         preprocess_function = getattr(preprocess_closure,
-                                            preprocess_function_name)
+                                      preprocess_function_name)
         mapper_function = getattr(mapper_methods_closure, mapper_function_name)
         mapped_value = None
         try:
@@ -198,15 +196,13 @@ class ADC:
             logger.error("Mapping error {}".format(e))
         try:
             if idx:
-                self.send_RPC('set_adc_parameter', function_name,
-                                      mapped_value, idx)
+                self.send_RPC('set_adc_parameter', function_name, mapped_value,
+                              idx)
             else:
-                self.send_RPC('set_adc_parameter', function_name,
-                                      mapped_value)
+                self.send_RPC('set_adc_parameter', function_name, mapped_value)
         except Exception as e:
             logger.error("Function invocation error {}".format(e))
         self.update_conf()
-
 
     def add_used_channel(self, channel):
         self.__used_channels.append(channel)
