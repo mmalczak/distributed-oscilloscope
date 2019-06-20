@@ -45,14 +45,9 @@ def main():
         zeroconf_info = zeroconf.ServiceInfo("_http._tcp.local.",
                             unique_ADC_name, zeroconf.socket.inet_aton(addr),
                             8000, properties={'addr': addr,
-                            'port': str(port), 'conf': conf})
+                            'port': str(port), 'n_chan': str(number_of_channels)})
         zeroconf_service = zeroconf.Zeroconf()
         zeroconf_service.register_service(zeroconf_info)
-        while ip_server['addr'] is None:
-            pass
-        """TODO check if it is working, if it will not block until the
-        registration is finished(during registration the server will
-        try to set it's own addres in the ADC"""
     else:
         serv_expose.set_server_address(ip_server['addr'])
         data = {'function_name': 'register_ADC',
