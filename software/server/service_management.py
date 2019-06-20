@@ -3,6 +3,7 @@ import threading
 import os
 import socket
 import logging
+from ipaddr import get_ip
 logger = logging.getLogger(__name__)
 
 
@@ -34,6 +35,6 @@ class ZeroconfListener:
             addr = socket.inet_ntoa(info.address)
             port = int(info.properties[b'port'])
             self.osc.register_ADC(name, n_chan, str(addr), port)
-            server_addr = os.popen("ifconfig| grep inet").read().split()[1]
+            server_addr = get_ip()
             ADC = self.osc.get_ADC(name)
             ADC.zmq_rpc.set_server_address(server_addr)
