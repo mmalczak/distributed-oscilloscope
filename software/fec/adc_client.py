@@ -27,13 +27,17 @@ def main():
     number_of_channels = 4  # TODO
     addr = os.popen("ifconfig| grep inet").read().split()[1]
     ADC_idx = addr + '_' + str(port)
-    unique_ADC_name = 'ADC' + '_' + ADC_idx + '._tcp.local.'
+    unique_ADC_name = 'ADC' + '_' + ADC_idx + '._http._tcp.local.'
 
     pci_addr = pci_addr
     trtl = 'trtl-000' + str(pci_addr)
     devices_access = DevicesAccess(pci_addr, trtl, unique_ADC_name)
     conf = devices_access.get_current_adc_conf()
-    ip_server = {'addr': args.ip_server[0]}
+    if args.ip_server:
+        ip_server = {'addr': args.ip_server[0]}
+    else:
+        ip_server = {'addr': None}
+
     serv_expose = ServerExpose(addr, port, devices_access, ip_server)
 
     zeroconf_service = None
