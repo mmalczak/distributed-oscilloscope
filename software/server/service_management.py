@@ -3,10 +3,10 @@ import threading
 import os
 import socket
 import logging
-from publisher import PublisherIPC
 import sys
 sys.path.append('../')
 from general.ipaddr import get_ip
+from general.publisher import PublisherIPC
 logger = logging.getLogger(__name__)
 
 

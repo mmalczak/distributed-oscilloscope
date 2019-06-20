@@ -5,7 +5,8 @@ from zmq.utils.monitor import recv_monitor_message
 from zmq.utils.monitor import parse_monitor_message
 import pickle
 import time
-from publisher import Publisher
+sys.path.append('../')
+from general.publisher import Publisher
 
 
 thismodule = sys.modules[__name__]

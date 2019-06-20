@@ -5,7 +5,9 @@ from timestamp_operations import tic_difference
 from timestamp_operations import check_if_equal
 import logging
 import time
-from publisher import Publisher
+import sys
+sys.path.append('../')
+from general.publisher import Publisher
 logger = logging.getLogger(__name__)
 
 
