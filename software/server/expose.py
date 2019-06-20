@@ -1,20 +1,17 @@
-import threading
-import os
-from service_management import *
-import zmq
 from zmq.utils.monitor import recv_monitor_message
 from zmq.utils.monitor import parse_monitor_message
-import pickle
 from ipaddr import get_ip
+import zmq
+import pickle
 import logging
 logger = logging.getLogger(__name__)
 
 
-class ThreadGUI_zmq_Expose(threading.Thread):
+class Expose():
 
     def __init__(self, osc):
-        threading.Thread.__init__(self)
         self.osc = osc
+        self.run()
 
     def add_channel(self, oscilloscope_channel_idx, unique_ADC_name,
                     ADC_channel_idx, GUI_name):

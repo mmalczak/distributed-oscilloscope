@@ -1,7 +1,7 @@
 import sys
 from oscilloscope import Oscilloscope
 from service_management import ThreadZeroConf
-from expose import ThreadGUI_zmq_Expose
+from expose import Expose
 
 
 def main():
@@ -12,8 +12,7 @@ def main():
     osc = Oscilloscope()
     thread_zero_conf = ThreadZeroConf(osc)
     thread_zero_conf.start()
-    thread_GUI_zmq_expose = ThreadGUI_zmq_Expose(osc)
-    thread_GUI_zmq_expose.start()
+    expose = Expose(osc)
 
 
 if __name__ == '__main__':
