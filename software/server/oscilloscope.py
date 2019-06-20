@@ -18,10 +18,13 @@ class Oscilloscope():
         logger.info("ADC {} registered".format(unique_ADC_name))
 
     def unregister_ADC(self, unique_ADC_name):
-        del self.__available_ADCs[unique_ADC_name]
-        for GUI_name, GUI in self.__GUIs.items():
-            GUI.unregister_ADC(unique_ADC_name)
-        logger.info("ADC {} unregistered".format(unique_ADC_name))
+        if unique_ADC_name in self.__available_ADCs:
+            del self.__available_ADCs[unique_ADC_name]
+            for GUI_name, GUI in self.__GUIs.items():
+                GUI.unregister_ADC(unique_ADC_name)
+            logger.info("ADC {} unregistered".format(unique_ADC_name))
+        logger.warning("ADC {} was not available to unregister".format(
+                                                            unique_ADC_name))
 
     def register_GUI(self, GUI_name, GUI_addr, GUI_port):
         GUI_ = GUI(GUI_name, GUI_addr, GUI_port)
