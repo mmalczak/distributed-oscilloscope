@@ -2,11 +2,11 @@ import sys
 from oscilloscope import Oscilloscope
 from service_management import ThreadZeroConf
 from expose import Expose
+import logging.config
+from logging_conf import DEFAULT_CONFIG
 
 
 def main():
-    import logging.config
-    from logging_conf import DEFAULT_CONFIG
     logging.config.dictConfig(DEFAULT_CONFIG)
 
     osc = Oscilloscope()
