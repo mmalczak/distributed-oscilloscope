@@ -206,3 +206,6 @@ class ADC:
 
     def stop_acquisition(self):
         self.zmq_rpc.send_RPC('stop_acquisition')
+
+    def set_server_address(self, server_addr):
+        self.zmq_rpc.send_RPC('set_server_address', server_addr)

@@ -36,7 +36,4 @@ class ZeroconfListener:
             self.osc.register_ADC(name, n_chan, str(addr), port)
             server_addr = os.popen("ifconfig| grep inet").read().split()[1]
             ADC = self.osc.get_ADC(name)
-            try:
-                ADC.zmq_rpc.send_RPC('set_server_address', server_addr)
-            except RPC_Error:
-                logger.warning("Zeroconf add service, set_server_address")
+            ADC.zmq_rpc.set_server_address(server_addr)
