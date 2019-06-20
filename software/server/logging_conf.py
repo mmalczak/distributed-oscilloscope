@@ -16,7 +16,7 @@ DEFAULT_CONFIG = {
             'stream': 'ext://sys.stdout',
         }
     },
-    'loggers':{
+    'loggers': {
         '': {
             'level': 'DEBUG',
             'handlers': ['console']

@@ -4,9 +4,9 @@ from timestamp_operations import check_if_not_max
 from timestamp_operations import tic_difference
 from timestamp_operations import check_if_equal
 import logging
+import time
 from publisher import Publisher
 logger = logging.getLogger(__name__)
-import time
 
 
 class HorizontalSettingsError(Exception):
@@ -30,11 +30,12 @@ class GUI():
     """TODO number of channels shouldn't be sent here"""
     def register_ADC(self, unique_ADC_name, number_of_channels):
         message = {'function_name': 'register_ADC',
-                'args': [unique_ADC_name, number_of_channels]}
+                   'args': [unique_ADC_name, number_of_channels]}
         self.__GUI_publisher.send_message(message)
 
     def unregister_ADC(self, unique_ADC_name):
-        message = {'function_name': 'unregister_ADC', 'args': [unique_ADC_name]}
+        message = {'function_name': 'unregister_ADC',
+                   'args': [unique_ADC_name]}
         self.__GUI_publisher.send_message(message)
         channels_to_delete = []
         for channel_idx, channel in self.__channels.items():
@@ -140,7 +141,6 @@ class GUI():
             if (channel.timestamp_pre_post_data is None):
                 return False
         return True
-
 
     def if_ready_send_data(self):
         self.__data_timer_start = int(time.time()*1000)

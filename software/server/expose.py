@@ -69,7 +69,6 @@ class ThreadGUI_zmq_Expose(threading.Thread):
     def unregister_GUI(self, GUI_name):
         self.osc.unregister_GUI(GUI_name)
 
-
     """---------------------------ADC--------------------------------------"""
     def update_data(self, timestamp, pre_post, data, unique_ADC_name):
         self.osc.update_data(timestamp, pre_post, data, unique_ADC_name)
@@ -82,16 +81,13 @@ class ThreadGUI_zmq_Expose(threading.Thread):
     def unregister_ADC(self, unique_ADC_name):
         self.osc.unregister_ADC(unique_ADC_name)
 
-
     """---------------------------ADC--------------------------------------"""
-
 
     """----------------- TESTING ------------------------------------------"""
     def get_GUI_channels(self, GUI_name):
         GUI = self.osc.get_GUI(GUI_name)
         return GUI.get_channels_copy()
     """----------------- TESTING ------------------------------------------"""
-
 
     def run(self):
         EVENT_MAP = {}
@@ -104,10 +100,9 @@ class ThreadGUI_zmq_Expose(threading.Thread):
         socket = context.socket(zmq.ROUTER)
         monitor = socket.get_monitor_socket()
         socket_ADC_listener = context.socket(zmq.ROUTER)
-        #socket.bind("tcp://*:8003")
         server_ip = get_ip()
-        socket.bind("tcp://" + server_ip  + ":8003")
-        socket_ADC_listener.bind("tcp://" + server_ip  + ":8023")
+        socket.bind("tcp://" + server_ip + ":8003")
+        socket_ADC_listener.bind("tcp://" + server_ip + ":8023")
 
         poller = zmq.Poller()
         poller.register(monitor, zmq.POLLIN | zmq.POLLERR)

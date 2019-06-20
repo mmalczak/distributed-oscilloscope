@@ -1,12 +1,11 @@
 import zmq
 import pickle
-
 import logging
 logger = logging.getLogger(__name__)
 
 
-"""TODO should I add some logging here or some error handling?"""
 class Publisher():
+    """TODO should I add some logging here or some error handling?"""
     def __init__(self, ip, port):
         context = zmq.Context()
         self.socket = context.socket(zmq.DEALER)

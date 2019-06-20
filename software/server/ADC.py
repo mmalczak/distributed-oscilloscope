@@ -2,12 +2,12 @@ from ADC_configs import Channel
 from ADC_configs import InternalTrigger
 from ADC_configs import ExternalTrigger
 from ADC_configs import AcqConf
-import sys
-sys.path.append('../')
-from general.zmq_rpc import ZMQ_RPC
 from conversion import threshold_mV_to_raw
+import sys
 import logging
 logger = logging.getLogger(__name__)
+sys.path.append('../')
+from general.zmq_rpc import ZMQ_RPC
 
 
 # fixme if your class doesnt inherit, do not add empty () after its declaration

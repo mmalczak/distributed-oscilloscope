@@ -17,13 +17,11 @@ class Oscilloscope():
             GUI.register_ADC(unique_ADC_name, number_of_channels)
         logger.info("ADC {} registered".format(unique_ADC_name))
 
-
     def unregister_ADC(self, unique_ADC_name):
         del self.__available_ADCs[unique_ADC_name]
         for GUI_name, GUI in self.__GUIs.items():
             GUI.unregister_ADC(unique_ADC_name)
         logger.info("ADC {} unregistered".format(unique_ADC_name))
-
 
     def register_GUI(self, GUI_name, GUI_addr, GUI_port):
         GUI_ = GUI(GUI_name, GUI_addr, GUI_port)
@@ -38,7 +36,7 @@ class Oscilloscope():
         logger.info("GUI {} unregistered".format(GUI_name))
 
     def update_data(self, timestamp, pre_post, data, unique_ADC_name):
-        if(data ==  0):
+        if(data == 0):
             self.__stop_acquisition_if_GUI_contains_ADC(unique_ADC_name)
             return
         """TODO add logging, do sth"""
