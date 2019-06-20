@@ -37,4 +37,4 @@ class ZeroconfListener:
             self.osc.register_ADC(name, n_chan, str(addr), port)
             server_addr = get_ip()
             ADC = self.osc.get_ADC(name)
-            ADC.zmq_rpc.set_server_address(server_addr)
+            ADC.set_server_address(server_addr)
