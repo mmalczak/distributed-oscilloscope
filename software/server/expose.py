@@ -1,10 +1,12 @@
 from zmq.utils.monitor import recv_monitor_message
 from zmq.utils.monitor import parse_monitor_message
-from ipaddr import get_ip
 import zmq
 import pickle
 import logging
+import sys
 logger = logging.getLogger(__name__)
+sys.path.append('../')
+from general.ipaddr import get_ip
 
 
 class Expose():

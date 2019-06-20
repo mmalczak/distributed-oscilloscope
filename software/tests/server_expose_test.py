@@ -4,7 +4,9 @@ from timeit import default_timer as timer
 import matplotlib.pyplot as plt
 from test_conf import plot_data
 from test_conf import performance_measurements
-from ipaddr import get_ip
+import sys
+sys.path.append('../')
+from general.ipaddr import get_ip
 import zmq
 import pickle
 

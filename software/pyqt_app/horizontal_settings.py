@@ -1,5 +1,7 @@
 from parent_classes import *
-from zmq_rpc import *
+import sys
+sys.path.append('../')
+from general.zmq_rpc import *
 from PyQt5.QtWidgets import QHBoxLayout
 
 
