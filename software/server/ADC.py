@@ -8,6 +8,7 @@ import logging
 logger = logging.getLogger(__name__)
 sys.path.append('../')
 from general.zmq_rpc import ZMQ_RPC
+from general.zmq_rpc import RPC_Error
 
 
 # fixme if your class doesnt inherit, do not add empty () after its declaration
