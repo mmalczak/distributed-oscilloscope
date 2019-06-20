@@ -5,7 +5,6 @@ import os
 import argparse
 from devices_access import DevicesAccess
 from server_expose import ServerExpose
-from publisher import Publisher
 import time
 
 
@@ -38,11 +37,10 @@ def main():
     else:
         ip_server = {'addr': None}
 
-    serv_expose = ServerExpose(addr, port, devices_access, ip_server)
+    serv_expose = ServerExpose(port, devices_access)
 
     zeroconf_service = None
     zeroconf_info = None
-    server_publisher = None
     if(args.ip_server is None):
         zeroconf_info = zeroconf.ServiceInfo("_http._tcp.local.",
                             unique_ADC_name, zeroconf.socket.inet_aton(addr),
@@ -55,15 +53,12 @@ def main():
         """TODO check if it is working, if it will not block until the
         registration is finished(during registration the server will
         try to set it's own addres in the ADC"""
-        server_publisher = Publisher(ip_server['addr'], 8023)
     else:
         serv_expose.set_server_address(ip_server['addr'])
-        server_publisher = Publisher(ip_server['addr'], 8023)
         data = {'function_name': 'register_ADC',
                                  'args': [unique_ADC_name, addr, port, conf]}
-        server_publisher.send_message(data)
+        serv_expose.server_publisher.send_message(data)
 
-    serv_expose.server_publisher = server_publisher
 
     try:
         print("Application starting")
@@ -74,7 +69,7 @@ def main():
         else:
             data = {'function_name': 'unregister_ADC',
                     'args': [unique_ADC_name]}
-            server_publisher.send_message(data)
+            serv_expose.server_publisher.send_message(data)
             time.sleep(0.1)  # otherwise the message is lost
 
         os._exit(1)

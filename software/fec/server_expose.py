@@ -5,6 +5,8 @@ from zmq.utils.monitor import recv_monitor_message
 from zmq.utils.monitor import parse_monitor_message
 import pickle
 import time
+from publisher import Publisher
+
 
 thismodule = sys.modules[__name__]
 
@@ -12,13 +14,11 @@ thismodule = sys.modules[__name__]
 class ServerExpose():
     devices_access = None
 
-    def __init__(self, addr, port, devices_access, ip_server):
-        self.addr = addr
+    def __init__(self, port, devices_access):
         self.port = port
         self.server_publisher = None
         self.devices_access = devices_access
         self.server = None
-        self.ip_server = ip_server
 
     def __getattr__(self, function_name):
         """ If he requered function is not defined here, look for it in the
@@ -26,7 +26,7 @@ class ServerExpose():
         return getattr(self.devices_access, function_name)
 
     def set_server_address(self, addr):
-        self.ip_server['addr'] = addr
+        self.server_publisher = Publisher(addr, 8023)
 
     def set_adc_parameter(self, function_name, *args):
         self.devices_access.configure_adc_parameter(function_name, [*args])
