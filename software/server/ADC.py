@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 # fixme if your class doesnt inherit, do not add empty () after its declaration
 class ADC:
 
-    def __init__(self, unique_ADC_name, ip, port):
+    def __init__(self, unique_ADC_name, ip, port, osc):
         self.__unique_ADC_name = unique_ADC_name
         self.__ip = ip
         self.__port = port
@@ -23,8 +23,9 @@ class ADC:
         self.__external_triggers = []
         self.__acq_conf = None
         self.__is_WRTD_master = None
-        self.zmq_rpc = ZMQ_RPC(ip, port + 8)  # remove +8 after removing xml
-        conf = self.zmq_rpc.send_RPC('get_current_adc_conf')
+        self.__osc = osc
+        self.__zmq_rpc = ZMQ_RPC(ip, port + 8)  # remove +8 after removing xml
+        conf = self.send_RPC('get_current_adc_conf')
         self.number_of_channels = conf['board_conf']['n_chan']
 
         for count in range(0, conf['board_conf']['n_chan']):
@@ -39,6 +40,17 @@ class ADC:
             self.__external_triggers.append(ext_trig)
         self.__acq_conf = AcqConf()
         self.update_conf()
+
+    def suicide(self):
+        self.__osc.unregister_ADC(self.__unique_ADC_name)
+
+    def send_RPC(self, RPC_name, *args):
+        try:
+            return self.__zmq_rpc.send_RPC(RPC_name, *args)
+        except RPC_Error:
+            logger.error("Error when calling RPC: {}, closing ADC".format(
+                                                                    RPC_name))
+            self.suicide()
 
     def get_unique_ADC_name(self):
         return self.__unique_ADC_name
@@ -61,8 +73,7 @@ class ADC:
                      'data_channel': data_channel}
 
     def update_conf(self):
-        zmq_rpc = self.zmq_rpc
-        conf = zmq_rpc.send_RPC('get_current_adc_conf')
+        conf = self.send_RPC('get_current_adc_conf')
         for count in range(0, conf['board_conf']['n_chan']):
             channel = conf['chn_conf'][count]
             self.__channels[count].update_channel_conf(
@@ -100,7 +111,7 @@ class ADC:
         return self.__acq_conf
 
     def set_is_WRTD_master(self, WRTD_master):
-        self.zmq_rpc.send_RPC('set_WRTD_master', WRTD_master)
+        self.send_RPC('set_WRTD_master', WRTD_master)
         self.update_conf()
 
     def get_is_WRTD_master(self):
@@ -154,16 +165,16 @@ class ADC:
             multiplication = multiplier[(previous_range, new_range)]
             threshold = int(curr_threshold * multiplication)
             if (threshold > 2**15-1 or threshold < -2**15):
-                ADC.zmq_rpc.send_RPC('set_adc_parameter',
+                ADC.send_RPC('set_adc_parameter',
                                      'set_internal_trigger_enable', 0,
                                       channel_idx)
-                ADC.zmq_rpc.send_RPC('set_adc_parameter',
+                ADC.send_RPC('set_adc_parameter',
                                      'set_internal_trigger_threshold', 0,
                                       channel_idx)
                 logger.warning("Internal trigger disabled: value out of range")
                 """TODO send information to the GUI"""
             else:
-                ADC.zmq_rpc.send_RPC('set_adc_parameter',
+                ADC.send_RPC('set_adc_parameter',
                                      'set_internal_trigger_threshold',
                                       threshold, channel_idx)
 
@@ -187,10 +198,10 @@ class ADC:
             logger.error("Mapping error {}".format(e))
         try:
             if idx:
-                self.zmq_rpc.send_RPC('set_adc_parameter', function_name,
+                self.send_RPC('set_adc_parameter', function_name,
                                       mapped_value, idx)
             else:
-                self.zmq_rpc.send_RPC('set_adc_parameter', function_name,
+                self.send_RPC('set_adc_parameter', function_name,
                                       mapped_value)
         except Exception as e:
             logger.error("Function invocation error {}".format(e))
@@ -202,10 +213,10 @@ class ADC:
         self.__used_channels.sort()
 
     def configure_acquisition(self):
-        self.zmq_rpc.send_RPC('configure_acquisition', self.__used_channels)
+        self.send_RPC('configure_acquisition', self.__used_channels)
 
     def stop_acquisition(self):
-        self.zmq_rpc.send_RPC('stop_acquisition')
+        self.send_RPC('stop_acquisition')
 
     def set_server_address(self, server_addr):
-        self.zmq_rpc.send_RPC('set_server_address', server_addr)
+        self.send_RPC('set_server_address', server_addr)
