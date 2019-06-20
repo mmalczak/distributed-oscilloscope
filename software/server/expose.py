@@ -11,6 +11,7 @@ logger = logging.getLogger(__name__)
 
 
 class ThreadGUI_zmq_Expose(threading.Thread):
+
     def __init__(self, osc):
         threading.Thread.__init__(self)
         self.osc = osc
