@@ -49,7 +49,7 @@ class ServerExpose():
         monitor = socket.get_monitor_socket()
         # socket.bind("tcp://*:8003")
         ip = '128.141.162.185'
-        port_zmq = str(self.port + 8)
+        port_zmq = str(self.port)
         socket.bind("tcp://" + ip + ":" + port_zmq)
 
         poller = zmq.Poller()

@@ -74,7 +74,7 @@ class OscilloscopeMethods(unittest.TestCase):
 
     def remove_ADC_FEC(self, name):
         ADC = self.ADCs[name]
-        zmq_rpc = ZMQ_RPC('spechost', ADC[0] + 8)
+        zmq_rpc = ZMQ_RPC('spechost', ADC[0])
         zmq_rpc.set_timeout(10)
         """the timeout is small because the RPC call will never return, so
         there is no point waiting"""

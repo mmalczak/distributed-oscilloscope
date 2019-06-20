@@ -25,7 +25,7 @@ class ADC:
         self.__acq_conf = None
         self.__is_WRTD_master = None
         self.__osc = osc
-        self.__zmq_rpc = ZMQ_RPC(ip, port + 8)  # remove +8 after removing xml
+        self.__zmq_rpc = ZMQ_RPC(ip, port)  # remove +8 after removing xml
         conf = self.send_RPC('get_current_adc_conf')
         self.number_of_channels = conf['board_conf']['n_chan']
 
