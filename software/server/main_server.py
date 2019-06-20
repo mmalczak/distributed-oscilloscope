@@ -10,7 +10,7 @@ def main():
     logging.config.dictConfig(DEFAULT_CONFIG)
 
     osc = Oscilloscope()
-    thread_zero_conf = ThreadZeroConf(osc)
+    thread_zero_conf = ThreadZeroConf()
     thread_zero_conf.start()
     expose = Expose(osc)
 

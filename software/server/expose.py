@@ -94,17 +94,22 @@ class Expose():
                 EVENT_MAP[value] = name
 
         context = zmq.Context()
+
         socket = context.socket(zmq.ROUTER)
         monitor = socket.get_monitor_socket()
         socket_ADC_listener = context.socket(zmq.ROUTER)
+        socket_zeroconf_listener = context.socket(zmq.ROUTER)
+
         server_ip = get_ip()
         socket.bind("tcp://" + server_ip + ":8003")
         socket_ADC_listener.bind("tcp://" + server_ip + ":8023")
+        socket_zeroconf_listener.bind("ipc:///tmp/zeroconf")
 
         poller = zmq.Poller()
         poller.register(monitor, zmq.POLLIN | zmq.POLLERR)
         poller.register(socket, zmq.POLLIN | zmq.POLLERR)
         poller.register(socket_ADC_listener, zmq.POLLIN | zmq.POLLERR)
+        poller.register(socket_zeroconf_listener, zmq.POLLIN | zmq.POLLERR)
 
         while True:
             socks = dict(poller.poll(100))
@@ -127,6 +132,13 @@ class Expose():
                 data = pickle.loads(message)
                 try:
                     getattr(self, data['function_name'])(*data['args'])
+                except AttributeError as e:
+                    logger.error("Attribute error: {}".format(e))
+            if socket_zeroconf_listener in socks:
+                [identity, message] = socket_zeroconf_listener.recv_multipart()
+                data = pickle.loads(message)
+                try:
+                    getattr(self.osc, data['function_name'])(*data['args'])
                 except AttributeError as e:
                     logger.error("Attribute error: {}".format(e))
             self.osc.check_timing()

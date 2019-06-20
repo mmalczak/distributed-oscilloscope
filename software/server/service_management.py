@@ -4,37 +4,42 @@ import os
 import socket
 import logging
 from ipaddr import get_ip
+from publisher import PublisherIPC
 logger = logging.getLogger(__name__)
 
 
 class ThreadZeroConf(threading.Thread):
 
-    def __init__(self, osc):
+    def __init__(self):
         threading.Thread.__init__(self)
-        self.osc = osc
 
     def run(self):
         zeroconf = Zeroconf()
-        listener = ZeroconfListener(self.osc)
+        listener = ZeroconfListener()
         browser = ServiceBrowser(zeroconf, "_http._tcp.local.", listener)
 
 
 class ZeroconfListener:
 
-    def __init__(self, osc):
-        self.osc = osc
+    def __init__(self):
+        self.publisher = PublisherIPC('zeroconf')
 
     def remove_service(self, zeroconf, type, name):
         if name.startswith("ADC"):
-            self.osc.unregister_ADC(name)
+            data = {'function_name': 'unregister_ADC',
+                    'args': [name]}
+            self.publisher.send_message(data)
 
     def add_service(self, zeroconf, type, name):
         if name.startswith("ADC"):
             info = zeroconf.get_service_info(type, name)
             n_chan = int(info.properties[b'n_chan'])
-            addr = socket.inet_ntoa(info.address)
+            addr = str(socket.inet_ntoa(info.address))
             port = int(info.properties[b'port'])
-            self.osc.register_ADC(name, n_chan, str(addr), port)
+            data = {'function_name': 'register_ADC',
+                    'args': [name, n_chan, addr, port]}
+            self.publisher.send_message(data)
             server_addr = get_ip()
-            ADC = self.osc.get_ADC(name)
-            ADC.set_server_address(server_addr)
+            data = {'function_name': 'set_server_address',
+                    'args': [name, server_addr]}
+            self.publisher.send_message(data)
