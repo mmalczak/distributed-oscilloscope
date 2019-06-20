@@ -158,7 +158,7 @@ class OscilloscopeMethods(unittest.TestCase):
                            "number of presamples = 0\n\n")
 
         ADC_idx = ADC_addr + "_" + str(self.ADCs['ADC1'][0])
-        unique_ADC_name = "ADC" + "_" + ADC_idx + "._tcp.local."
+        unique_ADC_name = "ADC" + "_" + ADC_idx + "._http._tcp.local."
 
         for j in range(3, -1, -1):
             self.results.write("Number of channels: " + str(4-j) + "\n")
@@ -193,7 +193,7 @@ class OscilloscopeMethods(unittest.TestCase):
         self.assertFalse(performance_measurements)
 
         ADC_idx = ADC_addr + "_" + str(self.ADCs['ADC1'][0])
-        unique_ADC_name_1 = "ADC" + "_" + ADC_idx + "._tcp.local."
+        unique_ADC_name_1 = "ADC" + "_" + ADC_idx + "._http._tcp.local."
 
         oscilloscope_channel_idx = 0
         ADC_channel = 3
@@ -202,7 +202,7 @@ class OscilloscopeMethods(unittest.TestCase):
 
 
         ADC_idx = ADC_addr + "_" + str(self.ADCs['ADC2'][0])
-        unique_ADC_name_2 = "ADC" + "_" + ADC_idx + "._tcp.local."
+        unique_ADC_name_2 = "ADC" + "_" + ADC_idx + "._http._tcp.local."
 
         oscilloscope_channel_idx = 1
         ADC_channel = 3
@@ -228,7 +228,7 @@ class OscilloscopeMethods(unittest.TestCase):
         GUI_channel = 0
         ADC_channel = 0
         ADC_idx = ADC_addr + "_" + str(self.ADCs['ADC1'][0])
-        ADC_name = "ADC" + "_" + ADC_idx + "._tcp.local."
+        ADC_name = "ADC" + "_" + ADC_idx + "._http._tcp.local."
         self.zmq_rpc.send_RPC('add_channel', GUI_channel, ADC_name,
                               ADC_channel, self.GUI_name)
         channels = self.zmq_rpc.send_RPC('get_GUI_channels', self.GUI_name)
