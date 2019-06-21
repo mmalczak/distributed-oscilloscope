@@ -48,7 +48,7 @@ class GUI():
 
     def contains_ADC(self, unique_ADC_name):
         for ADC in self.__ADCs_used:
-            if unique_ADC_name == ADC.unique_ADC_name:
+            if unique_ADC_name == ADC.get_unique_ADC_name():
                 return True
         return False
 

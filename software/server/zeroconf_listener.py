@@ -35,11 +35,10 @@ class ZeroconfListener:
     def add_service(self, zeroconf, type, name):
         if name.startswith("ADC"):
             info = zeroconf.get_service_info(type, name)
-            n_chan = int(info.properties[b'n_chan'])
             addr = str(socket.inet_ntoa(info.address))
             port = int(info.properties[b'port'])
             data = {'function_name': 'register_ADC',
-                    'args': [name, n_chan, addr, port]}
+                    'args': [name, addr, port]}
             self.publisher.send_message(data)
             server_addr = get_ip()
             data = {'function_name': 'set_server_address',

@@ -75,8 +75,7 @@ class Expose():
         return True
 
     def register_ADC(self, unique_ADC_name, addr, port, conf):
-        self.osc.register_ADC(unique_ADC_name, conf['board_conf']['n_chan'],
-                              str(addr), port)
+        self.osc.register_ADC(unique_ADC_name, str(addr), port)
 
     def unregister_ADC(self, unique_ADC_name):
         self.osc.unregister_ADC(unique_ADC_name)
