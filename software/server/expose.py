@@ -10,6 +10,7 @@ from general.ipaddr import get_ip
 from general.addresses import server_expose_to_user_port
 from general.addresses import server_expose_to_device_port
 
+
 class Expose():
 
     def __init__(self, connection_manager):
@@ -80,7 +81,8 @@ class Expose():
         return True
 
     def register_ADC(self, unique_ADC_name, addr, port, conf):
-        self.__connection_manager.register_ADC(unique_ADC_name, str(addr), port)
+        self.__connection_manager.register_ADC(unique_ADC_name, str(addr),
+                                               port)
 
     def unregister_ADC(self, unique_ADC_name):
         self.__connection_manager.unregister_ADC(unique_ADC_name)
