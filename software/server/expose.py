@@ -12,79 +12,79 @@ from general.addresses import server_expose_to_device_port
 
 class Expose():
 
-    def __init__(self, osc):
-        self.__osc = osc
+    def __init__(self, connection_manager):
+        self.__connection_manager = connection_manager
         self.run()
 
     def add_channel(self, oscilloscope_channel_idx, unique_ADC_name,
                     ADC_channel_idx, GUI_name):
-        GUI = self.__osc.get_GUI(GUI_name)
-        ADC = self.__osc.get_ADC(unique_ADC_name)
+        GUI = self.__connection_manager.get_GUI(GUI_name)
+        ADC = self.__connection_manager.get_ADC(unique_ADC_name)
         GUI.add_channel(oscilloscope_channel_idx, ADC, ADC_channel_idx)
 
     def remove_channel(self, oscilloscope_channel_idx, GUI_name):
-        GUI = self.__osc.get_GUI(GUI_name)
+        GUI = self.__connection_manager.get_GUI(GUI_name)
         GUI.remove_channel(oscilloscope_channel_idx)
 
     def add_trigger(self, type, unique_ADC_name, ADC_trigger_idx, GUI_name):
-        GUI = self.__osc.get_GUI(GUI_name)
-        ADC = self.__osc.get_ADC(unique_ADC_name)
+        GUI = self.__connection_manager.get_GUI(GUI_name)
+        ADC = self.__connection_manager.get_ADC(unique_ADC_name)
         GUI.add_trigger(type, ADC, ADC_trigger_idx)
 
     def remove_trigger(self, GUI_name):
-        GUI = self.__osc.get_GUI(GUI_name)
+        GUI = self.__connection_manager.get_GUI(GUI_name)
         GUI.remove_trigger()
 
     def set_ADC_parameter(self, parameter_name, value, unique_ADC_name,
                           idx=None):
-        ADC = self.__osc.get_ADC(unique_ADC_name)
+        ADC = self.__connection_manager.get_ADC(unique_ADC_name)
         try:
             ADC.set_ADC_parameter(parameter_name, value, idx)
         except Exception as e:
             print("Set_ADC_parameter error {}".format(e))
 
     def single_acquisition(self, GUI_name):
-        GUI = self.__osc.get_GUI(GUI_name)
+        GUI = self.__connection_manager.get_GUI(GUI_name)
         GUI.configure_acquisition_ADCs_used()
 
     def run_acquisition(self, run, GUI_name):
-        GUI = self.__osc.get_GUI(GUI_name)
+        GUI = self.__connection_manager.get_GUI(GUI_name)
         GUI.run_acquisition(run)
 
     def set_presamples(self, value, GUI_name):
-        GUI = self.__osc.get_GUI(GUI_name)
+        GUI = self.__connection_manager.get_GUI(GUI_name)
         GUI.set_presamples(value)
 
     def set_postsamples(self, value, GUI_name):
-        GUI = self.__osc.get_GUI(GUI_name)
+        GUI = self.__connection_manager.get_GUI(GUI_name)
         GUI.set_postsamples(value)
 
     def get_GUI_settings(self, GUI_name):
-        GUI = self.__osc.get_GUI(GUI_name)
+        GUI = self.__connection_manager.get_GUI(GUI_name)
         return GUI.get_GUI_settings()
 
     def register_GUI(self, GUI_name, addr, port):
-        self.__osc.register_GUI(GUI_name, str(addr), port)
+        self.__connection_manager.register_GUI(GUI_name, str(addr), port)
 
     def unregister_GUI(self, GUI_name):
-        self.__osc.unregister_GUI(GUI_name)
+        self.__connection_manager.unregister_GUI(GUI_name)
 
     """---------------------------ADC--------------------------------------"""
     def update_data(self, timestamp, pre_post, data, unique_ADC_name):
-        self.__osc.update_data(timestamp, pre_post, data, unique_ADC_name)
+        self.__connection_manager.update_data(timestamp, pre_post, data, unique_ADC_name)
         return True
 
     def register_ADC(self, unique_ADC_name, addr, port, conf):
-        self.__osc.register_ADC(unique_ADC_name, str(addr), port)
+        self.__connection_manager.register_ADC(unique_ADC_name, str(addr), port)
 
     def unregister_ADC(self, unique_ADC_name):
-        self.__osc.unregister_ADC(unique_ADC_name)
+        self.__connection_manager.unregister_ADC(unique_ADC_name)
 
     """---------------------------ADC--------------------------------------"""
 
     """----------------- TESTING ------------------------------------------"""
     def get_GUI_channels(self, GUI_name):
-        GUI = self.__osc.get_GUI(GUI_name)
+        GUI = self.__connection_manager.get_GUI(GUI_name)
         return GUI.get_channels_copy()
     """----------------- TESTING ------------------------------------------"""
 
@@ -142,7 +142,8 @@ class Expose():
                 [identity, message] = socket_zeroconf_listener.recv_multipart()
                 data = pickle.loads(message)
                 try:
-                    getattr(self.__osc, data['function_name'])(*data['args'])
+                    getattr(self.__connection_manager,
+                            data['function_name'])(*data['args'])
                 except AttributeError as e:
                     logger.error("Attribute error: {}".format(e))
-            self.__osc.check_timing()
+            self.__connection_manager.check_timing()

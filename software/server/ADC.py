@@ -14,7 +14,7 @@ from general.zmq_rpc import RPC_Error
 # fixme if your class doesnt inherit, do not add empty () after its declaration
 class ADC:
 
-    def __init__(self, unique_ADC_name, ip, port, osc):
+    def __init__(self, unique_ADC_name, ip, port, connection_manager):
         self.unique_ADC_name = unique_ADC_name
         self.__ip = ip
         self.__port = port
@@ -24,7 +24,7 @@ class ADC:
         self.__external_triggers = []
         self.__acq_conf = None
         self.__is_WRTD_master = None
-        self.__osc = osc
+        self.__connection_manager = connection_manager
         self.__zmq_rpc = ZMQ_RPC(ip, port)  # remove +8 after removing xml
         conf = self.send_RPC('get_current_adc_conf')
         self.number_of_channels = conf['board_conf']['n_chan']
@@ -43,7 +43,7 @@ class ADC:
         self.update_conf()
 
     def suicide(self):
-        self.__osc.unregister_ADC(self.unique_ADC_name)
+        self.__connection_manager.unregister_ADC(self.unique_ADC_name)
 
     def send_RPC(self, RPC_name, *args):
         try:
