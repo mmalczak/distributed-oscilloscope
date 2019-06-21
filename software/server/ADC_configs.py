@@ -5,13 +5,13 @@ class Channel:
         self.ADC_channel_idx = ADC_channel_idx
         self.range_conv = {35: 100, 69: 10, 17: 1}
         self.active = True  # TO BE REMOVED
-        self.channel_range = None
+        self.range = None
         self.termination = None
         self.offset = None
         self.timestamp_pre_post_data = None
 
-    def set_channel_range(self, channel_range):
-        self.channel_range = self.range_conv[channel_range]
+    def set_range(self, range):
+        self.range = self.range_conv[range]
 
     def set_termination(self, termination):
         self.termination = termination
@@ -19,8 +19,8 @@ class Channel:
     def set_offset(self, offset):
         self.offset = offset
 
-    def update_channel_conf(self, channel_range, termination, offset):
-        self.channel_range = self.range_conv[channel_range]
+    def update_channel_conf(self, range, termination, offset):
+        self.range = self.range_conv[range]
         self.termination = termination
         self.offset = offset
 

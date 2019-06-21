@@ -115,7 +115,7 @@ class ADC_100m14b4cha_extended_API(ADC_100m14b4cha):
         timestamp = [secs, ticks]
         return timestamp
 
-    def set_channel_range(self, channel_range, channel):
+    def set_channel_range(self, range, channel):
         """ possible values :
             100 mV     - 100
             1 V        - 1
@@ -123,13 +123,13 @@ class ADC_100m14b4cha_extended_API(ADC_100m14b4cha):
             open input - 0"""
         self._adc_conf.type = self.ADC_CONF_TYPE_CHN
         self._adc_conf.route_to = channel
-        if(channel_range == 100):
+        if(range == 100):
             ch_range = self.ADC_CONF_100M14B4CHA_CHN_RANGE_100mV
-        elif(channel_range == 1):
+        elif(range == 1):
             ch_range = self.ADC_CONF_100M14B4CHA_CHN_RANGE_1V
-        elif(channel_range == 10):
+        elif(range == 10):
             ch_range = self.ADC_CONF_100M14B4CHA_CHN_RANGE_10V
-        elif(channel_range == 0):
+        elif(range == 0):
             ch_range = self.ADC_CONF_100M14B4CHA_CHN_RANGE_OPEN_DRAIN
         else:
             print("Wrong channel range")
@@ -251,7 +251,7 @@ class ADC_100m14b4cha_extended_API(ADC_100m14b4cha):
         return acq_conf
 
     def current_config_channel(self, channel):
-        channel_range = c_uint()
+        range = c_uint()
         termination = c_uint()
         offset = c_int()  # originally it is uint
         saturation = c_uint()
@@ -267,13 +267,13 @@ class ADC_100m14b4cha_extended_API(ADC_100m14b4cha):
         # self.set_conf_mask(self.ADC_CONF_CHN_GAIN) doesn't work
         self.retrieve_config()
 
-        self.get_conf(self.ADC_CONF_CHN_RANGE, byref(channel_range))
+        self.get_conf(self.ADC_CONF_CHN_RANGE, byref(range))
         self.get_conf(self.ADC_CONF_CHN_TERMINATION, byref(termination))
         self.get_conf(self.ADC_CONF_CHN_OFFSET, byref(offset))
         self.get_conf(self.ADC_CONF_CHN_SATURATION, byref(saturation))
         # self.get_conf(self.ADC_CONF_CHN_GAIN, byref(gain))
 
-        chn_conf = {'channel_range': channel_range.value,
+        chn_conf = {'range': range.value,
                     'termination': termination.value,
                     'offset': offset.value,
                     'saturation': saturation.value}

@@ -198,7 +198,7 @@ class GUI():
         oscilloscope_channels_params = {}
         for channel_idx, channel in self.__channels.items():
             channel_params = {'active': channel.active,
-                              'range': channel.channel_range,
+                              'range': channel.range,
                               'termination': channel.termination,
                               'offset': channel.offset,
                               'ADC_channel_idx': channel.ADC_channel_idx}

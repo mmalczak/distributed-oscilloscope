@@ -62,7 +62,7 @@ class ADC:
         be outdated"""
         range_multiplier = {10: 1, 1: 1/10, 100: 1/100}
         for channel_idx, data_channel in data.items():
-            range = self.__channels[int(channel_idx)].channel_range
+            range = self.__channels[int(channel_idx)].range
             mult = range_multiplier[range]
             data_channel = [value * mult for value in data_channel]
             """conversion to the 10V scale"""
@@ -78,7 +78,7 @@ class ADC:
         for count in range(0, conf['board_conf']['n_chan']):
             channel = conf['chn_conf'][count]
             self.__channels[count].update_channel_conf(
-                                                channel['channel_range'],
+                                                channel['range'],
                                                 channel['termination'],
                                                 channel['offset'])
         for count in range(0, conf['board_conf']['n_trg_int']):
@@ -132,8 +132,8 @@ class ADC:
             return int(value)
 
         def map_channel_range(self, value, *args):
-            channel_ranges = {'10V': 10, '1V': 1, '100mV': 100}
-            return channel_ranges[value]
+            ranges = {'10V': 10, '1V': 1, '100mV': 100}
+            return ranges[value]
 
         def map_postsamples(self, value, *args):
             if value == 1:
@@ -155,11 +155,11 @@ class ADC:
             therefore if range is changed, the value in mv has to be
             recalculated"""
             channel = ADC.get_channel(channel_idx)
-            previous_range = channel.channel_range
+            previous_range = channel.range
             internal_trigger = ADC.get_internal_trigger(channel_idx)
             curr_threshold = internal_trigger.threshold
-            channel_ranges = {'10V': 10, '1V': 1, '100mV': 100}
-            new_range = channel_ranges[range_value_str]
+            ranges = {'10V': 10, '1V': 1, '100mV': 100}
+            new_range = ranges[range_value_str]
             multiplier = {(10, 10): 1, (10, 1): 10, (10, 100): 100,
                           (1, 10): 1/10, (1, 1): 1, (1, 100): 10,
                           (100, 10): 1/100, (100, 1): 10, (100, 100): 1}
