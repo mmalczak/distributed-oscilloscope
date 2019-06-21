@@ -10,15 +10,6 @@ class Channel:
         self.offset = None
         self.timestamp_pre_post_data = None
 
-    def set_range(self, range):
-        self.range = self.range_conv[range]
-
-    def set_termination(self, termination):
-        self.termination = termination
-
-    def set_offset(self, offset):
-        self.offset = offset
-
     def update_channel_conf(self, range, termination, offset):
         self.range = self.range_conv[range]
         self.termination = termination
@@ -32,15 +23,6 @@ class Trigger:
         self.polarity = None
         self.delay = None
         self.type = None
-
-    def set_enable(self, enable):
-        self.enable = enable
-
-    def set_polarity(self, polarity):
-        self.polarity = polarity
-
-    def set_delay(self, delay):
-        self.delay = delay
 
     def update_trigger_conf(self, enable, polarity, delay):
         self.enable = enable
@@ -56,9 +38,6 @@ class InternalTrigger(Trigger):
         self.ADC_trigger_idx = ADC_trigger_idx
         self.threshold = None
         self.type = 'internal'
-
-    def set_threshold(self, threshold):
-        self.threshold = threshold
 
     def update_trigger_conf(self, enable, polarity, delay, threshold):
         self.enable = enable
@@ -82,12 +61,6 @@ class AcqConf:
         self.presamples = None
         self.postsamples = None
 
-    def set_presamples(self, presamples):
-        self.presamples = presamples
-
-    def set_postsamples(self, postsamples):
-        self.postsamples = postsamples
-
     def update_acq_conf(self, presamples, postsamples):
-        self.set_presamples(presamples)
-        self.set_postsamples(postsamples)
+        self.presamples = presamples
+        self.postsamples = postsamples
