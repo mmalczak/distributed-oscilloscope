@@ -47,7 +47,6 @@ class ServerExpose():
         context = zmq.Context()
         socket = context.socket(zmq.ROUTER)
         monitor = socket.get_monitor_socket()
-        # socket.bind("tcp://*:8003")
         ip = '128.141.162.185'
         port_zmq = str(self.port)
         socket.bind("tcp://" + ip + ":" + port_zmq)
