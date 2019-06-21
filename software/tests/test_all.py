@@ -14,7 +14,7 @@ from test_conf import plot_data
 sys.path.append('../')
 from general.zmq_rpc import ZMQ_RPC
 from general.zmq_rpc import RPC_Error
-from general.addresses import server_zmq_expose_port
+from general.addresses import server_expose_to_user_port
 import timeout_decorator
 
 sys.path.append('../server')
@@ -39,7 +39,7 @@ class OscilloscopeMethods(unittest.TestCase):
             self.results = open("results.txt", "a")
         self.start_server()
         self.create_GUI_interface()
-        self.zmq_rpc = ZMQ_RPC(server_addr, server_zmq_expose_port)
+        self.zmq_rpc = ZMQ_RPC(server_addr, server_expose_to_user_port)
         self.connect_to_server()
         self.add_ADC_FEC('ADC1')
         self.add_ADC_FEC('ADC2')

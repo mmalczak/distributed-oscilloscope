@@ -7,7 +7,8 @@ import sys
 logger = logging.getLogger(__name__)
 sys.path.append('../')
 from general.ipaddr import get_ip
-
+from general.addresses import server_expose_to_user_port
+from general.addresses import server_expose_to_device_port
 
 class Expose():
 
@@ -103,8 +104,10 @@ class Expose():
         socket_zeroconf_listener = context.socket(zmq.ROUTER)
 
         server_ip = get_ip()
-        socket.bind("tcp://" + server_ip + ":8003")
-        socket_ADC_listener.bind("tcp://" + server_ip + ":8023")
+        socket.bind("tcp://" + server_ip + ":" +
+                    str(server_expose_to_user_port))
+        socket_ADC_listener.bind("tcp://" + server_ip + ":" +
+                                 str(server_expose_to_device_port))
         socket_zeroconf_listener.bind("ipc:///tmp/zeroconf")
 
         poller = zmq.Poller()

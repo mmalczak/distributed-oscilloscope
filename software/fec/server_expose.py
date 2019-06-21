@@ -7,7 +7,7 @@ import pickle
 import time
 sys.path.append('../')
 from general.publisher import Publisher
-
+from general.addresses import server_expose_to_device_port
 
 thismodule = sys.modules[__name__]
 
@@ -27,7 +27,7 @@ class ServerExpose():
         return getattr(self.devices_access, function_name)
 
     def set_server_address(self, addr):
-        self.server_publisher = Publisher(addr, 8023)
+        self.server_publisher = Publisher(addr, server_expose_to_device_port)
 
     def set_adc_parameter(self, function_name, *args):
         self.devices_access.configure_adc_parameter(function_name, [*args])

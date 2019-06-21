@@ -9,7 +9,7 @@ from server_expose import *
 from GUI import *
 sys.path.append('../')
 from general.zmq_rpc import ZMQ_RPC
-from general.addresses import server_zmq_expose_port
+from general.addresses import server_expose_to_user_port
 from general.ipaddr import get_ip
 
 """TODO number of ADCs different from data dimension occuring when I
@@ -55,7 +55,7 @@ def main():
     addr = get_ip()
     GUI_idx = addr + "_" + str(port)
     GUI_name = "GUI" + "_" + GUI_idx + "._http._tcp.local."
-    zmq_rpc = ZMQ_RPC(ip_server, server_zmq_expose_port)
+    zmq_rpc = ZMQ_RPC(ip_server, server_expose_to_user_port)
     app = QApplication([])
     win = MainWindow(zmq_rpc)
     GUI = GUI_Class(win.ui, zmq_rpc, GUI_name)
