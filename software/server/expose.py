@@ -71,7 +71,12 @@ class Expose():
 
     """---------------------------ADC--------------------------------------"""
     def update_data(self, timestamp, pre_post, data, unique_ADC_name):
-        self.__connection_manager.update_data(timestamp, pre_post, data, unique_ADC_name)
+        if(data == 0):
+            self.__stop_acquisition_if_GUI_contains_ADC(unique_ADC_name)
+            return
+        """TODO add logging, do sth"""
+        ADC = self.__connection_manager.get_ADC(unique_ADC_name)
+        ADC.update_data(timestamp, pre_post, data)
         return True
 
     def register_ADC(self, unique_ADC_name, addr, port, conf):

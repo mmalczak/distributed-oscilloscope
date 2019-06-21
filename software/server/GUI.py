@@ -80,6 +80,7 @@ class GUI():
 
     def remove_channel(self, GUI_channel_idx):
         del self.__channels[GUI_channel_idx]
+        ADC.set_GUI(None)
         self.__update_ADCs_used()
 
     def remove_trigger(self):
@@ -90,6 +91,7 @@ class GUI():
 
         ADC.set_is_WRTD_master(False)
         self.__trigger = None
+        ADC.set_GUI(None)
         self.__update_ADCs_used()
 
     def __update_ADCs_used(self):
@@ -97,6 +99,9 @@ class GUI():
         for channel_idx, channel in self.__channels.items():
             if not(channel.ADC in self.__ADCs_used):
                 self.__ADCs_used.append(channel.ADC)
+                channel.ADC.set_GUI(self)
+                """here I set the GUI in the ADC, it is removed in methods
+                remove_channel/remove_trigger"""
 
     def set_presamples(self, value):
         for ADC in self.__ADCs_used:

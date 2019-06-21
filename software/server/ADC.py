@@ -28,6 +28,7 @@ class ADC:
         self.__zmq_rpc = ZMQ_RPC(ip, port)  # remove +8 after removing xml
         conf = self.send_RPC('get_current_adc_conf')
         self.number_of_channels = conf['board_conf']['n_chan']
+        self.__GUI = None
 
         for count in range(0, conf['board_conf']['n_chan']):
             channel = Channel(self, count)
@@ -41,6 +42,9 @@ class ADC:
             self.__external_triggers.append(ext_trig)
         self.__acq_conf = AcqConf()
         self.update_conf()
+
+    def set_GUI(self, GUI):
+        self.__GUI = GUI
 
     def suicide(self):
         self.__connection_manager.unregister_ADC(self.unique_ADC_name)
@@ -69,6 +73,7 @@ class ADC:
             self.__channels[int(channel_idx)].timestamp_pre_post_data =\
                     {'timestamp': timestamp, 'pre_post': pre_post,
                      'data_channel': data_channel}
+        self.__GUI.if_ready_send_data()
 
     def update_conf(self):
         conf = self.send_RPC('get_current_adc_conf')
