@@ -79,8 +79,8 @@ class GUI():
         self.__update_ADCs_used()
 
     def remove_channel(self, GUI_channel_idx):
+        self.__channels[GUI_channel_idx].ADC.remove_GUI()
         del self.__channels[GUI_channel_idx]
-        ADC.set_GUI(None)
         self.__update_ADCs_used()
 
     def remove_trigger(self):
@@ -91,7 +91,7 @@ class GUI():
 
         ADC.set_is_WRTD_master(False)
         self.__trigger = None
-        ADC.set_GUI(None)
+        ADC.remove_GUI()
         self.__update_ADCs_used()
 
     def __update_ADCs_used(self):

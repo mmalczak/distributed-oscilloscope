@@ -46,6 +46,9 @@ class ADC:
     def set_GUI(self, GUI):
         self.__GUI = GUI
 
+    def remove_GUI(self):
+        self.__GUI = None
+
     def suicide(self):
         self.__connection_manager.unregister_ADC(self.unique_ADC_name)
 
