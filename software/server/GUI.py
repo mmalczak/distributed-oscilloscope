@@ -52,7 +52,7 @@ class GUI():
                 return True
         return False
 
-    def add_channel(self, oscilloscope_channel_idx, ADC, ADC_channel_idx):
+    def add_channel(self, GUI_channel_idx, ADC, ADC_channel_idx):
         def set_horizontal_setting_when_add_channel(self, new_ADC):
             ADC = self.__ADCs_used[0]
             acq_conf = ADC.get_acq_conf()
@@ -64,7 +64,7 @@ class GUI():
 
         ADC.add_used_channel(ADC_channel_idx)
         channel = ADC.get_channel(ADC_channel_idx)
-        self.__channels[oscilloscope_channel_idx] = channel
+        self.__channels[GUI_channel_idx] = channel
         self.__update_ADCs_used()
         set_horizontal_setting_when_add_channel(self, ADC)
 
@@ -78,8 +78,8 @@ class GUI():
         self.__trigger = trigger
         self.__update_ADCs_used()
 
-    def remove_channel(self, oscilloscope_channel_idx):
-        del self.__channels[oscilloscope_channel_idx]
+    def remove_channel(self, GUI_channel_idx):
+        del self.__channels[GUI_channel_idx]
         self.__update_ADCs_used()
 
     def remove_trigger(self):
@@ -197,15 +197,15 @@ class GUI():
             logger.warning("No ADC used to retrieve the horizontal params")
 
     def get_channels_copy(self):
-        oscilloscope_channels_params = {}
+        GUI_channels_params = {}
         for channel_idx, channel in self.__channels.items():
             channel_params = {'active': channel.active,
                               'range': channel.range,
                               'termination': channel.termination,
                               'offset': channel.offset,
                               'ADC_channel_idx': channel.ADC_channel_idx}
-            oscilloscope_channels_params[channel_idx] = channel_params
-        return oscilloscope_channels_params
+            GUI_channels_params[channel_idx] = channel_params
+        return GUI_channels_params
 
     def get_trigger_copy(self):
         trigger = self.__trigger
