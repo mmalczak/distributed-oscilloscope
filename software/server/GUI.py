@@ -173,15 +173,16 @@ class GUI():
             self.configure_acquisition_ADCs_used()
 
     def __check_horizontal_settings(self):
-        ADC0 = self.__ADCs_used[0]
-        acq_conf = ADC0.get_acq_conf()
-        presamples = acq_conf.presamples
-        postsamples = acq_conf.postsamples
-        for ADC in self.__ADCs_used:
-            acq_conf = ADC.get_acq_conf()
-            if (presamples != acq_conf.presamples) or\
-               (postsamples != acq_conf.postsamples):
-                raise HorizontalSettingsError
+        if self.__ADCs_used:
+            ADC0 = self.__ADCs_used[0]
+            acq_conf = ADC0.get_acq_conf()
+            presamples = acq_conf.presamples
+            postsamples = acq_conf.postsamples
+            for ADC in self.__ADCs_used:
+                acq_conf = ADC.get_acq_conf()
+                if (presamples != acq_conf.presamples) or\
+                   (postsamples != acq_conf.postsamples):
+                    raise HorizontalSettingsError
 
     def get_horiz_settings_copy(self):
         if self.__ADCs_used:
