@@ -15,7 +15,7 @@ from general.zmq_rpc import RPC_Error
 class ADC:
 
     def __init__(self, unique_ADC_name, ip, port, osc):
-        self.__unique_ADC_name = unique_ADC_name
+        self.unique_ADC_name = unique_ADC_name
         self.__ip = ip
         self.__port = port
         self.__channels = []
@@ -43,7 +43,7 @@ class ADC:
         self.update_conf()
 
     def suicide(self):
-        self.__osc.unregister_ADC(self.__unique_ADC_name)
+        self.__osc.unregister_ADC(self.unique_ADC_name)
 
     def send_RPC(self, RPC_name, *args):
         try:
@@ -52,9 +52,6 @@ class ADC:
             logger.error("Error when calling RPC: {}, closing ADC".format(
                                                                     RPC_name))
             self.suicide()
-
-    def get_unique_ADC_name(self):
-        return self.__unique_ADC_name
 
     def update_data(self, timestamp, pre_post, data):
         """the value of pre and postsamples is passed together with the data

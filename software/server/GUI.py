@@ -41,14 +41,14 @@ class GUI():
         self.__GUI_publisher.send_message(message)
         channels_to_delete = []
         for channel_idx, channel in self.__channels.items():
-            if channel.ADC.get_unique_ADC_name() == unique_ADC_name:
+            if channel.ADC.unique_ADC_name == unique_ADC_name:
                 channels_to_delete.append(channel_idx)
         for channel_idx in channels_to_delete:
             self.remove_channel(channel_idx)
 
     def contains_ADC(self, unique_ADC_name):
         for ADC in self.__ADCs_used:
-            if unique_ADC_name == ADC.get_unique_ADC_name():
+            if unique_ADC_name == ADC.unique_ADC_name:
                 return True
         return False
 
