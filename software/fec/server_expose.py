@@ -19,7 +19,6 @@ class ServerExpose():
         self.__port = port
         self.server_publisher = None
         self.__devices_access = devices_access
-        self.server = None
 
     def __getattr__(self, function_name):
         """ If he requered function is not defined here, look for it in the
