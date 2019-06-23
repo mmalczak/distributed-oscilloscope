@@ -14,31 +14,30 @@ thismodule = sys.modules[__name__]
 
 
 class ServerExpose():
-    devices_access = None
 
     def __init__(self, port, devices_access):
-        self.port = port
+        self.__port = port
         self.server_publisher = None
-        self.devices_access = devices_access
+        self.__devices_access = devices_access
         self.server = None
 
     def __getattr__(self, function_name):
         """ If he requered function is not defined here, look for it in the
         devices_access object"""
-        return getattr(self.devices_access, function_name)
+        return getattr(self.__devices_access, function_name)
 
     def set_server_address(self, addr):
         self.server_publisher = Publisher(addr, server_expose_to_device_port)
 
     def set_adc_parameter(self, function_name, *args):
-        self.devices_access.configure_adc_parameter(function_name, [*args])
+        self.__devices_access.configure_adc_parameter(function_name, [*args])
 
     def exit(self):
         """This fucntion is just for testing and will be removed after
         addding ZeroMQ"""
         """doesn'r work with zeroconf"""
         data = {'function_name': 'unregister_ADC',
-                                 'args': [self.devices_access.unique_ADC_name]}
+                                 'args': [self.__devices_access.unique_ADC_name]}
         self.server_publisher.send_message(data)
         time.sleep(0.1)  # otherwise the message is lost
         os._exit(1)
@@ -49,7 +48,7 @@ class ServerExpose():
         socket = context.socket(zmq.ROUTER)
         monitor = socket.get_monitor_socket()
         ip = get_ip()
-        port_zmq = str(self.port)
+        port_zmq = str(self.__port)
         socket.bind("tcp://" + ip + ":" + port_zmq)
 
         poller = zmq.Poller()
@@ -62,7 +61,7 @@ class ServerExpose():
                 value = getattr(zmq, name)
                 EVENT_MAP[value] = name
 
-        self.devices_access.selector = poller
+        self.__devices_access.selector = poller
         while True:
             socks = dict(poller.poll())
             if socket in socks:
@@ -80,11 +79,10 @@ class ServerExpose():
                 evt.update({'description': EVENT_MAP[evt['event']]})
                 # logger.info("Event: {}".format(evt))
 
-            if self.devices_access.fileno() in socks:
-                dev_ac = self.devices_access
+            if self.__devices_access.fileno() in socks:
+                dev_ac = self.__devices_access
                 poller.unregister(dev_ac)
-                [timestamp, pre_post, data] = dev_ac.retrieve_ADC_data(
-                                                            dev_ac.channels)
+                [timestamp, pre_post, data] = dev_ac.retrieve_ADC_data()
                 data = {'function_name': 'update_data',
                         'args': [timestamp, pre_post, data,
                                  dev_ac.unique_ADC_name]}

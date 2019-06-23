@@ -10,7 +10,7 @@ class WRTD(WRTD_wrapper):
         self.disable_all_rules()
         self.remove_all_rules()
 
-    def ts_add_ps(self, ts, ps):
+    def __ts_add_ps(self, ts, ps):
         ps = int(ps)
         frac = ps * 1 << 32
         frac = frac // 1000
@@ -25,7 +25,7 @@ class WRTD(WRTD_wrapper):
     @encode_arguments
     def set_rule(self, name, delay_ps, src_p, dst_p):
         ts = {"seconds": 0, "ns": 0, "frac": 0}
-        self.ts_add_ps(ts, delay_ps)
+        self.__ts_add_ps(ts, delay_ps)
         self.set_attr_string(name, self.WRTD_ATTR_RULE_SOURCE, src_p)
         self.set_attr_string(name, self.WRTD_ATTR_RULE_DESTINATION,
                              dst_p)
