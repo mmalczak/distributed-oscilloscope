@@ -80,7 +80,7 @@ class Expose():
         ADC.update_data(timestamp, pre_post, data)
         return True
 
-    def register_ADC(self, unique_ADC_name, addr, port, conf):
+    def register_ADC(self, unique_ADC_name, addr, port):
         self.__connection_manager.register_ADC(unique_ADC_name, str(addr),
                                                port)
 

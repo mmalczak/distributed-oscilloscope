@@ -23,7 +23,6 @@ def main():
     port = int(args.port[0])
     pci_addr = int(args.pci_addr[0])
 
-    number_of_channels = 4  # TODO
     addr = os.popen("ifconfig| grep inet").read().split()[1]
     ADC_idx = addr + '_' + str(port)
     unique_ADC_name = 'ADC' + '_' + ADC_idx + '._http._tcp.local.'
@@ -31,7 +30,6 @@ def main():
     pci_addr = pci_addr
     trtl = 'trtl-000' + str(pci_addr)
     devices_access = DevicesAccess(pci_addr, trtl, unique_ADC_name)
-    conf = devices_access.get_current_adc_conf()
     if args.ip_server:
         ip_server = {'addr': args.ip_server[0]}
     else:
@@ -44,14 +42,13 @@ def main():
     if(args.ip_server is None):
         zeroconf_info = zeroconf.ServiceInfo("_http._tcp.local.",
                             unique_ADC_name, zeroconf.socket.inet_aton(addr),
-                            8000, properties={'addr': addr,
-                            'port': str(port), 'n_chan': str(number_of_channels)})
+                            8000, properties={'addr': addr, 'port': str(port)})
         zeroconf_service = zeroconf.Zeroconf()
         zeroconf_service.register_service(zeroconf_info)
     else:
         serv_expose.set_server_address(ip_server['addr'])
         data = {'function_name': 'register_ADC',
-                                 'args': [unique_ADC_name, addr, port, conf]}
+                                 'args': [unique_ADC_name, addr, port]}
         serv_expose.server_publisher.send_message(data)
 
 
