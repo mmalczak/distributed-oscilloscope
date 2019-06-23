@@ -6,7 +6,7 @@ import argparse
 from devices_access import DevicesAccess
 from server_expose import ServerExpose
 import time
-
+from general.ipaddr import get_ip
 
 def main():
     parser = argparse.ArgumentParser()
@@ -23,7 +23,7 @@ def main():
     port = int(args.port[0])
     pci_addr = int(args.pci_addr[0])
 
-    addr = os.popen("ifconfig| grep inet").read().split()[1]
+    addr = get_ip()
     ADC_idx = addr + '_' + str(port)
     unique_ADC_name = 'ADC' + '_' + ADC_idx + '._http._tcp.local.'
 

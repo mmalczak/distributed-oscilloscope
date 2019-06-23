@@ -8,6 +8,7 @@ import time
 sys.path.append('../')
 from general.publisher import Publisher
 from general.addresses import server_expose_to_device_port
+from general.ipaddr import get_ip
 
 thismodule = sys.modules[__name__]
 
@@ -47,7 +48,7 @@ class ServerExpose():
         context = zmq.Context()
         socket = context.socket(zmq.ROUTER)
         monitor = socket.get_monitor_socket()
-        ip = '128.141.162.185'
+        ip = get_ip()
         port_zmq = str(self.port)
         socket.bind("tcp://" + ip + ":" + port_zmq)
 
