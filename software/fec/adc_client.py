@@ -3,7 +3,6 @@ sys.path.append('../')
 import zeroconf
 import os
 import argparse
-from devices_access import DevicesAccess
 from server_expose import ServerExpose
 import time
 from general.ipaddr import get_ip
@@ -29,13 +28,12 @@ def main():
 
     pci_addr = pci_addr
     trtl = 'trtl-000' + str(pci_addr)
-    devices_access = DevicesAccess(pci_addr, trtl, unique_ADC_name)
     if args.ip_server:
         ip_server = {'addr': args.ip_server[0]}
     else:
         ip_server = {'addr': None}
 
-    serv_expose = ServerExpose(port, devices_access)
+    serv_expose = ServerExpose(port, pci_addr, trtl, unique_ADC_name)
 
     zeroconf_service = None
     zeroconf_info = None

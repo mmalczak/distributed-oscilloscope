@@ -9,16 +9,17 @@ sys.path.append('../')
 from general.publisher import Publisher
 from general.addresses import server_expose_to_device_port
 from general.ipaddr import get_ip
+from devices_access import DevicesAccess
 
 thismodule = sys.modules[__name__]
 
 
 class ServerExpose():
 
-    def __init__(self, port, devices_access):
+    def __init__(self, port, pci_addr, trtl, unique_ADC_name):
         self.__port = port
         self.server_publisher = None
-        self.__devices_access = devices_access
+        self.__devices_access = DevicesAccess(pci_addr, trtl, unique_ADC_name)
 
     def __getattr__(self, function_name):
         """ If he requered function is not defined here, look for it in the
