@@ -14,14 +14,14 @@ class ChannelClosure:
 
     def __init__(self, channel_inputs_layout, ver_set_layout, zmq_rpc,
                  plot, GUI_name, channel_count, update_triggers, GUI):
-        self.adc_label = QLabel("")
-        self.adc_label.setAlignment(Qt.AlignCenter | Qt.AlignVCenter)
+        self.__adc_label = QLabel("")
+        self.__adc_label.setAlignment(Qt.AlignCenter | Qt.AlignVCenter)
         self.channel_label = QLabel("")
         self.channel_label.setAlignment(Qt.AlignCenter | Qt.AlignVCenter)
-        self.menu = ChannelsMenu(self, channel_count, plot, self.adc_label,
+        self.menu = ChannelsMenu(self, channel_count, plot, self.__adc_label,
                                  self.channel_label, GUI)
         self.channel_count = channel_count
-        self.chan_in_layout = ChannelInputsLayout(self.menu, self.adc_label,
+        self.chan_in_layout = ChannelInputsLayout(self.menu, self.__adc_label,
                                                   self.channel_label,
                                                   channel_count)
         self.chan_in_layout.setAlignment(Qt.AlignCenter | Qt.AlignVCenter)
@@ -73,7 +73,7 @@ class ChannelClosure:
         contain the information that they are not connected to any of
         the ADCs"""
         self.set_channel_properties(None, 0)
-        self.adc_label.setText('')
+        self.__adc_label.setText('')
         self.channel_label.setText('')
 
     def channel_exists(self):
@@ -133,7 +133,7 @@ class ChannelsMenu(QMenuBar):
                  channel_label, GUI):
         super().__init__()
         self.GUI = GUI
-        self.adc_label = adc_label
+        self.__adc_label = adc_label
         self.channel_label = channel_label
         self.channel_count = channel_count
         self.channel_closure = channel_closure
@@ -173,7 +173,7 @@ class ChannelsMenu(QMenuBar):
         str_chan = self.sender().text()
         idx = int(str_chan.split()[1])
         display_name = self.selected_ADC.replace('._tcp.local.', '')
-        self.adc_label.setText(display_name)
+        self.__adc_label.setText(display_name)
         self.channel_label.setText(str_chan)
         self.channel_closure.set_channel_properties(self.selected_ADC, idx)
         self.plot.add_channel(self.channel_count)

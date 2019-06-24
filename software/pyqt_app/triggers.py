@@ -12,12 +12,12 @@ class TriggerClosure:
     def __init__(self, trigger_inputs_layout, trig_set_layout, zmq_rpc,
                  plot, GUI_name, GUI_trigger_idx, channels, available_ADCs,
                  GUI):
-        self.adc_label = QLabel("")
-        self.adc_label.setAlignment(Qt.AlignCenter | Qt.AlignVCenter)
+        self.__adc_label = QLabel("")
+        self.__adc_label.setAlignment(Qt.AlignCenter | Qt.AlignVCenter)
         self.trigger_type = 'internal'  # default one
         self.GUI_trigger_idx = GUI_trigger_idx
         self.menu_type = TriggerTypeMenu(self)
-        self.trig_in_layout = TriggerInputsLayout(self.adc_label)
+        self.trig_in_layout = TriggerInputsLayout(self.__adc_label)
         self.trig_set_layout = TriggerSettingsLayout(self.menu_type)
         self.plot = plot
         self.GUI_name = GUI_name
@@ -50,7 +50,7 @@ class TriggerClosure:
                                              self.plot, self.channels,
                                              self.GUI)
         self.ext_trig_menu = ExtTriggersMenu(self, self.GUI_trigger_idx,
-                                             self.adc_label, self.GUI)
+                                             self.__adc_label, self.GUI)
         if(self.trigger_type == 'internal'):
             self.int_trig_menu.setEnabled(True)
             self.ext_trig_menu.setEnabled(False)
@@ -66,7 +66,7 @@ class TriggerClosure:
             if not remote:
                 self.zmq_rpc.send_RPC('remove_trigger', self.GUI_name)
         self.set_trigger_properties(None, 0)
-        self.adc_label.setText('')
+        self.__adc_label.setText('')
         self.int_trig_menu.ADCs_menu.setTitle("Select channel to trigger")
 
     def set_trigger_properties(self, unique_ADC_name, idx=0):
@@ -271,7 +271,7 @@ class ExtTriggersMenu(TriggersMenu):
     def __init__(self, trigger_closure, GUI_trigger_idx, adc_label, GUI):
         super().__init__(trigger_closure, GUI_trigger_idx)
         self.ADCs_menu = self.addMenu("Select external trigger")
-        self.adc_label = adc_label
+        self.__adc_label = adc_label
         self.GUI = GUI
 
     def update_triggers(self):
@@ -294,7 +294,7 @@ class ExtTriggersMenu(TriggersMenu):
         self.remove_trigger()
         self.trigger_closure.set_trigger_properties(self.selected_ADC)
         display_name = self.selected_ADC.replace('._tcp.local.', '')
-        self.adc_label.setText(display_name)
+        self.__adc_label.setText(display_name)
         rpc = self.trigger_closure
         rpc.zmq_rpc.send_RPC('add_trigger', 'external', selected_ADC, ADC_idx,
                              self.trigger_closure.GUI_name)
@@ -305,7 +305,7 @@ class TriggerInputsLayout(QVBoxLayout):
 
     def __init__(self, adc_label):
         super().__init__()
-        self.adc_label = adc_label
+        self.__adc_label = adc_label
         self.menu = None
         self.ADCs = {}
         self.trigger = None
@@ -315,7 +315,7 @@ class TriggerInputsLayout(QVBoxLayout):
             self.menu.deleteLater()
         self.menu = menu
         self.addWidget(self.menu)
-        self.addWidget(self.adc_label)
+        self.addWidget(self.__adc_label)
 
 
 class TriggerSettingsLayout(QVBoxLayout):
