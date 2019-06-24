@@ -1,5 +1,5 @@
 import sys
-sys.path.append('../general')
+sys.path.append('../')
 import zeroconf
 import os
 import argparse
