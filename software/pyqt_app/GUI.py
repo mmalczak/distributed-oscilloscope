@@ -100,11 +100,10 @@ class GUI_Class:
         for GUI_channel_idx, channel_params in channel_params.items():
             GUI_channel_idx = int(GUI_channel_idx)
             """to be removed with xmlrpc"""
-            channel_prop = self.channels[GUI_channel_idx].properties
-            channel_prop.set_channel_params(channel_params['active'],
-                                            channel_params['range'],
-                                            channel_params['termination'],
-                                            channel_params['offset'])
+            channel = self.channels[GUI_channel_idx]
+            channel.set_channel_params(channel_params['range'],
+                                       channel_params['termination'],
+                                       channel_params['offset'])
 
     def set_trigger_params(self, trigger_params):
         trig_prop = self.triggers[0].properties

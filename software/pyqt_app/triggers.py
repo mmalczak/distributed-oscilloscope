@@ -233,8 +233,8 @@ class IntTriggersMenu(TriggersMenu):
         none = self.ADCs_menu.addAction("Disconnect")
         none.triggered.connect(self.remove_trigger)
         for channel in self.channels:
-            if channel.properties is not None:
-                channel_disp = str(channel.channel_count + 1)
+            if channel.channel_exists is not None:
+                channel_disp = str(channel.GUI_channel_idx + 1)
                 chan = self.ADCs_menu.addAction("Channel: " + channel_disp)
                 chan.triggered.connect(self.select_trigger)
                 self.actions.append(chan)
@@ -251,13 +251,12 @@ class IntTriggersMenu(TriggersMenu):
 
     def add_trigger(self):
         self.remove_trigger()
-        selected_ADC = self.channels[self.GUI_channel_idx].properties.\
-            unique_ADC_name
+        selected_ADC = self.channels[self.GUI_channel_idx].unique_ADC_name
         chan_disp = str(self.GUI_channel_idx+1)
         self.ADCs_menu.setTitle("Channel " + chan_disp)
         """+1 is beacuse channels are indexed from 0, but displayed from 1"""
         if selected_ADC is not None:
-            ADC_idx = self.channels[self.GUI_channel_idx].properties.idx
+            ADC_idx = self.channels[self.GUI_channel_idx].ADC_channel_idx
             self.trigger_closure.set_trigger_properties(selected_ADC, ADC_idx)
             self.plot.add_trigger(self.GUI_channel_idx)
             rpc = self.trigger_closure.zmq_rpc

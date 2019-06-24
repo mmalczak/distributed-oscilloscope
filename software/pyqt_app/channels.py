@@ -13,221 +13,180 @@ DBG = False
 class ChannelClosure:
 
     def __init__(self, channel_inputs_layout, ver_set_layout, zmq_rpc,
-                 plot, GUI_name, channel_count, update_triggers, GUI):
+                 plot, GUI_name, GUI_channel_idx, update_triggers, GUI):
         self.__adc_label = QLabel("")
         self.__adc_label.setAlignment(Qt.AlignCenter | Qt.AlignVCenter)
-        self.channel_label = QLabel("")
-        self.channel_label.setAlignment(Qt.AlignCenter | Qt.AlignVCenter)
-        self.menu = ChannelsMenu(self, channel_count, plot, self.__adc_label,
-                                 self.channel_label, GUI)
-        self.channel_count = channel_count
-        self.chan_in_layout = ChannelInputsLayout(self.menu, self.__adc_label,
-                                                  self.channel_label,
-                                                  channel_count)
-        self.chan_in_layout.setAlignment(Qt.AlignCenter | Qt.AlignVCenter)
-        self.chan_set_layout = ChannelSettingsLayout(channel_count)
-        self.plot = plot
-        self.GUI_name = GUI_name
-        channel_inputs_layout.addLayout(self.chan_in_layout)
-        ver_set_layout.addLayout(self.chan_set_layout)
-        self.properties = None
-        self.zmq_rpc = zmq_rpc
-        self.GUI = GUI
+        self.__channel_label = QLabel("")
+        self.__channel_label.setAlignment(Qt.AlignCenter | Qt.AlignVCenter)
+        self.__menu = ChannelsMenu(self, GUI_channel_idx, GUI)
+        self.GUI_channel_idx = GUI_channel_idx
+        self.__chan_in_layout = ChannelInputsLayout(self.__menu, self.__adc_label,
+                                             self.__channel_label)
+        self.__chan_set_layout = ChannelSettingsLayout(GUI_channel_idx)
+        channel_inputs_layout.addLayout(self.__chan_in_layout)
+        ver_set_layout.addLayout(self.__chan_set_layout)
+        self.__plot = plot
+        self.__GUI_name = GUI_name
+        self.__zmq_rpc = zmq_rpc
+        self.__GUI = GUI
         """updates the list of channels for the trigger"""
         self.update_triggers = update_triggers
-        """adds layout to that is shown to the user, nothing there
-        should be active, None is unique_ADC_name"""
-        self.set_channel_properties(None, 0)
+        self.__range_menu = None
+        self.__termination_menu = None
+        self.__offset_box = None
+        self.ADC_channel_idx = None
+        self.unique_ADC_name = None
+        self.__set_empty_channel()
 
     def register_ADC(self, name, number_of_channels):
-        self.menu.register_ADC(name, number_of_channels)
+        self.__menu.register_ADC(name, number_of_channels)
 
     def unregister_ADC(self, name, remote=False):
-        self.menu.unregister_ADC(name)
+        self.__menu.unregister_ADC(name)
         if self.channel_exists():
-            if(self.properties.unique_ADC_name == name):
+            if(self.unique_ADC_name == name):
                 self.remove_channel(remote)
 
-    def set_channel_properties(self, unique_ADC_name, idx):
-        self.properties = ChannelProperties(unique_ADC_name, idx,
-                                            self.chan_set_layout,
-                                            self.zmq_rpc,
-                                            self.plot,
-                                            self.GUI,
-                                            self.GUI_name,
-                                            self)
+    def __set_empty_channel(self):
+        self.ADC_channel_idx = None
+        self.unique_ADC_name = None
+        self.__set_widgets()
+
+    def set_channel(self, unique_ADC_name, ADC_channel_idx):
+        self.__remove_widgets()
+        self.ADC_channel_idx = ADC_channel_idx
+        self.unique_ADC_name = unique_ADC_name
+        self.__set_widgets()
         self.update_triggers()
+        self.__plot.add_channel(self.GUI_channel_idx)
+        rpc = self.__zmq_rpc
+        rpc.send_RPC('add_channel', self.GUI_channel_idx, self.unique_ADC_name,
+                     self.ADC_channel_idx, self.__GUI_name)
+        self.__GUI.update_GUI_params()
+        self.__set_labels()
 
     def remove_channel(self, remote=False):
-        """unique_ADC_name is None if there is actually no channel,
-        just the layout that is shown to the user. In that case
-        just the properties should be removed"""
-        if self.properties.unique_ADC_name is not None:
-            self.plot.remove_channel(self.channel_count)
+        if self.channel_exists():
+            self.__plot.remove_channel(self.GUI_channel_idx)
             if not remote:
-                self.zmq_rpc.send_RPC('remove_channel', self.channel_count,
-                                      self.GUI_name)
-        """When the channel is removed the widgets should remain for
-        the user, but they are disabled.
-        The widgets are deleted and new are created so that they
-        contain the information that they are not connected to any of
-        the ADCs"""
-        self.set_channel_properties(None, 0)
-        self.__adc_label.setText('')
-        self.channel_label.setText('')
+                self.__zmq_rpc.send_RPC('remove_channel', self.GUI_channel_idx,
+                                      self.__GUI_name)
+            self.__remove_labels()
+            self.ADC_channel_idx = None
+            self.unique_ADC_name = None
+        self.__remove_widgets()
+        self.__set_empty_channel()
 
     def channel_exists(self):
-        return self.properties.unique_ADC_name is not None
+        return self.unique_ADC_name is not None
+
+    def set_channel_params(self, range, termination, offset):
+        self.__range_menu.set_value(range)
+        self.__termination_menu.set_value(termination)
+        self.__offset_box.set_value(offset)
+
+    def __set_widgets(self):
+        self.__range_menu = ChannelRange(self.ADC_channel_idx,
+                                       self.unique_ADC_name, self.__zmq_rpc,
+                                       self.__GUI)
+        self.__termination_menu = ChannelTermination(self.ADC_channel_idx,
+                                                   self.unique_ADC_name,
+                                                   self.__zmq_rpc, self.__GUI)
+        self.__offset_box = ChannelOffset(self.ADC_channel_idx,
+                                        self.unique_ADC_name, self.__zmq_rpc,
+                                        self.__GUI)
+
+        self.__chan_set_layout.addWidget(self.__range_menu)
+        self.__chan_set_layout.addWidget(self.__termination_menu)
+        self.__chan_set_layout.addWidget(self.__offset_box)
+
+    def __set_labels(self):
+        display_ADC_name = self.unique_ADC_name.replace('._tcp.local.', '')
+        self.__adc_label.setText(display_ADC_name)
+        self.__channel_label.setText('Channel ' + str(self.ADC_channel_idx))
 
 
-class ChannelProperties:
+    def __remove_widgets(self):
+        self.__range_menu.deleteLater()
+        self.__termination_menu.deleteLater()
+        self.__offset_box.deleteLater()
 
-    def __init__(self, unique_ADC_name, idx, chan_set_layout,
-                 zmq_rpc, plot, GUI, GUI_name, channel_closure):
-        self.idx = idx
-        self.unique_ADC_name = unique_ADC_name
-        self.chan_set_layout = chan_set_layout
-        self.zmq_rpc = zmq_rpc
-        self.GUI = GUI
-        self.channel_closure = channel_closure
-        self.button = ChannelEnableButton(idx, unique_ADC_name, zmq_rpc,
-                                          plot, GUI, GUI_name)
-        self.range_menu = ChannelRange(idx, unique_ADC_name, zmq_rpc, GUI)
-        self.termination_menu = ChannelTermination(idx, unique_ADC_name,
-                                                   zmq_rpc, GUI)
-        self.offset_box = ChannelOffset(idx, unique_ADC_name, zmq_rpc, GUI)
-
-        self.chan_set_layout.addWidget(self.button)
-        self.chan_set_layout.addWidget(self.range_menu)
-        self.chan_set_layout.addWidget(self.termination_menu)
-        self.chan_set_layout.addWidget(self.offset_box)
-
-    def set_button_active(self, active):
-        self.button.set_active(active)
-
-    def set_button_range(self, value):
-        self.range_menu.set_value(value)
-
-    def set_button_termination(self, value):
-        self.termination_menu.set_value(value)
-
-    def set_button_offset(self, value):
-        self.offset_box.set_value(value)
-
-    def set_channel_params(self, active, range, termination, offset):
-        self.button.set_active(active)
-        self.range_menu.set_value(range)
-        self.termination_menu.set_value(termination)
-        self.offset_box.set_value(offset)
-
-    def __del__(self):
-        self.button.deleteLater()
-        self.range_menu.deleteLater()
-        self.termination_menu.deleteLater()
-        self.offset_box.deleteLater()
+    def __remove_labels(self):
+        self.__adc_label.setText('')
+        self.__channel_label.setText('')
 
 
 class ChannelsMenu(QMenuBar):
 
-    def __init__(self, channel_closure, channel_count, plot, adc_label,
-                 channel_label, GUI):
+    def __init__(self, channel_closure, GUI_channel_idx, GUI):
         super().__init__()
-        self.GUI = GUI
-        self.__adc_label = adc_label
-        self.channel_label = channel_label
-        self.channel_count = channel_count
+        self.__GUI = GUI
+        self.GUI_channel_idx = GUI_channel_idx
         self.channel_closure = channel_closure
-        chan_disp = str(channel_count + 1)
+        chan_disp = str(GUI_channel_idx + 1)
         sp = "                            "
-        """Don't know how ot center the channel menu"""
+        """Don't know how to center the channel menu"""
         self.ADCs_menu = self.addMenu(sp + "Channel " + chan_disp + sp)
         menuBr = QMenuBar(self.ADCs_menu)
         self.setCornerWidget(menuBr, Qt.TopRightCorner)
         self.ADCs = {}
         self.selected_ADC = None
         disconnect = self.ADCs_menu.addAction("Disconnect")
-        disconnect.triggered.connect(self.remove_channel)
-        self.plot = plot
+        disconnect.triggered.connect(self.__remove_channel)
         """+1 is beacuse channels are indexed from 0, but displayed from 1"""
-        color = str((tuple(Colors().get_color(channel_count))))
+        color = str((tuple(Colors().get_color(GUI_channel_idx))))
         self.setStyleSheet("border: 2px solid rgb" + color + ";")
 
     def register_ADC(self, name, number_of_channels):
         display_name = name.replace('._tcp.local.', '')
         ADC = self.ADCs_menu.addMenu(display_name)
         self.ADCs[name] = ADC
-        ADC.menuAction().hovered.connect(self.select_ADC)
+        ADC.menuAction().hovered.connect(self.__select_ADC)
         for count in range(0, number_of_channels):
             chan = ADC.addAction("Chan " + str(count))
-            chan.triggered.connect(self.add_channel)
+            chan.triggered.connect(self.__add_channel)
 
     def unregister_ADC(self, name):
         self.ADCs_menu.removeAction(self.ADCs[name].menuAction())
 
-    def select_ADC(self):
+    def __select_ADC(self):
         self.selected_ADC = self.sender().text() + '._tcp.local.'
 
-    def add_channel(self):
+    def __add_channel(self):
         if self.channel_closure.channel_exists():
-            self.remove_channel()
+            self.__remove_channel()
         str_chan = self.sender().text()
         idx = int(str_chan.split()[1])
-        display_name = self.selected_ADC.replace('._tcp.local.', '')
-        self.__adc_label.setText(display_name)
-        self.channel_label.setText(str_chan)
-        self.channel_closure.set_channel_properties(self.selected_ADC, idx)
-        self.plot.add_channel(self.channel_count)
-        rpc = self.channel_closure.zmq_rpc
-        rpc.send_RPC('add_channel', self.channel_count, self.selected_ADC, idx,
-                     self.channel_closure.GUI_name)
-        self.GUI.update_GUI_params()
+        self.channel_closure.set_channel(self.selected_ADC, idx)
 
-    def remove_channel(self):
+    def __remove_channel(self):
         self.channel_closure.remove_channel()
 
 
 class ChannelInputsLayout(QVBoxLayout):
 
-    def __init__(self, menu, adc_label, channel_label, channel_count):
+    def __init__(self, menu, adc_label, channel_label):
         super().__init__()
-        self.menu = menu
-#        GUI_chan_label = ChannelLabel(channel_count)
-#        self.addWidget(GUI_chan_label)
-        self.addWidget(self.menu)
+        self.setAlignment(Qt.AlignCenter | Qt.AlignVCenter)
+        self.addWidget(menu)
         self.addWidget(adc_label)
         self.addWidget(channel_label)
-        self.ADCs = {}
-        self.channel = None
 
 
 class ChannelSettingsLayout(QVBoxLayout):
 
-    def __init__(self, channel_count):
+    def __init__(self, GUI_channel_idx):
         super().__init__()
-        GUI_chan_label = ChannelLabel(channel_count)
+        GUI_chan_label = ChannelLabel(GUI_channel_idx)
         self.addWidget(GUI_chan_label)
-
-
-class ChannelEnableButton(Button):
-
-    def __init__(self, idx, unique_ADC_name, zmq_rpc,
-                 plot, GUI, GUI_name):
-        super().__init__("Enable", idx, unique_ADC_name)
-        self.zmq_rpc = zmq_rpc
-        self.plot = plot
-        self.GUI_name = GUI_name  # probably to be removed
-        self.GUI = GUI
-
-    def action(self):
-        active = not self.isChecked()
 
 
 class ChannelRange(Menu):
 
     def __init__(self, idx, unique_ADC_name, zmq_rpc, GUI):
         super().__init__(idx, unique_ADC_name)
-        self.zmq_rpc = zmq_rpc
-        self.GUI = GUI
+        self.__zmq_rpc = zmq_rpc
+        self.__GUI = GUI
         self.range = self.addMenu("Range")
         range_10V = self.range.addAction("10V")
         range_10V.setText("10V")
@@ -242,12 +201,12 @@ class ChannelRange(Menu):
     def action(self):
         range_value_str = self.sender().text()
         try:
-            rpc = self.zmq_rpc
+            rpc = self.__zmq_rpc
             rpc.send_RPC('set_ADC_parameter', 'channel_range', range_value_str,
                          self.unique_ADC_name, self.idx)
         except Exception as e:
             print(e)
-        self.GUI.update_GUI_params()
+        self.__GUI.update_GUI_params()
 
     def set_value(self, value):
         if value == 100:
@@ -260,8 +219,8 @@ class ChannelTermination(Menu):
 
     def __init__(self, idx, unique_ADC_name, zmq_rpc, GUI):
         super().__init__(idx, unique_ADC_name)
-        self.zmq_rpc = zmq_rpc
-        self.GUI = GUI
+        self.__zmq_rpc = zmq_rpc
+        self.__GUI = GUI
         self.termination = self.addMenu("Termination")
         termination_0 = self.termination.addAction("1M\u03A9")
         termination_0.setText("1M\u03A9")
@@ -275,13 +234,13 @@ class ChannelTermination(Menu):
     def action(self):
         termination_str = self.sender().text()
         try:
-            rpc = self.zmq_rpc
+            rpc = self.__zmq_rpc
             rpc.send_RPC('set_ADC_parameter', 'channel_termination',
                          self.term_num_map[termination_str],
                          self.unique_ADC_name, self.idx)
         except Exception as e:
             print(e)
-        self.GUI.update_GUI_params()
+        self.__GUI.update_GUI_params()
 
     def set_value(self, value):
         term = self.num_term_map[str(value)]
@@ -292,28 +251,28 @@ class ChannelOffset(Box):
 
     def __init__(self, idx, unique_ADC_name, zmq_rpc, GUI):
         super().__init__(idx, unique_ADC_name, "Offset uV", 'vertical')
-        self.zmq_rpc = zmq_rpc
-        self.GUI = GUI
+        self.__zmq_rpc = zmq_rpc
+        self.__GUI = GUI
         self.box.setMinimum(-5000000)
         self.box.setMaximum(5000000)
 
     def value_change(self):
         offset = self.box.value()
         try:
-            rpc = self.zmq_rpc
+            rpc = self.__zmq_rpc
             rpc.send_RPC('set_ADC_parameter', 'channel_offset', offset,
                          self.unique_ADC_name, self.idx)
         except Exception as e:
             print(e)
-        self.GUI.update_GUI_params()
+        self.__GUI.update_GUI_params()
 
 
 class ChannelLabel(QLabel):
-    def __init__(self, channel_count):
-        chan_disp = str(channel_count + 1)
+    def __init__(self, GUI_channel_idx):
+        chan_disp = str(GUI_channel_idx + 1)
         """+1 is beacuse channels are indexed from 0, but displayed from 1"""
         super().__init__("Channel " + chan_disp)
         self.setAlignment(Qt.AlignCenter | Qt.AlignVCenter)
         self.setMaximumHeight(25)
-        color = str((tuple(Colors().get_color(channel_count))))
+        color = str((tuple(Colors().get_color(GUI_channel_idx))))
         self.setStyleSheet("border: 2px solid rgb" + color + ";")
