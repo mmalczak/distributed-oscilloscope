@@ -45,7 +45,7 @@ class GUI_Class:
                                        self.plot,
                                        self.GUI_name,
                                        count,
-                                       self.triggers[0].update_triggers,
+                                       self.triggers[0].update_available_triggers_list,
                                        self)
 
             self.channels.append(chan_clos)
@@ -67,7 +67,7 @@ class GUI_Class:
             self.channels[count].register_ADC(unique_ADC_name,
                                                    number_of_channels)
         for count in range(0, self.number_of_GUI_triggers):
-            self.triggers[count].update_triggers()
+            self.triggers[count].update_available_triggers_list()
         return True
 
     def unregister_ADC(self, unique_ADC_name):
@@ -77,7 +77,7 @@ class GUI_Class:
             self.channels[count].unregister_ADC(unique_ADC_name, True)
         for count in range(0, self.number_of_GUI_triggers):
             self.triggers[count].remove_trigger(True)
-            self.triggers[count].update_triggers()
+            self.triggers[count].update_available_triggers_list()
         return True
 
     def update_data(self, data, pre_post_samples, offsets):
@@ -106,11 +106,11 @@ class GUI_Class:
                                        channel_params['offset'])
 
     def set_trigger_params(self, trigger_params):
-        trig_prop = self.triggers[0].properties
-        trig_prop.set_params(trigger_params['enable'],
-                             trigger_params['polarity'],
-                             trigger_params['delay'],
-                             trigger_params['threshold'])
+        trig= self.triggers[0]
+        trig.set_params(trigger_params['enable'],
+                        trigger_params['polarity'],
+                        trigger_params['delay'],
+                        trigger_params['threshold'])
 
     def set_horizontal_params(self, horizontal_params):
         self.acq_settings.set_params(horizontal_params['presamples'],

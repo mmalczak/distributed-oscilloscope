@@ -201,7 +201,7 @@ class ADC:
         except Exception as e:
             logger.error("Mapping error {}".format(e))
         try:
-            if idx:
+            if idx != None:
                 self.send_RPC('set_adc_parameter', function_name, mapped_value,
                               idx)
             else:
