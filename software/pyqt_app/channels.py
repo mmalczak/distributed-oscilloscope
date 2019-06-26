@@ -67,6 +67,10 @@ class ChannelClosure:
 
     def remove_channel(self, remote=False):
         if self.channel_exists():
+            trigger = self.__GUI.triggers[0]
+            if(trigger.ADC_idx == self.ADC_channel_idx and
+               trigger.unique_ADC_name == self.unique_ADC_name):
+                trigger.remove_trigger()
             self.__plot.remove_channel(self.GUI_channel_idx)
             if not remote:
                 self.__zmq_rpc.send_RPC('remove_channel', self.GUI_channel_idx,
