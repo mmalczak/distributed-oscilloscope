@@ -169,7 +169,11 @@ class GUI():
             pre_post = channel.timestamp_pre_post_data['pre_post']
             pre_post_samples[channel_idx] = [pre_post['presamples'],
                                              pre_post['postsamples']]
+        for channel_idx, channel in self.__channels.items():
+            """seperate loop is necessary in case th euser wants to display
+            the same channel twice"""
             channel.timestamp_pre_post_data = None
+
         data = {'function_name': 'update_data',
                 'args': [data, pre_post_samples, offsets]}
         self.__GUI_publisher.send_message(data)
