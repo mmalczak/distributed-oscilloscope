@@ -6,6 +6,8 @@ from run_control import *
 import numpy as np
 from PyQt5.QtCore import pyqtSlot
 import pickle
+import logging
+logger = logging.getLogger(__name__)
 
 SAMP_FREQ = 1e8
 
@@ -123,7 +125,9 @@ class GUI_Class:
         if GUI_settings['horizontal_settings']:
             self.set_horizontal_params(GUI_settings['horizontal_settings'])
 
-    """TODO add logger and AttributeError handling"""
     def socket_communication(self, data):
         data = pickle.loads(data)
-        getattr(self, data['function_name'])(*data['args'])
+        try:
+            getattr(self, data['function_name'])(*data['args'])
+        except AttributeError:
+            logger.warning("Wrong function name (remote)")
