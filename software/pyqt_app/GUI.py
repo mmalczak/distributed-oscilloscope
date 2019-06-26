@@ -18,7 +18,6 @@ class GUI_Class:
         self.GUI_name = GUI_name
         self.plot = PlotMine(ui)
         self.number_of_GUI_channels = 4
-        """this information should be retrieved from the ADC"""
         self.number_of_GUI_triggers = 1
         self.channels = []
         self.triggers = []
@@ -45,7 +44,8 @@ class GUI_Class:
                                        self.plot,
                                        self.GUI_name,
                                        count,
-                                       self.triggers[0].update_available_triggers_list,
+                                       self.triggers[0].\
+                                               update_available_triggers_list,
                                        self)
 
             self.channels.append(chan_clos)
@@ -72,7 +72,6 @@ class GUI_Class:
 
     def unregister_ADC(self, unique_ADC_name):
         self.available_ADCs.remove(unique_ADC_name)
-        """TODO the same for the new layout"""
         for count in range(0, self.number_of_GUI_channels):
             self.channels[count].unregister_ADC(unique_ADC_name, True)
         for count in range(0, self.number_of_GUI_triggers):
