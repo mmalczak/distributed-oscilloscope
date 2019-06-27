@@ -59,6 +59,9 @@ class DevicesAccess():
 
 
     def set_WRTD_master(self, WRTD_master):
+        for count in range(4):
+            self.__ADC.set_internal_trigger_enable(0, count)
+        self.__ADC.set_external_trigger_enable(0, 0)
         self.__WRTD_master = WRTD_master
         if(WRTD_master):
             self.__ADC.set_presamples(self.__required_presamples)
