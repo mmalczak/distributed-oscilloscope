@@ -103,14 +103,11 @@ class GUI():
                 """here I set the GUI in the ADC, it is removed in methods
                 remove_channel/remove_trigger"""
 
-    def set_presamples(self, value):
+    def set_pre_post_samples(self, presamples, postsamples):
         for ADC in self.__ADCs_used:
-            ADC.set_ADC_parameter('presamples', value)
-        self.__check_horizontal_settings()
-
-    def set_postsamples(self, value):
+            ADC.set_ADC_parameter('presamples', presamples)
         for ADC in self.__ADCs_used:
-            ADC.set_ADC_parameter('postsamples', value)
+            ADC.set_ADC_parameter('postsamples', postsamples)
         self.__check_horizontal_settings()
 
     def run_acquisition(self, run):

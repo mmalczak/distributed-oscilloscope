@@ -170,12 +170,11 @@ class OscilloscopeMethods(unittest.TestCase):
                          ADC_trigger_idx, self.GUI_name)
                 send_RPC('set_ADC_parameter', 'internal_trigger_enable', 1,
                          unique_ADC_name, ADC_trigger_idx)
-                self.zmq_rpc.send_RPC('set_presamples', 0, self.GUI_name)
             for i in range(0, 6):
                 postsamples = 10**i
                 if postsamples == 1:
                     postsamples = 2  # that is the minimum available value
-                self.zmq_rpc.send_RPC('set_postsamples', postsamples,
+                self.zmq_rpc.send_RPC('set_pre_post_samples', 0, postsamples,
                                       self.GUI_name)
                 self.results.write("Postsamples: " + str(postsamples) + "\n")
                 best_result = 100000

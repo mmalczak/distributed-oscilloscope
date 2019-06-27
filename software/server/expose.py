@@ -52,13 +52,9 @@ class Expose():
         GUI = self.__connection_manager.get_GUI(GUI_name)
         GUI.run_acquisition(run)
 
-    def set_presamples(self, value, GUI_name):
+    def set_pre_post_samples(self, presamples, postsamples, GUI_name):
         GUI = self.__connection_manager.get_GUI(GUI_name)
-        GUI.set_presamples(value)
-
-    def set_postsamples(self, value, GUI_name):
-        GUI = self.__connection_manager.get_GUI(GUI_name)
-        GUI.set_postsamples(value)
+        GUI.set_pre_post_samples(presamples, postsamples)
 
     def get_GUI_settings(self, GUI_name):
         GUI = self.__connection_manager.get_GUI(GUI_name)

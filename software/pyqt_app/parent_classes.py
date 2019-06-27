@@ -77,6 +77,9 @@ class Box(QtGui.QWidget):
     def set_value(self, value):
         self.box.setValue(value)
 
+    def get_value(self):
+        return self.box.value()
+
 
 class TriggerPolarity(Menu):
 
