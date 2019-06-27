@@ -71,6 +71,10 @@ class TriggerClosure:
         self.__set_empty_trigger()
         self.__adc_label.setText('')
         self.__int_trig_menu.ADCs_menu.setTitle("Select channel to trigger")
+        run_button = self.__GUI.run_stop_acquisition
+        if run_button.is_active():
+            run_button.toggle()
+            run_button.action()
 
     def __exchange_widgets(self, unique_ADC_name, ADC_idx=0):
         self.__remove_widgets()
@@ -193,7 +197,7 @@ class IntTriggersMenu(TriggersMenu):
         none = self.ADCs_menu.addAction("Disconnect")
         none.triggered.connect(self.trigger_closure.remove_trigger)
         for channel in self.channels:
-            if channel.channel_exists is not None:
+            if channel.channel_exists():
                 channel_disp = str(channel.GUI_channel_idx + 1)
                 chan = self.ADCs_menu.addAction("Channel: " + channel_disp)
                 chan.triggered.connect(self.select_trigger)

@@ -45,6 +45,9 @@ class GUI():
                 channels_to_delete.append(channel_idx)
         for channel_idx in channels_to_delete:
             self.remove_channel(channel_idx)
+        if self.__trigger:
+            self.remove_trigger()
+
 
     def contains_ADC(self, unique_ADC_name):
         for ADC in self.__ADCs_used:
@@ -85,9 +88,6 @@ class GUI():
 
     def remove_trigger(self):
         ADC = self.__trigger.ADC
-        trigger = self.__trigger
-        parameter_name = trigger.type + '_trigger_enable'
-        ADC.set_ADC_parameter(parameter_name, 0, trigger.ADC_trigger_idx)
 
         ADC.set_is_WRTD_master(False)
         self.__trigger = None

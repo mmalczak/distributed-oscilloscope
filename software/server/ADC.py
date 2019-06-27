@@ -25,6 +25,10 @@ class ADC:
         self.__is_WRTD_master = None
         self.__connection_manager = connection_manager
         self.__zmq_rpc = ZMQ_RPC(ip, port)
+        self.__zmq_rpc.set_timeout(500)
+        """ There is no reason for the ADC not to reply immediately, therefore
+        this timeout is small in order not to block the rest of the
+        application in case of an ADC error"""
         conf = self.send_RPC('get_current_adc_conf')
         self.number_of_channels = conf['board_conf']['n_chan']
         self.__GUI = None
@@ -79,6 +83,10 @@ class ADC:
 
     def update_conf(self):
         conf = self.send_RPC('get_current_adc_conf')
+        if not conf:
+            logger.warning("Update conf returned None, removing the ADC")
+            self.suicide()
+            return
         for count in range(0, conf['board_conf']['n_chan']):
             channel = conf['chn_conf'][count]
             self.__channels[count].update_channel_conf(

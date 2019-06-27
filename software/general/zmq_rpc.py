@@ -29,7 +29,8 @@ class ZMQ_RPC():
             message = self.socket.recv()
         except Exception as e:
             logger.error("Server not replying")
-            raise RPC_Error("Timeout of zmq socket.recv()")
+            raise RPC_Error("Timeout of zmq socket.recv() when calling\
+                            function {}".format(function_name))
             """TODO decide what to do: close application, save conf,
             or sth. else"""
             return None
