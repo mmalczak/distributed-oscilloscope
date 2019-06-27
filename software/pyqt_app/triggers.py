@@ -83,6 +83,7 @@ class TriggerClosure:
         self.__set_widgets()
 
     def set_trigger(self, unique_ADC_name, ADC_channel_idx, GUI_channel_idx):
+        self.remove_trigger()
         self.__exchange_widgets(unique_ADC_name, ADC_channel_idx)
         if self.trigger_type == 'internal':
             self.__plot.add_trigger(GUI_channel_idx)
