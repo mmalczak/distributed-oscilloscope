@@ -123,8 +123,10 @@ class ADC:
     def get_acq_conf(self):
         return self.__acq_conf
 
-    def set_is_WRTD_master(self, WRTD_master):
-        self.send_RPC('set_WRTD_master', WRTD_master)
+    def set_is_WRTD_master(self, WRTD_master, trigger_type=None,
+                           ADC_trigger_idx=None):
+        self.send_RPC('set_WRTD_master', WRTD_master, trigger_type,
+                      ADC_trigger_idx)
         self.update_conf()
 
     def get_is_WRTD_master(self):

@@ -57,11 +57,16 @@ class DevicesAccess():
         postsamples = acq_conf['postsamples']
         return {'presamples': presamples, 'postsamples': postsamples}
 
-
-    def set_WRTD_master(self, WRTD_master):
+    def set_WRTD_master(self, WRTD_master, trigger_type=None,
+                           ADC_trigger_idx=None):
         for count in range(4):
             self.__ADC.set_internal_trigger_enable(0, count)
         self.__ADC.set_external_trigger_enable(0, 0)
+        if WRTD_master:
+            trig_enable_name = "set_{}_trigger_enable".format(trigger_type)
+            trig_enable = getattr(self.__ADC, trig_enable_name)
+            trig_enable(1, count)
+
         self.__WRTD_master = WRTD_master
         if(WRTD_master):
             self.__ADC.set_presamples(self.__required_presamples)

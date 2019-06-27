@@ -77,7 +77,7 @@ class GUI():
             trigger = ADC.get_internal_trigger(ADC_trigger_idx)
         else:
             trigger = ADC.get_external_trigger(ADC_trigger_idx)
-        ADC.set_is_WRTD_master(True)
+        ADC.set_is_WRTD_master(True, type, ADC_trigger_idx)
         self.__trigger = trigger
         self.__update_ADCs_used()
 
