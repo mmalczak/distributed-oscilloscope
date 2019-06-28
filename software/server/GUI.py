@@ -56,20 +56,18 @@ class GUI():
         return False
 
     def add_channel(self, GUI_channel_idx, ADC, ADC_channel_idx):
-        def set_horizontal_setting_when_add_channel(self, new_ADC):
+        def set_horizontal_setting_when_add_channel(self):
             ADC = self.__ADCs_used[0]
             acq_conf = ADC.get_acq_conf()
             presamples = acq_conf.presamples
             postsamples = acq_conf.postsamples
-            new_acq_conf = new_ADC.get_acq_conf()
-            new_acq_conf.presamples = presamples
-            new_acq_conf.postsamples = postsamples
+            self.set_pre_post_samples(presamples, postsamples)
 
         ADC.add_used_channel(ADC_channel_idx)
         channel = ADC.get_channel(ADC_channel_idx)
         self.__channels[GUI_channel_idx] = channel
         self.__update_ADCs_used()
-        set_horizontal_setting_when_add_channel(self, ADC)
+        set_horizontal_setting_when_add_channel(self)
 
     def add_trigger(self, type, ADC, ADC_trigger_idx):
         trigger = None
