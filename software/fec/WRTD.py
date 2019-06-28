@@ -1,8 +1,8 @@
-from wrtd_wrapper import WRTD_wrapper
-from wrtd_wrapper import encode_arguments
+from PyWrtd import PyWrtd
+from PyWrtd import encode_arguments
 
 
-class WRTD(WRTD_wrapper):
+class WRTD(PyWrtd):
     def __init__(self, trtl):
         super().__init__(trtl)
         self.trtl = trtl.encode('utf-8')
@@ -29,15 +29,16 @@ class WRTD(WRTD_wrapper):
         self.set_attr_string(name, self.WRTD_ATTR_RULE_SOURCE, src_p)
         self.set_attr_string(name, self.WRTD_ATTR_RULE_DESTINATION,
                              dst_p)
-        self.set_attr_tstamp(name, self.WRTD_ATTR_RULE_DELAY, ts)
+        self.set_attr_tstamp(name, self.WRTD_ATTR_RULE_DELAY, ts['seconds'],
+                             ts['ns'], ts['frac'])
 
     @encode_arguments
     def enable_rule(self, name):
-        self.set_attr_bool(name, self.WRTD_ATTR_RULE_ENABLED, 1)
+        self.set_attr_bool(name, self.WRTD_ATTR_RULE_ENABLED, True)
 
     @encode_arguments
     def disable_rule(self, name):
-        self.set_attr_bool(name, self.WRTD_ATTR_RULE_ENABLED, 0)
+        self.set_attr_bool(name, self.WRTD_ATTR_RULE_ENABLED, False)
 
     def add_rule_mult_src(self, name, number):
         for count in range(1, number):
