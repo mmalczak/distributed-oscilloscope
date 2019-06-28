@@ -16,6 +16,7 @@ from general.zmq_rpc import ZMQ_RPC
 from general.zmq_rpc import RPC_Error
 from general.addresses import server_expose_to_user_port
 import timeout_decorator
+import numpy as np
 
 sys.path.append('../server')
 from server import ADC_configs
@@ -153,9 +154,14 @@ class OscilloscopeMethods(unittest.TestCase):
         self.clean_queue()
         self.assertFalse(plot_data)
 
+
+
+        number_of_acq = 5
         self.results.write("Internal trigger on channel 3\n"
                            "Sampled signal: 100kHz sine wave Channel 3(0-3)\n"
-                           "number of presamples = 0\n\n")
+                           "number of presamples = 0\n"
+                           "number of acquisitions = {}\n\n".format(
+                                                            number_of_acq))
 
         ADC_idx = ADC_addr + "_" + str(self.ADCs['ADC1'][0])
         unique_ADC_name = "ADC" + "_" + ADC_idx + "._http._tcp.local."
@@ -176,14 +182,25 @@ class OscilloscopeMethods(unittest.TestCase):
                     postsamples = 2  # that is the minimum available value
                 self.zmq_rpc.send_RPC('set_pre_post_samples', 0, postsamples,
                                       self.GUI_name)
-                self.results.write("Postsamples: " + str(postsamples) + "\n")
+
                 best_result = 100000
-                for i in range(5):
+                sum = 0
+                results = []
+
+                for i in range(number_of_acq):
                     time_diff = self.measure_acquisition_time()
+                    results.append(time_diff)
+                    sum = sum + time_diff
                     if time_diff < best_result:
                         best_result = time_diff
-                        best_result_txt = str(best_result) + '\n'
-                self.results.write("Best in 5: " + best_result_txt)
+
+                medium = sum / number_of_acq
+                var = np.var(results, ddof=1)
+                self.results.write("Postsamples: {:<7} ,".format(postsamples) +
+                        "Best: {:<1.15f}, ".format(best_result) +
+                        "medium: {:<1.15f}, ".format(medium) +
+                        "variance: {:<1.15f}, \n".format(var)
+                                                             )
         for j in range(3, -1, -1):
             self.remove_channel(j)
 
