@@ -11,7 +11,7 @@ from ctypes import sizeof
 from ctypes import Structure
 from ctypes import POINTER
 from ctypes import CDLL
-import errno
+from ctypes import get_errno
 
 
 """ Wrapper for ADC C library using ctypes
