@@ -44,15 +44,13 @@ class DevicesAccess():
         self.__acquisition_configured = False
 
     def __get_required_buffer_size(self):
-        conf = self.get_current_adc_conf()
-        acq_conf = conf['acq_conf']
+        acq_conf = self.get_current_adc_conf_acq()
         presamples = acq_conf['presamples']
         postsamples = acq_conf['postsamples']
         return presamples + postsamples
 
     def __get_pre_post_samples(self):
-        conf = self.get_current_adc_conf()
-        acq_conf = conf['acq_conf']
+        acq_conf = self.get_current_adc_conf_acq()
         presamples = acq_conf['presamples']
         postsamples = acq_conf['postsamples']
         return {'presamples': presamples, 'postsamples': postsamples}
@@ -100,6 +98,12 @@ class DevicesAccess():
         if(not self.__WRTD_master):
             conf['acq_conf']['presamples'] -= delay_samples
         return conf
+
+    def get_current_adc_conf_acq(self):
+        acq_conf = self.__ADC.current_config_acq()
+        if(not self.__WRTD_master):
+            acq_conf['presamples'] -= delay_samples
+        return acq_conf
 
     def stop_acquisition(self):
         self.__ADC.acq_stop(0)
