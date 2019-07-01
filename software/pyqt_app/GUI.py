@@ -96,7 +96,7 @@ class GUI_Class:
             print('offsets: ' + str(offsets))
             axis = np.array(range(-presamples, postsamples))/SAMP_FREQ
             """to be removed with xmlrpc"""
-            self.plot.curves[channel_idx].setData(axis, channel_data)
+            self.plot.curves[int(channel_idx)].setData(axis, channel_data)
 
     def set_channel_params(self, channel_params):
         for GUI_channel_idx, channel_params in channel_params.items():
@@ -127,7 +127,7 @@ class GUI_Class:
             self.set_horizontal_params(GUI_settings['horizontal_settings'])
 
     def socket_communication(self, data):
-        data = serialization.deserialize(data)
+        data = serialization.deserialize(data.data())
         try:
             getattr(self, data['function_name'])(*data['args'])
         except AttributeError:
