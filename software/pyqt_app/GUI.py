@@ -8,6 +8,7 @@ from PyQt5.QtCore import pyqtSlot
 import pickle
 import logging
 logger = logging.getLogger(__name__)
+from general import serialization
 
 SAMP_FREQ = 1e8
 
@@ -126,7 +127,7 @@ class GUI_Class:
             self.set_horizontal_params(GUI_settings['horizontal_settings'])
 
     def socket_communication(self, data):
-        data = pickle.loads(data)
+        data = serialization.deserialize(data)
         try:
             getattr(self, data['function_name'])(*data['args'])
         except AttributeError:

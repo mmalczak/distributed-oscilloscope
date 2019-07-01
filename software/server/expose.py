@@ -9,7 +9,7 @@ sys.path.append('../')
 from general.ipaddr import get_ip
 from general.addresses import server_expose_to_user_port
 from general.addresses import server_expose_to_device_port
-
+from general import serialization
 
 class Expose():
 
@@ -136,7 +136,7 @@ class Expose():
                 logger.info("Event: {}".format(evt))
             if socket_ADC_listener in socks:
                 [identity, message] = socket_ADC_listener.recv_multipart()
-                data = pickle.loads(message)
+                data = serialization.deserialize(message)
                 try:
                     getattr(self, data['function_name'])(*data['args'])
                 except AttributeError as e:

@@ -1,5 +1,5 @@
 import zmq
-import pickle
+from general import serialization
 import logging
 logger = logging.getLogger(__name__)
 
@@ -14,7 +14,7 @@ class Publisher():
         self.socket.connect("tcp://" + addr)
 
     def send_message(self, data):
-        msg = pickle.dumps(data)
+        msg = serialization.serialize(data)
         self.socket.send(msg)
 
 

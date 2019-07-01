@@ -9,7 +9,7 @@ sys.path.append('../')
 from general.ipaddr import get_ip
 import zmq
 import pickle
-
+from general import serialization
 
 class ServerExposeTest():
 
@@ -50,7 +50,7 @@ class ServerExposeTest():
             socks = dict(poller.poll())   
             if socket in socks:  
                 [identity, message] = socket.recv_multipart() 
-                data = pickle.loads(message)    
+                data = serialization.deserialize(message)
                 getattr(self, data['function_name'])(*data['args']) 
 
 
