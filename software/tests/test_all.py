@@ -31,7 +31,7 @@ class OscilloscopeMethods(unittest.TestCase):
     server_handler = None
     server_expose = None
     ADCs = {'ADC1': [8000, 1], 'ADC2': [8001, 2]}
-    delay = 0.4
+    delay = 1
     return_queue = None
     GUI_name = None
 
