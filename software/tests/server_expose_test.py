@@ -10,6 +10,9 @@ from general.ipaddr import get_ip
 import zmq
 import pickle
 from general import serialization
+from general.tcp_server import TCPServer
+
+
 
 class ServerExposeTest():
 
@@ -41,20 +44,27 @@ class ServerExposeTest():
     def monitorSlot(self, return_queue):
         self.return_queue = return_queue
         context = zmq.Context() 
-        socket = context.socket(zmq.ROUTER) 
         ip = get_ip()    
-        socket.bind("tcp://" + ip  + ":" + str(self.port_GUI)) 
         poller = zmq.Poller()  
-        poller.register(socket, zmq.POLLIN | zmq.POLLERR) 
+
+        tcp_server = TCPServer(ip, self.port_GUI, poller)
+        poller.register(tcp_server.socket)
+
+
         while True:
-            socks = dict(poller.poll())   
-            if socket in socks:  
-                [identity, message] = socket.recv_multipart() 
-                data = serialization.deserialize(message)
-                getattr(self, data['function_name'])(*data['args']) 
+            socks = dict(poller.poll())
 
-
-
+            if tcp_server.socket.fileno() in socks:
+                tcp_server.register_connection()
+            for sock, event in socks.items():
+                if sock in tcp_server.fd_conn:
+                    message = tcp_server.receive_packet(sock)
+                    if message:
+                        data = serialization.deserialize(message)
+                        try:
+                            getattr(self, data['function_name'])(*data['args'])
+                        except AttributeError as e:
+                            logger.error("Attribute error: {}".format(e))
 
 class ThreadServerExposeTest():
 

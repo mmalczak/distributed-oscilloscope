@@ -10,6 +10,7 @@ from general.ipaddr import get_ip
 from general.addresses import server_expose_to_user_port
 from general.addresses import server_expose_to_device_port
 from general import serialization
+from general.tcp_server import TCPServer
 
 class Expose():
 
@@ -102,21 +103,25 @@ class Expose():
 
         socket = context.socket(zmq.ROUTER)
         monitor = socket.get_monitor_socket()
-        socket_ADC_listener = context.socket(zmq.ROUTER)
+        #socket_ADC_listener = context.socket(zmq.ROUTER)
         socket_zeroconf_listener = context.socket(zmq.ROUTER)
 
         server_ip = get_ip()
         socket.bind("tcp://" + server_ip + ":" +
                     str(server_expose_to_user_port))
-        socket_ADC_listener.bind("tcp://" + server_ip + ":" +
-                                 str(server_expose_to_device_port))
+        #socket_ADC_listener.bind("tcp://" + server_ip + ":" +
+        #                         str(server_expose_to_device_port))
         socket_zeroconf_listener.bind("ipc:///tmp/zeroconf")
 
         poller = zmq.Poller()
         poller.register(monitor, zmq.POLLIN | zmq.POLLERR)
         poller.register(socket, zmq.POLLIN | zmq.POLLERR)
-        poller.register(socket_ADC_listener, zmq.POLLIN | zmq.POLLERR)
+        #poller.register(socket_ADC_listener, zmq.POLLIN | zmq.POLLERR)
         poller.register(socket_zeroconf_listener, zmq.POLLIN | zmq.POLLERR)
+
+        tcp_server = TCPServer(server_ip, server_expose_to_device_port, poller)
+        poller.register(tcp_server.socket)
+
 
         while True:
             socks = dict(poller.poll(100))
@@ -134,13 +139,17 @@ class Expose():
                 evt = recv_monitor_message(monitor)
                 evt.update({'description': EVENT_MAP[evt['event']]})
                 logger.info("Event: {}".format(evt))
-            if socket_ADC_listener in socks:
-                [identity, message] = socket_ADC_listener.recv_multipart()
-                data = serialization.deserialize(message)
-                try:
-                    getattr(self, data['function_name'])(*data['args'])
-                except AttributeError as e:
-                    logger.error("Attribute error: {}".format(e))
+            if tcp_server.socket.fileno() in socks:
+                tcp_server.register_connection()
+            for sock, event in socks.items():
+                if sock in tcp_server.fd_conn:
+                    message = tcp_server.receive_packet(sock)
+                    if message:
+                        data = serialization.deserialize(message)
+                        try:
+                            getattr(self, data['function_name'])(*data['args'])
+                        except AttributeError as e:
+                            logger.error("Attribute error: {}".format(e))
             if socket_zeroconf_listener in socks:
                 [identity, message] = socket_zeroconf_listener.recv_multipart()
                 data = pickle.loads(message)

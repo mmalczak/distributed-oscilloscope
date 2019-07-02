@@ -4,6 +4,8 @@ import zmq
 import sys
 sys.path.append('../')
 from general.ipaddr import get_ip
+from general.tcp_server import TCPServer
+
 
 class ServerExposeZMQ(QtCore.QObject):
 
@@ -17,18 +19,23 @@ class ServerExposeZMQ(QtCore.QObject):
 
     def monitorSlot(self):
         context = zmq.Context()
-        socket = context.socket(zmq.ROUTER)
         ip = get_ip()
-        socket.bind("tcp://" + ip  + ":" + str(self.port_GUI))
 
         poller = zmq.Poller()
-        poller.register(socket, zmq.POLLIN | zmq.POLLERR)
+
+        tcp_server = TCPServer(ip, self.port_GUI, poller)
+        poller.register(tcp_server.socket)
 
         while True:
             socks = dict(poller.poll())
-            if socket in socks:
-                [identity, message] = socket.recv_multipart()
-                self.signal.emit(message)
+
+            if tcp_server.socket.fileno() in socks:
+                tcp_server.register_connection()
+            for sock, event in socks.items():
+                if sock in tcp_server.fd_conn:
+                    message = tcp_server.receive_packet(sock)
+                    if message:
+                        self.signal.emit(message)
 
 
 class ThreadServerExposeZMQ(QtGui.QWidget):
