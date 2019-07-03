@@ -30,8 +30,8 @@ class ServerExposeTest():
     def update_data(self, *args, **kwargs):
         if plot_data:
             data = args[0]
-            chan0 = data[0]
-            chan1 = data[1]
+            chan0 = data['0']
+            chan1 = data['1']
             plt.plot(chan0, linewidth=0.5)
             plt.plot(chan1, linewidth=0.5)
             plt.show()

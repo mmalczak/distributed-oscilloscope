@@ -1,8 +1,10 @@
-import pickle
+import json 
 
 def serialize(data):
-    return  pickle.dumps(data)
+    data = json.dumps(data)
+    return data.encode('utf-8')
  
 def deserialize(data):
-    return pickle.loads(data)    
+    data = data.decode('utf-8')
+    return json.loads(data)    
  
