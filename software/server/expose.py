@@ -11,6 +11,8 @@ from general.addresses import server_expose_to_user_port
 from general.addresses import server_expose_to_device_port
 from general import serialization
 
+from general.grpc_server import GRPC_Server
+
 class Expose():
 
     def __init__(self, connection_manager):
@@ -117,6 +119,8 @@ class Expose():
         poller.register(socket, zmq.POLLIN | zmq.POLLERR)
         poller.register(socket_ADC_listener, zmq.POLLIN | zmq.POLLERR)
         poller.register(socket_zeroconf_listener, zmq.POLLIN | zmq.POLLERR)
+
+        grpc_server = GRPC_Server()
 
         while True:
             socks = dict(poller.poll(100))

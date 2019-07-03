@@ -7,6 +7,12 @@ from server_expose import ServerExpose
 import time
 from general.ipaddr import get_ip
 
+from general import rpc_pb2
+from general import rpc_pb2_grpc
+
+import grpc
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--port', nargs=1,
@@ -35,6 +41,8 @@ def main():
 
     serv_expose = ServerExpose(port, pci_addr, trtl, unique_ADC_name)
 
+
+
     zeroconf_service = None
     zeroconf_info = None
     if(args.ip_server is None):
@@ -44,10 +52,18 @@ def main():
         zeroconf_service = zeroconf.Zeroconf()
         zeroconf_service.register_service(zeroconf_info)
     else:
+        with grpc.insecure_channel('128.141.79.50:50051') as channel:
+            stub = rpc_pb2_grpc.RPC_reqStub(channel)
+            response = stub.register_ADC(rpc_pb2.Args(
+                                            unique_ADC_name=unique_ADC_name))
+        print("Greeter client received: " + response.value)
+
         serv_expose.set_server_address(ip_server['addr'])
         data = {'function_name': 'register_ADC',
                                  'args': [unique_ADC_name, addr, port]}
         serv_expose.server_publisher.send_message(data)
+        
+
 
 
     try:

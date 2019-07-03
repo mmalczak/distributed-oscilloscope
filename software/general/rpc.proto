@@ -17,6 +17,10 @@ message prepost {
     repeated int32 value = 1;
 }
 
+message reply {
+    string value = 1;
+}
+
 message Args {
     string unique_ADC_name = 11;
     string addr = 10;
@@ -32,3 +36,7 @@ message Args {
     map<int32, string> offsets = 1;
 }
 
+
+service RPC_req {
+    rpc register_ADC(Args) returns (reply) {}
+}
