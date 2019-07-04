@@ -7,7 +7,7 @@ from concurrent import futures
 class RPC_req(rpc_pb2_grpc.RPC_reqServicer):
 
     def register_ADC(self, request, context):
-        return rpc_pb2.reply(value="bleble")
+        return rpc_pb2.Empty()
 
 
 import time

@@ -1,5 +1,9 @@
 syntax = "proto3";
 
+message Empty{
+
+}
+
 message RPC {
     string function_name = 1;
     Args args = 2;
@@ -38,5 +42,5 @@ message Args {
 
 
 service RPC_req {
-    rpc register_ADC(Args) returns (reply) {}
+    rpc register_ADC(Args) returns (Empty) {}
 }

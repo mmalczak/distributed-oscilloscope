@@ -17,7 +17,7 @@ class RPC_reqStub(object):
     self.register_ADC = channel.unary_unary(
         '/RPC_req/register_ADC',
         request_serializer=rpc__pb2.Args.SerializeToString,
-        response_deserializer=rpc__pb2.reply.FromString,
+        response_deserializer=rpc__pb2.Empty.FromString,
         )
 
 
@@ -38,7 +38,7 @@ def add_RPC_reqServicer_to_server(servicer, server):
       'register_ADC': grpc.unary_unary_rpc_method_handler(
           servicer.register_ADC,
           request_deserializer=rpc__pb2.Args.FromString,
-          response_serializer=rpc__pb2.reply.SerializeToString,
+          response_serializer=rpc__pb2.Empty.SerializeToString,
       ),
   }
   generic_handler = grpc.method_handlers_generic_handler(

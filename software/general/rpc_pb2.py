@@ -19,10 +19,34 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\trpc.proto\"1\n\x03RPC\x12\x15\n\rfunction_name\x18\x01 \x01(\t\x12\x13\n\x04\x61rgs\x18\x02 \x01(\x0b\x32\x05.Args\"\x1e\n\x0c\x63hannel_data\x12\x0e\n\x06values\x18\x01 \x03(\x05\"\x1f\n\rchannel_data2\x12\x0e\n\x06values\x18\x01 \x03(\x02\"\x18\n\x07prepost\x12\r\n\x05value\x18\x01 \x03(\x05\"\x16\n\x05reply\x12\r\n\x05value\x18\x01 \x01(\t\"\x83\x04\n\x04\x41rgs\x12\x17\n\x0funique_ADC_name\x18\x0b \x01(\t\x12\x0c\n\x04\x61\x64\x64r\x18\n \x01(\t\x12\x0c\n\x04port\x18\t \x01(\x05\x12\x1a\n\x12number_of_channels\x18\x08 \x01(\x05\x12\x12\n\ntimestamps\x18\x07 \x03(\x03\x12\x12\n\npresamples\x18\x06 \x01(\x05\x12\x13\n\x0bpostsamples\x18\x05 \x01(\x05\x12\x1d\n\x04\x64\x61ta\x18\x04 \x03(\x0b\x32\x0f.Args.DataEntry\x12\x1f\n\x05\x64\x61ta2\x18\x03 \x03(\x0b\x32\x10.Args.Data2Entry\x12$\n\x08pre_post\x18\x02 \x03(\x0b\x32\x12.Args.PrePostEntry\x12#\n\x07offsets\x18\x01 \x03(\x0b\x32\x12.Args.OffsetsEntry\x1a:\n\tDataEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\x1c\n\x05value\x18\x02 \x01(\x0b\x32\r.channel_data:\x02\x38\x01\x1a<\n\nData2Entry\x12\x0b\n\x03key\x18\x01 \x01(\x05\x12\x1d\n\x05value\x18\x02 \x01(\x0b\x32\x0e.channel_data2:\x02\x38\x01\x1a\x38\n\x0cPrePostEntry\x12\x0b\n\x03key\x18\x01 \x01(\x05\x12\x17\n\x05value\x18\x02 \x01(\x0b\x32\x08.prepost:\x02\x38\x01\x1a.\n\x0cOffsetsEntry\x12\x0b\n\x03key\x18\x01 \x01(\x05\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\x32*\n\x07RPC_req\x12\x1f\n\x0cregister_ADC\x12\x05.Args\x1a\x06.reply\"\x00\x62\x06proto3')
+  serialized_pb=_b('\n\trpc.proto\"\x07\n\x05\x45mpty\"1\n\x03RPC\x12\x15\n\rfunction_name\x18\x01 \x01(\t\x12\x13\n\x04\x61rgs\x18\x02 \x01(\x0b\x32\x05.Args\"\x1e\n\x0c\x63hannel_data\x12\x0e\n\x06values\x18\x01 \x03(\x05\"\x1f\n\rchannel_data2\x12\x0e\n\x06values\x18\x01 \x03(\x02\"\x18\n\x07prepost\x12\r\n\x05value\x18\x01 \x03(\x05\"\x16\n\x05reply\x12\r\n\x05value\x18\x01 \x01(\t\"\x83\x04\n\x04\x41rgs\x12\x17\n\x0funique_ADC_name\x18\x0b \x01(\t\x12\x0c\n\x04\x61\x64\x64r\x18\n \x01(\t\x12\x0c\n\x04port\x18\t \x01(\x05\x12\x1a\n\x12number_of_channels\x18\x08 \x01(\x05\x12\x12\n\ntimestamps\x18\x07 \x03(\x03\x12\x12\n\npresamples\x18\x06 \x01(\x05\x12\x13\n\x0bpostsamples\x18\x05 \x01(\x05\x12\x1d\n\x04\x64\x61ta\x18\x04 \x03(\x0b\x32\x0f.Args.DataEntry\x12\x1f\n\x05\x64\x61ta2\x18\x03 \x03(\x0b\x32\x10.Args.Data2Entry\x12$\n\x08pre_post\x18\x02 \x03(\x0b\x32\x12.Args.PrePostEntry\x12#\n\x07offsets\x18\x01 \x03(\x0b\x32\x12.Args.OffsetsEntry\x1a:\n\tDataEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\x1c\n\x05value\x18\x02 \x01(\x0b\x32\r.channel_data:\x02\x38\x01\x1a<\n\nData2Entry\x12\x0b\n\x03key\x18\x01 \x01(\x05\x12\x1d\n\x05value\x18\x02 \x01(\x0b\x32\x0e.channel_data2:\x02\x38\x01\x1a\x38\n\x0cPrePostEntry\x12\x0b\n\x03key\x18\x01 \x01(\x05\x12\x17\n\x05value\x18\x02 \x01(\x0b\x32\x08.prepost:\x02\x38\x01\x1a.\n\x0cOffsetsEntry\x12\x0b\n\x03key\x18\x01 \x01(\x05\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\x32*\n\x07RPC_req\x12\x1f\n\x0cregister_ADC\x12\x05.Args\x1a\x06.Empty\"\x00\x62\x06proto3')
 )
 
 
+
+
+_EMPTY = _descriptor.Descriptor(
+  name='Empty',
+  full_name='Empty',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=13,
+  serialized_end=20,
+)
 
 
 _RPC = _descriptor.Descriptor(
@@ -58,8 +82,8 @@ _RPC = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=13,
-  serialized_end=62,
+  serialized_start=22,
+  serialized_end=71,
 )
 
 
@@ -89,8 +113,8 @@ _CHANNEL_DATA = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=64,
-  serialized_end=94,
+  serialized_start=73,
+  serialized_end=103,
 )
 
 
@@ -120,8 +144,8 @@ _CHANNEL_DATA2 = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=96,
-  serialized_end=127,
+  serialized_start=105,
+  serialized_end=136,
 )
 
 
@@ -151,8 +175,8 @@ _PREPOST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=129,
-  serialized_end=153,
+  serialized_start=138,
+  serialized_end=162,
 )
 
 
@@ -182,8 +206,8 @@ _REPLY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=155,
-  serialized_end=177,
+  serialized_start=164,
+  serialized_end=186,
 )
 
 
@@ -220,8 +244,8 @@ _ARGS_DATAENTRY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=469,
-  serialized_end=527,
+  serialized_start=478,
+  serialized_end=536,
 )
 
 _ARGS_DATA2ENTRY = _descriptor.Descriptor(
@@ -257,8 +281,8 @@ _ARGS_DATA2ENTRY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=529,
-  serialized_end=589,
+  serialized_start=538,
+  serialized_end=598,
 )
 
 _ARGS_PREPOSTENTRY = _descriptor.Descriptor(
@@ -294,8 +318,8 @@ _ARGS_PREPOSTENTRY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=591,
-  serialized_end=647,
+  serialized_start=600,
+  serialized_end=656,
 )
 
 _ARGS_OFFSETSENTRY = _descriptor.Descriptor(
@@ -331,8 +355,8 @@ _ARGS_OFFSETSENTRY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=649,
-  serialized_end=695,
+  serialized_start=658,
+  serialized_end=704,
 )
 
 _ARGS = _descriptor.Descriptor(
@@ -431,8 +455,8 @@ _ARGS = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=180,
-  serialized_end=695,
+  serialized_start=189,
+  serialized_end=704,
 )
 
 _RPC.fields_by_name['args'].message_type = _ARGS
@@ -447,6 +471,7 @@ _ARGS.fields_by_name['data'].message_type = _ARGS_DATAENTRY
 _ARGS.fields_by_name['data2'].message_type = _ARGS_DATA2ENTRY
 _ARGS.fields_by_name['pre_post'].message_type = _ARGS_PREPOSTENTRY
 _ARGS.fields_by_name['offsets'].message_type = _ARGS_OFFSETSENTRY
+DESCRIPTOR.message_types_by_name['Empty'] = _EMPTY
 DESCRIPTOR.message_types_by_name['RPC'] = _RPC
 DESCRIPTOR.message_types_by_name['channel_data'] = _CHANNEL_DATA
 DESCRIPTOR.message_types_by_name['channel_data2'] = _CHANNEL_DATA2
@@ -454,6 +479,13 @@ DESCRIPTOR.message_types_by_name['prepost'] = _PREPOST
 DESCRIPTOR.message_types_by_name['reply'] = _REPLY
 DESCRIPTOR.message_types_by_name['Args'] = _ARGS
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
+
+Empty = _reflection.GeneratedProtocolMessageType('Empty', (_message.Message,), dict(
+  DESCRIPTOR = _EMPTY,
+  __module__ = 'rpc_pb2'
+  # @@protoc_insertion_point(class_scope:Empty)
+  ))
+_sym_db.RegisterMessage(Empty)
 
 RPC = _reflection.GeneratedProtocolMessageType('RPC', (_message.Message,), dict(
   DESCRIPTOR = _RPC,
@@ -541,8 +573,8 @@ _RPC_REQ = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=697,
-  serialized_end=739,
+  serialized_start=706,
+  serialized_end=748,
   methods=[
   _descriptor.MethodDescriptor(
     name='register_ADC',
@@ -550,7 +582,7 @@ _RPC_REQ = _descriptor.ServiceDescriptor(
     index=0,
     containing_service=None,
     input_type=_ARGS,
-    output_type=_REPLY,
+    output_type=_EMPTY,
     serialized_options=None,
   ),
 ])

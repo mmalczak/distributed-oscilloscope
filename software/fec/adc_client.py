@@ -54,9 +54,8 @@ def main():
     else:
         with grpc.insecure_channel('128.141.79.50:50051') as channel:
             stub = rpc_pb2_grpc.RPC_reqStub(channel)
-            response = stub.register_ADC(rpc_pb2.Args(
-                                            unique_ADC_name=unique_ADC_name))
-        print("Greeter client received: " + response.value)
+            stub.register_ADC(rpc_pb2.Args(unique_ADC_name=unique_ADC_name))
+        print("Greeter client received: ")
 
         serv_expose.set_server_address(ip_server['addr'])
         data = {'function_name': 'register_ADC',
