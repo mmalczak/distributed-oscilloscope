@@ -42,6 +42,7 @@ class DevicesAccess():
 
         """Used to retrieve the acquisition when modyfing the parameters"""
         self.__acquisition_configured = False
+        self.run = False
 
     def __get_required_buffer_size(self):
         acq_conf = self.get_current_adc_conf_acq()
@@ -125,6 +126,11 @@ class DevicesAccess():
 
         self.__acquisition_configured = True
 
+
+    def run_acquisition(self, run, channels=None):
+        self.run = run
+        if run:
+            self.configure_acquisition(channels)
 
     def fileno(self):
         return self.__ADC.fileno()

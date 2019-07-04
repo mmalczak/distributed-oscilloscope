@@ -225,6 +225,9 @@ class ADC:
     def configure_acquisition(self):
         self.send_RPC('configure_acquisition', self.__used_channels)
 
+    def run_acquisition(self, run):
+        self.send_RPC('run_acquisition', run, self.__used_channels)
+
     def stop_acquisition(self):
         self.send_RPC('stop_acquisition')
 

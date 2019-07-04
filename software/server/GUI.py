@@ -110,8 +110,20 @@ class GUI():
 
     def run_acquisition(self, run):
         self.__run = run
-        if run:
-            self.configure_acquisition_ADCs_used()
+        self.run_acquisition_ADCs_used(run)
+
+    def run_acquisition_ADCs_used(self, run):
+        self.__data_timer_start = int(time.time()*1000)
+        if self.__trigger is not None:
+            for ADC in self.__ADCs_used:
+                if(not ADC.get_is_WRTD_master()):
+                    ADC.run_acquisition(run)
+            self.__trigger.ADC.run_acquisition(run)
+            """This is the WRTD master"""
+        else:
+            logger.info("No trigger selected")
+
+
 
     def configure_acquisition_ADCs_used(self):
         self.__data_timer_start = int(time.time()*1000)
