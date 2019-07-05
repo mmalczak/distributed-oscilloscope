@@ -176,8 +176,6 @@ class GUI():
                 'args': [data, pre_post_samples, offsets]}
         self.__GUI_publisher.send_message(data)
         """TODO make sure that the data rate is not too big for plot"""
-        if self.__run:
-            self.configure_acquisition_ADCs_used()
 
     def __check_horizontal_settings(self):
         if self.__ADCs_used:
