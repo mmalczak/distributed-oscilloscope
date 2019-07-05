@@ -9,8 +9,7 @@ import os
 from multiprocessing import Queue
 from timeit import default_timer as timer
 from test_conf import server_addr
-from test_conf import performance_measurements
-from test_conf import plot_data
+from test_conf import update_data_type
 sys.path.append('../')
 from general.zmq_rpc import ZMQ_RPC
 from general.zmq_rpc import RPC_Error
@@ -36,7 +35,8 @@ class OscilloscopeMethods(unittest.TestCase):
     GUI_name = None
 
     def setUp(self):
-        if performance_measurements:
+        if update_data_type == ('time_measurements' or
+                                'frequency_measurements'):
             self.results = open("results.txt", "a")
         self.start_server()
         self.create_GUI_interface()
@@ -48,7 +48,8 @@ class OscilloscopeMethods(unittest.TestCase):
         self.clean_queue()
 
     def tearDown(self):
-        if performance_measurements:
+        if update_data_type == ('time_measurements' or
+                                'frequency_measurements'):
             self.results.close()
         self.remove_ADC_FEC('ADC1')
         self.remove_ADC_FEC('ADC2')
@@ -149,12 +150,10 @@ class OscilloscopeMethods(unittest.TestCase):
         time_diff = time_end - time_start
         return time_diff
 
-    @unittest.skipUnless(performance_measurements, "Only for measurements")
+    @unittest.skipUnless(update_data_type == 'time_measurements',
+                         "Only for time measurements")
     def test_acquisition_time(self):
         self.clean_queue()
-        self.assertFalse(plot_data)
-
-
 
         number_of_acq = 5
         self.results.write("Internal trigger on channel 3\n"
@@ -204,9 +203,9 @@ class OscilloscopeMethods(unittest.TestCase):
         for j in range(3, -1, -1):
             self.remove_channel(j)
 
+    @unittest.skipUnless(update_data_type == 'plot', "Only for plotting")
     def test_acquisition(self):
         self.clean_queue()
-        self.assertFalse(performance_measurements)
 
         ADC_idx = ADC_addr + "_" + str(self.ADCs['ADC1'][0])
         unique_ADC_name_1 = "ADC" + "_" + ADC_idx + "._http._tcp.local."
