@@ -2,6 +2,8 @@ from WRTD import WRTD
 from ADC_100m14b4cha import ADC_100m14b4cha_extended_API
 import zmq
 import numpy as np
+import logging
+logger = logging.getLogger(__name__)
 
 
 delay_u = 600
@@ -110,9 +112,10 @@ class DevicesAccess():
         self.__ADC.acq_stop(0)
         try:
             self.selector.unregister(self)
+            logger.debug("The ADC device unregistered from the poller selector")
         except KeyError:
-            pass
-        # TODO after adding logger log it
+            logger.warning("The ADC device not available to unregister from "
+                           "the poller selector stop acquisition")
 
         self.__acquisition_configured = False
 
@@ -120,9 +123,9 @@ class DevicesAccess():
 
         self.__channels = channels
         self.__ADC.stop_acquisition()
-
         self.__ADC.start_acquisition()
         self.selector.register(self, zmq.POLLIN)
+        logger.debug("The ADC device registered in the poller selector")
 
         self.__acquisition_configured = True
 
@@ -140,8 +143,8 @@ class DevicesAccess():
         try:
             self.__ADC.fill_buf()
         except Exception as e:
+            logger.warning("Error when filling buffer: {}".format(e))
             return [0, 0, 0]
-            print(e)
 
         try:
             data = np.ctypeslib.as_array(self.__ADC.buf_ptr.contents.data,

@@ -6,8 +6,13 @@ import argparse
 from server_expose import ServerExpose
 import time
 from general.ipaddr import get_ip
+import logging.config
+from logging_conf import DEFAULT_CONFIG
+
 
 def main():
+    logging.config.dictConfig(DEFAULT_CONFIG)
+
     parser = argparse.ArgumentParser()
     parser.add_argument('--port', nargs=1,
                         help='port used on the current machine',

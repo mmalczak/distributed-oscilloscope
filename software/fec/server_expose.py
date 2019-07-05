@@ -10,6 +10,8 @@ from general.publisher import Publisher
 from general.addresses import server_expose_to_device_port
 from general.ipaddr import get_ip
 from devices_access import DevicesAccess
+import logging
+logger = logging.getLogger(__name__)
 
 thismodule = sys.modules[__name__]
 
@@ -81,7 +83,14 @@ class ServerExpose():
 
             if self.__devices_access.fileno() in socks:
                 dev_ac = self.__devices_access
-                poller.unregister(dev_ac)
+                try:
+                    poller.unregister(dev_ac)
+                    logger.debug("The ADC device unregistered from the poller "
+                                "selector")
+                except KeyError:
+                    logger.warning("The ADC device not available to unregister"
+                                   " from the poller selector, expose")
+
                 [timestamp, pre_post, data] = dev_ac.retrieve_ADC_data()
                 data = {'function_name': 'update_data',
                         'args': [timestamp, pre_post, data,
