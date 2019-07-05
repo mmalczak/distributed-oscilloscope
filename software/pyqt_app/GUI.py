@@ -9,6 +9,7 @@ import pickle
 import logging
 logger = logging.getLogger(__name__)
 from general import serialization
+from timeit import default_timer as timer
 
 SAMP_FREQ = 1e8
 
@@ -26,6 +27,7 @@ class GUI_Class:
         self.triggers = []
         self.layouts = []
         self.zmq_rpc = zmq_rpc
+        self.last_data_time = timer()
 
         for count in range(self.number_of_GUI_triggers):
             trig_clos = TriggerClosure(self.ui.trigger_inputs_layout,
@@ -83,6 +85,11 @@ class GUI_Class:
         return True
 
     def update_data(self, data, pre_post_samples, offsets):
+        curr_time = timer()
+        time_diff = curr_time - self.last_data_time
+        if(time_diff < 0.1):
+            return
+        self.last_data_time = curr_time
         for channel_idx, channel_data in data.items():
             [presamples, postsamples] = pre_post_samples[channel_idx]
             offset = int(offsets[channel_idx])*4/5
