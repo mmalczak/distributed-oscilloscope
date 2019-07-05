@@ -18,6 +18,7 @@ class ServerExposeTest():
         self.return_queue = None
         update_data_name = 'update_data_' + update_data_type
         self.update_data = getattr(self, update_data_name)
+        self.number_of_acquisitions = 0
 
     def unregister_ADC(self, unique_ADC_name):
         self.return_queue.put(unique_ADC_name)
@@ -40,7 +41,9 @@ class ServerExposeTest():
         print("GUI: update GUI")
 
     def update_data_frequency_measurements(self, *args, **kwargs):
-        pass
+        self.number_of_acquisitions += 1
+        time = timer()
+        self.return_queue.put([self.number_of_acquisitions, time])
 
     def monitorSlot(self, return_queue):
         self.return_queue = return_queue

@@ -35,8 +35,8 @@ class OscilloscopeMethods(unittest.TestCase):
     GUI_name = None
 
     def setUp(self):
-        if update_data_type == ('time_measurements' or
-                                'frequency_measurements'):
+        if update_data_type == 'time_measurements' or\
+                                update_data_type == 'frequency_measurements':
             self.results = open("results.txt", "a")
         self.start_server()
         self.create_GUI_interface()
@@ -48,8 +48,8 @@ class OscilloscopeMethods(unittest.TestCase):
         self.clean_queue()
 
     def tearDown(self):
-        if update_data_type == ('time_measurements' or
-                                'frequency_measurements'):
+        if update_data_type == 'time_measurements' or\
+                                update_data_type == 'frequency_measurements':
             self.results.close()
         self.remove_ADC_FEC('ADC1')
         self.remove_ADC_FEC('ADC2')
@@ -149,6 +149,74 @@ class OscilloscopeMethods(unittest.TestCase):
         time_end = self.return_queue.get()
         time_diff = time_end - time_start
         return time_diff
+
+    def measure_acquisition_freq(self):
+        self.zmq_rpc.send_RPC('run_acquisition', True, self.GUI_name)
+
+        [initial_number, initial_time] = self.return_queue.get()
+        
+        while True:
+            [number, time] = self.return_queue.get()
+            time_diff = time - initial_time
+            if time_diff > 0.5:
+                number_diff = number - initial_number
+                number_per_sec = number_diff / time_diff
+                self.zmq_rpc.send_RPC('run_acquisition', False, self.GUI_name)
+                return number_per_sec
+        
+    @unittest.skipUnless(update_data_type == 'frequency_measurements',
+                         "Only for frequency measurements")
+    def test_acquisition_frequency(self):
+        self.clean_queue()
+
+        number_of_acq = 5
+        self.results.write("Internal trigger on channel 3\n"
+                           "Sampled signal: 100kHz sine wave Channel 3(0-3)\n"
+                           "number of presamples = 0\n"
+                           "number of acquisitions = {}\n\n".format(
+                                                            number_of_acq))
+
+        ADC_idx = ADC_addr + "_" + str(self.ADCs['ADC1'][0])
+        unique_ADC_name = "ADC" + "_" + ADC_idx + "._http._tcp.local."
+
+        for j in range(3, -1, -1):
+            self.results.write("Number of channels: " + str(4-j) + "\n")
+            self.add_channel(j, unique_ADC_name)
+            if j == 3:
+                ADC_trigger_idx = 3
+                send_RPC = self.zmq_rpc.send_RPC
+                send_RPC('add_trigger', 'internal', unique_ADC_name,
+                         ADC_trigger_idx, self.GUI_name)
+                send_RPC('set_ADC_parameter', 'internal_trigger_enable', 1,
+                         unique_ADC_name, ADC_trigger_idx)
+            for i in range(0, 6):
+                postsamples = 10**i
+                if postsamples == 1:
+                    postsamples = 2  # that is the minimum available value
+                self.zmq_rpc.send_RPC('set_pre_post_samples', 0, postsamples,
+                                      self.GUI_name)
+
+                best_result = 0
+                sum = 0
+                results = []
+
+                for i in range(number_of_acq):
+                    print("measure acq freq, acq no: {}".format(i))
+                    acq_freq = self.measure_acquisition_freq()
+                    results.append(acq_freq)
+                    sum = sum + acq_freq
+                    if acq_freq > best_result:
+                        best_result = acq_freq
+
+                medium = sum / number_of_acq
+                var = np.var(results, ddof=1)
+                self.results.write("Postsamples: {:<7} ,".format(postsamples) +
+                                   "Best: {:<1.15f}, ".format(best_result) +
+                                   "medium: {:<1.15f}, ".format(medium) +
+                                   "variance: {:<1.15f}, \n".format(var)
+                                   )
+        for j in range(3, -1, -1):
+            self.remove_channel(j)
 
     @unittest.skipUnless(update_data_type == 'time_measurements',
                          "Only for time measurements")
