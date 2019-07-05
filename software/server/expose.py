@@ -149,4 +149,3 @@ class Expose():
                             data['function_name'])(*data['args'])
                 except AttributeError as e:
                     logger.error("Attribute error: {}".format(e))
-            self.__connection_manager.check_timing()

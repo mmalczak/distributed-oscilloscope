@@ -37,10 +37,6 @@ class ConnectionManager():
         del self.__GUIs[GUI_name]
         logger.info("GUI {} unregistered".format(GUI_name))
 
-    def check_timing(self):
-        for GUI_name, GUI in self.__GUIs.items():
-            GUI.check_timing()
-
     def __stop_acquisition_if_GUI_contains_ADC(self, unique_ADC_name):
         for GUI_name, GUI in self.__GUIs.items():
             if GUI.contains_ADC(unique_ADC_name):

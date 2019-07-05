@@ -142,15 +142,6 @@ class GUI():
         for channel_idx, channel in self.__channels.items():
             channel.timestamp_pre_post_data = None
 
-    def check_timing(self):
-        """If during 300 ms the data does not arrive, discard te existing data
-        and start new acquisition"""
-        if (int(time.time()*1000) - self.__data_timer_start) > 300:
-            for channel_idx, channel in self.__channels.items():
-                channel.timestamp_pre_post_data = None
-            if self.__run:
-                self.configure_acquisition_ADCs_used()
-
     def __check_if_all_data_ready(self):
         for channel_idx, channel in self.__channels.items():
             if (channel.timestamp_pre_post_data is None):
