@@ -128,6 +128,7 @@ class DevicesAccess():
 
 
     def run_acquisition(self, run, channels=None):
+        """channels could be None only if run is False"""
         self.run = run
         if run:
             self.configure_acquisition(channels)
