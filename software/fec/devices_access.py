@@ -164,4 +164,7 @@ class DevicesAccess():
 
         self.__acquisition_configured = False
 
+        if self.run:
+            self.configure_acquisition(self.__channels)
+
         return [timestamp, pre_post_samples_dict, data_dict]
