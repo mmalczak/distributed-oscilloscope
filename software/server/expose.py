@@ -120,7 +120,7 @@ class Expose():
         poller.register(socket_zeroconf_listener, zmq.POLLIN | zmq.POLLERR)
 
         while True:
-            socks = dict(poller.poll(100))
+            socks = dict(poller.poll())
             if socket in socks:
                 [identity, message] = socket.recv_multipart()
                 message = pickle.loads(message)
