@@ -8,7 +8,7 @@ class Channel:
         self.range = None
         self.termination = None
         self.offset = None
-        self.timestamp_pre_post_data = None
+        self.timestamp_pre_post_data = []
 
     def update_channel_conf(self, range, termination, offset):
         self.range = self.range_conv[range]

@@ -75,9 +75,10 @@ class ADC:
             data_channel = data_channel * conv_fact 
             """conversion from raw to the 10V scale"""
 
-            self.__channels[int(channel_idx)].timestamp_pre_post_data =\
+            self.__channels[int(channel_idx)].timestamp_pre_post_data.append(
                     {'timestamp': timestamp, 'pre_post': pre_post,
                      'data_channel': data_channel}
+                    )
         self.__GUI.if_ready_send_data()
 
     def update_conf(self):

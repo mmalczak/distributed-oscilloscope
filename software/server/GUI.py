@@ -137,11 +137,13 @@ class GUI():
         for ADC in self.__ADCs_used:
             ADC.stop_acquisition()
         for channel_idx, channel in self.__channels.items():
-            channel.timestamp_pre_post_data = None
+            channel.timestamp_pre_post_data = []
 
     def __check_if_all_data_ready(self):
         for channel_idx, channel in self.__channels.items():
-            if (channel.timestamp_pre_post_data is None):
+            try:
+                channel.timestamp_pre_post_data[0]
+            except IndexError:
                 return False
         return True
 
@@ -153,19 +155,20 @@ class GUI():
         timestamps = []
         offsets = {}
         for channel_idx, channel in self.__channels.items():
-            data[channel_idx] = channel.timestamp_pre_post_data['data_channel']
-            timestamps.append(channel.timestamp_pre_post_data['timestamp'])
+            timestamp_pre_post_data = channel.timestamp_pre_post_data[0]
+            data[channel_idx] = timestamp_pre_post_data['data_channel']
+            timestamps.append(timestamp_pre_post_data['timestamp'])
 
-            tic_diff = tic_difference(*channel.timestamp_pre_post_data[
-                                            'timestamp'], *timestamps[0])
+            tic_diff = tic_difference(*timestamp_pre_post_data['timestamp'],
+                                      *timestamps[0])
             offsets[channel_idx] = int(tic_diff)
-            pre_post = channel.timestamp_pre_post_data['pre_post']
+            pre_post = timestamp_pre_post_data['pre_post']
             pre_post_samples[channel_idx] = [pre_post['presamples'],
                                              pre_post['postsamples']]
         for channel_idx, channel in self.__channels.items():
             """seperate loop is necessary in case th euser wants to display
             the same channel twice"""
-            channel.timestamp_pre_post_data = None
+            channel.timestamp_pre_post_data.pop(0)
 
         data = {'function_name': 'update_data',
                 'args': [data, pre_post_samples, offsets]}
