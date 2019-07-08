@@ -27,7 +27,6 @@ class GUI():
         self.__GUI_port = GUI_port
         self.__run = False
         self.__GUI_publisher = Publisher(self.__GUI_addr, self.__GUI_port)
-        self.__data_timer_start = 0
 
     """TODO number of channels shouldn't be sent here"""
     def register_ADC(self, unique_ADC_name, number_of_channels):
@@ -113,7 +112,6 @@ class GUI():
         self.run_acquisition_ADCs_used(run)
 
     def run_acquisition_ADCs_used(self, run):
-        self.__data_timer_start = int(time.time()*1000)
         if self.__trigger is not None:
             for ADC in self.__ADCs_used:
                 if(not ADC.get_is_WRTD_master()):
@@ -126,7 +124,6 @@ class GUI():
 
 
     def configure_acquisition_ADCs_used(self):
-        self.__data_timer_start = int(time.time()*1000)
         if self.__trigger is not None:
             for ADC in self.__ADCs_used:
                 if(not ADC.get_is_WRTD_master()):
@@ -149,7 +146,6 @@ class GUI():
         return True
 
     def if_ready_send_data(self):
-        self.__data_timer_start = int(time.time()*1000)
         if not self.__check_if_all_data_ready():
             return
         data = {}
