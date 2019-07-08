@@ -153,13 +153,12 @@ class GUI():
         timestamps = []
         offsets = {}
         for channel_idx, channel in self.__channels.items():
-            ADC = channel.ADC
             data[channel_idx] = channel.timestamp_pre_post_data['data_channel']
             timestamps.append(channel.timestamp_pre_post_data['timestamp'])
 
             tic_diff = tic_difference(*channel.timestamp_pre_post_data[
                                             'timestamp'], *timestamps[0])
-            offsets[channel_idx] = str(int(tic_diff))
+            offsets[channel_idx] = int(tic_diff)
             pre_post = channel.timestamp_pre_post_data['pre_post']
             pre_post_samples[channel_idx] = [pre_post['presamples'],
                                              pre_post['postsamples']]

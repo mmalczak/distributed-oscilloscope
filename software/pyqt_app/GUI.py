@@ -92,8 +92,7 @@ class GUI_Class:
         self.last_data_time = curr_time
         for channel_idx, channel_data in data.items():
             [presamples, postsamples] = pre_post_samples[channel_idx]
-            offset = int(offsets[channel_idx])*4/5
-            offset = int(offset)
+            offset = int(offsets[channel_idx]*4/5)
 #            if(offset>10 and offset < 14):
 #                offset = 12
 #            presamples = presamples - offset
