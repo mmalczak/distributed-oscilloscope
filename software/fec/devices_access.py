@@ -144,7 +144,6 @@ class DevicesAccess():
             return([0, 0, 0])
 
         data = np.transpose(data)
-        data = data.tolist()
         data_dict = {}
         for channel in self.__channels:
             data_dict[str(channel)] = data[channel]

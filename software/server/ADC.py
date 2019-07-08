@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 sys.path.append('../')
 from general.zmq_rpc import ZMQ_RPC
 from general.zmq_rpc import RPC_Error
-
+import numpy as np
 
 class ADC:
 
@@ -71,10 +71,9 @@ class ADC:
         for channel_idx, data_channel in data.items():
             range = self.__channels[int(channel_idx)].range
             mult = range_multiplier[range]
-            data_channel = [value * mult for value in data_channel]
-            """conversion to the 10V scale"""
-            data_channel = [(value / 2**16 * 10) for value in data_channel]
-            """conversionfrom raw to V"""
+            conv_fact = mult * 10 / 2**16
+            data_channel = data_channel * conv_fact 
+            """conversion from raw to the 10V scale"""
 
             self.__channels[int(channel_idx)].timestamp_pre_post_data =\
                     {'timestamp': timestamp, 'pre_post': pre_post,
