@@ -1,13 +1,3 @@
-def check_if_not_max(max_sec, max_tic, sec, tic, available_offset):
-    max_tic = max_tic - available_offset
-    if(max_tic >= 125e6):
-        max_tic = max_tic - 125e6
-        max_sec = max_sec+1
-    if((sec < max_sec) or ((sec == max_sec) and (tic < max_tic))):
-        return True
-    return False
-
-
 def tic_difference(timestamp_1, timestamp_2):
     sec_1 = timestamp_1[0]
     sec_2 = timestamp_2[0]
