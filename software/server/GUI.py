@@ -3,6 +3,7 @@ from conversion import threshold_raw_to_mV
 from timestamp_operations import check_if_not_max
 from timestamp_operations import tic_difference
 from timestamp_operations import check_if_equal
+from timestamp_operations import check_if_greater
 import logging
 import time
 import sys
@@ -139,7 +140,30 @@ class GUI():
         for channel_idx, channel in self.__channels.items():
             channel.timestamp_pre_post_data = []
 
-    def __check_if_all_data_ready(self):
+
+
+    def __all_data_aligned(self, max_timestamp):
+        for channel_idx, channel in self.__channels.items():
+            timestamp = channel.timestamp_pre_post_data[0]['timestamp']
+            if(not check_if_equal(max_timestamp, timestamp, 50)):
+                return False
+        return True
+
+    def __remove_old_data(self, max_timestamp):
+        for channel_idx, channel in self.__channels.items():
+            timestamp = channel.timestamp_pre_post_data[0]['timestamp']
+            if(not check_if_equal(max_timestamp, timestamp, 50)):
+                channel.timestamp_pre_post_data.pop(0)
+
+    def __find_max(self):
+        max_timestamp = [0, 0]
+        for channel_idx, channel in self.__channels.items():
+            timestamp = channel.timestamp_pre_post_data[0]['timestamp']
+            if check_if_greater(timestamp, max_timestamp):
+                max_timestamp = timestamp
+        return max_timestamp
+
+    def __check_if_data_exists(self):
         for channel_idx, channel in self.__channels.items():
             try:
                 channel.timestamp_pre_post_data[0]
@@ -148,8 +172,16 @@ class GUI():
         return True
 
     def if_ready_send_data(self):
-        if not self.__check_if_all_data_ready():
+        if not self.__check_if_data_exists():
             return
+        max_timestamp = self.__find_max()
+        while(not self.__all_data_aligned(max_timestamp)):
+            max_timestamp = self.__find_max()
+            self.__remove_old_data(max_timestamp)
+            if not self.__check_if_data_exists():
+                return
+
+
         data = {}
         pre_post_samples = {}
         timestamps = []
@@ -159,8 +191,8 @@ class GUI():
             data[channel_idx] = timestamp_pre_post_data['data_channel']
             timestamps.append(timestamp_pre_post_data['timestamp'])
 
-            tic_diff = tic_difference(*timestamp_pre_post_data['timestamp'],
-                                      *timestamps[0])
+            tic_diff = tic_difference(timestamp_pre_post_data['timestamp'],
+                                      timestamps[0])
             offsets[channel_idx] = int(tic_diff)
             pre_post = timestamp_pre_post_data['pre_post']
             pre_post_samples[channel_idx] = [pre_post['presamples'],
