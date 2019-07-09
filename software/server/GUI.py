@@ -179,6 +179,8 @@ class GUI():
             self.__remove_old_data(max_timestamp)
             if not self.__check_if_data_exists():
                 return
+        """Checks if the data is aligned in time, if there is any sample not
+        aligned, smalles then the others, it is removed"""
 
 
         data = {}
