@@ -39,7 +39,7 @@ class PlotMine():
         label_style = {'color': '#FFF', 'font-size': str(font_size)+'px'}
         self.graphics_view.setLabel('left', units='V', **label_style)
         self.graphics_view.setLabel('bottom', units='s', **label_style)
-
+        self.graphics_view.showGrid(x=True, y=True)
         self.graphics_view.setRange(yRange=[-10, 10])
 
     def add_channel(self, GUI_channel):
