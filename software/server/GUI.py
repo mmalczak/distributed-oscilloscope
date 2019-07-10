@@ -144,14 +144,14 @@ class GUI():
     def __all_data_aligned(self, max_timestamp):
         for channel_idx, channel in self.__channels.items():
             timestamp = channel.timestamp_pre_post_data[0]['timestamp']
-            if(not check_if_equal(max_timestamp, timestamp, 50)):
+            if(not check_if_equal(max_timestamp, timestamp, 1)):
                 return False
         return True
 
     def __remove_old_data(self, max_timestamp):
         for channel_idx, channel in self.__channels.items():
             timestamp = channel.timestamp_pre_post_data[0]['timestamp']
-            if(not check_if_equal(max_timestamp, timestamp, 50)):
+            if(not check_if_equal(max_timestamp, timestamp, 1)):
                 channel.timestamp_pre_post_data.pop(0)
 
     def __find_max(self):
