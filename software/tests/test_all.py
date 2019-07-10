@@ -16,6 +16,7 @@ from general.zmq_rpc import RPC_Error
 from general.addresses import server_expose_to_user_port
 import timeout_decorator
 import numpy as np
+import matplotlib.pyplot as plt
 
 sys.path.append('../server')
 from server import ADC_configs
@@ -36,7 +37,8 @@ class OscilloscopeMethods(unittest.TestCase):
 
     def setUp(self):
         if update_data_type == 'time_measurements' or\
-                                update_data_type == 'frequency_measurements':
+           update_data_type == 'frequency_measurements' or\
+           update_data_type == 'precision':
             self.results = open("results.txt", "a")
         self.start_server()
         self.create_GUI_interface()
@@ -49,7 +51,8 @@ class OscilloscopeMethods(unittest.TestCase):
 
     def tearDown(self):
         if update_data_type == 'time_measurements' or\
-                                update_data_type == 'frequency_measurements':
+           update_data_type == 'frequency_measurements' or\
+           update_data_type == 'precision':
             self.results.close()
         self.remove_ADC_FEC('ADC1')
         self.remove_ADC_FEC('ADC2')
@@ -154,7 +157,7 @@ class OscilloscopeMethods(unittest.TestCase):
         self.zmq_rpc.send_RPC('run_acquisition', True, self.GUI_name)
 
         [initial_number, initial_time] = self.return_queue.get()
-        
+
         while True:
             [number, time] = self.return_queue.get()
             time_diff = time - initial_time
@@ -163,7 +166,7 @@ class OscilloscopeMethods(unittest.TestCase):
                 number_per_sec = number_diff / time_diff
                 self.zmq_rpc.send_RPC('run_acquisition', False, self.GUI_name)
                 return number_per_sec
-        
+
     @unittest.skipUnless(update_data_type == 'frequency_measurements',
                          "Only for frequency measurements")
     def test_acquisition_frequency(self):
@@ -323,3 +326,89 @@ class OscilloscopeMethods(unittest.TestCase):
     @timeout_decorator.timeout(5)
     def test_unregister_ADC(self):
         self.assertEqual("abc", "abc")
+
+    def channel_zero_cross(self, channel_samples):
+        chan = channel_samples  # to make it shorter
+        """Samples are counted from 0 to (pre+post-1) """
+        pos_sam = 0  # first positive sample
+        for i in range(len(chan)):
+            if chan[i] > 0:
+                pos_sam = i
+                break
+        #self.results.write("Positive sample idx: {} \n".format(pos_sam))
+
+        x = chan[pos_sam] / (chan[pos_sam] - chan[pos_sam - 1]) * 10
+        """Distance from zero crossing to the first positive sample in ns"""
+        #self.results.write("x: {} \n".format(x))
+
+        zc = pos_sam * 10 - x
+        """Zero crossing in ns form the beginning of the array"""
+        #self.results.write("zc: {} \n".format(zc))
+        return zc
+
+    def measure_zero_cross_distance(self):
+        self.zmq_rpc.send_RPC('single_acquisition', self.GUI_name)
+        try:
+            res = self.return_queue.get(timeout=0.1 )
+        except:
+            return None
+        chan_1 = res[0]
+        chan_2 = res[1]
+        #self.results.write(str(chan_1) + '\n')
+        #self.results.write(str(chan_2) + '\n')
+
+        zc_1 = self.channel_zero_cross(chan_1)
+        zc_2 = self.channel_zero_cross(chan_2)
+        dist = zc_2 - zc_1
+        #self.results.write("dist: {} \n".format(dist))
+        return dist
+
+
+
+#    @timeout_decorator.timeout(5)
+    def test_precision(self):
+        self.clean_queue()
+
+        number_of_acq = 10000
+        self.results.write("Internal trigger on channel 3\n"
+                           "Sampled signal: 100kHz sine wave Channel 3(0-3)\n"
+                           "number of presamples = 2\n"
+                           "number of postsamples = 2\n"
+                           "number of acquisitions = {}\n\n".format(
+                                                            number_of_acq))
+
+        ADC_idx = ADC_addr + "_" + str(self.ADCs['ADC1'][0])
+        unique_ADC_name_1 = "ADC" + "_" + ADC_idx + "._http._tcp.local."
+
+        ADC_idx = ADC_addr + "_" + str(self.ADCs['ADC2'][0])
+        unique_ADC_name_2 = "ADC" + "_" + ADC_idx + "._http._tcp.local."
+
+
+        ADC_channel = 3
+        oscilloscope_channel = 0
+        self.zmq_rpc.send_RPC('add_channel', oscilloscope_channel,
+                              unique_ADC_name_1, ADC_channel, self.GUI_name)
+        oscilloscope_channel = 1
+        self.zmq_rpc.send_RPC('add_channel', oscilloscope_channel,
+                              unique_ADC_name_2, ADC_channel, self.GUI_name)
+
+
+        self.zmq_rpc.send_RPC('set_pre_post_samples', 5, 5, self.GUI_name)
+
+
+        ADC_trigger_idx = 3
+        send_RPC = self.zmq_rpc.send_RPC
+        self.zmq_rpc.send_RPC('add_trigger', 'internal', unique_ADC_name_2,
+                              ADC_trigger_idx, self.GUI_name)
+        self.zmq_rpc.send_RPC('set_ADC_parameter', 'internal_trigger_enable',
+                              1, unique_ADC_name_2, ADC_trigger_idx)
+
+        distances = []
+        for i in range(number_of_acq):
+            dist = self.measure_zero_cross_distance()
+            if dist is not None:
+                distances.append(dist)
+        #histogram = np.histogram(distances, bins=30)
+        plt.hist(distances, bins=100)
+        plt.show()
+        #self.results.write("histogram: {} \n".format(histogram))

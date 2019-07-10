@@ -26,6 +26,10 @@ class ServerExposeTest():
     def register_ADC(self, unique_ADC_name, number_of_channels):
         self.return_queue.put((unique_ADC_name, number_of_channels))
 
+    def update_data_precision(self, *args, **kwargs):
+        data = args[0]
+        self.return_queue.put(data)
+
     def update_data_plot(self, *args, **kwargs):
         data = args[0]
         chan0 = data[0]
