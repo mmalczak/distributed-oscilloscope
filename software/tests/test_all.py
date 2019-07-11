@@ -349,27 +349,61 @@ class OscilloscopeMethods(unittest.TestCase):
     def measure_zero_cross_distance(self):
         self.zmq_rpc.send_RPC('single_acquisition', self.GUI_name)
         try:
-            res = self.return_queue.get(timeout=0.1 )
+            data, offsets = self.return_queue.get(timeout=0.1 )
         except:
             return None
-        chan_1 = res[0]
-        chan_2 = res[1]
+        chan_1 = data[0]
+        chan_2 = data[1]
         #self.results.write(str(chan_1) + '\n')
         #self.results.write(str(chan_2) + '\n')
 
         zc_1 = self.channel_zero_cross(chan_1)
         zc_2 = self.channel_zero_cross(chan_2)
-        dist = zc_2 - zc_1
+        dist = zc_2 - zc_1 + offsets[1]*8
         #self.results.write("dist: {} \n".format(dist))
         return dist
 
 
+    def measure_zero_cross_distances(self, number_of_acq):
+        distances = []
+        for i in range(number_of_acq):
+            dist = self.measure_zero_cross_distance()
+            if dist is not None:
+                distances.append(dist)
+        return distances
+
+    def calculate_statistics(self, data):
+        mean = np.mean(data)
+        var = np.var(data, ddof=1)
+        sigma = var**(1/2)
+        return [mean, var, sigma]
+
+    def save_histogram(self, data, name):
+        mean, var, sigma = self.calculate_statistics(data)
+        fig, ax = plt.subplots()
+        ax.hist(data, bins=100)
+        props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
+        text = "Mean: {:<1.2f}\n".format(mean) +\
+               "Sigma: {:<1.2f}\n".format(sigma)
+        ax.text(0.80, 0.95, text, transform=ax.transAxes, fontsize=10,
+                verticalalignment='top', bbox=props)
+        plt.savefig('/home/milosz/Desktop/figures_precision/'+ name + '.png')
+
+    def save_data(self, data, name):
+        mean, var, sigma = self.calculate_statistics(data)
+        with open('/home/milosz/Desktop/figures_precision/' + name + '.txt', 'a') as fh:
+            fh.write("Mean: {}\n".format(mean))
+            fh.write("Var: {}\n".format(var))
+            fh.write("Sigma: {}\n".format(sigma))
+            fh.write("Data: {}\n".format(data))
 
 #    @timeout_decorator.timeout(5)
     def test_precision(self):
         self.clean_queue()
 
-        number_of_acq = 10000
+        number_of_acq = 20000
+        """Some data could not arrive so actual number of acquisitions could
+        be smaller"""
         self.results.write("Internal trigger on channel 3\n"
                            "Sampled signal: 100kHz sine wave Channel 3(0-3)\n"
                            "number of presamples = 2\n"
@@ -396,19 +430,22 @@ class OscilloscopeMethods(unittest.TestCase):
         self.zmq_rpc.send_RPC('set_pre_post_samples', 5, 5, self.GUI_name)
 
 
+
         ADC_trigger_idx = 3
-        send_RPC = self.zmq_rpc.send_RPC
+
+
+        self.zmq_rpc.send_RPC('add_trigger', 'internal', unique_ADC_name_1,
+                              ADC_trigger_idx, self.GUI_name)
+        name = 'WRTD_sig_rev'
+        distances = self.measure_zero_cross_distances(number_of_acq)
+        self.save_histogram(distances, name)
+        self.save_data(distances, name)
+
+
         self.zmq_rpc.send_RPC('add_trigger', 'internal', unique_ADC_name_2,
                               ADC_trigger_idx, self.GUI_name)
-        self.zmq_rpc.send_RPC('set_ADC_parameter', 'internal_trigger_enable',
-                              1, unique_ADC_name_2, ADC_trigger_idx)
+        name = 'WRTD_signal_rev_trig_rev'
+        distances = self.measure_zero_cross_distances(number_of_acq)
+        self.save_histogram(distances, name)
+        self.save_data(distances, name)
 
-        distances = []
-        for i in range(number_of_acq):
-            dist = self.measure_zero_cross_distance()
-            if dist is not None:
-                distances.append(dist)
-        #histogram = np.histogram(distances, bins=30)
-        plt.hist(distances, bins=100)
-        plt.show()
-        #self.results.write("histogram: {} \n".format(histogram))

@@ -28,7 +28,8 @@ class ServerExposeTest():
 
     def update_data_precision(self, *args, **kwargs):
         data = args[0]
-        self.return_queue.put(data)
+        offsets = args[2]
+        self.return_queue.put([data, offsets])
 
     def update_data_plot(self, *args, **kwargs):
         data = args[0]
