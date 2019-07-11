@@ -92,7 +92,7 @@ class GUI_Class:
         self.last_data_time = curr_time
         for channel_idx, channel_data in data.items():
             [presamples, postsamples] = pre_post_samples[channel_idx]
-            offset = int(offsets[channel_idx]*4/5)
+            offset = offsets[channel_idx]*4/5
 #            if(offset>10 and offset < 14):
 #                offset = 12
 #            presamples = presamples - offset
@@ -100,7 +100,7 @@ class GUI_Class:
             print('presamples: ' + str(presamples))
             print('postsamples: ' + str(postsamples))
             print('offsets: ' + str(offsets))
-            axis = np.array(range(-presamples, postsamples))/SAMP_FREQ
+            axis = (np.array(range(-presamples, postsamples))+offset)/SAMP_FREQ
             """to be removed with xmlrpc"""
             self.plot.curves[channel_idx].setData(axis, channel_data)
 
