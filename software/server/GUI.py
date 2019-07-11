@@ -69,6 +69,8 @@ class GUI():
         set_horizontal_setting_when_add_channel(self)
 
     def add_trigger(self, type, ADC, ADC_trigger_idx):
+        if self.__trigger:
+            self.remove_trigger()
         trigger = None
         if type == 'internal':   # consider dictionary
             trigger = ADC.get_internal_trigger(ADC_trigger_idx)
