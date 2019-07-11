@@ -426,13 +426,13 @@ class OscilloscopeMethods(unittest.TestCase):
         self.zmq_rpc.send_RPC('add_channel', oscilloscope_channel,
                               unique_ADC_name_2, ADC_channel, self.GUI_name)
 
-
         self.zmq_rpc.send_RPC('set_pre_post_samples', 5, 5, self.GUI_name)
-
-
 
         ADC_trigger_idx = 3
 
+        self.zmq_rpc.send_RPC('set_ADC_parameter', 'channel_offset', -500000,
+                              unique_ADC_name_1, ADC_trigger_idx)
+        """Used for calibration"""
 
         self.zmq_rpc.send_RPC('add_trigger', 'internal', unique_ADC_name_1,
                               ADC_trigger_idx, self.GUI_name)
