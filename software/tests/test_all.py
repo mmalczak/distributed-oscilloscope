@@ -387,7 +387,8 @@ class OscilloscopeMethods(unittest.TestCase):
                "Sigma: {:<1.2f}\n".format(sigma)
         ax.text(0.80, 0.95, text, transform=ax.transAxes, fontsize=10,
                 verticalalignment='top', bbox=props)
-        plt.savefig('/home/milosz/Desktop/figures_precision/'+ name + '.png')
+        plt.savefig('/home/milosz/Desktop/figures_precision/'+ name + '.svg',
+                    format='svg')
 
     def save_data(self, data, name):
         mean, var, sigma = self.calculate_statistics(data)
@@ -401,7 +402,7 @@ class OscilloscopeMethods(unittest.TestCase):
     def test_precision(self):
         self.clean_queue()
 
-        number_of_acq = 20000
+        number_of_acq = 200
         """Some data could not arrive so actual number of acquisitions could
         be smaller"""
         self.results.write("Internal trigger on channel 3\n"
@@ -426,26 +427,26 @@ class OscilloscopeMethods(unittest.TestCase):
         self.zmq_rpc.send_RPC('add_channel', oscilloscope_channel,
                               unique_ADC_name_2, ADC_channel, self.GUI_name)
 
-        self.zmq_rpc.send_RPC('set_pre_post_samples', 5, 5, self.GUI_name)
+        self.zmq_rpc.send_RPC('set_pre_post_samples', 50, 50, self.GUI_name)
 
         ADC_trigger_idx = 3
 
-        self.zmq_rpc.send_RPC('set_ADC_parameter', 'channel_offset', -500000,
+        self.zmq_rpc.send_RPC('set_ADC_parameter', 'channel_offset', -290000,
                               unique_ADC_name_1, ADC_trigger_idx)
         """Used for calibration"""
 
         self.zmq_rpc.send_RPC('add_trigger', 'internal', unique_ADC_name_1,
                               ADC_trigger_idx, self.GUI_name)
-        name = 'WRTD_sig_rev'
+        name = 'WRTD_calibration'
         distances = self.measure_zero_cross_distances(number_of_acq)
         self.save_histogram(distances, name)
         self.save_data(distances, name)
 
 
-        self.zmq_rpc.send_RPC('add_trigger', 'internal', unique_ADC_name_2,
-                              ADC_trigger_idx, self.GUI_name)
-        name = 'WRTD_signal_rev_trig_rev'
-        distances = self.measure_zero_cross_distances(number_of_acq)
-        self.save_histogram(distances, name)
-        self.save_data(distances, name)
+#        self.zmq_rpc.send_RPC('add_trigger', 'internal', unique_ADC_name_2,
+#                              ADC_trigger_idx, self.GUI_name)
+#        name = 'WRTD_trig_rev'
+#        distances = self.measure_zero_cross_distances(number_of_acq)
+#        self.save_histogram(distances, name)
+#        self.save_data(distances, name)
 
