@@ -16,7 +16,6 @@ SAMP_FREQ = 1e8
 class GUI_Class:
 
     def __init__(self, ui, zmq_rpc, GUI_name):
-        self.numberOfADC = 0
         self.ui = ui
         self.available_ADCs = []
         self.GUI_name = GUI_name
