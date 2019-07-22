@@ -63,6 +63,10 @@ class TriggerClosure:
         self.__exchange_widgets(None, None)
 
     def remove_trigger(self, remote=False):
+        run_button = self.__GUI.run_stop_acquisition
+        if run_button.is_active():
+            run_button.toggle()
+            run_button.action()
         if self.trigger_exists():
             self.__plot.remove_trigger()
             if not remote:
@@ -71,10 +75,6 @@ class TriggerClosure:
         self.__set_empty_trigger()
         self.__adc_label.setText('')
         self.__int_trig_menu.ADCs_menu.setTitle("Select channel to trigger")
-        run_button = self.__GUI.run_stop_acquisition
-        if run_button.is_active():
-            run_button.toggle()
-            run_button.action()
 
     def __exchange_widgets(self, unique_ADC_name, ADC_idx=0):
         self.__remove_widgets()
