@@ -66,7 +66,7 @@ class DevicesAccess():
         if WRTD_master:
             trig_enable_name = "set_{}_trigger_enable".format(trigger_type)
             trig_enable = getattr(self.__ADC, trig_enable_name)
-            trig_enable(1, count)
+            trig_enable(1, ADC_trigger_idx)
 
         self.__WRTD_master = WRTD_master
         if(WRTD_master):
