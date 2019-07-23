@@ -47,6 +47,12 @@ class ChannelClosure:
             if(self.unique_ADC_name == name):
                 self.remove_channel(remote)
 
+    def set_ADC_available(self, unique_ADC_name):
+        self.__menu.set_ADC_available(unique_ADC_name)
+
+    def set_ADC_unavailable(self, unique_ADC_name):
+        self.__menu.set_ADC_unavailable(unique_ADC_name)
+
     def __set_empty_channel(self):
         self.ADC_channel_idx = None
         self.unique_ADC_name = None
@@ -153,6 +159,12 @@ class ChannelsMenu(QMenuBar):
 
     def unregister_ADC(self, name):
         self.ADCs_menu.removeAction(self.ADCs[name].menuAction())
+
+    def set_ADC_unavailable(self, unique_ADC_name):
+        self.ADCs[unique_ADC_name].setEnabled(False)
+
+    def set_ADC_available(self, unique_ADC_name):
+        self.ADCs[unique_ADC_name].setEnabled(True)
 
     def __select_ADC(self):
         self.selected_ADC = self.sender().text() + '._tcp.local.'

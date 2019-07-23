@@ -26,14 +26,27 @@ class ConnectionManager():
         logger.warning("ADC {} was not available to unregister".format(
                                                             unique_ADC_name))
 
+    def set_ADC_available(self, unique_ADC_name, owner_GUI):
+        for GUI_name, GUI_ in self.__GUIs.items():
+            if not GUI_name is owner_GUI:
+                GUI_.set_ADC_available(unique_ADC_name)
+
+    def set_ADC_unavailable(self, unique_ADC_name, owner_GUI):
+        for GUI_name, GUI_ in self.__GUIs.items():
+            if not GUI_name is owner_GUI:
+                GUI_.set_ADC_unavailable(unique_ADC_name)
+
     def register_GUI(self, GUI_name, GUI_addr, GUI_port):
-        GUI_ = GUI(GUI_name, GUI_addr, GUI_port)
+        GUI_ = GUI(GUI_name, GUI_addr, GUI_port, self)
         self.__GUIs.update({GUI_name: GUI_})
         for unique_ADC_name, ADC in self.__available_ADCs.items():
             GUI_.register_ADC(unique_ADC_name, ADC.number_of_channels)
+            if not ADC.is_available:
+                GUI_.set_ADC_unavailable(unique_ADC_name)
         logger.info("GUI {} registered".format(GUI_name))
 
     def unregister_GUI(self, GUI_name):
+        self.__GUIs[GUI_name].remove_all()
         del self.__GUIs[GUI_name]
         logger.info("GUI {} unregistered".format(GUI_name))
 

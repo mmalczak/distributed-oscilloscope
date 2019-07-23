@@ -18,7 +18,7 @@ class HorizontalSettingsError(Exception):
 
 class GUI():
 
-    def __init__(self, name, GUI_addr, GUI_port):
+    def __init__(self, name, GUI_addr, GUI_port, connection_manager):
         self.name = name
         self.__channels = {}
         self.__trigger = None
@@ -26,7 +26,20 @@ class GUI():
         self.__GUI_addr = GUI_addr
         self.__GUI_port = GUI_port
         self.__run = False
+        self.connection_manager = connection_manager
         self.__GUI_publisher = Publisher(self.__GUI_addr, self.__GUI_port)
+
+    def remove_all(self):
+        print("Remove all")
+        try:
+            self.remove_trigger()
+        except Exception as e:
+            print(e)
+        for count in range(4):
+            try:
+                self.remove_channel(count)
+            except Exception as e:
+                print(e)
 
     """TODO number of channels shouldn't be sent here"""
     def register_ADC(self, unique_ADC_name, number_of_channels):
@@ -47,6 +60,15 @@ class GUI():
         if self.__trigger:
             self.remove_trigger()
 
+    def set_ADC_available(self, unique_ADC_name):
+        message = {'function_name': 'set_ADC_available',
+                   'args': [unique_ADC_name]}
+        self.__GUI_publisher.send_message(message)
+
+    def set_ADC_unavailable(self, unique_ADC_name):
+        message = {'function_name': 'set_ADC_unavailable',
+                   'args': [unique_ADC_name]}
+        self.__GUI_publisher.send_message(message)
 
     def contains_ADC(self, unique_ADC_name):
         for ADC in self.__ADCs_used:
@@ -97,12 +119,21 @@ class GUI():
         for channel_idx, channel in self.__channels.items():
             if not(channel.ADC in self.__ADCs_used):
                 self.__ADCs_used.append(channel.ADC)
+        if self.__trigger:
+            if self.__trigger.ADC:
+                if not(self.__trigger.ADC in self.__ADCs_used):
+                    self.__ADCs_used.append(self.__trigger.ADC)
+
         for ADC in self.__ADCs_used:
             if not ADC in pr_ADCs_used:
                 ADC.set_GUI(self)
+                ADC.is_available = False
+                self.connection_manager.set_ADC_unavailable(ADC.unique_ADC_name, self.name)
         for ADC in pr_ADCs_used:
             if not ADC in self.__ADCs_used:
                 ADC.remove_GUI()
+                ADC.is_available = True
+                self.connection_manager.set_ADC_available(ADC.unique_ADC_name, self.name)
 
     def set_pre_post_samples(self, presamples, postsamples):
         for ADC in self.__ADCs_used:

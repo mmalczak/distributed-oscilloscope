@@ -74,6 +74,18 @@ class GUI_Class:
             self.triggers[count].register_ADC(unique_ADC_name) 
         return True
 
+    def set_ADC_unavailable(self, unique_ADC_name):
+        for count in range(0, self.number_of_GUI_channels):
+            self.channels[count].set_ADC_unavailable(unique_ADC_name)
+        for count in range(0, self.number_of_GUI_triggers):
+            self.triggers[count].set_ADC_unavailable(unique_ADC_name)
+
+    def set_ADC_available(self, unique_ADC_name):
+        for count in range(0, self.number_of_GUI_channels):
+            self.channels[count].set_ADC_available(unique_ADC_name)
+        for count in range(0, self.number_of_GUI_triggers):
+            self.triggers[count].set_ADC_available(unique_ADC_name)
+
     def unregister_ADC(self, unique_ADC_name):
         self.available_ADCs.remove(unique_ADC_name)
         for count in range(0, self.number_of_GUI_channels):

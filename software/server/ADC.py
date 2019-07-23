@@ -32,6 +32,7 @@ class ADC:
         conf = self.send_RPC('get_current_adc_conf')
         self.number_of_channels = conf['board_conf']['n_chan']
         self.__GUI = None
+        self.is_available = True
 
         for count in range(0, conf['board_conf']['n_chan']):
             channel = Channel(self, count)

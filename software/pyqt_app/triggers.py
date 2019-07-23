@@ -61,6 +61,12 @@ class TriggerClosure:
             if(self.unique_ADC_name == name):
                 self.remove_trigger(remote)
 
+    def set_ADC_available(self, unique_ADC_name):
+        self.__ext_trig_menu.set_ADC_available(unique_ADC_name)
+
+    def set_ADC_unavailable(self, unique_ADC_name):
+        self.__ext_trig_menu.set_ADC_unavailable(unique_ADC_name)
+
     def update_available_triggers_list(self):
         self.__int_trig_menu.update_available_triggers_list()
         #self.__ext_trig_menu.update_available_triggers_list()
@@ -257,6 +263,11 @@ class ExtTriggersMenu(TriggersMenu):
         self.ADCs[name] = ADC
         ADC.triggered.connect(self.select_trigger)
 
+    def set_ADC_unavailable(self, unique_ADC_name):
+        self.ADCs[unique_ADC_name].setEnabled(False)
+
+    def set_ADC_available(self, unique_ADC_name):
+        self.ADCs[unique_ADC_name].setEnabled(True)
 
     def select_trigger(self):
         self.selected_ADC = self.sender().text() + '._tcp.local.'
