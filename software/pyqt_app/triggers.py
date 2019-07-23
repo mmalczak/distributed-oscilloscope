@@ -38,6 +38,14 @@ class TriggerClosure:
         self.__int_trig_menu = None
         self.__ext_trig_menu = None
         self.__set_empty_trigger()
+
+        self.__int_trig_menu = IntTriggersMenu(self, self.__GUI_trigger_idx,
+                                               self.channels)
+        self.__ext_trig_menu = ExtTriggersMenu(self, self.__GUI_trigger_idx,
+                                               self.__adc_label)
+        self.__trig_in_layout.set_menu(self.__ext_trig_menu)
+        self.__trig_set_layout.set_menu(self.__int_trig_menu)
+
         self.set_menu()
         """Adds widgets in the GUI, when unique_ADC_name==None,
         widgets are disabled"""
@@ -47,19 +55,12 @@ class TriggerClosure:
         self.__ext_trig_menu.update_available_triggers_list()
 
     def set_menu(self):
-        self.__int_trig_menu = IntTriggersMenu(self, self.__GUI_trigger_idx,
-                                               self.channels)
-
-        self.__ext_trig_menu = ExtTriggersMenu(self, self.__GUI_trigger_idx,
-                                               self.__adc_label)
         if(self.trigger_type == 'internal'):
             self.__int_trig_menu.setEnabled(True)
             self.__ext_trig_menu.setEnabled(False)
         else:
             self.__int_trig_menu.setEnabled(False)
             self.__ext_trig_menu.setEnabled(True)
-        self.__trig_in_layout.set_menu(self.__ext_trig_menu)
-        self.__trig_set_layout.set_menu(self.__int_trig_menu)
         self.__exchange_widgets(None, None)
 
     def remove_trigger(self, remote=False):
