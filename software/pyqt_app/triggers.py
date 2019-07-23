@@ -50,6 +50,17 @@ class TriggerClosure:
         """Adds widgets in the GUI, when unique_ADC_name==None,
         widgets are disabled"""
 
+
+    def register_ADC(self, name):
+        self.__ext_trig_menu.register_ADC(name)
+
+
+    def unregister_ADC(self, name):
+        self.__ext_trig_menu.unregister_ADC(name)
+        if self.trigger_exists():
+            if(self.unique_ADC_name == name):
+                self.remove_trigger(remote)
+
     def update_available_triggers_list(self):
         self.__int_trig_menu.update_available_triggers_list()
         self.__ext_trig_menu.update_available_triggers_list()
@@ -231,21 +242,22 @@ class ExtTriggersMenu(TriggersMenu):
         super().__init__(trigger_closure, GUI_trigger_idx)
         self.ADCs_menu = self.addMenu("Select external trigger")
         self.__adc_label = adc_label
-
-    def update_available_triggers_list(self):
-        self.ADCs_menu.clear()
+        self.ADCs = {}
         none = self.ADCs_menu.addAction("None")
         none.triggered.connect(self.trigger_closure.remove_trigger)
-        for ADC_name in self.trigger_closure.available_ADCs:
-            ADC = self.ADCs_menu.addAction(ADC_name)
-            self.ADCs[ADC_name] = ADC
-            ADC.triggered.connect(self.select_trigger)
 
     def unregister_ADC(self, name):
         self.ADCs_menu.removeAction(self.ADCs[name].menuAction())
 
+    def register_ADC(self, name):
+        display_name = name.replace('._tcp.local.', '')
+        ADC = self.ADCs_menu.addAction(display_name)
+        self.ADCs[name] = ADC
+        ADC.triggered.connect(self.select_trigger)
+
+
     def select_trigger(self):
-        self.selected_ADC = self.sender().text()
+        self.selected_ADC = self.sender().text() + '._tcp.local.'
         self.add_trigger()
 
     def add_trigger(self):

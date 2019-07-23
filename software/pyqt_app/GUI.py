@@ -71,7 +71,7 @@ class GUI_Class:
             self.channels[count].register_ADC(unique_ADC_name,
                                                    number_of_channels)
         for count in range(0, self.number_of_GUI_triggers):
-            self.triggers[count].update_available_triggers_list()
+            self.triggers[count].register_ADC(unique_ADC_name) 
         return True
 
     def unregister_ADC(self, unique_ADC_name):
