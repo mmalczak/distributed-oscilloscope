@@ -27,14 +27,14 @@ class DevicesAccess():
         self.__ADC.set_external_trigger_enable(0, 0)
         if(not self.__WRTD_master):
             self.__ADC.set_presamples(delay_samples)
-        self.__WRTD.add_rule_mult_src('dist_triggers', 5)
-        self.__WRTD.set_rule_mult_src('dist_triggers', 0, 'LC-I', 'LAN1', 5)
+        self.__WRTD.add_rule_mult_src('dist_triggers', 6)
+        self.__WRTD.set_rule_mult_src('dist_triggers', 0, 'LC-I', 'LAN1', 6)
 
         self.__WRTD.add_rule('receive_trigger')
         self.__WRTD.set_rule('receive_trigger', 600e6, 'LAN1', 'LC-O1')
 
         self.__WRTD.enable_rule('receive_trigger')
-        self.__WRTD.disable_rule_mult_src('dist_triggers', 5)
+        self.__WRTD.disable_rule_mult_src('dist_triggers', 6)
 
         self.__ADC.set_number_of_shots(NSHOT)
         buf_size = self.__get_required_buffer_size()
@@ -74,13 +74,13 @@ class DevicesAccess():
             buf_size = self.__get_required_buffer_size()
             self.__ADC.set_buffer(buf_size)
             self.__WRTD.disable_rule('receive_trigger')
-            self.__WRTD.enable_rule_mult_src('dist_triggers', 5)
+            self.__WRTD.enable_rule_mult_src('dist_triggers', 6)
 
         else:
             self.__ADC.set_presamples(self.__required_presamples + delay_samples)
             buf_size = self.__get_required_buffer_size()
             self.__ADC.set_buffer(buf_size)
-            self.__WRTD.disable_rule_mult_src('dist_triggers', 5)
+            self.__WRTD.disable_rule_mult_src('dist_triggers', 6)
             self.__WRTD.enable_rule('receive_trigger')
 
     def configure_adc_parameter(self, function_name, args):
