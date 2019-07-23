@@ -215,7 +215,8 @@ class IntTriggersMenu(TriggersMenu):
                 chan = self.ADCs_menu.addAction("Channel: " + channel_disp)
                 chan.triggered.connect(self.select_trigger)
                 self.actions.append(chan)
-        if self.trigger_closure.trigger_exists():
+        if self.trigger_closure.trigger_exists() and\
+                self.trigger_closure.trigger_type == 'internal':
             self.add_trigger()
             """this is done in case the ADC connected to the channel on
             which I trigger changes """
