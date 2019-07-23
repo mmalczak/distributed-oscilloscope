@@ -43,8 +43,6 @@ class ConnectionManager():
                 GUI.stop_acquisition_ADCs_used()
 
     def get_ADC(self, unique_ADC_name):
-        print(self.__available_ADCs)
-        print(unique_ADC_name)
         return self.__available_ADCs[unique_ADC_name]
 
     def get_GUI(self, GUI_name):
