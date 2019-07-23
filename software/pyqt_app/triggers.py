@@ -63,7 +63,7 @@ class TriggerClosure:
 
     def update_available_triggers_list(self):
         self.__int_trig_menu.update_available_triggers_list()
-        self.__ext_trig_menu.update_available_triggers_list()
+        #self.__ext_trig_menu.update_available_triggers_list()
 
     def set_menu(self):
         if(self.trigger_type == 'internal'):
@@ -248,7 +248,8 @@ class ExtTriggersMenu(TriggersMenu):
         none.triggered.connect(self.trigger_closure.remove_trigger)
 
     def unregister_ADC(self, name):
-        self.ADCs_menu.removeAction(self.ADCs[name].menuAction())
+        action = self.ADCs[name]
+        self.ADCs_menu.removeAction(action)
 
     def register_ADC(self, name):
         display_name = name.replace('._tcp.local.', '')

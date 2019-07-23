@@ -79,7 +79,8 @@ class GUI_Class:
         for count in range(0, self.number_of_GUI_channels):
             self.channels[count].unregister_ADC(unique_ADC_name, True)
         for count in range(0, self.number_of_GUI_triggers):
-            self.triggers[count].remove_trigger(True)
+            #self.triggers[count].remove_trigger(True)
+            self.triggers[count].unregister_ADC(unique_ADC_name)
             self.triggers[count].update_available_triggers_list()
         return True
 
