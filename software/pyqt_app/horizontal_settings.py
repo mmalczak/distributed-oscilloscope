@@ -2,7 +2,7 @@ from parent_classes import *
 import sys
 sys.path.append('../')
 from general.zmq_rpc import *
-from PyQt5.QtWidgets import QHBoxLayout
+from PyQt5.QtWidgets import QVBoxLayout
 
 
 class Percentage(Slider):
@@ -23,7 +23,7 @@ class Percentage(Slider):
 
 class Time(Box):
     def __init__(self, zmq_rpc, GUI_name, GUI, acq_set):
-        super().__init__(0, "No_ADC", "Acq Time[us]")
+        super().__init__(0, "No_ADC", "Acquisition Time[us]")
         self.box.setMinimum(1)
         self.box.setMaximum(1000)
         """TODO check how many pre and postsamples maximum"""
@@ -37,7 +37,7 @@ class Time(Box):
         self.acq_set.set_acq_set(time=time)
 
 
-class AcquisitionSettings(QHBoxLayout):
+class AcquisitionSettings(QVBoxLayout):
     def __init__(self, zmq_rpc, GUI_name, GUI):
         super().__init__()
         self.zmq_rpc = zmq_rpc
