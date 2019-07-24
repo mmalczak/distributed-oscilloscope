@@ -357,22 +357,25 @@ class TriggerPolarity(Menu):
         self.polarity = self.addMenu("Polarity")
         self.polarity.setTitle("Polarity")
         polarity_0 = self.polarity.addAction("0")
-        polarity_0.setText("0")
+        polarity_0.setText('positive')
         polarity_0.triggered.connect(self.action)
         polarity_1 = self.polarity.addAction("1")
-        polarity_1.setText("1")
+        polarity_1.setText('negative')
         polarity_1.triggered.connect(self.action)
+        self.polarity_num_map = {'positive':0, 'negative':1}
+        self.num_polarity_map = {0:'positive', 1:'negative'}
 
     def action(self):
         polarity_str = self.sender().text()
-        polarity = int(polarity_str)
         self.__zmq_rpc.send_RPC('set_ADC_parameter',
-                                self.type + '_trigger_polarity', polarity,
+                                self.type + '_trigger_polarity',
+                                self.polarity_num_map[polarity_str],
                                 self.unique_ADC_name, self.idx)
         self.__GUI.update_GUI_params()
 
     def set_value(self, value):
-        self.polarity.setTitle("Polarity" + str(value))
+        polarity = self.num_polarity_map[value]
+        self.polarity.setTitle("Polarity " + polarity)
 
 
 class TriggerDelay(Box):
