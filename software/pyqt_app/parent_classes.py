@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import QSpinBox
 from PyQt5.QtWidgets import QLabel
 from colors import Colors
 from PyQt5.QtCore import Qt
-
+from PyQt5.QtWidgets import QSlider
 
 class Button(QtGui.QPushButton):
 
@@ -44,6 +44,42 @@ class Menu(QMenuBar):
         is no enabled therefore the widget is disabled"""
         if(unique_ADC_name is None):
             self.setEnabled(False)
+
+
+
+class Slider(QtGui.QWidget):
+
+    def __init__(self, idx, unique_ADC_name, slider_name, layout='horizontal'):
+        super().__init__()
+        self.idx = idx
+        self.unique_ADC_name = unique_ADC_name
+        if layout == "horizontal":
+            self.layout = QtGui.QHBoxLayout()
+        else:
+            self.layout = QtGui.QVBoxLayout()
+        self.layout.setContentsMargins(0, 0, 0, 0)
+        self.layout.setSpacing(0)
+        self.slider = QSlider(Qt.Horizontal)
+        self.label = QLabel(slider_name)
+        self.layout.addWidget(self.slider)
+        self.layout.addWidget(self.label)
+        self.setLayout(self.layout)
+        self.slider.valueChanged.connect(self.value_change)
+        """If unique_ADC_name is None it means that the certain channel
+        is no enabled therefore the widget is disabled"""
+        if(unique_ADC_name is None):
+            self.setEnabled(False)
+
+
+    def value_change(self):
+        pass
+
+    def set_value(self, value):
+        self.slider.setValue(value)
+
+    def get_value(self):
+        return self.slider.value()
+
 
 
 

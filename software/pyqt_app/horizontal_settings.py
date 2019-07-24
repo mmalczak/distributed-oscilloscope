@@ -4,11 +4,12 @@ sys.path.append('../')
 from general.zmq_rpc import *
 from PyQt5.QtWidgets import QHBoxLayout
 
-class Percentage(Box):
+
+class Percentage(Slider):
     def __init__(self, zmq_rpc, GUI_name, GUI, acq_set):
         super().__init__(0, "No_ADC", "Percentage")
-        self.box.setMinimum(0)
-        self.box.setMaximum(99)
+        self.slider.setMinimum(0)
+        self.slider.setMaximum(99)
         """TODO check how many pre and postsamples maximum"""
         self.zmq_rpc = zmq_rpc
         self.GUI_name = GUI_name
@@ -16,7 +17,7 @@ class Percentage(Box):
         self.acq_set = acq_set
 
     def value_change(self):
-        percentage = self.box.value()
+        percentage = self.slider.value()
         self.acq_set.set_acq_set(percentage=percentage)
 
 
