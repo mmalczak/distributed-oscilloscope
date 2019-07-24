@@ -116,7 +116,6 @@ class ChannelClosure:
         self.__adc_label.setText(display_ADC_name)
         self.__channel_label.setText('Channel ' + str(self.ADC_channel_idx))
 
-
     def __remove_widgets(self):
         self.__range_menu.deleteLater()
         self.__termination_menu.deleteLater()
