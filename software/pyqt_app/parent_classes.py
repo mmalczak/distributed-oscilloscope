@@ -115,23 +115,3 @@ class Box(QtGui.QWidget):
 
     def get_value(self):
         return self.box.value()
-
-
-class TriggerPolarity(Menu):
-
-    def __init__(self, idx, unique_ADC_name):
-        super().__init__(idx, unique_ADC_name)
-        self.polarity = self.addMenu("Polarity")
-        self.polarity.setTitle("Polarity")
-        polarity_0 = self.polarity.addAction("0")
-        polarity_0.setText("0")
-        polarity_0.triggered.connect(self.action)
-        polarity_1 = self.polarity.addAction("1")
-        polarity_1.setText("1")
-        polarity_1.triggered.connect(self.action)
-
-    def set_value(self, value):
-        self.polarity.setTitle("Polarity" + str(value))
-
-    def action(self):
-        pass

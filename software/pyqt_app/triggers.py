@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import QLabel
 from PyQt5.QtCore import Qt
 from parent_classes import Box
 from parent_classes import Button
-from parent_classes import TriggerPolarity
+from parent_classes import Menu
 
 
 class TriggerClosure:
@@ -347,13 +347,21 @@ class TriggerEnableButton(Button):
         self.__GUI.update_GUI_params()
 
 
-class TriggerPolarity(TriggerPolarity):
+class TriggerPolarity(Menu):
 
     def __init__(self, idx, unique_ADC_name, zmq_rpc, type, GUI):
         super().__init__(idx, unique_ADC_name)
         self.__zmq_rpc = zmq_rpc
         self.type = type
         self.__GUI = GUI
+        self.polarity = self.addMenu("Polarity")
+        self.polarity.setTitle("Polarity")
+        polarity_0 = self.polarity.addAction("0")
+        polarity_0.setText("0")
+        polarity_0.triggered.connect(self.action)
+        polarity_1 = self.polarity.addAction("1")
+        polarity_1.setText("1")
+        polarity_1.triggered.connect(self.action)
 
     def action(self):
         polarity_str = self.sender().text()
@@ -362,6 +370,9 @@ class TriggerPolarity(TriggerPolarity):
                                 self.type + '_trigger_polarity', polarity,
                                 self.unique_ADC_name, self.idx)
         self.__GUI.update_GUI_params()
+
+    def set_value(self, value):
+        self.polarity.setTitle("Polarity" + str(value))
 
 
 class TriggerDelay(Box):
