@@ -7,6 +7,7 @@ from colors import Colors
 from parent_classes import Button
 from parent_classes import Menu
 from parent_classes import Box
+from parent_classes import Dial_Box
 DBG = False
 
 
@@ -263,7 +264,7 @@ class ChannelTermination(Menu):
         self.termination.setTitle("Term. " + term)
 
 
-class ChannelOffset(Box):
+class ChannelOffset(Dial_Box):
 
     def __init__(self, idx, unique_ADC_name, zmq_rpc, GUI):
         super().__init__(idx, unique_ADC_name, "Offset uV", 'vertical')
@@ -272,8 +273,15 @@ class ChannelOffset(Box):
         self.box.setMinimum(-5000000)
         self.box.setMaximum(5000000)
 
-    def value_change(self):
-        offset = self.box.value()
+    def value_change_dial(self):
+        value = self.dial.value()
+        self.value_change(value)
+
+    def value_change_box(self):
+        value = self.box.value()
+        self.value_change(value)
+
+    def value_change(self, offset):
         try:
             rpc = self.__zmq_rpc
             rpc.send_RPC('set_ADC_parameter', 'channel_offset', offset,
