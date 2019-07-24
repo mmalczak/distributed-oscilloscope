@@ -111,8 +111,8 @@ class TriggerClosure:
             self.__zmq_rpc.send_RPC('add_trigger', 'external', unique_ADC_name,
                                     0, self.__GUI_name)
             self.__GUI.update_GUI_params()
-        display_name = unique_ADC_name.replace('._tcp.local.', '')
-        self.__adc_label.setText(display_name)
+            display_name = unique_ADC_name.replace('._tcp.local.', '')
+            self.__adc_label.setText(display_name)
 
     def trigger_exists(self):
         return self.unique_ADC_name is not None
@@ -164,8 +164,9 @@ class TriggerClosure:
             pass
         else:
             self.trigger_type = type
+            if self.trigger_exists():
+                self.remove_trigger()
             self.set_menu()
-            self.update_available_triggers_list()
 
 
 class TriggerTypeMenu(QMenuBar):
