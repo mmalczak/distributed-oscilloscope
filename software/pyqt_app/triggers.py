@@ -19,7 +19,7 @@ class TriggerClosure:
         self.__delay_box = None
         self.__threshold_box = None
 
-        self.__adc_label = QLabel("")
+        self.__adc_label = QLabel('')
         self.__adc_label.setAlignment(Qt.AlignCenter | Qt.AlignVCenter)
         self.trigger_type = 'internal'  # default one
         self.__GUI_trigger_idx = GUI_trigger_idx
@@ -41,8 +41,7 @@ class TriggerClosure:
 
         self.__int_trig_menu = IntTriggersMenu(self, self.__GUI_trigger_idx,
                                                self.channels)
-        self.__ext_trig_menu = ExtTriggersMenu(self, self.__GUI_trigger_idx,
-                                               self.__adc_label)
+        self.__ext_trig_menu = ExtTriggersMenu(self, self.__GUI_trigger_idx)
         self.__trig_in_layout.set_menu(self.__ext_trig_menu)
         self.__trig_set_layout.set_menu(self.__int_trig_menu)
 
@@ -112,6 +111,8 @@ class TriggerClosure:
             self.__zmq_rpc.send_RPC('add_trigger', 'external', unique_ADC_name,
                                     0, self.__GUI_name)
             self.__GUI.update_GUI_params()
+        display_name = unique_ADC_name.replace('._tcp.local.', '')
+        self.__adc_label.setText(display_name)
 
     def trigger_exists(self):
         return self.unique_ADC_name is not None
@@ -245,10 +246,9 @@ class IntTriggersMenu(TriggersMenu):
 
 class ExtTriggersMenu(TriggersMenu):
 
-    def __init__(self, trigger_closure, GUI_trigger_idx, adc_label):
+    def __init__(self, trigger_closure, GUI_trigger_idx):
         super().__init__(trigger_closure, GUI_trigger_idx)
         self.ADCs_menu = self.addMenu("Select external trigger")
-        self.__adc_label = adc_label
         self.ADCs = {}
         none = self.ADCs_menu.addAction("None")
         none.triggered.connect(self.trigger_closure.remove_trigger)
@@ -274,8 +274,6 @@ class ExtTriggersMenu(TriggersMenu):
         self.add_trigger()
 
     def add_trigger(self):
-        display_name = self.selected_ADC.replace('._tcp.local.', '')
-        self.__adc_label.setText(display_name)
         self.trigger_closure.set_trigger(self.selected_ADC, 0, None)
 
 
