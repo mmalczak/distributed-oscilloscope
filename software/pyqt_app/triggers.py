@@ -20,12 +20,15 @@ class TriggerClosure:
         self.__threshold_box = None
 
         self.__adc_label = QLabel('')
+        self.__channel_label = QLabel('')
         self.__adc_label.setAlignment(Qt.AlignCenter | Qt.AlignVCenter)
+        self.__channel_label.setAlignment(Qt.AlignCenter | Qt.AlignVCenter)
         self.trigger_type = 'internal'  # default one
         self.__GUI_trigger_idx = GUI_trigger_idx
         self.menu_type = TriggerTypeMenu(self)
         self.__trig_in_layout = TriggerInputsLayout(self.__adc_label)
-        self.__trig_set_layout = TriggerSettingsLayout(self.menu_type)
+        self.__trig_set_layout = TriggerSettingsLayout(self.menu_type,
+                                                       self.__channel_label)
         self.__plot = plot
         self.__GUI_name = GUI_name
         self.__GUI = GUI
@@ -91,6 +94,7 @@ class TriggerClosure:
         self.__remove_widgets()
         self.__set_empty_trigger()
         self.__adc_label.setText('')
+        self.__channel_label.setText('')
         self.__int_trig_menu.ADCs_menu.setTitle("Select channel to trigger")
 
     def __exchange_widgets(self, unique_ADC_name, ADC_idx=0):
@@ -107,6 +111,10 @@ class TriggerClosure:
             self.__zmq_rpc.send_RPC('add_trigger', 'internal', unique_ADC_name,
                                     ADC_channel_idx, self.__GUI_name)
             self.__GUI.update_GUI_params()
+            display_name = "Channel {}".format(GUI_channel_idx + 1)
+            """ +1 beacause when displaying the numeration is from 1, not
+            from 0"""
+            self.__channel_label.setText(display_name)
         else:
             self.__zmq_rpc.send_RPC('add_trigger', 'external', unique_ADC_name,
                                     0, self.__GUI_name)
@@ -297,10 +305,11 @@ class TriggerInputsLayout(QVBoxLayout):
 
 class TriggerSettingsLayout(QVBoxLayout):
 
-    def __init__(self, menu_type):
+    def __init__(self, menu_type, channel_label):
         super().__init__()
         self.menu = None
         self.menu_type = menu_type
+        self.__channel_label = channel_label
         self.addWidget(self.menu_type)
 
     def set_menu(self, menu):
@@ -308,6 +317,7 @@ class TriggerSettingsLayout(QVBoxLayout):
             self.menu.deleteLater()
         self.menu = menu
         self.addWidget(self.menu)
+        self.addWidget(self.__channel_label)
 
 
 class TriggerThreshold(Box):
