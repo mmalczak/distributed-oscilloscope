@@ -1,6 +1,7 @@
 from PyQt5.QtWidgets import QVBoxLayout
 from PyQt5.QtWidgets import QMenuBar
 from PyQt5.QtWidgets import QLabel
+from PyQt5.QtGui import QFrame
 from PyQt5.QtCore import Qt
 from PyQt5.QtCore import QRect
 from colors import Colors
@@ -21,11 +22,19 @@ class ChannelClosure:
         self.__channel_label.setAlignment(Qt.AlignCenter | Qt.AlignVCenter)
         self.__menu = ChannelsMenu(self, GUI_channel_idx, GUI)
         self.GUI_channel_idx = GUI_channel_idx
-        self.__chan_in_layout = ChannelInputsLayout(self.__menu, self.__adc_label,
-                                             self.__channel_label)
-        self.__chan_set_layout = ChannelSettingsLayout(GUI_channel_idx)
+        self.__chan_in_layout = ChannelInputsLayout(self.__menu,
+                                                    self.__adc_label,
+                                                    self.__channel_label)
         channel_inputs_layout.addLayout(self.__chan_in_layout)
-        ver_set_layout.addLayout(self.__chan_set_layout)
+
+        self.__chan_set_frame = QFrame()
+        self.__chan_set_layout = ChannelSettingsLayout(GUI_channel_idx)
+        self.__chan_set_frame.setLayout(self.__chan_set_layout)
+        color = Colors().get_greyed_color(GUI_channel_idx)
+        self.__chan_set_frame.setStyleSheet("background-color: rgb" + color +
+                                            ";")
+        ver_set_layout.addWidget(self.__chan_set_frame)
+
         self.__plot = plot
         self.__GUI_name = GUI_name
         self.__zmq_rpc = zmq_rpc
@@ -194,6 +203,8 @@ class ChannelSettingsLayout(QVBoxLayout):
 
     def __init__(self, GUI_channel_idx):
         super().__init__()
+        self.setSpacing(10)
+        self.setContentsMargins(3,3,3,3)
         GUI_chan_label = ChannelLabel(GUI_channel_idx)
         self.addWidget(GUI_chan_label)
 
