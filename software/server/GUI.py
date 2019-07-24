@@ -30,16 +30,11 @@ class GUI():
         self.__GUI_publisher = Publisher(self.__GUI_addr, self.__GUI_port)
 
     def remove_all(self):
-        print("Remove all")
-        try:
+        if self.__trigger:
             self.remove_trigger()
-        except Exception as e:
-            print(e)
         for count in range(4):
-            try:
+            if count in self.__channels:
                 self.remove_channel(count)
-            except Exception as e:
-                print(e)
 
     """TODO number of channels shouldn't be sent here"""
     def register_ADC(self, unique_ADC_name, number_of_channels):
