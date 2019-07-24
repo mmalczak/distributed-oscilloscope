@@ -1,24 +1,31 @@
-from parent_classes import Slider
+from parent_classes import Slider_Box
 from parent_classes import Box
 import sys
 sys.path.append('../')
 from PyQt5.QtWidgets import QVBoxLayout
 
 
-class Percentage(Slider):
+class Percentage(Slider_Box):
     def __init__(self, zmq_rpc, GUI_name, GUI, acq_set):
-        super().__init__(0, "No_ADC", "Percentage")
+        super().__init__(0, "No_ADC", "Trigger Position[%]")
         self.slider.setMinimum(0)
+        self.box.setMinimum(0)
         self.slider.setMaximum(99)
+        self.box.setMaximum(99)
         """TODO check how many pre and postsamples maximum"""
         self.zmq_rpc = zmq_rpc
         self.GUI_name = GUI_name
         self.GUI = GUI
         self.acq_set = acq_set
 
-    def value_change(self):
+    def value_change_slider(self):
         percentage = self.slider.value()
         self.acq_set.set_acq_set(percentage=percentage)
+
+    def value_change_box(self):
+        percentage = self.box.value()
+        self.acq_set.set_acq_set(percentage=percentage)
+
 
 
 class Time(Box):

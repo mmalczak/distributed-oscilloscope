@@ -47,7 +47,7 @@ class Menu(QMenuBar):
 
 
 
-class Slider(QtGui.QWidget):
+class Slider_Box(QtGui.QWidget):
 
     def __init__(self, idx, unique_ADC_name, slider_name, layout='horizontal'):
         super().__init__()
@@ -61,21 +61,27 @@ class Slider(QtGui.QWidget):
         self.layout.setSpacing(0)
         self.slider = QSlider(Qt.Horizontal)
         self.label = QLabel(slider_name)
+        self.box = QSpinBox()
         self.layout.addWidget(self.slider)
         self.layout.addWidget(self.label)
+        self.layout.addWidget(self.box)
         self.setLayout(self.layout)
-        self.slider.valueChanged.connect(self.value_change)
+        self.slider.valueChanged.connect(self.value_change_slider)
+        self.box.valueChanged.connect(self.value_change_box)
         """If unique_ADC_name is None it means that the certain channel
         is no enabled therefore the widget is disabled"""
         if(unique_ADC_name is None):
             self.setEnabled(False)
 
+    def value_change_slider(self):
+        pass
 
-    def value_change(self):
+    def value_change_box(self):
         pass
 
     def set_value(self, value):
         self.slider.setValue(value)
+        self.box.setValue(value)
 
     def get_value(self):
         return self.slider.value()
@@ -100,7 +106,8 @@ class Box(QtGui.QWidget):
         self.layout.addWidget(self.box)
         self.layout.addWidget(self.label)
         self.setLayout(self.layout)
-        self.box.editingFinished.connect(self.value_change)
+        self.box.valueChanged.connect(self.value_change)
+        #self.box.editingFinished.connect(self.value_change)
         """If unique_ADC_name is None it means that the certain channel
         is no enabled therefore the widget is disabled"""
         if(unique_ADC_name is None):
