@@ -1,7 +1,7 @@
-from parent_classes import *
+from parent_classes import Slider
+from parent_classes import Box
 import sys
 sys.path.append('../')
-from general.zmq_rpc import *
 from PyQt5.QtWidgets import QVBoxLayout
 
 
