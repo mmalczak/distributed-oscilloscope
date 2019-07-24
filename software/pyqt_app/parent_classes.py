@@ -6,6 +6,7 @@ from colors import Colors
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QSlider
 
+
 class Button(QtGui.QPushButton):
 
     def __init__(self, button_name, idx, unique_ADC_name):
@@ -18,7 +19,6 @@ class Button(QtGui.QPushButton):
         is no enabled therefore the widget is disabled"""
         if(unique_ADC_name is None):
             self.setEnabled(False)
-
 
     def action(self):
         pass
@@ -44,7 +44,6 @@ class Menu(QMenuBar):
         is no enabled therefore the widget is disabled"""
         if(unique_ADC_name is None):
             self.setEnabled(False)
-
 
 
 class Slider_Box(QtGui.QWidget):
@@ -87,8 +86,6 @@ class Slider_Box(QtGui.QWidget):
         return self.slider.value()
 
 
-
-
 class Box(QtGui.QWidget):
 
     def __init__(self, idx, unique_ADC_name, box_name, layout='horizontal'):
@@ -112,7 +109,6 @@ class Box(QtGui.QWidget):
         is no enabled therefore the widget is disabled"""
         if(unique_ADC_name is None):
             self.setEnabled(False)
-
 
     def value_change(self):
         pass
