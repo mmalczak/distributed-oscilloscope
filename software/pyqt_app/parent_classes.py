@@ -58,7 +58,7 @@ class Slider_Box(QtGui.QWidget):
         else:
             self.layout = QtGui.QVBoxLayout()
         self.layout.setContentsMargins(0, 0, 0, 0)
-        self.layout.setSpacing(0)
+        self.layout.setSpacing(2)
         self.slider = QSlider(Qt.Horizontal)
         self.label = QLabel(slider_name)
         self.box = QSpinBox()
@@ -100,7 +100,7 @@ class Box(QtGui.QWidget):
         else:
             self.layout = QtGui.QVBoxLayout()
         self.layout.setContentsMargins(0, 0, 0, 0)
-        self.layout.setSpacing(0)
+        self.layout.setSpacing(2)
         self.box = QSpinBox()
         self.label = QLabel(box_name)
         self.layout.addWidget(self.box)
