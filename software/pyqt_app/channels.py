@@ -286,6 +286,7 @@ class ChannelOffset(Dial_Box):
         self.dial.setMinimum(-5000)
         self.box.setMaximum(5000)
         self.dial.setMaximum(5000)
+        self.dial.setWrapping(False)
 
     def value_change_dial(self):
         value = self.dial.value()*1000
