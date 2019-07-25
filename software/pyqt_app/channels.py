@@ -215,7 +215,7 @@ class ChannelRange(Menu):
         super().__init__(idx, unique_ADC_name)
         self.__zmq_rpc = zmq_rpc
         self.__GUI = GUI
-        self.range = self.addMenu("Range")
+        self.range = self.addMenu(" Range")
         range_10V = self.range.addAction("10V")
         range_10V.setText("10V")
         range_10V.triggered.connect(self.action)
@@ -238,9 +238,9 @@ class ChannelRange(Menu):
 
     def set_value(self, value):
         if value == 100:
-            self.range.setTitle("Range " + str(value) + "mV")
+            self.range.setTitle(" Range " + str(value) + "mV")
         else:
-            self.range.setTitle("Range " + str(value) + "V")
+            self.range.setTitle(" Range " + str(value) + "V")
 
 
 class ChannelTermination(Menu):
@@ -249,7 +249,7 @@ class ChannelTermination(Menu):
         super().__init__(idx, unique_ADC_name)
         self.__zmq_rpc = zmq_rpc
         self.__GUI = GUI
-        self.termination = self.addMenu("Termination")
+        self.termination = self.addMenu(" Termination")
         termination_0 = self.termination.addAction("1M\u03A9")
         termination_0.setText("1M\u03A9")
         termination_0.triggered.connect(self.action)
@@ -272,7 +272,7 @@ class ChannelTermination(Menu):
 
     def set_value(self, value):
         term = self.num_term_map[str(value)]
-        self.termination.setTitle("Term. " + term)
+        self.termination.setTitle(" Term. " + term)
 
 
 class ChannelOffset(Dial_Box):
