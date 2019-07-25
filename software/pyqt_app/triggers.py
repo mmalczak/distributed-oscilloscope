@@ -350,7 +350,13 @@ class TriggerThreshold(Dial_Box):
         self.box.setValue(value)
 
     def value_change(self, threshold):
-        # threshold in mV
+        if threshold < 0:
+            threshold -= 1
+        else:
+            threshold += 1
+        """ This is done, because due to the conversion, the absolue value
+        actually set is 1 less than the desired one"""
+
         self.__zmq_rpc.send_RPC('set_ADC_parameter',
                                 'internal_trigger_threshold', threshold,
                                 self.unique_ADC_name, self.idx)
