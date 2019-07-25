@@ -137,7 +137,8 @@ class Slider_Box(QtGui.QWidget):
 
 class Box(QtGui.QWidget):
 
-    def __init__(self, idx, unique_ADC_name, box_name, layout='horizontal'):
+    def __init__(self, idx, unique_ADC_name, box_name, layout='horizontal',
+                 signal_connect='valueChanged'):
         super().__init__()
         self.idx = idx
         self.unique_ADC_name = unique_ADC_name
@@ -152,7 +153,8 @@ class Box(QtGui.QWidget):
         self.layout.addWidget(self.box)
         self.layout.addWidget(self.label)
         self.setLayout(self.layout)
-        self.box.valueChanged.connect(self.value_change)
+        getattr(self.box, signal_connect).connect(self.value_change)
+        #self.box.valueChanged.connect(self.value_change)
         #self.box.editingFinished.connect(self.value_change)
         """If unique_ADC_name is None it means that the certain channel
         is no enabled therefore the widget is disabled"""
