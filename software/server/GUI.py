@@ -231,7 +231,8 @@ class GUI():
         for channel_idx, channel in self.__channels.items():
             """seperate loop is necessary in case th euser wants to display
             the same channel twice"""
-            channel.timestamp_pre_post_data.pop(0)
+            if channel.timestamp_pre_post_data:
+                channel.timestamp_pre_post_data.pop(0)
 
         data = {'function_name': 'update_data',
                 'args': [data, pre_post_samples, offsets]}
