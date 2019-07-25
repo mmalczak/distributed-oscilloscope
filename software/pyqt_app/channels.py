@@ -290,11 +290,11 @@ class ChannelOffset(Dial_Box):
 
     def value_change_dial(self):
         value = self.dial.value()*1000
-        self.value_change(value)*1000
+        self.value_change(value)
 
     def value_change_box(self):
         value = self.box.value()*1000
-        self.value_change(value)*1000
+        self.value_change(value)
 
     def set_value(self, value):
         self.dial.setValue(value/1000)
