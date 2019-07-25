@@ -19,7 +19,7 @@
      <rect>
       <x>10</x>
       <y>20</y>
-      <width>1411</width>
+      <width>1391</width>
       <height>811</height>
      </rect>
     </property>
@@ -27,9 +27,9 @@
    <widget class="QFrame" name="vertical_settings_frame">
     <property name="geometry">
      <rect>
-      <x>1450</x>
+      <x>1430</x>
       <y>650</y>
-      <width>441</width>
+      <width>461</width>
       <height>341</height>
      </rect>
     </property>
@@ -44,7 +44,7 @@
       <rect>
        <x>20</x>
        <y>60</y>
-       <width>401</width>
+       <width>421</width>
        <height>211</height>
       </rect>
      </property>
@@ -54,9 +54,9 @@
    <widget class="QFrame" name="trigger_settings_frame">
     <property name="geometry">
      <rect>
-      <x>1450</x>
+      <x>1430</x>
       <y>20</y>
-      <width>201</width>
+      <width>211</width>
       <height>371</height>
      </rect>
     </property>
@@ -69,9 +69,9 @@
     <widget class="QWidget" name="verticalLayoutWidget_4">
      <property name="geometry">
       <rect>
-       <x>30</x>
+       <x>19</x>
        <y>30</y>
-       <width>160</width>
+       <width>171</width>
        <height>201</height>
       </rect>
      </property>
@@ -81,9 +81,9 @@
    <widget class="QFrame" name="run_control_frame">
     <property name="geometry">
      <rect>
-      <x>1680</x>
+      <x>1669</x>
       <y>20</y>
-      <width>210</width>
+      <width>221</width>
       <height>371</height>
      </rect>
     </property>
@@ -98,7 +98,7 @@
       <rect>
        <x>20</x>
        <y>30</y>
-       <width>160</width>
+       <width>181</width>
        <height>80</height>
       </rect>
      </property>
@@ -108,9 +108,9 @@
    <widget class="QFrame" name="horizontal_settings_frame">
     <property name="geometry">
      <rect>
-      <x>1450</x>
+      <x>1430</x>
       <y>460</y>
-      <width>441</width>
+      <width>461</width>
       <height>121</height>
      </rect>
     </property>
@@ -123,9 +123,9 @@
     <widget class="QWidget" name="verticalLayoutWidget_2">
      <property name="geometry">
       <rect>
-       <x>30</x>
+       <x>20</x>
        <y>30</y>
-       <width>381</width>
+       <width>421</width>
        <height>51</height>
       </rect>
      </property>
@@ -164,7 +164,7 @@
      <rect>
       <x>319</x>
       <y>860</y>
-      <width>1101</width>
+      <width>1081</width>
       <height>131</height>
      </rect>
     </property>
@@ -182,7 +182,7 @@
       <rect>
        <x>20</x>
        <y>20</y>
-       <width>1061</width>
+       <width>1041</width>
        <height>101</height>
       </rect>
      </property>
@@ -375,7 +375,7 @@
    <widget class="QLabel" name="vertical_settings_label">
     <property name="geometry">
      <rect>
-      <x>1460</x>
+      <x>1440</x>
       <y>640</y>
       <width>121</width>
       <height>21</height>
@@ -465,7 +465,7 @@
    <widget class="QLabel" name="trigger_settings_label">
     <property name="geometry">
      <rect>
-      <x>1460</x>
+      <x>1440</x>
       <y>10</y>
       <width>121</width>
       <height>21</height>
@@ -555,7 +555,7 @@
    <widget class="QLabel" name="horizontal_settings_label">
     <property name="geometry">
      <rect>
-      <x>1460</x>
+      <x>1440</x>
       <y>450</y>
       <width>141</width>
       <height>21</height>
@@ -645,7 +645,7 @@
    <widget class="QLabel" name="trigger_settings_label_4">
     <property name="geometry">
      <rect>
-      <x>1690</x>
+      <x>1680</x>
       <y>10</y>
       <width>91</width>
       <height>21</height>
