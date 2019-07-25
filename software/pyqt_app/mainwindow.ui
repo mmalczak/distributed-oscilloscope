@@ -72,7 +72,7 @@
        <x>19</x>
        <y>30</y>
        <width>171</width>
-       <height>201</height>
+       <height>291</height>
       </rect>
      </property>
      <layout class="QVBoxLayout" name="triggers_settings_layout"/>

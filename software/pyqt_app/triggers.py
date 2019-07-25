@@ -3,8 +3,10 @@ from PyQt5.QtWidgets import QVBoxLayout
 from PyQt5.QtWidgets import QLabel
 from PyQt5.QtCore import Qt
 from parent_classes import Box
+from parent_classes import Dial_Box
 from parent_classes import Button
 from parent_classes import Menu
+from PyQt5.QtWidgets import QHBoxLayout
 
 
 class TriggerClosure:
@@ -148,15 +150,17 @@ class TriggerClosure:
 
         self.__trig_set_layout.addWidget(self.__button)
         self.__trig_set_layout.addWidget(self.__polarity_menu)
-        self.__trig_set_layout.addWidget(self.__delay_box)
+        self.dials_layout = QHBoxLayout() 
+        self.__trig_set_layout.addLayout(self.dials_layout)
+        self.dials_layout.addWidget(self.__delay_box.frame)
         if self.trigger_type == 'internal':
-            self.__trig_set_layout.addWidget(self.__threshold_box)
+            self.dials_layout.addWidget(self.__threshold_box.frame)
 
     def __remove_widgets(self):
         self.__button.deleteLater()
         self.__polarity_menu.deleteLater()
-        self.__delay_box.deleteLater()
-        self.__threshold_box.deleteLater()
+        self.__delay_box.frame.deleteLater()
+        self.__threshold_box.frame.deleteLater()
 
     def set_params(self, enable, polarity, delay, threshold_mv):
         self.__button.set_active(enable)
@@ -320,19 +324,33 @@ class TriggerSettingsLayout(QVBoxLayout):
         self.addWidget(self.__channel_label)
 
 
-class TriggerThreshold(Box):
+class TriggerThreshold(Dial_Box):
 
     def __init__(self, idx, unique_ADC_name, zmq_rpc, GUI):
-        super().__init__(idx, unique_ADC_name, "Treshold mV")
+        super().__init__(idx, unique_ADC_name, "Treshold mV", 'vertical')
         self.__zmq_rpc = zmq_rpc
         self.unique_ADC_name = unique_ADC_name
         self.idx = idx
         self.__GUI = GUI
         self.box.setMinimum(-5000)
+        self.dial.setMinimum(-5000)
         self.box.setMaximum(4999)
+        self.dial.setMaximum(4999)
 
-    def value_change(self):
-        threshold = self.box.value()   # in mV
+    def value_change_dial(self):
+        value = self.dial.value()
+        self.value_change(value)
+
+    def value_change_box(self):
+        value = self.box.value()
+        self.value_change(value)
+
+    def set_value(self, value):
+        self.dial.setValue(value)
+        self.box.setValue(value)
+
+    def value_change(self, threshold):
+        # threshold in mV
         self.__zmq_rpc.send_RPC('set_ADC_parameter',
                                 'internal_trigger_threshold', threshold,
                                 self.unique_ADC_name, self.idx)
@@ -387,18 +405,32 @@ class TriggerPolarity(Menu):
         self.polarity.setTitle("Polarity " + polarity)
 
 
-class TriggerDelay(Box):
+class TriggerDelay(Dial_Box):
 
     def __init__(self, idx, unique_ADC_name, zmq_rpc, type, GUI):
-        super().__init__(idx, unique_ADC_name, "Delay")
+        super().__init__(idx, unique_ADC_name, "Delay", 'vertical')
         self.__zmq_rpc = zmq_rpc
         self.type = type
         self.__GUI = GUI
         self.box.setMinimum(0)
+        self.dial.setMinimum(0)
         self.box.setMaximum(65535)
+        self.dial.setMaximum(65535)
 
-    def value_change(self):
-        delay = self.box.value()
+
+    def value_change_dial(self):
+        value = self.dial.value()
+        self.value_change(value)
+
+    def value_change_box(self):
+        value = self.box.value()
+        self.value_change(value)
+
+    def set_value(self, value):
+        self.dial.setValue(value)
+        self.box.setValue(value)
+
+    def value_change(self, delay):
         self.__zmq_rpc.send_RPC('set_ADC_parameter',
                                 self.type + '_trigger_delay', delay,
                                 self.unique_ADC_name, self.idx)

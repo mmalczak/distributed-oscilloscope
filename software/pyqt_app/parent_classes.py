@@ -63,7 +63,7 @@ class Dial_Box(QtGui.QWidget):
 
         self.frame = QFrame()
         self.frame.setLayout(self.layout)
-        self.frame.setStyleSheet("border:0px solid rgb(200, 200, 200); ")
+        #self.frame.setStyleSheet("border:0px solid rgb(200, 200, 200); ")
 
         self.dial= QDial()
         self.label = QLabel(dial_name)

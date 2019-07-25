@@ -34,7 +34,7 @@ class Ui_MainWindow(object):
         self.trigger_settings_frame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.trigger_settings_frame.setObjectName("trigger_settings_frame")
         self.verticalLayoutWidget_4 = QtWidgets.QWidget(self.trigger_settings_frame)
-        self.verticalLayoutWidget_4.setGeometry(QtCore.QRect(19, 30, 171, 201))
+        self.verticalLayoutWidget_4.setGeometry(QtCore.QRect(19, 30, 171, 291))
         self.verticalLayoutWidget_4.setObjectName("verticalLayoutWidget_4")
         self.triggers_settings_layout = QtWidgets.QVBoxLayout(self.verticalLayoutWidget_4)
         self.triggers_settings_layout.setContentsMargins(0, 0, 0, 0)
