@@ -41,8 +41,12 @@ class Time(Box):
 
     def value_change(self):
         time = self.box.value()
-        self.acq_set.set_acq_set(time=time)
-
+        try:
+            """ TODO fix it, in principle this exception is not necessary,
+            however there is an error during startup"""
+            self.acq_set.set_acq_set(time=time)
+        except Exception as e:
+            print(e)
 
 class AcquisitionSettings(QVBoxLayout):
     def __init__(self, zmq_rpc, GUI_name, GUI):
