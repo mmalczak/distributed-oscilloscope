@@ -6,6 +6,7 @@ from PyQt5.QtWidgets import QSlider
 from PyQt5.QtWidgets import QDial
 from colors import Colors
 from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QFrame
 
 
 class Button(QtGui.QPushButton):
@@ -59,19 +60,27 @@ class Dial_Box(QtGui.QWidget):
             self.layout = QtGui.QVBoxLayout()
         self.layout.setContentsMargins(0, 0, 0, 0)
         self.layout.setSpacing(2)
+
+        self.frame = QFrame()
+        self.frame.setLayout(self.layout)
+        self.frame.setStyleSheet("border:0px solid rgb(200, 200, 200); ")
+
         self.dial= QDial()
         self.label = QLabel(dial_name)
         self.box = QSpinBox()
-        self.layout.addWidget(self.box)
-        self.layout.addWidget(self.dial)
+
+        self.label.setAlignment(Qt.AlignCenter | Qt.AlignVCenter)
+
         self.layout.addWidget(self.label)
-        self.setLayout(self.layout)
+        self.layout.addWidget(self.dial)
+        self.layout.addWidget(self.box)
+
         self.dial.valueChanged.connect(self.value_change_dial)
         self.box.valueChanged.connect(self.value_change_box)
         """If unique_ADC_name is None it means that the certain channel
         is no enabled therefore the widget is disabled"""
         if(unique_ADC_name is None):
-            self.setEnabled(False)
+            self.frame.setEnabled(False)
 
     def value_change_dial(self):
         pass
@@ -80,12 +89,10 @@ class Dial_Box(QtGui.QWidget):
         pass
 
     def set_value(self, value):
-        self.dial.setValue(value)
-        self.box.setValue(value)
+        pass
 
     def get_value(self):
         return self.dial.value()
-
 
 
 class Slider_Box(QtGui.QWidget):

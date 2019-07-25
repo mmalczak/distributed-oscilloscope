@@ -119,7 +119,7 @@ class ChannelClosure:
 
         self.__chan_set_layout.addWidget(self.__range_menu)
         self.__chan_set_layout.addWidget(self.__termination_menu)
-        self.__chan_set_layout.addWidget(self.__offset_box)
+        self.__chan_set_layout.addWidget(self.__offset_box.frame)
 
     def __set_labels(self):
         display_ADC_name = self.unique_ADC_name.replace('._tcp.local.', '')
@@ -129,7 +129,7 @@ class ChannelClosure:
     def __remove_widgets(self):
         self.__range_menu.deleteLater()
         self.__termination_menu.deleteLater()
-        self.__offset_box.deleteLater()
+        self.__offset_box.frame.deleteLater()
 
     def __remove_labels(self):
         self.__adc_label.setText('')
@@ -204,7 +204,7 @@ class ChannelSettingsLayout(QVBoxLayout):
     def __init__(self, GUI_channel_idx):
         super().__init__()
         self.setSpacing(10)
-        self.setContentsMargins(3,3,3,3)
+        self.setContentsMargins(1, 1, 1, 1)
         GUI_chan_label = ChannelLabel(GUI_channel_idx)
         self.addWidget(GUI_chan_label)
 
@@ -277,20 +277,27 @@ class ChannelTermination(Menu):
 
 class ChannelOffset(Dial_Box):
 
+    """The value is displayed in mV and sent in uv"""
     def __init__(self, idx, unique_ADC_name, zmq_rpc, GUI):
-        super().__init__(idx, unique_ADC_name, "Offset uV", 'vertical')
+        super().__init__(idx, unique_ADC_name, "Offset [mV]", 'vertical')
         self.__zmq_rpc = zmq_rpc
         self.__GUI = GUI
-        self.box.setMinimum(-5000000)
-        self.box.setMaximum(5000000)
+        self.box.setMinimum(-5000)
+        self.dial.setMinimum(-5000)
+        self.box.setMaximum(5000)
+        self.dial.setMaximum(5000)
 
     def value_change_dial(self):
-        value = self.dial.value()
-        self.value_change(value)
+        value = self.dial.value()*1000
+        self.value_change(value)*1000
 
     def value_change_box(self):
-        value = self.box.value()
-        self.value_change(value)
+        value = self.box.value()*1000
+        self.value_change(value)*1000
+
+    def set_value(self, value):
+        self.dial.setValue(value/1000)
+        self.box.setValue(value/1000)
 
     def value_change(self, offset):
         try:
