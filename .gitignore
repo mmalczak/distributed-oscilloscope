@@ -1,5 +1,6 @@
 tags
 __pycache__
 software/pyqt_app/pyqt_env/
+*venv
 *.bin
 *.swp
