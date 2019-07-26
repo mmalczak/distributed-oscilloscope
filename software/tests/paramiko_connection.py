@@ -23,7 +23,7 @@ def start_adc(port, pci):
     client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     client.connect(host, username='root')
     command = "cd /home/Projects/distributed_oscilloscope/software/fec/;" +\
-        "python3.6 adc_client.py --ip_server PCBE15195 --port " +\
+        "python3.6 main.py --ip_server PCBE15195 --port " +\
          str(port) + " --pci_addr " + str(pci)
     (stdin, stdout, stderr) = client.exec_command(command)
     #(stdin, stdout, stderr) = client.exec_command("ps -A | grep python")
