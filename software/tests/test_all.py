@@ -399,6 +399,8 @@ class OscilloscopeMethods(unittest.TestCase):
             fh.write("Data: {}\n".format(data))
 
 #    @timeout_decorator.timeout(5)
+    @unittest.skipUnless(update_data_type == 'precision',
+                         "Only for precision measurements")
     def test_precision(self):
         self.clean_queue()
 
