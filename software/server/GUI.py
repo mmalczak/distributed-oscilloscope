@@ -1,8 +1,5 @@
 from ADC import ADC
 from conversion import threshold_raw_to_mV
-from timestamp_operations import tic_difference
-from timestamp_operations import check_if_equal
-from timestamp_operations import check_if_greater
 import logging
 import time
 import sys
@@ -174,21 +171,21 @@ class GUI():
     def __all_data_aligned(self, max_timestamp):
         for channel_idx, channel in self.__channels.items():
             timestamp = channel.timestamp_pre_post_data[0]['timestamp']
-            if(not check_if_equal(max_timestamp, timestamp, 1)):
+            if(not self.check_if_equal(max_timestamp, timestamp, 1)):
                 return False
         return True
 
     def __remove_old_data(self, max_timestamp):
         for channel_idx, channel in self.__channels.items():
             timestamp = channel.timestamp_pre_post_data[0]['timestamp']
-            if(not check_if_equal(max_timestamp, timestamp, 1)):
+            if(not self.check_if_equal(max_timestamp, timestamp, 1)):
                 channel.timestamp_pre_post_data.pop(0)
 
     def __find_max(self):
         max_timestamp = [0, 0]
         for channel_idx, channel in self.__channels.items():
             timestamp = channel.timestamp_pre_post_data[0]['timestamp']
-            if check_if_greater(timestamp, max_timestamp):
+            if self.check_if_greater(timestamp, max_timestamp):
                 max_timestamp = timestamp
         return max_timestamp
 
@@ -222,8 +219,8 @@ class GUI():
             data[channel_idx] = timestamp_pre_post_data['data_channel']
             timestamps.append(timestamp_pre_post_data['timestamp'])
 
-            tic_diff = tic_difference(timestamp_pre_post_data['timestamp'],
-                                      timestamps[0])
+            tic_diff = self.tic_difference(timestamp_pre_post_data['timestamp'],
+                                           timestamps[0])
             offsets[channel_idx] = int(tic_diff)
             pre_post = timestamp_pre_post_data['pre_post']
             pre_post_samples[channel_idx] = [pre_post['presamples'],
@@ -297,3 +294,29 @@ class GUI():
                         'trigger': self.get_trigger_copy(),
                         'horizontal_settings': self.get_horiz_settings_copy()}
         return GUI_settings
+
+    def tic_difference(self, timestamp_1, timestamp_2):
+        [sec_1, tic_1] = timestamp_1
+        [sec_2, tic_2] = timestamp_2
+
+        sec_diff = sec_1 - sec_2
+        tic_diff = tic_1 - tic_2
+        tic_diff += sec_diff*125e6
+
+        return tic_diff
+
+    def check_if_equal(self, timestamp_1, timestamp_2, available_offset_tics):
+        tic_diff = self.tic_difference(timestamp_1, timestamp_2)
+        if(tic_diff <= available_offset_tics
+           and tic_diff >= -available_offset_tics):
+            return True
+        return False
+
+    def check_if_greater(self, timestamp_1, timestamp_2):
+        [sec_1, tic_1] = timestamp_1
+        [sec_2, tic_2] = timestamp_2
+
+        if (sec_1 > sec_2) or ((sec_1 == sec_2) and (tic_1 > tic_2)):
+            return True
+        else:
+            return False
