@@ -7,14 +7,14 @@ import sys
 logger = logging.getLogger(__name__)
 sys.path.append('../')
 from general.ipaddr import get_ip
-from general.addresses import server_expose_to_user_port
-from general.addresses import server_expose_to_device_port
 from general import serialization
 
 class Expose():
 
-    def __init__(self, connection_manager):
+    def __init__(self, connection_manager, port_user, port_device):
         self.__connection_manager = connection_manager
+        self.__port_user = port_user
+        self.__port_device = port_device
         self.run()
 
     def add_channel(self, oscilloscope_channel_idx, unique_ADC_name,
@@ -108,9 +108,9 @@ class Expose():
 
         server_ip = get_ip()
         socket.bind("tcp://" + server_ip + ":" +
-                    str(server_expose_to_user_port))
+                    str(self.__port_user))
         socket_ADC_listener.bind("tcp://" + server_ip + ":" +
-                                 str(server_expose_to_device_port))
+                                 str(self.__port_device))
         socket_zeroconf_listener.bind("ipc:///tmp/zeroconf")
 
         poller = zmq.Poller()
