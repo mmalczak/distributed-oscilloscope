@@ -41,6 +41,8 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--port', nargs=1,
                         help='port used on the current machine')
+    parser.add_argument('--port_server', nargs=1,
+                        help='port used on the server')
     parser.add_argument('--ip_server', nargs=1,
                         help='IP address of the server')
     args = parser.parse_args()
@@ -50,12 +52,19 @@ def main():
     else:
         port = int(args.port[0])
 
+    server_port = None
+    if args.port_server:
+        server_port = args.port_server[0]
+    else:
+        server_port = server_expose_to_user_port
+
     ip_server = args.ip_server[0]
 
     addr = get_ip()
     GUI_idx = addr + "_" + str(port)
     GUI_name = "GUI" + "_" + GUI_idx + "._http._tcp.local."
-    zmq_rpc = ZMQ_RPC(ip_server, server_expose_to_user_port)
+    print(server_port)
+    zmq_rpc = ZMQ_RPC(ip_server, server_port)
     app = QApplication([])
     win = MainWindow(zmq_rpc)
     GUI = GUI_Class(win.ui, zmq_rpc, GUI_name)
