@@ -6,6 +6,7 @@ import argparse
 from server_expose import ServerExpose
 import time
 from general.ipaddr import get_ip
+from general.addresses import server_expose_to_device_port
 import logging.config
 from logging_conf import DEFAULT_CONFIG
 
@@ -22,6 +23,8 @@ def main():
                         type=int, default=[0x01])
     parser.add_argument('--ip_server', nargs=1,
                         help='IP address of the server')
+    parser.add_argument('--port_server', nargs=1,
+                        help='port of the server')
 
     args = parser.parse_args()
     port = int(args.port[0])
@@ -38,7 +41,13 @@ def main():
     else:
         ip_server = {'addr': None}
 
-    serv_expose = ServerExpose(port, pci_addr, trtl, unique_ADC_name)
+    port_server = None
+    if args.port_server:
+        port_server = args.port_server[0]
+    else:
+        port_server = server_expose_to_device_port
+
+    serv_expose = ServerExpose(port, port_server, pci_addr, trtl, unique_ADC_name)
 
     zeroconf_service = None
     zeroconf_info = None

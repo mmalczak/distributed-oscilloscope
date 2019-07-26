@@ -7,7 +7,6 @@ import pickle
 import time
 sys.path.append('../')
 from general.publisher import Publisher
-from general.addresses import server_expose_to_device_port
 from general.ipaddr import get_ip
 from devices_access import DevicesAccess
 import logging
@@ -18,8 +17,9 @@ thismodule = sys.modules[__name__]
 
 class ServerExpose():
 
-    def __init__(self, port, pci_addr, trtl, unique_ADC_name):
+    def __init__(self, port, port_server, pci_addr, trtl, unique_ADC_name):
         self.__port = port
+        self.__port_server = port_server
         self.server_publisher = None
         self.__devices_access = DevicesAccess(pci_addr, trtl, unique_ADC_name)
 
@@ -29,7 +29,7 @@ class ServerExpose():
         return getattr(self.__devices_access, function_name)
 
     def set_server_address(self, addr):
-        self.server_publisher = Publisher(addr, server_expose_to_device_port)
+        self.server_publisher = Publisher(addr, self.__port_server)
 
     def set_adc_parameter(self, function_name, *args):
         self.__devices_access.configure_adc_parameter(function_name, [*args])
