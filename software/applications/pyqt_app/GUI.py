@@ -8,6 +8,7 @@ from PyQt5.QtCore import pyqtSlot
 import pickle
 import logging
 logger = logging.getLogger(__name__)
+sys.path.append('../../')
 from general import serialization
 from timeit import default_timer as timer
 

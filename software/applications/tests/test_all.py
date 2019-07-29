@@ -10,7 +10,7 @@ from multiprocessing import Queue
 from timeit import default_timer as timer
 from test_conf import server_addr
 from test_conf import update_data_type
-sys.path.append('../')
+sys.path.append('../../')
 from general.zmq_rpc import ZMQ_RPC
 from general.zmq_rpc import RPC_Error
 from general.addresses import server_expose_to_user_port
@@ -18,7 +18,7 @@ import timeout_decorator
 import numpy as np
 import matplotlib.pyplot as plt
 
-sys.path.append('../server')
+sys.path.append('../../server')
 from server import ADC_configs
 """TODO is this the rigth thing to do???"""
 

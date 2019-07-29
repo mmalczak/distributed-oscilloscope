@@ -7,7 +7,7 @@ import argparse
 from PyQt5 import QtGui
 from server_expose import *
 from GUI import *
-sys.path.append('../')
+sys.path.append('../../')
 from general.zmq_rpc import ZMQ_RPC
 from general.addresses import server_expose_to_user_port
 from general.ipaddr import get_ip
