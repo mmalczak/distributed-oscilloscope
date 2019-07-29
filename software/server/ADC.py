@@ -6,6 +6,7 @@ from conversion import threshold_mV_to_raw
 import sys
 import logging
 logger = logging.getLogger(__name__)
+sys.path.append('../')
 sys.path.append('../../')
 from general.zmq_rpc import ZMQ_RPC
 from general.zmq_rpc import RPC_Error
@@ -31,7 +32,7 @@ class ADC:
         application in case of an ADC error"""
         conf = self.send_RPC('get_current_adc_conf')
         self.number_of_channels = conf['board_conf']['n_chan']
-        self.__GUI = None
+        self.__user_app = None
         self.is_available = True
 
         for count in range(0, conf['board_conf']['n_chan']):
@@ -47,13 +48,13 @@ class ADC:
         self.__acq_conf = AcqConf()
         self.update_conf()
 
-    def set_GUI(self, GUI):
-        self.__GUI = GUI
-        self.send_RPC('set_GUI_name', GUI.name)
+    def set_user_app(self, user_app):
+        self.__user_app = user_app
+        self.send_RPC('set_user_app_name', user_app.name)
 
-    def remove_GUI(self):
-        self.__GUI = None
-        self.send_RPC('set_GUI_name', None)
+    def remove_user_app(self):
+        self.__user_app = None
+        self.send_RPC('set_user_app_name', None)
 
     def suicide(self):
         self.__connection_manager.unregister_ADC(self.unique_ADC_name)
@@ -82,7 +83,7 @@ class ADC:
                     {'timestamp': timestamp, 'pre_post': pre_post,
                      'data_channel': data_channel}
                     )
-        self.__GUI.if_ready_send_data()
+        self.__user_app.if_ready_send_data()
 
     def update_conf(self):
         conf = self.send_RPC('get_current_adc_conf')
@@ -188,7 +189,7 @@ class ADC:
                 ADC.send_RPC('set_adc_parameter',
                              'set_internal_trigger_threshold', 0, channel_idx)
                 logger.warning("Internal trigger disabled: value out of range")
-                """TODO send information to the GUI"""
+                """TODO send information to the user_app"""
             else:
                 ADC.send_RPC('set_adc_parameter',
                              'set_internal_trigger_threshold', threshold,

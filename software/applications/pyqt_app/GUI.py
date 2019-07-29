@@ -138,7 +138,8 @@ class GUI_Class:
                                      horizontal_params['postsamples'])
 
     def update_GUI_params(self):
-        GUI_settings = self.zmq_rpc.send_RPC('get_GUI_settings', self.GUI_name)
+        GUI_settings = self.zmq_rpc.send_RPC('get_user_app_settings',
+                                             self.GUI_name)
         self.set_channel_params(GUI_settings['channels'])
         if GUI_settings['trigger']:
             self.set_trigger_params(GUI_settings['trigger'])

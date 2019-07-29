@@ -34,8 +34,8 @@ class ServerExpose():
     def set_adc_parameter(self, function_name, *args):
         self.__devices_access.configure_adc_parameter(function_name, [*args])
 
-    def set_GUI_name(self, GUI_name):
-        self.__devices_access.set_GUI_name(GUI_name)
+    def set_user_app_name(self, user_app_name):
+        self.__devices_access.set_user_app_name(user_app_name)
 
     def exit(self):
         """This fucntion is just for testing and will be removed after

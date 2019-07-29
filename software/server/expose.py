@@ -18,23 +18,24 @@ class Expose():
         self.run()
 
     def add_channel(self, oscilloscope_channel_idx, unique_ADC_name,
-                    ADC_channel_idx, GUI_name):
-        GUI = self.__connection_manager.get_GUI(GUI_name)
+                    ADC_channel_idx, user_app_name):
+        user_app = self.__connection_manager.get_user_app(user_app_name)
         ADC = self.__connection_manager.get_ADC(unique_ADC_name)
-        GUI.add_channel(oscilloscope_channel_idx, ADC, ADC_channel_idx)
+        user_app.add_channel(oscilloscope_channel_idx, ADC, ADC_channel_idx)
 
-    def remove_channel(self, oscilloscope_channel_idx, GUI_name):
-        GUI = self.__connection_manager.get_GUI(GUI_name)
-        GUI.remove_channel(oscilloscope_channel_idx)
+    def remove_channel(self, oscilloscope_channel_idx, user_app_name):
+        user_app = self.__connection_manager.get_user_app(user_app_name)
+        user_app.remove_channel(oscilloscope_channel_idx)
 
-    def add_trigger(self, type, unique_ADC_name, ADC_trigger_idx, GUI_name):
-        GUI = self.__connection_manager.get_GUI(GUI_name)
+    def add_trigger(self, type, unique_ADC_name, ADC_trigger_idx,
+                    user_app_name):
+        user_app = self.__connection_manager.get_user_app(user_app_name)
         ADC = self.__connection_manager.get_ADC(unique_ADC_name)
-        GUI.add_trigger(type, ADC, ADC_trigger_idx)
+        user_app.add_trigger(type, ADC, ADC_trigger_idx)
 
-    def remove_trigger(self, GUI_name):
-        GUI = self.__connection_manager.get_GUI(GUI_name)
-        GUI.remove_trigger()
+    def remove_trigger(self, user_app_name):
+        user_app = self.__connection_manager.get_user_app(user_app_name)
+        user_app.remove_trigger()
 
     def set_ADC_parameter(self, parameter_name, value, unique_ADC_name,
                           idx=None):
@@ -44,32 +45,33 @@ class Expose():
         except Exception as e:
             print("Set_ADC_parameter error {}".format(e))
 
-    def single_acquisition(self, GUI_name):
-        GUI = self.__connection_manager.get_GUI(GUI_name)
-        GUI.configure_acquisition_ADCs_used()
+    def single_acquisition(self, user_app_name):
+        user_app = self.__connection_manager.get_user_app(user_app_name)
+        user_app.configure_acquisition_ADCs_used()
 
-    def run_acquisition(self, run, GUI_name):
-        GUI = self.__connection_manager.get_GUI(GUI_name)
-        GUI.run_acquisition(run)
+    def run_acquisition(self, run, user_app_name):
+        user_app = self.__connection_manager.get_user_app(user_app_name)
+        user_app.run_acquisition(run)
 
-    def set_pre_post_samples(self, presamples, postsamples, GUI_name):
-        GUI = self.__connection_manager.get_GUI(GUI_name)
-        GUI.set_pre_post_samples(presamples, postsamples)
+    def set_pre_post_samples(self, presamples, postsamples, user_app_name):
+        user_app = self.__connection_manager.get_user_app(user_app_name)
+        user_app.set_pre_post_samples(presamples, postsamples)
 
-    def get_GUI_settings(self, GUI_name):
-        GUI = self.__connection_manager.get_GUI(GUI_name)
-        return GUI.get_GUI_settings()
+    def get_user_app_settings(self, user_app_name):
+        user_app = self.__connection_manager.get_user_app(user_app_name)
+        return user_app.get_user_app_settings()
 
-    def register_GUI(self, GUI_name, addr, port):
-        self.__connection_manager.register_GUI(GUI_name, str(addr), port)
+    def register_user_app(self, user_app_name, addr, port):
+        self.__connection_manager.register_user_app(user_app_name, str(addr),
+                                                    port)
 
-    def unregister_GUI(self, GUI_name):
-        self.__connection_manager.unregister_GUI(GUI_name)
+    def unregister_user_app(self, user_app_name):
+        self.__connection_manager.unregister_user_app(user_app_name)
 
     """---------------------------ADC--------------------------------------"""
     def update_data(self, timestamp, pre_post, data, unique_ADC_name):
         if(data == 0):
-            self.__connection_manager.stop_acquisition_if_GUI_contains_ADC(
+            self.__connection_manager.stop_acquisition_if_user_app_contains_ADC(
                                                             unique_ADC_name)
             logger.warning("Received empty data")
             return
@@ -87,9 +89,9 @@ class Expose():
     """---------------------------ADC--------------------------------------"""
 
     """----------------- TESTING ------------------------------------------"""
-    def get_GUI_channels(self, GUI_name):
-        GUI = self.__connection_manager.get_GUI(GUI_name)
-        return GUI.get_channels_copy()
+    def get_user_app_channels(self, user_app_name):
+        user_app = self.__connection_manager.get_user_app(user_app_name)
+        return user_app.get_channels_copy()
     """----------------- TESTING ------------------------------------------"""
 
     def run(self):

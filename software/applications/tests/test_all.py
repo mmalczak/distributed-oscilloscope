@@ -18,7 +18,7 @@ import timeout_decorator
 import numpy as np
 import matplotlib.pyplot as plt
 
-sys.path.append('../../server')
+#sys.path.append('../../server')
 from server import ADC_configs
 """TODO is this the rigth thing to do???"""
 

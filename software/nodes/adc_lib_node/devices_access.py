@@ -17,7 +17,7 @@ NCHAN = 4
 class DevicesAccess():
 
     def __init__(self, pci_addr, trtl, unique_ADC_name):
-        self.GUI_name = None
+        self.user_app_name = None
         self.__WRTD = WRTD(trtl)
         self.__ADC = ADC_100m14b4cha_extended_API(pci_addr)
         self.__WRTD_master = False
@@ -38,12 +38,12 @@ class DevicesAccess():
         self.__acquisition_configured = False
         self.run = False
 
-    def set_GUI_name(self, GUI_name):
-        print(GUI_name)
-        self.GUI_name = GUI_name
-        if GUI_name:
-            self.distribute_triggers_name = 'dt_' + GUI_name[0:8]
-            self.receive_triggers_name = 'rt_' + GUI_name[0:8]
+    def set_user_app_name(self, user_app_name):
+        print(user_app_name)
+        self.user_app_name = user_app_name
+        if user_app_name:
+            self.distribute_triggers_name = 'dt_' + user_app_name[0:8]
+            self.receive_triggers_name = 'rt_' + user_app_name[0:8]
         self.set_WRTD_master(False)
 
     def __get_required_buffer_size(self):

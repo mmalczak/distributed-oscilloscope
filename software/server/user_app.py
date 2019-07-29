@@ -13,18 +13,19 @@ class HorizontalSettingsError(Exception):
         return "Presamples or postsampls not equal in the ADCs"
 
 
-class GUI():
+class UserApplication():
 
-    def __init__(self, name, GUI_addr, GUI_port, connection_manager):
+    def __init__(self, name, user_app_addr, user_app_port, connection_manager):
         self.name = name
         self.__channels = {}
         self.__trigger = None
         self.__ADCs_used = []
-        self.__GUI_addr = GUI_addr
-        self.__GUI_port = GUI_port
+        self.__user_app_addr = user_app_addr
+        self.__user_app_port = user_app_port
         self.__run = False
         self.connection_manager = connection_manager
-        self.__GUI_publisher = Publisher(self.__GUI_addr, self.__GUI_port)
+        self.__user_app_publisher = Publisher(self.__user_app_addr,
+                                              self.__user_app_port)
 
     def remove_all(self):
         if self.__trigger:
@@ -37,12 +38,12 @@ class GUI():
     def register_ADC(self, unique_ADC_name, number_of_channels):
         message = {'function_name': 'register_ADC',
                    'args': [unique_ADC_name, number_of_channels]}
-        self.__GUI_publisher.send_message(message)
+        self.__user_app_publisher.send_message(message)
 
     def unregister_ADC(self, unique_ADC_name):
         message = {'function_name': 'unregister_ADC',
                    'args': [unique_ADC_name]}
-        self.__GUI_publisher.send_message(message)
+        self.__user_app_publisher.send_message(message)
         channels_to_delete = []
         for channel_idx, channel in self.__channels.items():
             if channel.ADC.unique_ADC_name == unique_ADC_name:
@@ -55,12 +56,12 @@ class GUI():
     def set_ADC_available(self, unique_ADC_name):
         message = {'function_name': 'set_ADC_available',
                    'args': [unique_ADC_name]}
-        self.__GUI_publisher.send_message(message)
+        self.__user_app_publisher.send_message(message)
 
     def set_ADC_unavailable(self, unique_ADC_name):
         message = {'function_name': 'set_ADC_unavailable',
                    'args': [unique_ADC_name]}
-        self.__GUI_publisher.send_message(message)
+        self.__user_app_publisher.send_message(message)
 
     def contains_ADC(self, unique_ADC_name):
         for ADC in self.__ADCs_used:
@@ -68,7 +69,7 @@ class GUI():
                 return True
         return False
 
-    def add_channel(self, GUI_channel_idx, ADC, ADC_channel_idx):
+    def add_channel(self, user_app_channel_idx, ADC, ADC_channel_idx):
         def set_horizontal_setting_when_add_channel(self):
             ADC = self.__ADCs_used[0]
             acq_conf = ADC.get_acq_conf()
@@ -78,7 +79,7 @@ class GUI():
 
         ADC.add_used_channel(ADC_channel_idx)
         channel = ADC.get_channel(ADC_channel_idx)
-        self.__channels[GUI_channel_idx] = channel
+        self.__channels[user_app_channel_idx] = channel
         self.__update_ADCs_used()
         set_horizontal_setting_when_add_channel(self)
 
@@ -94,8 +95,8 @@ class GUI():
         self.__trigger = trigger
         self.__update_ADCs_used()
 
-    def remove_channel(self, GUI_channel_idx):
-        del self.__channels[GUI_channel_idx]
+    def remove_channel(self, user_app_channel_idx):
+        del self.__channels[user_app_channel_idx]
         self.__update_ADCs_used()
 
     def remove_trigger(self):
@@ -118,14 +119,16 @@ class GUI():
 
         for ADC in self.__ADCs_used:
             if not ADC in pr_ADCs_used:
-                ADC.set_GUI(self)
+                ADC.set_user_app(self)
                 ADC.is_available = False
-                self.connection_manager.set_ADC_unavailable(ADC.unique_ADC_name, self.name)
+                self.connection_manager.set_ADC_unavailable(ADC.unique_ADC_name,
+                                                            self.name)
         for ADC in pr_ADCs_used:
             if not ADC in self.__ADCs_used:
-                ADC.remove_GUI()
+                ADC.remove_user_app()
                 ADC.is_available = True
-                self.connection_manager.set_ADC_available(ADC.unique_ADC_name, self.name)
+                self.connection_manager.set_ADC_available(ADC.unique_ADC_name,
+                                                          self.name)
 
     def set_pre_post_samples(self, presamples, postsamples):
         for ADC in self.__ADCs_used:
@@ -233,7 +236,7 @@ class GUI():
 
         data = {'function_name': 'update_data',
                 'args': [data, pre_post_samples, offsets]}
-        self.__GUI_publisher.send_message(data)
+        self.__user_app_publisher.send_message(data)
         """TODO make sure that the data rate is not too big for plot"""
 
     def __check_horizontal_settings(self):
@@ -261,15 +264,15 @@ class GUI():
             logger.warning("No ADC used to retrieve the horizontal params")
 
     def get_channels_copy(self):
-        GUI_channels_params = {}
+        user_app_channels_params = {}
         for channel_idx, channel in self.__channels.items():
             channel_params = {'active': channel.active,
                               'range': channel.range,
                               'termination': channel.termination,
                               'offset': channel.offset,
                               'ADC_channel_idx': channel.ADC_channel_idx}
-            GUI_channels_params[channel_idx] = channel_params
-        return GUI_channels_params
+            user_app_channels_params[channel_idx] = channel_params
+        return user_app_channels_params
 
     def get_trigger_copy(self):
         trigger = self.__trigger
@@ -289,11 +292,11 @@ class GUI():
                           'threshold': threshold}
         return trigger_params
 
-    def get_GUI_settings(self):
-        GUI_settings = {'channels': self.get_channels_copy(),
+    def get_user_app_settings(self):
+        user_app_settings = {'channels': self.get_channels_copy(),
                         'trigger': self.get_trigger_copy(),
                         'horizontal_settings': self.get_horiz_settings_copy()}
-        return GUI_settings
+        return user_app_settings
 
     def tic_difference(self, timestamp_1, timestamp_2):
         [sec_1, tic_1] = timestamp_1
