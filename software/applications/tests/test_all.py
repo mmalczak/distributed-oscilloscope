@@ -94,7 +94,7 @@ class OscilloscopeMethods(unittest.TestCase):
         the process exits"""
 
     def start_server(self):
-        command = 'python3 ../server/main_server.py'
+        command = 'python3 ../../server/main_server.py'
         self.server_handler = subprocess.Popen(command, shell=True)
 
     def stop_server(self):
