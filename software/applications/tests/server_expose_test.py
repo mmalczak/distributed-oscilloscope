@@ -12,9 +12,8 @@ from general import serialization
 
 class ServerExposeTest():
 
-    def __init__(self, GUI, port_GUI):
-        self.port_GUI = port_GUI
-        self.GUI = GUI
+    def __init__(self, port_testbench):
+        self.port_testbench = port_testbench
         self.return_queue = None
         update_data_name = 'update_data_' + update_data_type
         self.update_data = getattr(self, update_data_name)
@@ -43,7 +42,7 @@ class ServerExposeTest():
     def update_data_time_measurements(self, *args, **kwargs):
         time_end = timer()
         self.return_queue.put(time_end)
-        print("GUI: update GUI")
+        print("testbench: update testbench")
 
     def update_data_frequency_measurements(self, *args, **kwargs):
         self.number_of_acquisitions += 1
@@ -55,7 +54,7 @@ class ServerExposeTest():
         context = zmq.Context()
         socket = context.socket(zmq.ROUTER)
         ip = get_ip()
-        socket.bind("tcp://" + ip  + ":" + str(self.port_GUI))
+        socket.bind("tcp://" + ip  + ":" + str(self.port_testbench))
         poller = zmq.Poller()
         poller.register(socket, zmq.POLLIN | zmq.POLLERR)
         while True:
@@ -70,9 +69,9 @@ class ServerExposeTest():
 
 class ThreadServerExposeTest():
 
-    def __init__(self, GUI, port_GUI, return_queue):
+    def __init__(self, port_testbench, return_queue):
         super().__init__()
-        self.server_expose_test = ServerExposeTest(GUI, port_GUI)
+        self.server_expose_test = ServerExposeTest(port_testbench)
         self.thread = multiprocessing.Process(
                 target=self.server_expose_test.monitorSlot, args=(return_queue,))
         """The same as threading.Thread but I can terminate process

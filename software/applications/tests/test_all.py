@@ -33,7 +33,7 @@ class OscilloscopeMethods(unittest.TestCase):
     ADCs = {'ADC1': [8000, 1], 'ADC2': [8001, 2]}
     delay = 0.4
     return_queue = None
-    GUI_name = None
+    testbench_name = None
 
     def setUp(self):
         if update_data_type == 'time_measurements' or\
@@ -41,7 +41,7 @@ class OscilloscopeMethods(unittest.TestCase):
            update_data_type == 'precision':
             self.results = open("results.txt", "a")
         self.start_server()
-        self.create_GUI_interface()
+        self.create_testbench_interface()
         self.zmq_rpc = ZMQ_RPC(server_addr, server_expose_to_user_port)
         self.connect_to_server()
         self.add_ADC_FEC('ADC1')
@@ -57,17 +57,17 @@ class OscilloscopeMethods(unittest.TestCase):
         self.remove_ADC_FEC('ADC1')
         self.remove_ADC_FEC('ADC2')
         time.sleep(self.delay)
-        self.stop_GUI_interface()
+        self.stop_testbench_interface()
         self.stop_server()
 
     def connect_to_server(self):
         # addr = os.popen("ifconfig| grep inet").read().split()[1]
         addr = '128.141.79.50'
         port = 8001
-        GUI_idx = addr + "_" + str(port)
-        GUI_name = "GUI" + "_" + GUI_idx + "._http._tcp.local."
-        self.GUI_name = GUI_name
-        self.zmq_rpc.send_RPC('register_GUI', GUI_name, addr, port)
+        testbench_idx = addr + "_" + str(port)
+        testbench_name = "testbench" + "_" + testbench_idx + "._http._tcp.local."
+        self.testbench_name = testbench_name
+        self.zmq_rpc.send_RPC('register_user_app', testbench_name, addr, port)
 
     def clean_queue(self):
         while not self.return_queue.empty():
@@ -100,13 +100,12 @@ class OscilloscopeMethods(unittest.TestCase):
     def stop_server(self):
         self.server_expose.thread.terminate()
 
-    def create_GUI_interface(self):
+    def create_testbench_interface(self):
 
         self.return_queue = Queue()
-        self.server_expose = ThreadServerExposeTest(None, 8001,
-                                                    self.return_queue)
+        self.server_expose = ThreadServerExposeTest(8001, self.return_queue)
 
-    def stop_GUI_interface(self):
+    def stop_testbench_interface(self):
         self.server_handler.terminate()
 
     @timeout_decorator.timeout(5)
@@ -131,30 +130,32 @@ class OscilloscopeMethods(unittest.TestCase):
 
     @timeout_decorator.timeout(5)
     def test_channels_empty(self):
-        channels = self.zmq_rpc.send_RPC('get_GUI_channels', self.GUI_name)
+        channels = self.zmq_rpc.send_RPC('get_user_app_channels',
+                                         self.testbench_name)
         self.assertTrue(not channels)
 
     def add_channel(self, idx, unique_ADC_name):
         oscilloscope_channel_idx = idx
         ADC_channel = idx
         self.zmq_rpc.send_RPC('add_channel', oscilloscope_channel_idx,
-                              unique_ADC_name, ADC_channel, self.GUI_name)
+                              unique_ADC_name, ADC_channel,
+                              self.testbench_name)
 
     def remove_channel(self, idx):
         oscilloscope_channel_idx = idx
         ADC_channel = idx
         self.zmq_rpc.send_RPC('remove_channel', oscilloscope_channel_idx,
-                              self.GUI_name)
+                              self.testbench_name)
 
     def measure_acquisition_time(self):
-        self.zmq_rpc.send_RPC('single_acquisition', self.GUI_name)
+        self.zmq_rpc.send_RPC('single_acquisition', self.testbench_name)
         time_start = timer()
         time_end = self.return_queue.get()
         time_diff = time_end - time_start
         return time_diff
 
     def measure_acquisition_freq(self):
-        self.zmq_rpc.send_RPC('run_acquisition', True, self.GUI_name)
+        self.zmq_rpc.send_RPC('run_acquisition', True, self.testbench_name)
 
         [initial_number, initial_time] = self.return_queue.get()
 
@@ -164,7 +165,8 @@ class OscilloscopeMethods(unittest.TestCase):
             if time_diff > 0.5:
                 number_diff = number - initial_number
                 number_per_sec = number_diff / time_diff
-                self.zmq_rpc.send_RPC('run_acquisition', False, self.GUI_name)
+                self.zmq_rpc.send_RPC('run_acquisition', False,
+                                      self.testbench_name)
                 return number_per_sec
 
     @unittest.skipUnless(update_data_type == 'frequency_measurements',
@@ -189,7 +191,7 @@ class OscilloscopeMethods(unittest.TestCase):
                 ADC_trigger_idx = 3
                 send_RPC = self.zmq_rpc.send_RPC
                 send_RPC('add_trigger', 'internal', unique_ADC_name,
-                         ADC_trigger_idx, self.GUI_name)
+                         ADC_trigger_idx, self.testbench_name)
                 send_RPC('set_ADC_parameter', 'internal_trigger_enable', 1,
                          unique_ADC_name, ADC_trigger_idx)
             for i in range(0, 6):
@@ -197,7 +199,7 @@ class OscilloscopeMethods(unittest.TestCase):
                 if postsamples == 1:
                     postsamples = 2  # that is the minimum available value
                 self.zmq_rpc.send_RPC('set_pre_post_samples', 0, postsamples,
-                                      self.GUI_name)
+                                      self.testbench_name)
 
                 best_result = 0
                 sum = 0
@@ -243,7 +245,7 @@ class OscilloscopeMethods(unittest.TestCase):
                 ADC_trigger_idx = 3
                 send_RPC = self.zmq_rpc.send_RPC
                 send_RPC('add_trigger', 'internal', unique_ADC_name,
-                         ADC_trigger_idx, self.GUI_name)
+                         ADC_trigger_idx, self.testbench_name)
                 send_RPC('set_ADC_parameter', 'internal_trigger_enable', 1,
                          unique_ADC_name, ADC_trigger_idx)
             for i in range(0, 6):
@@ -251,7 +253,7 @@ class OscilloscopeMethods(unittest.TestCase):
                 if postsamples == 1:
                     postsamples = 2  # that is the minimum available value
                 self.zmq_rpc.send_RPC('set_pre_post_samples', 0, postsamples,
-                                      self.GUI_name)
+                                      self.testbench_name)
 
                 best_result = 100000
                 sum = 0
@@ -284,7 +286,7 @@ class OscilloscopeMethods(unittest.TestCase):
         oscilloscope_channel_idx = 0
         ADC_channel = 3
         self.zmq_rpc.send_RPC('add_channel', oscilloscope_channel_idx,
-                          unique_ADC_name_1, ADC_channel, self.GUI_name)
+                          unique_ADC_name_1, ADC_channel, self.testbench_name)
 
 
         ADC_idx = ADC_addr + "_" + str(self.ADCs['ADC2'][0])
@@ -293,33 +295,35 @@ class OscilloscopeMethods(unittest.TestCase):
         oscilloscope_channel_idx = 1
         ADC_channel = 3
         self.zmq_rpc.send_RPC('add_channel', oscilloscope_channel_idx,
-                          unique_ADC_name_2, ADC_channel, self.GUI_name)
+                          unique_ADC_name_2, ADC_channel, self.testbench_name)
 
 
         ADC_trigger_idx = 3
         self.zmq_rpc.send_RPC('add_trigger', 'internal', unique_ADC_name_1,
-                              ADC_trigger_idx, self.GUI_name)
+                              ADC_trigger_idx, self.testbench_name)
         self.zmq_rpc.send_RPC('set_ADC_parameter', 'internal_trigger_enable',
                               1, unique_ADC_name_1, ADC_trigger_idx)
 
-        self.zmq_rpc.send_RPC('set_presamples', 0, self.GUI_name)
-        self.zmq_rpc.send_RPC('set_postsamples', 1000, self.GUI_name)
+        self.zmq_rpc.send_RPC('set_presamples', 0, self.testbench_name)
+        self.zmq_rpc.send_RPC('set_postsamples', 1000, self.testbench_name)
 
-        self.zmq_rpc.send_RPC('single_acquisition', self.GUI_name)
+        self.zmq_rpc.send_RPC('single_acquisition', self.testbench_name)
         self.return_queue.get()
         time.sleep(1)
 
     @timeout_decorator.timeout(5)
     def test_add_channel(self):
-        GUI_channel = 0
+        testbench_channel = 0
         ADC_channel = 0
         ADC_idx = ADC_addr + "_" + str(self.ADCs['ADC1'][0])
         ADC_name = "ADC" + "_" + ADC_idx + "._http._tcp.local."
-        self.zmq_rpc.send_RPC('add_channel', GUI_channel, ADC_name,
-                              ADC_channel, self.GUI_name)
-        channels = self.zmq_rpc.send_RPC('get_GUI_channels', self.GUI_name)
-        self.zmq_rpc.send_RPC('remove_channel', GUI_channel, self.GUI_name)
-        channel = channels[GUI_channel]
+        self.zmq_rpc.send_RPC('add_channel', testbench_channel, ADC_name,
+                              ADC_channel, self.testbench_name)
+        channels = self.zmq_rpc.send_RPC('get_user_app_channels',
+                                         self.testbench_name)
+        self.zmq_rpc.send_RPC('remove_channel', testbench_channel,
+                              self.testbench_name)
+        channel = channels[testbench_channel]
         self.assertEqual(channel['ADC_channel_idx'], ADC_channel)
         self.assertEqual(len(channels), 1)
 
@@ -347,7 +351,7 @@ class OscilloscopeMethods(unittest.TestCase):
         return zc
 
     def measure_zero_cross_distance(self):
-        self.zmq_rpc.send_RPC('single_acquisition', self.GUI_name)
+        self.zmq_rpc.send_RPC('single_acquisition', self.testbench_name)
         try:
             data, offsets = self.return_queue.get(timeout=0.1 )
         except:
@@ -392,7 +396,8 @@ class OscilloscopeMethods(unittest.TestCase):
 
     def save_data(self, data, name):
         mean, var, sigma = self.calculate_statistics(data)
-        with open('/home/milosz/Desktop/figures_precision/' + name + '.txt', 'a') as fh:
+        with open('/home/milosz/Desktop/figures_precision/' + name +
+                  '.txt', 'a') as fh:
             fh.write("Mean: {}\n".format(mean))
             fh.write("Var: {}\n".format(var))
             fh.write("Sigma: {}\n".format(sigma))
@@ -424,12 +429,15 @@ class OscilloscopeMethods(unittest.TestCase):
         ADC_channel = 3
         oscilloscope_channel = 0
         self.zmq_rpc.send_RPC('add_channel', oscilloscope_channel,
-                              unique_ADC_name_1, ADC_channel, self.GUI_name)
+                              unique_ADC_name_1, ADC_channel,
+                              self.testbench_name)
         oscilloscope_channel = 1
         self.zmq_rpc.send_RPC('add_channel', oscilloscope_channel,
-                              unique_ADC_name_2, ADC_channel, self.GUI_name)
+                              unique_ADC_name_2, ADC_channel,
+                              self.testbench_name)
 
-        self.zmq_rpc.send_RPC('set_pre_post_samples', 50, 50, self.GUI_name)
+        self.zmq_rpc.send_RPC('set_pre_post_samples', 50, 50,
+                              self.testbench_name)
 
         ADC_trigger_idx = 3
 
@@ -438,7 +446,7 @@ class OscilloscopeMethods(unittest.TestCase):
         """Used for calibration"""
 
         self.zmq_rpc.send_RPC('add_trigger', 'internal', unique_ADC_name_1,
-                              ADC_trigger_idx, self.GUI_name)
+                              ADC_trigger_idx, self.testbench_name)
         name = 'WRTD_calibration'
         distances = self.measure_zero_cross_distances(number_of_acq)
         self.save_histogram(distances, name)
@@ -446,7 +454,7 @@ class OscilloscopeMethods(unittest.TestCase):
 
 
 #        self.zmq_rpc.send_RPC('add_trigger', 'internal', unique_ADC_name_2,
-#                              ADC_trigger_idx, self.GUI_name)
+#                              ADC_trigger_idx, self.testbench_name)
 #        name = 'WRTD_trig_rev'
 #        distances = self.measure_zero_cross_distances(number_of_acq)
 #        self.save_histogram(distances, name)
