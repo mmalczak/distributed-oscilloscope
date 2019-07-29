@@ -332,8 +332,8 @@ class TriggerThreshold(Dial_Box):
         self.unique_ADC_name = unique_ADC_name
         self.idx = idx
         self.__GUI = GUI
-        self.box.setMinimum(-5000)
-        self.dial.setMinimum(-5000)
+        self.box.setMinimum(-4999)
+        self.dial.setMinimum(-4999)
         self.box.setMaximum(4999)
         self.dial.setMaximum(4999)
 
