@@ -16,7 +16,7 @@ import timeout_decorator
 import numpy as np
 import matplotlib.pyplot as plt
 
-from server import ADC_configs
+import DistributedOscilloscope.server.ADC_configs as ADC_configs
 """TODO is this the rigth thing to do???"""
 
 server_addr = '128.141.79.50'
@@ -28,7 +28,7 @@ class OscilloscopeMethods(unittest.TestCase):
     server_handler = None
     server_expose = None
     ADCs = {'ADC1': [8000, 1], 'ADC2': [8001, 2]}
-    delay = 0.4
+    delay = 0.5
     return_queue = None
     testbench_name = None
 
@@ -77,7 +77,7 @@ class OscilloscopeMethods(unittest.TestCase):
     def remove_ADC_FEC(self, name):
         ADC = self.ADCs[name]
         zmq_rpc = ZMQ_RPC('spechost', ADC[0])
-        zmq_rpc.set_timeout(10)
+        zmq_rpc.set_timeout(100)
         """the timeout is small because the RPC call will never return, so
         there is no point waiting"""
         try:
@@ -91,7 +91,7 @@ class OscilloscopeMethods(unittest.TestCase):
         the process exits"""
 
     def start_server(self):
-        command = 'python3 ../../server/main_server.py'
+        command = 'dist_osc_server'
         self.server_handler = subprocess.Popen(command, shell=True)
 
     def stop_server(self):
@@ -289,6 +289,7 @@ class OscilloscopeMethods(unittest.TestCase):
         ADC_idx = ADC_addr + "_" + str(self.ADCs['ADC2'][0])
         unique_ADC_name_2 = "ADC" + "_" + ADC_idx + "._http._tcp.local."
 
+        time.sleep(1)
         oscilloscope_channel_idx = 1
         ADC_channel = 3
         self.zmq_rpc.send_RPC('add_channel', oscilloscope_channel_idx,
@@ -350,7 +351,7 @@ class OscilloscopeMethods(unittest.TestCase):
     def measure_zero_cross_distance(self):
         self.zmq_rpc.send_RPC('single_acquisition', self.testbench_name)
         try:
-            data, offsets = self.return_queue.get(timeout=0.1 )
+            data, offsets = self.return_queue.get(timeout=1 )
         except:
             return None
         chan_1 = data[0]

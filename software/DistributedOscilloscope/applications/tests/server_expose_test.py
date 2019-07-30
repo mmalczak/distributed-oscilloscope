@@ -6,7 +6,7 @@ from test_conf import update_data_type
 from DistributedOscilloscope.utilities.ipaddr import get_ip
 import zmq
 import pickle
-from DistributedOscilloscope.utilities import serialization
+import DistributedOscilloscope.utilities.serialization as serialization
 
 class ServerExposeTest():
 

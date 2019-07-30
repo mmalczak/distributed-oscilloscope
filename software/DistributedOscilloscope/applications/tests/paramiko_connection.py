@@ -22,8 +22,9 @@ def start_adc(port, pci):
     client.load_system_host_keys()
     client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     client.connect(host, username='root')
-    command = "cd /home/Projects/distributed_oscilloscope/software/nodes/adc_lib_node/;" +\
-        "python3.6 main.py --ip_server PCBE15195 --port " +\
+    command = "cd /home/Projects/distributed_oscilloscope/software/DistributedOscilloscope/nodes/adc_lib_node/;" +\
+        "source adc_venv/bin/activate;" +\
+        "dist_osc_adc_node --ip_server PCBE15195 --port " +\
          str(port) + " --pci_addr " + str(pci)
     (stdin, stdout, stderr) = client.exec_command(command)
     #(stdin, stdout, stderr) = client.exec_command("ps -A | grep python")
