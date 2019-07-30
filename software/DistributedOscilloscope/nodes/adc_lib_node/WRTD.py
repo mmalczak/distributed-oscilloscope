@@ -1,5 +1,5 @@
-from PyWrtd import PyWrtd
-from PyWrtd import encode_arguments
+from .PyWrtd import PyWrtd
+from .PyWrtd import encode_arguments
 
 
 class WRTD(PyWrtd):

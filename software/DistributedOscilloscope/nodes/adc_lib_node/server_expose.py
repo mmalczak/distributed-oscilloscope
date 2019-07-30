@@ -7,7 +7,7 @@ import pickle
 import time
 from DistributedOscilloscope.utilities.publisher import Publisher
 from DistributedOscilloscope.utilities.ipaddr import get_ip
-from devices_access import DevicesAccess
+from .devices_access import DevicesAccess
 import logging
 logger = logging.getLogger(__name__)
 

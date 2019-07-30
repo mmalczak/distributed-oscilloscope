@@ -1,12 +1,12 @@
 import zeroconf
 import os
 import argparse
-from server_expose import ServerExpose
+from .server_expose import ServerExpose
 import time
 from DistributedOscilloscope.utilities.ipaddr import get_ip
 from DistributedOscilloscope.utilities.addresses import server_expose_to_device_port
 import logging.config
-from logging_conf import DEFAULT_CONFIG
+from .logging_conf import DEFAULT_CONFIG
 
 
 def main():

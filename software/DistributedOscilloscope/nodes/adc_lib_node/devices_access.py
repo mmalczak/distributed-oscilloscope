@@ -1,5 +1,5 @@
-from WRTD import WRTD
-from ADC_100m14b4cha import ADC_100m14b4cha_extended_API
+from .WRTD import WRTD
+from .ADC_100m14b4cha import ADC_100m14b4cha_extended_API
 import zmq
 import numpy as np
 import logging
