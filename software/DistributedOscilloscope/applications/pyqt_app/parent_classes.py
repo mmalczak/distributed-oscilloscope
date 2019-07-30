@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import QSpinBox
 from PyQt5.QtWidgets import QLabel
 from PyQt5.QtWidgets import QSlider
 from PyQt5.QtWidgets import QDial
-from colors import Colors
+from .colors import Colors
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFrame
 

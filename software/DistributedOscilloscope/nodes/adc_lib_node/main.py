@@ -3,8 +3,8 @@ import os
 import argparse
 from server_expose import ServerExpose
 import time
-from DistScopeUtilities.ipaddr import get_ip
-from DistScopeUtilities.addresses import server_expose_to_device_port
+from DistributedOscilloscope.utilities.ipaddr import get_ip
+from DistributedOscilloscope.utilities.addresses import server_expose_to_device_port
 import logging.config
 from logging_conf import DEFAULT_CONFIG
 

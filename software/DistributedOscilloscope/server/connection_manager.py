@@ -1,5 +1,5 @@
-from user_app import UserApplication
-from ADC import ADC
+from .user_app import UserApplication
+from .ADC import ADC
 import logging
 logger = logging.getLogger(__name__)
 

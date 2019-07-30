@@ -1,7 +1,6 @@
-from parent_classes import Slider_Box
-from parent_classes import Box
+from .parent_classes import Slider_Box
+from .parent_classes import Box
 import sys
-sys.path.append('../')
 from PyQt5.QtWidgets import QVBoxLayout
 
 

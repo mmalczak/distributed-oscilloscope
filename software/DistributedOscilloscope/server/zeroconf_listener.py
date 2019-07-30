@@ -3,8 +3,8 @@ import threading
 import os
 import socket
 import logging
-from DistScopeUtilities.ipaddr import get_ip
-from DistScopeUtilities.publisher import PublisherIPC
+from DistributedOscilloscope.utilities.ipaddr import get_ip
+from DistributedOscilloscope.utilities.publisher import PublisherIPC
 logger = logging.getLogger(__name__)
 
 

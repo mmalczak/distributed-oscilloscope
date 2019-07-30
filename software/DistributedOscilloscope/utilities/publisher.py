@@ -1,5 +1,5 @@
 import zmq
-from DistScopeUtilities import serialization
+import DistributedOscilloscope.utilities.serialization as serialization
 import logging
 logger = logging.getLogger(__name__)
 

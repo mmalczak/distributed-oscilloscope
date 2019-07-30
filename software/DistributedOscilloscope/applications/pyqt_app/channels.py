@@ -4,11 +4,11 @@ from PyQt5.QtWidgets import QLabel
 from PyQt5.QtGui import QFrame
 from PyQt5.QtCore import Qt
 from PyQt5.QtCore import QRect
-from colors import Colors
-from parent_classes import Button
-from parent_classes import Menu
-from parent_classes import Box
-from parent_classes import Dial_Box
+from .colors import Colors
+from .parent_classes import Button
+from .parent_classes import Menu
+from .parent_classes import Box
+from .parent_classes import Dial_Box
 DBG = False
 
 

@@ -1,14 +1,14 @@
-from plot import *
-from channels import ChannelClosure
-from triggers import *
-from horizontal_settings import *
-from run_control import *
+from .plot import *
+from .channels import ChannelClosure
+from .triggers import *
+from .horizontal_settings import *
+from .run_control import *
 import numpy as np
 from PyQt5.QtCore import pyqtSlot
 import pickle
 import logging
 logger = logging.getLogger(__name__)
-from DistScopeUtilities import serialization
+import DistributedOscilloscope.utilities.serialization as serialization
 from timeit import default_timer as timer
 
 SAMP_FREQ = 1e8

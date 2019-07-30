@@ -1,5 +1,5 @@
 import pyqtgraph as pg
-from colors import Colors
+from .colors import Colors
 from PyQt5 import QtCore
 
 

@@ -9,9 +9,9 @@ from multiprocessing import Queue
 from timeit import default_timer as timer
 from test_conf import server_addr
 from test_conf import update_data_type
-from DistScopeUtilities.zmq_rpc import ZMQ_RPC
-from DistScopeUtilities.zmq_rpc import RPC_Error
-from DistScopeUtilities.addresses import server_expose_to_user_port
+from DistributedOscilloscope.utilities.zmq_rpc import ZMQ_RPC
+from DistributedOscilloscope.utilities.zmq_rpc import RPC_Error
+from DistributedOscilloscope.utilities.addresses import server_expose_to_user_port
 import timeout_decorator
 import numpy as np
 import matplotlib.pyplot as plt

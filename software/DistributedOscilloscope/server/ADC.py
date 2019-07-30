@@ -1,12 +1,12 @@
-from ADC_configs import Channel
-from ADC_configs import InternalTrigger
-from ADC_configs import ExternalTrigger
-from ADC_configs import AcqConf
-from conversion import threshold_mV_to_raw
+from .ADC_configs import Channel
+from .ADC_configs import InternalTrigger
+from .ADC_configs import ExternalTrigger
+from .ADC_configs import AcqConf
+from .conversion import threshold_mV_to_raw
 import logging
 logger = logging.getLogger(__name__)
-from DistScopeUtilities.zmq_rpc import ZMQ_RPC
-from DistScopeUtilities.zmq_rpc import RPC_Error
+from DistributedOscilloscope.utilities.zmq_rpc import ZMQ_RPC
+from DistributedOscilloscope.utilities.zmq_rpc import RPC_Error
 import numpy as np
 
 class ADC:

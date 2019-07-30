@@ -4,8 +4,8 @@ import zmq
 import pickle
 import logging
 logger = logging.getLogger(__name__)
-from DistScopeUtilities.ipaddr import get_ip
-from DistScopeUtilities import serialization
+from DistributedOscilloscope.utilities.ipaddr import get_ip
+from DistributedOscilloscope.utilities import serialization
 
 class Expose():
 

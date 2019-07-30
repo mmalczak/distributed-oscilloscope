@@ -5,8 +5,8 @@ from zmq.utils.monitor import recv_monitor_message
 from zmq.utils.monitor import parse_monitor_message
 import pickle
 import time
-from DistScopeUtilities.publisher import Publisher
-from DistScopeUtilities.ipaddr import get_ip
+from DistributedOscilloscope.utilities.publisher import Publisher
+from DistributedOscilloscope.utilities.ipaddr import get_ip
 from devices_access import DevicesAccess
 import logging
 logger = logging.getLogger(__name__)

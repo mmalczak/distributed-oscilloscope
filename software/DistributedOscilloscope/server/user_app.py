@@ -1,8 +1,8 @@
-from ADC import ADC
-from conversion import threshold_raw_to_mV
+from .ADC import ADC
+from .conversion import threshold_raw_to_mV
 import logging
 import time
-from DistScopeUtilities.publisher import Publisher
+from DistributedOscilloscope.utilities.publisher import Publisher
 logger = logging.getLogger(__name__)
 
 

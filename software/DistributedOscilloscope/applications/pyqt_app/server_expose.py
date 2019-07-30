@@ -1,7 +1,7 @@
 from PyQt5 import QtCore
 from PyQt5 import QtGui
 import zmq
-from DistScopeUtilities.ipaddr import get_ip
+from DistributedOscilloscope.utilities.ipaddr import get_ip
 
 class ServerExposeZMQ(QtCore.QObject):
 

@@ -3,10 +3,10 @@ from xmlrpc.server import SimpleXMLRPCServer
 from timeit import default_timer as timer
 import matplotlib.pyplot as plt
 from test_conf import update_data_type
-from DistScopeUtilities.ipaddr import get_ip
+from DistributedOscilloscope.utilities.ipaddr import get_ip
 import zmq
 import pickle
-from DistScopeUtilities import serialization
+from DistributedOscilloscope.utilities import serialization
 
 class ServerExposeTest():
 

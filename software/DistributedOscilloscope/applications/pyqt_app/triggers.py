@@ -2,10 +2,10 @@ from PyQt5.QtWidgets import QMenuBar
 from PyQt5.QtWidgets import QVBoxLayout
 from PyQt5.QtWidgets import QLabel
 from PyQt5.QtCore import Qt
-from parent_classes import Box
-from parent_classes import Dial_Box
-from parent_classes import Button
-from parent_classes import Menu
+from .parent_classes import Box
+from .parent_classes import Dial_Box
+from .parent_classes import Button
+from .parent_classes import Menu
 from PyQt5.QtWidgets import QHBoxLayout
 
 

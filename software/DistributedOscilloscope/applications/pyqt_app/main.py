@@ -1,13 +1,13 @@
 from PyQt5.QtWidgets import QApplication
 from PyQt5.QtWidgets import QMainWindow
-from mainwindow import Ui_MainWindow
+from .mainwindow import Ui_MainWindow
 import argparse
 from PyQt5 import QtGui
-from server_expose import *
-from GUI import *
-from DistScopeUtilities.zmq_rpc import ZMQ_RPC
-from DistScopeUtilities.addresses import server_expose_to_user_port
-from DistScopeUtilities.ipaddr import get_ip
+from .server_expose import *
+from .GUI import *
+from DistributedOscilloscope.utilities.zmq_rpc import ZMQ_RPC
+from DistributedOscilloscope.utilities.addresses import server_expose_to_user_port
+from DistributedOscilloscope.utilities.ipaddr import get_ip
 
 """TODO number of ADCs different from data dimension occuring when I
 switch off ADC"""
@@ -29,7 +29,7 @@ class MainWindow(QMainWindow):
 
 def main():
     import logging.config
-    from logging_conf import DEFAULT_CONFIG
+    from .logging_conf import DEFAULT_CONFIG
     logging.config.dictConfig(DEFAULT_CONFIG)
 
     pg.setConfigOption('background', 'k')
