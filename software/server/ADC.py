@@ -3,13 +3,10 @@ from ADC_configs import InternalTrigger
 from ADC_configs import ExternalTrigger
 from ADC_configs import AcqConf
 from conversion import threshold_mV_to_raw
-import sys
 import logging
 logger = logging.getLogger(__name__)
-sys.path.append('../')
-sys.path.append('../../')
-from general.zmq_rpc import ZMQ_RPC
-from general.zmq_rpc import RPC_Error
+from DistScopeUtilities.zmq_rpc import ZMQ_RPC
+from DistScopeUtilities.zmq_rpc import RPC_Error
 import numpy as np
 
 class ADC:

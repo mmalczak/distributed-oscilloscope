@@ -1,12 +1,10 @@
-import sys
-sys.path.append('../../')
 import zeroconf
 import os
 import argparse
 from server_expose import ServerExpose
 import time
-from general.ipaddr import get_ip
-from general.addresses import server_expose_to_device_port
+from DistScopeUtilities.ipaddr import get_ip
+from DistScopeUtilities.addresses import server_expose_to_device_port
 import logging.config
 from logging_conf import DEFAULT_CONFIG
 

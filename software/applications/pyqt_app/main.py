@@ -1,16 +1,13 @@
-import sys
 from PyQt5.QtWidgets import QApplication
 from PyQt5.QtWidgets import QMainWindow
 from mainwindow import Ui_MainWindow
-import os
 import argparse
 from PyQt5 import QtGui
 from server_expose import *
 from GUI import *
-sys.path.append('../../')
-from general.zmq_rpc import ZMQ_RPC
-from general.addresses import server_expose_to_user_port
-from general.ipaddr import get_ip
+from DistScopeUtilities.zmq_rpc import ZMQ_RPC
+from DistScopeUtilities.addresses import server_expose_to_user_port
+from DistScopeUtilities.ipaddr import get_ip
 
 """TODO number of ADCs different from data dimension occuring when I
 switch off ADC"""

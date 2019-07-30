@@ -3,8 +3,8 @@ from connection_manager import ConnectionManager
 from zeroconf_listener import ThreadZeroConf
 from expose import Expose
 import argparse
-from general.addresses import server_expose_to_user_port
-from general.addresses import server_expose_to_device_port
+from DistScopeUtilities.addresses import server_expose_to_user_port
+from DistScopeUtilities.addresses import server_expose_to_device_port
 import logging.config
 from logging_conf import DEFAULT_CONFIG
 

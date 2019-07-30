@@ -1,9 +1,7 @@
 from PyQt5 import QtCore
 from PyQt5 import QtGui
 import zmq
-import sys
-sys.path.append('../../')
-from general.ipaddr import get_ip
+from DistScopeUtilities.ipaddr import get_ip
 
 class ServerExposeZMQ(QtCore.QObject):
 

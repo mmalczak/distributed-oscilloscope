@@ -1,5 +1,5 @@
 import zmq
-from general import serialization
+from DistScopeUtilities import serialization
 import logging
 logger = logging.getLogger(__name__)
 
