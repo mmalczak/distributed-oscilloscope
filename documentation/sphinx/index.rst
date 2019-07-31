@@ -14,7 +14,8 @@ Welcome to distributed_oscilloscope's documentation!
    installation
    usage
    user_applications
-   devices 
+   devices
+   developer_guide
 
 
 
