@@ -1,3 +1,3 @@
-export WRTD_DEP_TRTL=/home/Projects/distributed_oscilloscope/dependencies/mock-turtle
-export WRTD_DEP_FMC_ADC=/home/Projects/distributed_oscilloscope/dependencies/fmc-adc-100m14b4cha-gw
-export WRTD_DEP_TRTL_FW=/home/Projects/distributed_oscilloscope/dependencies/mock-turtle/software/firmware
+export WRTD_DEP_TRTL=$(pwd)/dependencies/mock-turtle
+export WRTD_DEP_FMC_ADC=$(pwd)/dependencies/fmc-adc-100m14b4cha-gw
+export WRTD_DEP_TRTL_FW=$(pwd)/dependencies/mock-turtle/software/firmware
