@@ -1,17 +1,19 @@
 """
-@package docstring
-@copyright: Copyright (c) 2019 CERN (home.cern)
+Wrapper for WRTD C library using ctypes.
 
-SPDX-License-Identifier: LGPL-3.0-or-later
-"""
-import sys
-from ctypes import *
-
-""" Wrapper for WRTD C library using ctypes
 All ctypes functions have exactly the same names as the ones in the
 C library. To each C function corresponds a Python function that hides
 C specific operations from the user. The names of these functions are
-the sames as the ctypes functions without the WRTD prefix."""
+the sames as the ctypes functions without the WRTD prefix.
+
+Copyright (c) 2019 CERN (home.cern)
+
+SPDX-License-Identifier: LGPL-3.0-or-later
+
+"""
+
+import decorator
+from ctypes import *
 
 class wrtd_dev(Structure):
     pass
@@ -22,29 +24,35 @@ class wrtd_tstamp(Structure):
                 ("frac", c_uint32)]
 
     def __init__(self, seconds = 0, ns = 0, frac = 0):
-        self.seconds = seconds
-        self.ns      = ns
-        self.frac    = frac
+        self.seconds = int(seconds)
+        self.ns      = int(ns)
+        self.frac    = int(frac)
 
     def __iter__(self):
         yield 'seconds', self.seconds
         yield 'ns'     , self.ns
-        yield 'frac'   , self.seconds
+        yield 'frac'   , self.frac
 
-def encode_arguments(func):
+@decorator.decorator
+def encode_arguments(func, *args, **kwargs):
     """Used to convert arguments from strings to bytes"""
-    def wrapper(self, *args, **kwargs):
-        encoded = []
-        for arg in args:
-            if(type(arg) == str):
-                encoded.append(arg.encode('utf-8'))
-            else:
-                encoded.append(arg)
-        args = tuple(encoded)
-        return func(self, *args, **kwargs)
-    return wrapper
+    encoded = []
+    for arg in args:
+        if(type(arg) == str):
+            encoded.append(arg.encode('utf-8'))
+        else:
+            encoded.append(arg)
+    args = tuple(encoded)
+    return func(*args, **kwargs)
 
 class PyWrtd():
+    """Top-level Python wrapper class for WRTD library.
+
+    :param resource_name: Underlying MockTurtle device ID in the form of ``MTxxx`` or\
+    ``trtl-xxxx``. See also :ref:`node_id`.
+
+    """
+
     WRTD_SUCCESS                      = 0
     __WRTD_ERROR_BASE                 = 0xBFFA0000
     WRTD_ERROR_INVALID_ATTRIBUTE      = __WRTD_ERROR_BASE + 0x0C
@@ -109,6 +117,11 @@ class PyWrtd():
     WRTD_ATTR_FW_MINOR_VERSION          = __WRTD_ATTR_BASE + 0x82
     WRTD_ATTR_FW_MAJOR_VERSION_REQUIRED = __WRTD_ATTR_BASE + 0x83
     WRTD_ATTR_FW_MINOR_VERSION_REQUIRED = __WRTD_ATTR_BASE + 0x84
+    WRTD_ATTR_FW_MAX_RULES              = __WRTD_ATTR_BASE + 0x85
+    WRTD_ATTR_FW_MAX_ALARMS             = __WRTD_ATTR_BASE + 0x86
+    WRTD_ATTR_FW_CAPABILITIES           = __WRTD_ATTR_BASE + 0x88
+    WRTD_ATTR_FW_LOCAL_INPUTS           = __WRTD_ATTR_BASE + 0x8A
+    WRTD_ATTR_FW_LOCAL_OUTPUTS          = __WRTD_ATTR_BASE + 0x8B
 
     WRTD_GLOBAL_REP_CAP_ID = 'WGRCI'
 
@@ -260,9 +273,17 @@ class PyWrtd():
             self.wrtd_p = 0
 
     def reset(self):
+        """
+        Corresponds to C library :cpp:func:`wrtd_reset`.
+        """
         self.wrtd_lib.wrtd_reset(self.wrtd_p)
 
     def get_error(self):
+        """
+        Corresponds to C library :cpp:func:`wrtd_get_error`.
+
+        :return: a tuple with the :ref:`Error Code <api_error_codes>` and the error message.
+        """
         buf_size = self.wrtd_lib.wrtd_get_error(self.wrtd_p, None, 0, None)
         error_description = create_string_buffer(buf_size)
         error_c = c_int()
@@ -271,6 +292,13 @@ class PyWrtd():
         return error_c.value, error_description.value.decode('ascii')
 
     def error_message(self, err_code):
+        """
+        Corresponds to C library :cpp:func:`wrtd_error_message`.
+
+        :param err_code: error code to convert
+
+        :return: error message (string)
+        """
         error_message = create_string_buffer(256)
         self.wrtd_lib.wrtd_error_message(self.wrtd_p, err_code,
                                          error_message)
@@ -278,11 +306,26 @@ class PyWrtd():
 
     @encode_arguments
     def set_attr_bool(self, rep_cap_id, id, value):
+        """
+        Corresponds to C library :cpp:func:`wrtd_set_attr_bool`.
+
+        :param rep_cap_id: :ref:`rep_cap_id`
+        :param id: ID of concerned :ref:`attribute`
+        :param value: Value to write to the :ref:`attribute`
+        """
         self.wrtd_lib.wrtd_set_attr_bool(self.wrtd_p, rep_cap_id,
                                          id, value)
 
     @encode_arguments
     def get_attr_bool(self, rep_cap_id, id):
+        """
+        Corresponds to C library :cpp:func:`wrtd_get_attr_bool`.
+
+        :param rep_cap_id: :ref:`rep_cap_id`
+        :param id: ID of concerned :ref:`attribute`
+
+        :return: Retrieved attribute value
+        """
         value = c_bool()
         self.wrtd_lib.wrtd_get_attr_bool(self.wrtd_p, rep_cap_id,
                                          id, byref(value))
@@ -290,11 +333,26 @@ class PyWrtd():
 
     @encode_arguments
     def set_attr_int32(self, rep_cap_id, id, value):
+        """
+        Corresponds to C library :cpp:func:`wrtd_set_attr_int32`.
+
+        :param rep_cap_id: :ref:`rep_cap_id`
+        :param id: ID of concerned :ref:`attribute`
+        :param value: Value to write to the :ref:`attribute`
+        """
         self.wrtd_lib.wrtd_set_attr_int32(self.wrtd_p, rep_cap_id,
                                           id, value)
 
     @encode_arguments
     def get_attr_int32(self, rep_cap_id, id):
+        """
+        Corresponds to C library :cpp:func:`wrtd_get_attr_int32`.
+
+        :param rep_cap_id: :ref:`rep_cap_id`
+        :param id: ID of concerned :ref:`attribute`
+
+        :return: Retrieved attribute value
+        """
         value = c_int32()
         self.wrtd_lib.wrtd_get_attr_int32(self.wrtd_p, rep_cap_id,
                                           id, byref(value))
@@ -302,11 +360,26 @@ class PyWrtd():
 
     @encode_arguments
     def set_attr_string(self, rep_cap_id, id, value):
+        """
+        Corresponds to C library :cpp:func:`wrtd_set_attr_string`.
+
+        :param rep_cap_id: :ref:`rep_cap_id`
+        :param id: ID of concerned :ref:`attribute`
+        :param value: Value to write to the :ref:`attribute`
+        """
         self.wrtd_lib.wrtd_set_attr_string(self.wrtd_p, rep_cap_id,
                                            id, value)
 
     @encode_arguments
     def get_attr_string(self, rep_cap_id, id):
+        """
+        Corresponds to C library :cpp:func:`wrtd_get_attr_string`.
+
+        :param rep_cap_id: :ref:`rep_cap_id`
+        :param id: ID of concerned :ref:`attribute`
+
+        :return: Retrieved attribute value
+        """
         buf_size = self.wrtd_lib.wrtd_get_attr_string(self.wrtd_p,
                                                       rep_cap_id, id,
                                                       0, None)
@@ -318,21 +391,45 @@ class PyWrtd():
     @encode_arguments
     def set_attr_tstamp(self, rep_cap_id, id,
                         seconds = 0, ns = 0, frac = 0):
+        """
+        Corresponds to C library :cpp:func:`wrtd_set_attr_tstamp`.
+
+        :param rep_cap_id: :ref:`rep_cap_id`
+        :param id: ID of concerned :ref:`attribute`
+        :param seconds: Seconds value to write to the :ref:`attribute`
+        :param ns: Nanoseconds value to write to the :ref:`attribute`
+        :param frac: Fractional nanoseconds value to write to the :ref:`attribute`
+        """
         tstamp = wrtd_tstamp(seconds, ns, frac)
         self.wrtd_lib.wrtd_set_attr_tstamp(self.wrtd_p, rep_cap_id,
                                            id, byref(tstamp))
 
     @encode_arguments
     def get_attr_tstamp(self, rep_cap_id, id):
+        """
+        Corresponds to C library :cpp:func:`wrtd_get_attr_tstamp`.
+
+        :param rep_cap_id: :ref:`rep_cap_id`
+        :param id: ID of concerned :ref:`attribute`
+
+        :return: Retrieved attribute value\
+        (Python dictionary with ``seconds``, ``ns`` and ``frac`` keys)
+        """
         tstamp = wrtd_tstamp()
         self.wrtd_lib.wrtd_get_attr_tstamp(self.wrtd_p, rep_cap_id,
                                            id, byref(tstamp))
         return dict(tstamp)
 
     def clear_event_log_entries(self):
-        self.wrtd_lib.clear_event_log_entries(self.wrtd_p)
+        """
+        Corresponds to C library :cpp:func:`wrtd_clear_event_log_entries`.
+        """
+        self.wrtd_lib.wrtd_clear_event_log_entries(self.wrtd_p)
 
     def get_next_event_log_entry(self):
+        """
+        Corresponds to C library :cpp:func:`wrtd_get_next_event_log_entry`.
+        """
         buf_size = self.WRTD_LOG_ENTRY_SIZE
         log_entry = create_string_buffer(buf_size)
         self.wrtd_lib.wrtd_get_next_event_log_entry(self.wrtd_p,
@@ -342,19 +439,42 @@ class PyWrtd():
 
     @encode_arguments
     def add_alarm(self, rep_cap_id):
+        """
+        Corresponds to C library :cpp:func:`wrtd_add_alarm`.
+
+        :param rep_cap_id: :ref:`rep_cap_id` of new :ref:`alarm`
+        """
         self.wrtd_lib.wrtd_add_alarm(self.wrtd_p, rep_cap_id)
 
     def disable_all_alarms(self):
+        """
+        Corresponds to C library :cpp:func:`wrtd_disable_all_alarms`.
+        """
         self.wrtd_lib.wrtd_disable_all_alarms(self.wrtd_p)
 
     @encode_arguments
     def remove_alarm(self, rep_cap_id):
+        """
+        Corresponds to C library :cpp:func:`wrtd_remove_alarm`.
+
+        :param rep_cap_id: :ref:`rep_cap_id` of :ref:`alarm` to remove
+        """
         self.wrtd_lib.wrtd_remove_alarm(self.wrtd_p, rep_cap_id)
 
-    def remove_all_rules(self):
-        self.wrtd_lib.wrtd_remove_all_rules(self.wrtd_p)
+    def remove_all_alarms(self):
+        """
+        Corresponds to C library :cpp:func:`wrtd_remove_all_alarms`.
+        """
+        self.wrtd_lib.wrtd_remove_all_alarms(self.wrtd_p)
 
     def get_alarm_name(self, index):
+        """
+        Corresponds to C library :cpp:func:`wrtd_get_alarm_name`.
+
+        :param index: Index of the :ref:`alarm`
+
+        :return: :ref:`rep_cap_id` of the :ref:`alarm`
+        """
         buf_size = self.wrtd_lib.wrtd_get_alarm_name(self.wrtd_p,
                                                      index,
                                                      0, None)
@@ -365,19 +485,42 @@ class PyWrtd():
 
     @encode_arguments
     def add_rule(self, rep_cap_id):
+        """
+        Corresponds to C library :cpp:func:`wrtd_add_rule`.
+
+        :param rep_cap_id: :ref:`rep_cap_id` of new :ref:`rule`
+        """
         self.wrtd_lib.wrtd_add_rule(self.wrtd_p, rep_cap_id)
 
     def disable_all_rules(self):
+        """
+        Corresponds to C library :cpp:func:`wrtd_disable_all_alarms`.
+        """
         self.wrtd_lib.wrtd_disable_all_rules(self.wrtd_p)
 
     @encode_arguments
     def remove_rule(self, rep_cap_id):
+        """
+        Corresponds to C library :cpp:func:`wrtd_remove_rule`.
+
+        :param rep_cap_id: :ref:`rep_cap_id` of :ref:`rule` to remove
+        """
         self.wrtd_lib.wrtd_remove_rule(self.wrtd_p, rep_cap_id)
 
     def remove_all_rules(self):
+        """
+        Corresponds to C library :cpp:func:`wrtd_remove_all_rules`.
+        """
         self.wrtd_lib.wrtd_remove_all_rules(self.wrtd_p)
 
     def get_rule_name(self, index):
+        """
+        Corresponds to C library :cpp:func:`wrtd_get_rule_name`.
+
+        :param index: Index of the :ref:`rule`
+
+        :return: :ref:`rep_cap_id` of the :ref:`rule`
+        """
         buf_size = self.wrtd_lib.wrtd_get_rule_name(self.wrtd_p,
                                                     index,
                                                     0, None)
@@ -388,9 +531,21 @@ class PyWrtd():
 
     @encode_arguments
     def reset_rule_stats(self, rep_cap_id):
+        """
+        Corresponds to C library :cpp:func:`wrtd_reset_rule_stats`.
+
+        :param rep_cap_id: :ref:`rep_cap_id` of the :ref:`rule` to reset its statistics
+        """
         self.wrtd_lib.wrtd_reset_rule_stats(self.wrtd_p, rep_cap_id)
 
     def get_fw_name(self, index):
+        """
+        Corresponds to C library :cpp:func:`wrtd_get_fw_name`.
+
+        :param index: Index of the :ref:`application`
+
+        :return: :ref:`rep_cap_id` of the :ref:`application`
+        """
         buf_size = self.wrtd_lib.wrtd_get_fw_name(self.wrtd_p,
                                                   index,
                                                   0, None)
@@ -406,7 +561,6 @@ class PyWrtd():
                 code, msg = self.get_error()
             else:
                 code, msg = ret, self.error_message(ret)
-            print('Error {0}: {1}'.format(hex(code% (1 << 32)), msg))
-            sys.exit(code)
+            raise OSError(ret, 'Error {0}: {1}'.format(hex(code% (1 << 32)), msg))
         else:
             return ret
