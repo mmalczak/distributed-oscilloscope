@@ -6,10 +6,10 @@ Introduction
 
 The Distributed Oscilloscope (DO) is an application allowing to synchronously monitor analog signals in a distributed system, independently of the distance.
 
-The idea of the DO is presented in :numref:`fig-problem-description`.
+The idea of the DO is presented in :numref:`fig_problem_description`.
 
 .. figure:: graphics/problem_description.png
-   :name: fig-problem-description
+   :name: fig_problem_description
    :width: 400pt
    :align: center
    :alt: alternate text
@@ -17,7 +17,7 @@ The idea of the DO is presented in :numref:`fig-problem-description`.
 
    Synchronous acqusition of distributed data
 
-Analog signals from various digitizers are time-stamped, aligned to the same moment in time and sent to the Graphical User Interfacei (GUI), to be displayed. The synchronization is obtained using the White Rabbit Trigger Distribution `(WRTD)  <https://www.ohwr.org/project/wrtd>`_ project.
+Analog signals from various digitizers are time-stamped, aligned to the same moment in time and sent to the Graphical User Interface (GUI), to be displayed. The synchronization is obtained using the White Rabbit Trigger Distribution `(WRTD)  <https://www.ohwr.org/project/wrtd>`_ project.
 
 
 Architecture
@@ -29,20 +29,38 @@ The DO constits of three layers:
 * `DO Server`_
 * `Device Application`_
 
+
+The structure of the DO is presented in :numref:`fig_DO_basic_schematics`. 
+
+.. figure:: graphics/DO_basic_schematics.png
+   :name: fig_DO_basic_schematics
+   :width: 400pt
+   :align: center
+   :alt: alternate text
+   :figclass: align-center
+
+   Structure of the DO 
+
+The DO Server is a proxy between Devices and Users Applications. In a single network there could be one Server, multiple Users and multiple devices. The applications typically are run on different machines, but it is not a restriction.
+
+
+
+
 ================
 `User Applications`_
 ================
+
 There are currently two User Applications available:
 
 * GUI --- it is designed to resemble standard oscilloscope.
 * testbench --- it is used to test the DO Server and the Device Applications as well as to perform statistical measurements of data acquisition speed and of the precision of the synchronization.
 
-The User Applications serve two purposes:
+The User Applications serve the following purposes:
 
-* Deviced configuration
+* Sending the configuration settings
 * Collecting and processing the acquisition data
 
-The Device Applications never communicate with the devices directly, always through the DO Server. This allows to hide all the implementation details and to provide common interface for various types of applications.
+The Device Applications never communicate with the devices directly, always through the DO Server. This allows to hide all the implementation details and to provide a common interface for various types of applications.
 The details how to write User Applications are described in section :ref:`user_applications`
 
 ================
@@ -56,10 +74,5 @@ The DO Server is a central unit responsible for managing all the connections, pr
 `Device Application`_
 ================
 
-    At the moment there is only one type of the
-
-================
-`Developer Guide`_
-================
-
+Device applications provide a direct access to hardware resources. At the moment the only available devices are ADCs supported by the `adc-lib <https://ohwr.org/project/adc-lib>`_.
 

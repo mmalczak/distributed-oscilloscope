@@ -13,8 +13,6 @@ Welcome to distributed_oscilloscope's documentation!
    introduction
    installation
    usage
-   user_applications
-   devices
    developer_guide
 
 
