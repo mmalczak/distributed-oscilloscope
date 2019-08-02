@@ -1,3 +1,6 @@
+decorator==4.4.0
+ifaddr==0.1.6
 numpy==1.15.4
 pyzmq==18.0.1
 zeroconf==0.21.3
+https://ohwr.org/project/distributed-oscilloscope/wikis/uploads/83b8f430e9a18bd9d7ad3ce3af91c5e0/PyWrtd-1.0.tar.gz
