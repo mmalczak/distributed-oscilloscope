@@ -1,5 +1,5 @@
 PYTHON=python3.6
-DEPDIR=/home/Projects/distributed_oscilloscope/dependencies
+DEPDIR=$(pwd)/../
 DRIVERSDIR=${DEPDIR}/drivers
 PLATFORM_DEVICE_LOADER=$DRIVERSDIR/coht-tools/drivers/platform-device-loader/platform-device-loader
 HTVIC_IRQ_HW_TO_LNX=$DRIVERSDIR/htvic_irq_hw_to_lnx
