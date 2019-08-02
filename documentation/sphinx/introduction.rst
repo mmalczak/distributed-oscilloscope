@@ -76,3 +76,8 @@ The DO Server is a central unit responsible for managing all the connections, pr
 
 Device applications provide a direct access to hardware resources. At the moment the only available devices are ADCs supported by the `adc-lib <https://ohwr.org/project/adc-lib>`_.
 
+
+
+.. todo:
+
+Explain the hardware setup

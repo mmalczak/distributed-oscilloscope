@@ -3,22 +3,20 @@
 Installation
 ===========
 
+
+.. _inst_app:
+
 ===========
 Applications
 ===========
 
+.. important::
+
+    In order to be able to access the ADC device, the ref::`dependencies` have to be installed.
+
 In order to use the DO, the python version 3.6 is required.
 
-All the necessary files are available in the `DistOsc <https://ohwr.org/project/distributed-oscilloscope/wikis/uploads/2f7d710befa8b3dc66dff3a82a3e5abb/DistScope.zip>`_.
 
-Download the file and go to its location. In order to unzip the file, issue the following commands.
-
-.. code-block:: console
-
-    $ unzip DistScope.zip
-    $ cd DistScope/
-
-In the folder there are DistributedOscilloscope package and three requirements files, for the DistOscServer, ADC_lib_node and the GUI.
 
 Before installing the Distributed Oscilloscope and the requirements, create a python virtual environment in order to avoid issues with packages versions.
 
@@ -27,24 +25,40 @@ Before installing the Distributed Oscilloscope and the requirements, create a py
     $ python -m venv do_venv
     $ source do_venv/bin/activate
 
-In order to install the Distributed Oscilloscope, issue:
+
+In order to install the Distributed Oscilloscope, type: 
 
 .. code-block:: console
 
-    $ pip install DistributedOscilloscope-1.0.0.tar.gz
+    $ pip install https://ohwr.org/project/distributed-oscilloscope/wikis/uploads/96748e7016d163f85cfb146e661bdc3d/DistributedOscilloscope-1.0.0.tar.gz 
 
 Now, three available applications could be started form the terminal:
 
-* dist_osc_gui
 * dist_osc_server
+* dist_osc_gui
 * dist_osc_adc_node
 
+Each of the applications requires installation of dependencies. 
 
-Depending on the application that will be run on the given machine, install appriopriate set of requirements, issuing:
+
+In order to install the dependencies for the Server, issue: 
 
 .. code-block:: console
 
-    $ pip install -r requirements*.txt
+    $ pip install -r https://ohwr.org/project/distributed-oscilloscope/raw/master/software/DistributedOscilloscope/server/requirements.txt 
+
+In order to install the dependencies for the GUI, issue: 
+
+.. code-block:: console
+
+    $ pip install -r https://ohwr.org/project/distributed-oscilloscope/raw/master/software/DistributedOscilloscope/applications/pyqt_app/requirements.txt 
+
+In order to install the dependencies for the ADC node, issue: 
+
+.. code-block:: console
+
+    $ pip install -r https://ohwr.org/project/distributed-oscilloscope/raw/master/software/DistributedOscilloscope/nodes/adc_lib_node/requirements.txt 
+
 
 In order to display help for each of the applications, type the name of the applications with '-h' option, e.g.:
 
@@ -53,10 +67,25 @@ In order to display help for each of the applications, type the name of the appl
     $ dist_osc_server -h
 
 
+.. _dependencies:
+
 ===========
-Drivers
+Dependencies
 ===========
 
+
+In order to be able to access the ADC device, the following drivers need to be loaded:
+
+.. todo::
+
+    provide the links for the documentation and the particular commits
+
+
+After installing the drivers, the WRTD reference design has to be loaded.
+
+.. todo::
+
+    Provide the link for the WRTD reference design
 
 
 
