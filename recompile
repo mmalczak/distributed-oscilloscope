@@ -4,6 +4,10 @@ make clean
 make
 cd ../../fmc-adc-100m14b4cha-sw/
 make clean
+cd zio
+make
+cd ..
+cp zio/drivers/zio/Module.symvers kernel/
 make
 cd ../wr-trigger-distribution/software/lib
 make clean

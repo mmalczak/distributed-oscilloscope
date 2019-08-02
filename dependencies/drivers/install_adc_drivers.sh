@@ -29,8 +29,8 @@ sudo mount -t debugfs none /sys/kernel/debug/
 # laziness, needed to avoid to compile two different ADC drivers
 #sudo insmod ${DRIVERSDIR}/vmebridge/vmebus.ko
 sudo insmod ${DRIVERSDIR}/coht-vic/drivers/htvic.ko
-sudo insmod ${DEPDIR}/fmc-adc-100m14b4cha-sw/zio/zio.ko
-sudo insmod ${DEPDIR}/fmc-adc-100m14b4cha-sw/zio/buffers/zio-buf-vmalloc.ko   #????
+sudo insmod ${DEPDIR}/fmc-adc-100m14b4cha-sw/zio/drivers/zio/zio.ko
+sudo insmod ${DEPDIR}/fmc-adc-100m14b4cha-sw/zio/drivers/zio/buffers/zio-buf-vmalloc.ko   #????
 sudo insmod ${DEPDIR}/fmc-adc-100m14b4cha-sw/kernel/fmc-adc-100m14b.ko
 sudo insmod ${DRIVERSDIR}/fmc/drivers/fmc/fmc.ko
 sudo insmod ${DRIVERSDIR}/fpga-manager/drivers/fpga/fpga-mgr.ko
