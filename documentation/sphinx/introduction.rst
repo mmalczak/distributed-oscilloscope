@@ -78,6 +78,6 @@ Device applications provide a direct access to hardware resources. At the moment
 
 
 
-.. todo:
+.. todo::
 
-Explain the hardware setup
+    Explain the hardware setup

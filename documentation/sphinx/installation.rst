@@ -113,16 +113,11 @@ In order to be able to access the ADC device, the following drivers need to be l
 
 
 
-After installing the drivers, the WRTD reference design has to be loaded.
+After installing the drivers, the SPEC150T-based FMC_ADC reference design has to be loaded. You can find the reference design `here <https://wrtd.readthedocs.io/en/latest/ref_spec_fmc_adc.html#spec150t-ref-adc>`_. 
 
 .. todo::
-
-    Provide the link for the WRTD reference design
-
-
-
-.. todo::
-    What about init script
+    Reset mockturtle CPUs
+    Enable WRTD trigger in the adc-lib
 
 
 

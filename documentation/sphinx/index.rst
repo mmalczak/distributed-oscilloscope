@@ -12,6 +12,7 @@ Welcome to distributed_oscilloscope's documentation!
 
    introduction
    installation
+   startup 
    usage
    developer_guide
 
