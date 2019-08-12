@@ -44,6 +44,10 @@ def main():
                         help='IP address of the server')
     args = parser.parse_args()
 
+    if not args.ip_server:
+        logging.error("IP of the server not provided. Exiting")
+        exit()
+
     if(args.port is None):
         port = 8001
     else:
