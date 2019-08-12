@@ -76,9 +76,41 @@ Dependencies
 
 In order to be able to access the ADC device, the following drivers need to be loaded:
 
-.. todo::
+* htvic.ko:
+    https://gitlab.cern.ch/cohtdrivers/coht-vic
 
-    provide the links for the documentation and the particular commits
+    commit: df07c670abcf87c967b634504417e482d5e3696b
+
+* zio.ko, zio-buf-vmalloc.ko:
+    https://www.ohwr.org/project/zio/wikis/home
+
+    commit: d8bef4d89361194c2e5644e751add9bd9ffa106d
+
+* fmc-adc-100m14b.ko:
+    https://ohwr.org/project/fmc-adc-100m14b4cha-sw/wikis/home
+
+    commit: 54a77d73df0ef321bbe74ef4acaf2776f6a142c5
+
+* fmc.ko:
+    https://gitlab.cern.ch/fvaga/fmc
+
+    commit: ca386f42df6cdfe5fb6462215622ab2796c2ec75
+
+* fpga-mgr.ko:
+    https://gitlab.cern.ch/fvaga/fpga-manager
+
+    commit: a3711f798ec4a17121c2f6ccfe160fde24a170bb
+
+* spec.ko:
+    https://gitlab.cern.ch/fvaga/fmc-spec
+
+    commit: e893e85ff45dfa3b532295b0b86c5a276b2f221c
+
+* mockturtle.ko:
+    https://ohwr.org/project/mock-turtle/wikis/home
+
+    commit: b07df87ad36d963beb7d7596b3dffa4221d6bd58
+
 
 
 After installing the drivers, the WRTD reference design has to be loaded.
@@ -88,6 +120,9 @@ After installing the drivers, the WRTD reference design has to be loaded.
     Provide the link for the WRTD reference design
 
 
+
+.. todo::
+    What about init script
 
 
 
