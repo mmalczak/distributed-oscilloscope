@@ -1,14 +1,14 @@
 .. _installation:
 
 Installation
-===========
+=============
 
 
 .. _inst_app:
 
-===========
+=============
 Applications
-===========
+=============
 
 .. important::
 
@@ -69,9 +69,9 @@ To display help for each of the applications, type the name of the applications 
 
 .. _dependencies:
 
-===========
+=============
 Dependencies
-===========
+=============
 
 
 To be able to access the ADC device, the following drivers need to be loaded:

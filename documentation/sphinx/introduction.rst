@@ -1,8 +1,8 @@
 .. _introduction:
 
------------
+-------------
 Introduction
------------
+-------------
 
 The Distributed Oscilloscope (DO) is an application allowing to synchronously monitor analog signals in a distributed system, independently of the distance.
 
@@ -21,7 +21,7 @@ Analog signals from various digitizers are time-stamped, aligned to the same mom
 
 
 Architecture
-===========
+==============
 
 The DO constists of three layers:
 
@@ -46,9 +46,9 @@ The DO Server is a proxy between Devices and Users Applications. In a single net
 
 
 
-================
+=====================
 `User Applications`_
-================
+=====================
 
 There are currently two User Applications available:
 
@@ -70,15 +70,15 @@ The details on how to write User Applications are described in section :ref:`dev
 The DO Server is a central unit responsible for managing all the connections, preprocessing the data and providing a common interface for connected applications.
 
 
-================
+======================
 `Device Application`_
-================
+======================
 
 Device applications provide direct access to hardware resources. At the moment the only available devices are ADCs supported by the `adc-lib <https://ohwr.org/project/adc-lib/wikis/home>`_.
 
 
 Hardware setup
-==============
+================
 
 The minimum hardware requirements necessary to demonstrate features of the DO are the following:
 

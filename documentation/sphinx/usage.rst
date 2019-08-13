@@ -32,7 +32,7 @@ Just like in standard oscilloscope, there is a possibility of observing up to 4 
 
 
 Triggers selection
------------------
+------------------
 
 The ADCs could be triggered either by external trigger pulse or when the signal of the observed channel crosses the threshold value.
 
@@ -77,7 +77,7 @@ If the external trigger is selected, the GUI could be triggered by the external 
 
 
 Channels settings
-----------------
+-----------------
 
 Currently available channels settings are the following:
 
