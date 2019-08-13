@@ -68,7 +68,7 @@ If the external trigger is selected, the GUI could be triggered by the external 
 
 .. figure:: graphics/GUI_external_trigger.png
    :name: fig_gui_ext_trigg
-   :width: 120pt
+   :width: 180pt
    :align: center
    :alt: alternate text
    :figclass: align-center
@@ -87,7 +87,7 @@ Currently available channels settings are following:
 
 .. figure:: graphics/GUI_channels_settings.png
    :name: fig_gui_chann_sett
-   :width: 120pt
+   :width: 220pt
    :align: center
    :alt: alternate text
    :figclass: align-center
@@ -139,7 +139,7 @@ Acquisition settings allow to modify the acquisition time and position of the tr
 
 .. figure:: graphics/GUI_acquisition_settings.png
    :name: fig_gui_acq_set
-   :width: 120pt
+   :width: 220pt
    :align: center
    :alt: alternate text
    :figclass: align-center
