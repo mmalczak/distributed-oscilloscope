@@ -16,13 +16,13 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 
-soft_dir = '/home/milosz/Projects/distributed_oscilloscope/software/'
+soft_dir = '/home/milosz/Projects/distributed_oscilloscope/software/DistributedOscilloscope/'
 
 import os
 import sys
-sys.path.append(os.path.abspath(soft_dir + 'pyqt_app'))
+sys.path.append(os.path.abspath(soft_dir + 'applications/pyqt_app'))
 sys.path.append(os.path.abspath(soft_dir + 'server'))
-sys.path.append(os.path.abspath(soft_dir + 'fec'))
+sys.path.append(os.path.abspath(soft_dir + 'nodes/adc_lib_node'))
 sys.path.append(os.path.abspath(soft_dir))
 print(sys.path)
 
