@@ -61,7 +61,7 @@ The User Applications serve the following purposes:
 * Collecting and processing the acquisition data
 
 The Device Applications never communicate with the devices directly, always through the DO Server. This allows to hide all the implementation details and to provide a common interface for various types of applications.
-The details on how to write User Applications are described in section :ref:`user_applications`
+The details on how to write User Applications are described in section :ref:`developer_guide`
 
 ================
 `DO Server`_
@@ -74,7 +74,7 @@ The DO Server is a central unit responsible for managing all the connections, pr
 `Device Application`_
 ================
 
-Device applications provide direct access to hardware resources. At the moment the only available devices are ADCs supported by the `adc-lib <https://ohwr.org/project/adc-lib>`_.
+Device applications provide direct access to hardware resources. At the moment the only available devices are ADCs supported by the `adc-lib <https://ohwr.org/project/adc-lib/wikis/home>`_.
 
 
 Hardware setup
@@ -86,7 +86,7 @@ The minimum hardware requirements necessary to demonstrate features of the DO ar
 
 .. note::
 
-    The DO is designed to run each application on a different machine. However, it is possible to run them on the same machine. Also, to make the DO really distributed, the ADC cards should be installed in different locations in different machines. The described hardware setup should serve only as a demonstrator.
+    The DO is designed to run each application on a different machine. However, it is possible to run them on the same machine. To make the DO really distributed, the ADC cards should be installed in different locations in different machines. The described hardware setup should serve only as a demonstrator.
 
 
 .. note::
@@ -100,7 +100,7 @@ The minimum hardware requirements necessary to demonstrate features of the DO ar
 
         The DO will work only with SPEC 150T version. Be careful not to purchase standard SPEC 45T version.
 * 2 `FMC ADC 100M 14b 4cha <https://www.ohwr.org/project/fmc-adc-100m14b4cha/wikis/home>`_ boards
-* 2 fibers -- to demonstrate the synchronization features, the fibers could be of different lengths
+* 2 fibers 
 * 4 SFP cages
 * signal generator
 
@@ -117,5 +117,5 @@ The minimum hardware setup of the DO is presented in :numref:`fig_hardware_setup
 
 
 
-The SPEC boards together with ADC cards should be installed in PCIe slots of the computer and connected to any of White Rabbit switch Channels using the SFP cages and fibers. To be able to demonstrate the synchronization accuracy, the same signal from the generator should be provided to both ADCs, with cables of the same length or precisely known lengths.
+The SPEC boards together with ADC cards should be installed in PCIe slots of the computer and connected to any of White Rabbit switch channels using the SFP cages and fibers. To be able to demonstrate the synchronization accuracy, the same signal from the generator should be provided to both ADCs, with cables of the same length or precisely known lengths.
 

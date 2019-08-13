@@ -4,9 +4,9 @@
 Starting Applications 
 ================
 
-To use the GUI, also the Server and the ADC node have to be run. The GUI and the Server can be run on any Linux machine with python3.6. Before starting the ADC application, all the dependencies, described in section :ref:`dependencies`, have to be installed.
+The GUI and the Server can be run on any Linux machine with python3.6. Before starting the ADC application, all the dependencies, described in section :ref:`dependencies`, have to be installed.
 
-The first application that has to be run is the Server. When the Server is already started,  GUIs and ADC nodes can be run in any order. 
+The first application that has to be run is the Server. When the Server is already started, GUIs and ADC nodes can be run in any order. 
 
 
 Before starting any of the applications, start the virtual environment and install the Distributed Oscilloscope, as described in section :ref:`inst_app`.
@@ -51,7 +51,7 @@ Required arguments:
 Optional arguments:
 
     * port -- port used on the current machine to listen for notifications and acquisition data, default value -- 8001
-    * port_server -- port used on the Server to listen for the requests from the GUI -- 8003
+    * port_server -- port used on the Server to listen for the requests from the GUI, default value -- 8003
 
 
 

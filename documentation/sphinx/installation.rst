@@ -12,7 +12,7 @@ Applications
 
 .. important::
 
-    To be able to access the ADC device, the ref::`dependencies` have to be installed.
+    To be able to access the ADC device, the :ref:`dependencies` have to be installed.
 
 To use the DO, the python version 3.6 is required.
 
