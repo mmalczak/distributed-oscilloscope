@@ -77,7 +77,45 @@ The DO Server is a central unit responsible for managing all the connections, pr
 Device applications provide a direct access to hardware resources. At the moment the only available devices are ADCs supported by the `adc-lib <https://ohwr.org/project/adc-lib>`_.
 
 
+Hardware setup
+==============
 
-.. todo::
+The minimum hardware requirements necessary to demonstrate features of the DO are the following:
 
-    Explain the hardware setup
+* computer with minimum 2 PCIe slots and CentOS 7.6.1810
+
+.. note::
+
+    The DO is designed to run each application on different machine. However, it is possible ot run them on the same machine. Also, to make the DO really distributed, the ADC cards should be installed in different locations in different machines. The described hardware setup should serve only as a demonstrator.
+
+
+.. note::
+    CentOS 7.6.1810 guaranties that all the drivers will function properly. However, it is possible to use the DO with different OS. In case of the machines where the Server and the GUI are run, the Linux version does not matter.
+
+
+* `White Rabbit Switch <https://www.ohwr.org/projects/white-rabbit/wiki/switch>`_
+* 2 `SPEC 150T <https://ohwr.org/project/spec/wikis/home>`_ boards 
+  
+    .. important::
+
+        The DO will work only with SPEC 150T version. Be carrefoul not to purchase standard SPEC 45T version.
+* 2 `FMC ADC 100M 14b 4cha <https://www.ohwr.org/project/fmc-adc-100m14b4cha/wikis/home>`_ boards
+* 2 fibres -- in order to demonstrate the synchronization features, the fibres could be of different lenghts
+* 4 SFP cages
+* signal generator
+
+The minimum hardware setup of the DO is presented in :numref:`fig_hardware_setup`.
+
+.. figure:: graphics/hardware_setup.png
+   :name: fig_hardware_setup
+   :width: 250pt
+   :align: center
+   :alt: alternate text
+   :figclass: align-center
+
+   Minimum hardware setup for the DO 
+
+
+
+The SPEC boards togehter with ADC cards should be installed in PCIe slots of the computer and connected to any of White Rabbit switch Channels using the SFP cages and fibres. In order to be able to demonstrate the synchronization accuracy, the same signal from the generator should be provided to both ADCs, with cables of the same length or precisely known lengths.
+
