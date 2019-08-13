@@ -19,7 +19,7 @@ The GUI application is presented in :numref:`fig_gui`.
 Channels selection:
 ------------------
 
-Just like in standard oscilloscope, there is a possibility of observing up to 4 channels. Channels from available ADCs could be connected to channels of the GUI. 
+Just like in standard oscilloscope, there is a possibility of observing up to 4 channels. Any channel of any available ADC can be connected to the particular channel of the GUI. 
 
 .. figure:: graphics/GUI_channels_selection.png
    :name: fig_gui_chann_sel
@@ -35,6 +35,8 @@ Just like in standard oscilloscope, there is a possibility of observing up to 4 
 Triggers selection:
 -----------------
 
+The ADCs could be triggered either by external trigger pulse or when signal of the observed channel crosses the threshold value.
+
 .. figure:: graphics/GUI_triggers_selection.png
    :name: fig_gui_trigg_sel
    :width: 120pt
@@ -49,6 +51,8 @@ Triggers selection:
 Internal trigger:
 ^^^^^^^^^^^^^^^^
 
+If the internal trigger is selected, the GUI could be triggered on any channel to which a signal is connected. 
+
 .. figure:: graphics/GUI_internal_trigger.png
    :name: fig_gui_int_trigg
    :width: 120pt
@@ -62,6 +66,8 @@ Internal trigger:
 
 External trigger:
 ^^^^^^^^^^^^^^^^
+
+If the external trigger is selected, the GUI could be triggered by the external trigger input of any connected ADC.
 
 .. figure:: graphics/GUI_external_trigger.png
    :name: fig_gui_ext_trigg
@@ -78,6 +84,13 @@ External trigger:
 Channels settings:
 ----------------
 
+Currently available channels settings are following:
+
+* range
+* termination
+* offset
+
+
 .. figure:: graphics/GUI_channels_settings.png
    :name: fig_gui_chann_sett
    :width: 120pt
@@ -91,6 +104,12 @@ Channels settings:
 
 Trigger settings:
 ----------------
+
+Currently available trigger settings are following:
+
+* polarity
+* delay
+* threshold (in case of internal trigger)
 
 .. figure:: graphics/GUI_trigger_settings.png
    :name: fig_gui_trigg_sett
@@ -106,6 +125,11 @@ Trigger settings:
 Run control:
 ---------------
 
+There are two available modes:
+
+* single acquisition
+* continuous acquisition
+
 .. figure:: graphics/GUI_run_control.png
    :name: fig_gui_run_control
    :width: 120pt
@@ -120,6 +144,8 @@ Run control:
 Acquisition settings:
 --------------------
 
+Acquisition settings allow to modify the acquisition time and position of the trigger. Position of the trigger is given in percentage of the acquisition time.
+
 .. figure:: graphics/GUI_acquisition_settings.png
    :name: fig_gui_acq_set
    :width: 120pt
@@ -128,13 +154,3 @@ Acquisition settings:
    :figclass: align-center
     
    Acquisition settings 
-
-
-
-
-
-
-.. todo::
-    
-    Make screenshots of all of the components of the GUI and explain shortly
-
