@@ -34,7 +34,7 @@ Just like in standard oscilloscope, there is a possibility of observing up to 4 
 Triggers selection
 -----------------
 
-The ADCs could be triggered either by external trigger pulse or when signal of the observed channel crosses the threshold value.
+The ADCs could be triggered either by external trigger pulse or when the signal of the observed channel crosses the threshold value.
 
 .. figure:: graphics/GUI_triggers_selection.png
    :name: fig_gui_trigg_sel
@@ -79,7 +79,7 @@ If the external trigger is selected, the GUI could be triggered by the external 
 Channels settings
 ----------------
 
-Currently available channels settings are following:
+Currently available channels settings are the following:
 
 * range
 * termination
@@ -98,7 +98,7 @@ Currently available channels settings are following:
 Trigger settings
 ----------------
 
-Currently available trigger settings are following:
+Currently available trigger settings are the following:
 
 * polarity
 * delay
@@ -135,7 +135,7 @@ There are two available modes:
 Acquisition settings
 --------------------
 
-Acquisition settings allow to modify the acquisition time and position of the trigger. Position of the trigger is given in percentage of the acquisition time.
+Acquisition settings allow modifying the acquisition time and position of the trigger. Position of the trigger is given in percentage of the acquisition time.
 
 .. figure:: graphics/GUI_acquisition_settings.png
    :name: fig_gui_acq_set

@@ -12,13 +12,13 @@ Applications
 
 .. important::
 
-    In order to be able to access the ADC device, the ref::`dependencies` have to be installed.
+    To be able to access the ADC device, the ref::`dependencies` have to be installed.
 
-In order to use the DO, the python version 3.6 is required.
+To use the DO, the python version 3.6 is required.
 
 
 
-Before installing the Distributed Oscilloscope and the requirements, create a python virtual environment in order to avoid issues with packages versions.
+Before installing the Distributed Oscilloscope and the requirements, create a python virtual environment to avoid issues with packages versions.
 
 .. code-block:: console
 
@@ -26,7 +26,7 @@ Before installing the Distributed Oscilloscope and the requirements, create a py
     $ source do_venv/bin/activate
 
 
-In order to install the Distributed Oscilloscope, type: 
+To install the Distributed Oscilloscope, type: 
 
 .. code-block:: console
 
@@ -41,26 +41,26 @@ Now, three available applications could be started form the terminal:
 Each of the applications requires installation of dependencies. 
 
 
-In order to install the dependencies for the Server, issue: 
+To install the dependencies for the Server, issue: 
 
 .. code-block:: console
 
     $ pip install -r https://ohwr.org/project/distributed-oscilloscope/raw/master/software/DistributedOscilloscope/server/requirements.txt 
 
-In order to install the dependencies for the GUI, issue: 
+To install the dependencies for the GUI, issue: 
 
 .. code-block:: console
 
     $ pip install -r https://ohwr.org/project/distributed-oscilloscope/raw/master/software/DistributedOscilloscope/applications/pyqt_app/requirements.txt 
 
-In order to install the dependencies for the ADC node, issue: 
+To install the dependencies for the ADC node, issue: 
 
 .. code-block:: console
 
     $ pip install -r https://ohwr.org/project/distributed-oscilloscope/raw/master/software/DistributedOscilloscope/nodes/adc_lib_node/requirements.txt 
 
 
-In order to display help for each of the applications, type the name of the applications with '-h' option, e.g.:
+To display help for each of the applications, type the name of the applications with '-h' option, e.g.:
 
 .. code-block:: console
 
@@ -74,7 +74,7 @@ Dependencies
 ===========
 
 
-In order to be able to access the ADC device, the following drivers need to be loaded:
+To be able to access the ADC device, the following drivers need to be loaded:
 
 * htvic.ko:
     https://gitlab.cern.ch/cohtdrivers/coht-vic

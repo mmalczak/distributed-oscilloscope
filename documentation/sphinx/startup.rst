@@ -4,9 +4,9 @@
 Starting Applications 
 ================
 
-In order to use the GUI, also the Server and the ADC node have to be run. The GUI and the Server can be run on any linux machine with python3.6. Before starting the ADC application, all the dependencies, described in section :ref:`dependencies`, have to be installed.
+To use the GUI, also the Server and the ADC node have to be run. The GUI and the Server can be run on any Linux machine with python3.6. Before starting the ADC application, all the dependencies, described in section :ref:`dependencies`, have to be installed.
 
-The first application that have to be run is the Server. When the Server is already started,  GUIs and ADC nodes can be run in any order. 
+The first application that has to be run is the Server. When the Server is already started,  GUIs and ADC nodes can be run in any order. 
 
 
 Before starting any of the applications, start the virtual environment and install the Distributed Oscilloscope, as described in section :ref:`inst_app`.
@@ -15,7 +15,7 @@ Before starting any of the applications, start the virtual environment and insta
 Server Application
 ---------------
 
-In order to start the Server Application, run in terminal:
+To start the Server Application, run in terminal:
 
 .. code-block:: console
 
@@ -30,7 +30,7 @@ Optional arguments:
 GUI:
 ----------------
 
-Before staring the GUI applications, find out what is the ip address of the Server: SERVER_IP_ADDRESS. You can check it using the command:
+Before starting the GUI applications, find out what is the IP address of the Server: SERVER_IP_ADDRESS. You can check it using the command:
 
 
 .. code-block:: console
@@ -38,7 +38,7 @@ Before staring the GUI applications, find out what is the ip address of the Serv
     $ ifconfig 
 
 
-In order to start the GUI, run in terminal:
+To start the GUI, run in terminal:
 
 .. code-block:: console
 
@@ -58,14 +58,14 @@ Optional arguments:
 ADC application:
 ----------------
 
-If the Server and the ADC device are in different local networks, before staring the ADC applications, find out what is the ip address of the Server: SERVER_IP_ADDRESS. If the IP address of the Server is not provided, Zeroconf will be used to automatically find out this information.
+If the Server and the ADC device are in different local networks, before staring the ADC applications, find out what is the IP address of the Server: SERVER_IP_ADDRESS. If the IP address of the Server is not provided, Zeroconf will be used to automatically find out this information.
 
 .. important::
 
     The Zeroconf will only work if the Server and the ADC are in the same local networks. Otherwise, the IP of the Server has to be provided manually.
 
 
-In order to start the GUI, run in terminal:
+To start the GUI, run in terminal:
 
 .. code-block:: console
 
