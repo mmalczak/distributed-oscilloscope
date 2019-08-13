@@ -1,4 +1,0 @@
-.. _devices:
-
-Devices
-======
