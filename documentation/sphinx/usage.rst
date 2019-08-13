@@ -16,7 +16,7 @@ The GUI application is presented in :numref:`fig_gui`.
    Screenshot of the GUI application
 
 
-Channels selection:
+Channels selection
 ------------------
 
 Just like in standard oscilloscope, there is a possibility of observing up to 4 channels. Any channel of any available ADC can be connected to the particular channel of the GUI. 
@@ -31,8 +31,7 @@ Just like in standard oscilloscope, there is a possibility of observing up to 4 
    Selection of GUI channels 
 
 
-
-Triggers selection:
+Triggers selection
 -----------------
 
 The ADCs could be triggered either by external trigger pulse or when signal of the observed channel crosses the threshold value.
@@ -47,8 +46,7 @@ The ADCs could be triggered either by external trigger pulse or when signal of t
    Selection of trigger type 
 
 
-
-Internal trigger:
+Internal trigger
 ^^^^^^^^^^^^^^^^
 
 If the internal trigger is selected, the GUI could be triggered on any channel to which a signal is connected. 
@@ -63,8 +61,7 @@ If the internal trigger is selected, the GUI could be triggered on any channel t
    Selection of internal trigger 
 
 
-
-External trigger:
+External trigger
 ^^^^^^^^^^^^^^^^
 
 If the external trigger is selected, the GUI could be triggered by the external trigger input of any connected ADC.
@@ -79,9 +76,7 @@ If the external trigger is selected, the GUI could be triggered by the external 
    Selection of external trigger 
 
 
-
-
-Channels settings:
+Channels settings
 ----------------
 
 Currently available channels settings are following:
@@ -89,7 +84,6 @@ Currently available channels settings are following:
 * range
 * termination
 * offset
-
 
 .. figure:: graphics/GUI_channels_settings.png
    :name: fig_gui_chann_sett
@@ -101,8 +95,7 @@ Currently available channels settings are following:
    Channels settings 
 
 
-
-Trigger settings:
+Trigger settings
 ----------------
 
 Currently available trigger settings are following:
@@ -121,8 +114,7 @@ Currently available trigger settings are following:
    Trigger settings 
 
 
-
-Run control:
+Run control
 ---------------
 
 There are two available modes:
@@ -140,8 +132,7 @@ There are two available modes:
    Run control 
 
 
-
-Acquisition settings:
+Acquisition settings
 --------------------
 
 Acquisition settings allow to modify the acquisition time and position of the trigger. Position of the trigger is given in percentage of the acquisition time.
