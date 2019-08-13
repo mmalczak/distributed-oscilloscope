@@ -1,6 +1,7 @@
 import zmq
 import DistributedOscilloscope.utilities.serialization as serialization
 import logging
+import pickle
 logger = logging.getLogger(__name__)
 
 
