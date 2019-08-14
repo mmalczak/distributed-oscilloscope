@@ -1,9 +1,9 @@
 """
 expose.py
 ============================================
-Exposes the functionalities of the Server to other Device Applications and to
+Exposes the functionalities of the Server to Device Applications and to
 User Applications. All communication with other applications is done using
-Expose class
+Expose class.
 For communication with the nodes it uses `ZeroMQ <https://zeromq.org/>`_
 sockets.
 
@@ -21,7 +21,7 @@ from DistributedOscilloscope.utilities import serialization
 
 class Expose():
     """
-    Top level class
+    Top level class.
 
     :param connection_manager: :class:`~server.connection_manager.ConnectionManager`
     :param port_user: port on which it listens for User Applications connections
@@ -37,8 +37,8 @@ class Expose():
     def add_channel(self, oscilloscope_channel_idx, unique_ADC_name,
                     ADC_channel_idx, user_app_name):
         """
-        Add channel in the User Application
-        Called by the User Application
+        Called by the User Application.
+        Adds channel in the User Application.
 
         :param oscilloscope_channel_idx: index of the channel in the user\
             application
@@ -52,8 +52,8 @@ class Expose():
 
     def remove_channel(self, oscilloscope_channel_idx, user_app_name):
         """
-        Remove channel from the User Application
-        Called by the User Application
+        Called by the User Application.
+        Removes channel from the User Application.
 
         :param oscilloscope_channel_idx: index of the channel in the user\
             application
@@ -66,8 +66,8 @@ class Expose():
     def add_trigger(self, type, unique_ADC_name, ADC_trigger_idx,
                     user_app_name):
         """
-        Add trigger in the User Application
-        Called by the User Application
+        Called by the User Application.
+        Adds trigger in the User Application.
 
         :param type: type of the trigger
         :param unique_ADC_name: name of the Device Application (ADC)
@@ -80,8 +80,8 @@ class Expose():
 
     def remove_trigger(self, user_app_name):
         """
-        Remove trigger from the User Application
-        Called by the User Application
+        Called by the User Application.
+        Removes trigger from the User Application.
 
         :param user_app_name: name of the User Application
         """
@@ -91,8 +91,8 @@ class Expose():
     def set_ADC_parameter(self, parameter_name, value, unique_ADC_name,
                           idx=None):
         """
-        Generic function, used to modify parameters of the ADC
-        Called by the User Application
+        Called by the User Application.
+        Generic function, used to modify parameters of the ADC.
 
         :param parameter_name: name of the parameter to be modified
         :param value: new value of the parameter
@@ -108,8 +108,8 @@ class Expose():
 
     def single_acquisition(self, user_app_name):
         """
-        Called by the User Application
-        Starts single acquisition in the given User Application
+        Called by the User Application.
+        Starts single acquisition in the given User Application.
 
         :param user_app_name: name of the User Application
         """
@@ -118,8 +118,8 @@ class Expose():
 
     def run_acquisition(self, run, user_app_name):
         """
-        Called by the User Application
-        Starts or stops continuous acquisition in the given User Application
+        Called by the User Application.
+        Starts or stops continuous acquisition in the given User Application.
 
         :param run: defines if the acquisition is to be started or stopped
         :param user_app_name: name of the User Application
@@ -130,9 +130,9 @@ class Expose():
 
     def set_pre_post_samples(self, presamples, postsamples, user_app_name):
         """
-        Called by the User Application
+        Called by the User Application.
         Defines he number of presamples and postsamples that are to be set in
-        all ADCs used by the given User Application
+        all ADCs used by the given User Application.
 
         :param presamples: number of presamples
         :param postsamples: number of postsamples
@@ -144,7 +144,7 @@ class Expose():
 
     def get_user_app_settings(self, user_app_name):
         """
-        Called by the User Application
+        Called by the User Application.
         Retrieves the parameters of channels and trigger used by the
         particular User Application as well as length of the acquisition.
 
@@ -157,8 +157,8 @@ class Expose():
 
     def register_user_app(self, user_app_name, addr, port):
         """
-        Called by the User Application
-        Registers User Application in the Distributed Oscilloscope
+        Called by the User Application.
+        Registers User Application in the Distributed Oscilloscope.
 
         :param addr: IP address of the socket of the User Application
         :param port: port of the socket of the User Application
@@ -169,8 +169,8 @@ class Expose():
 
     def unregister_user_app(self, user_app_name):
         """
-        Called by the User Application
-        Unregisters User Application in the Distributed Oscilloscope
+        Called by the User Application.
+        Unregisters User Application in the Distributed Oscilloscope.
 
         :param user_app_name: name of the User Application
         """
@@ -179,12 +179,12 @@ class Expose():
     """---------------------------ADC--------------------------------------"""
     def update_data(self, timestamp, pre_post, data, unique_ADC_name):
         """
-        Called by the Device Application
+        Called by the Device Application.
 
         Adds the acquisition data to the acquisition data queue in the ADC.
         Every time the new data arrives, the ADC notifies the User Application
         class, which checks if all rrequired data has arrived and is properly
-        aligned. If yes, it sends the data to the actuall User Application
+        aligned. If yes, it sends the data to the actuall User Application.
 
         :param timestamp: timestamp with the information about the time of the
             trigger
@@ -204,8 +204,8 @@ class Expose():
 
     def register_ADC(self, unique_ADC_name, addr, port):
         """
-        Called by the Device Application
-        Registers Device Application (ADC) in the Distributed Oscilloscope
+        Called by the Device Application.
+        Registers Device Application (ADC) in the Distributed Oscilloscope.
 
         :param unique_ADC_name: name of the Device Application (ADC)
         :param addr: IP address of the socket of the Device Application (ADC)
@@ -217,8 +217,8 @@ class Expose():
 
     def unregister_ADC(self, unique_ADC_name):
         """
-        Called by the Device Application
-        Unregisters ADC in the Distributed Oscilloscope
+        Called by the Device Application.
+        Unregisters ADC in the Distributed Oscilloscope.
 
         :param unique_ADC_name: name of the Device Application (ADC)
         """
