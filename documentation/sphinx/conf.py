@@ -20,11 +20,10 @@ soft_dir = '/home/milosz/Projects/distributed_oscilloscope/software/DistributedO
 
 import os
 import sys
-sys.path.append(os.path.abspath(soft_dir + 'applications/pyqt_app'))
-sys.path.append(os.path.abspath(soft_dir + 'server'))
-sys.path.append(os.path.abspath(soft_dir + 'nodes/adc_lib_node'))
+#sys.path.append(os.path.abspath(soft_dir + 'applications/pyqt_app'))
+# sys.path.append(os.path.abspath(soft_dir + 'server'))
+# sys.path.append(os.path.abspath(soft_dir + 'nodes/adc_lib_node'))
 sys.path.append(os.path.abspath(soft_dir))
-print(sys.path)
 
 # -- General configuration ------------------------------------------------
 
