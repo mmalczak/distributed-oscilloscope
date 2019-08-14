@@ -3,7 +3,10 @@ expose.py
 ============================================
 Exposes the functionalities of the Server to other Device Applications and to
 User Applications. All communication with other applications is done using
-Expose classs
+Expose class
+For communication with the nodes it uses `ZeroMQ <https://zeromq.org/>`_
+sockets.
+
 """
 
 from zmq.utils.monitor import recv_monitor_message
@@ -39,7 +42,7 @@ class Expose():
 
         :param oscilloscope_channel_idx: index of the channel in the user\
             application
-        :param unique_ADC_name: name of the ADC
+        :param unique_ADC_name: name of the Device Application (ADC)
         :param ADC_channel_index: channel index of the ADC
         :param user_app_name: name of the User Application
         """
@@ -67,7 +70,7 @@ class Expose():
         Called by the User Application
 
         :param type: type of the trigger
-        :param unique_ADC_name: name of the ADC
+        :param unique_ADC_name: name of the Device Application (ADC)
         :param ADC_trigger_index: trigger index of the ADC
         :param user_app_name: name of the User Application
         """
@@ -93,7 +96,7 @@ class Expose():
 
         :param parameter_name: name of the parameter to be modified
         :param value: new value of the parameter
-        :param unique_ADC_name: name of the ADC
+        :param unique_ADC_name: name of the Device Application (ADC)
         :param idx: index of the given parameter if applies
         """
 
@@ -188,7 +191,7 @@ class Expose():
         :param pre_post: number of acquired presamples and postsamples
         :param data: dictionary with ADC channels indexes as keys, containing
             acquisition data
-        :param unique_ADC_name: name of the ADC
+        :param unique_ADC_name: name of the Device Application (ADC)
         """
         if(data == 0):
             self.__connection_manager.stop_acquisition_if_user_app_contains_ADC(
@@ -202,6 +205,11 @@ class Expose():
     def register_ADC(self, unique_ADC_name, addr, port):
         """
         Called by the Device Application
+        Registers Device Application (ADC) in the Distributed Oscilloscope
+
+        :param unique_ADC_name: name of the Device Application (ADC)
+        :param addr: IP address of the socket of the Device Application (ADC)
+        :param port: port of the socket of the Device Application (ADC)
 
         """
         self.__connection_manager.register_ADC(unique_ADC_name, str(addr),
@@ -210,7 +218,9 @@ class Expose():
     def unregister_ADC(self, unique_ADC_name):
         """
         Called by the Device Application
+        Unregisters ADC in the Distributed Oscilloscope
 
+        :param unique_ADC_name: name of the Device Application (ADC)
         """
         self.__connection_manager.unregister_ADC(unique_ADC_name)
 
@@ -223,6 +233,21 @@ class Expose():
     """----------------- TESTING ------------------------------------------"""
 
     def run(self):
+        """
+        Called when the object of the class is created.
+        It listens in the loop for messages from
+        Device Applications (socket_ADC_listener),
+        User Applications (socket_user_listener)
+        and from Zeroconf (zeroconf_listener).
+        The monitor socket is used to monitor the state of ZeroMQ connection.
+
+        The message contain the name of the method to call. Since communication
+        with the User Applications is synchronous, the socket_user_listener
+        sends back the data returned by the called funciton. In case of
+        socket_ADC_listener and zeroconf_listener the communication is
+        asynchronous
+
+        """
         EVENT_MAP = {}
         for name in dir(zmq):
             if name.startswith('EVENT_'):
