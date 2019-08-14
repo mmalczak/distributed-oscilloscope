@@ -185,3 +185,4 @@ intersphinx_mapping = {'https://docs.python.org/': None}
 html_theme = 'sphinx_rtd_theme'
 numfig = True
 
+autodoc_member_order = 'bysource'
