@@ -231,13 +231,13 @@ class Expose():
 
         context = zmq.Context()
 
-        socket = context.socket(zmq.ROUTER)
-        monitor = socket.get_monitor_socket()
+        socket_user_listener = context.socket(zmq.ROUTER)
+        monitor = socket_user_listener.get_monitor_socket()
         socket_ADC_listener = context.socket(zmq.ROUTER)
         socket_zeroconf_listener = context.socket(zmq.ROUTER)
 
         server_ip = get_ip()
-        socket.bind("tcp://" + server_ip + ":" +
+        socket_user_listener.bind("tcp://" + server_ip + ":" +
                     str(self.__port_user))
         socket_ADC_listener.bind("tcp://" + server_ip + ":" +
                                  str(self.__port_device))
@@ -245,22 +245,22 @@ class Expose():
 
         poller = zmq.Poller()
         poller.register(monitor, zmq.POLLIN | zmq.POLLERR)
-        poller.register(socket, zmq.POLLIN | zmq.POLLERR)
+        poller.register(socket_user_listener, zmq.POLLIN | zmq.POLLERR)
         poller.register(socket_ADC_listener, zmq.POLLIN | zmq.POLLERR)
         poller.register(socket_zeroconf_listener, zmq.POLLIN | zmq.POLLERR)
 
         while True:
             socks = dict(poller.poll())
-            if socket in socks:
-                [identity, message] = socket.recv_multipart()
+            if socket_user_listener in socks:
+                [identity, message] = socket_user_listener.recv_multipart()
                 message = pickle.loads(message)
                 try:
                     func = getattr(self, message[0])
                     ret = func(*message[1:])
                     ret = pickle.dumps(ret)
-                    socket.send_multipart([identity, ret])
+                    socket_user_listener.send_multipart([identity, ret])
                 except AttributeError:
-                    socket.send_multipart([identity, b"Error"])
+                    socket_user_listener.send_multipart([identity, b"Error"])
             if monitor in socks:
                 evt = recv_monitor_message(monitor)
                 evt.update({'description': EVENT_MAP[evt['event']]})
