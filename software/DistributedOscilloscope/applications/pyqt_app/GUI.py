@@ -66,27 +66,51 @@ class GUI_Class:
         self.ui.run_control_layout.addWidget(self.run_stop_acquisition)
 
     def register_ADC(self, unique_ADC_name, number_of_channels):
+        """
+        Registers a new ADC.
+
+        :param unique_ADC_name: name of the Device Application (ADC)
+        :param number_of_channels: number of channels in the ADC
+        """
         self.available_ADCs.append(unique_ADC_name)
         for count in range(0, self.number_of_GUI_channels):
             self.channels[count].register_ADC(unique_ADC_name,
                                                    number_of_channels)
         for count in range(0, self.number_of_GUI_triggers):
-            self.triggers[count].register_ADC(unique_ADC_name) 
+            self.triggers[count].register_ADC(unique_ADC_name)
         return True
 
     def set_ADC_unavailable(self, unique_ADC_name):
+        """
+        Makes the ADC unavailable when other Application uses this ADC.
+
+        :param unique_ADC_name: name of the Device Application (ADC)
+        """
+
         for count in range(0, self.number_of_GUI_channels):
             self.channels[count].set_ADC_unavailable(unique_ADC_name)
         for count in range(0, self.number_of_GUI_triggers):
             self.triggers[count].set_ADC_unavailable(unique_ADC_name)
 
     def set_ADC_available(self, unique_ADC_name):
+        """
+        Makes the ADC available when other Application stops using this ADC.
+
+        :param unique_ADC_name: name of the Device Application (ADC)
+        """
+
         for count in range(0, self.number_of_GUI_channels):
             self.channels[count].set_ADC_available(unique_ADC_name)
         for count in range(0, self.number_of_GUI_triggers):
             self.triggers[count].set_ADC_available(unique_ADC_name)
 
     def unregister_ADC(self, unique_ADC_name):
+        """
+        Unregisters an ADC.
+
+        :param unique_ADC_name: name of the Device Application (ADC)
+        """
+
         self.available_ADCs.remove(unique_ADC_name)
         for count in range(0, self.number_of_GUI_channels):
             self.channels[count].unregister_ADC(unique_ADC_name, True)
@@ -97,6 +121,21 @@ class GUI_Class:
         return True
 
     def update_data(self, data, pre_post_samples, offsets):
+        """
+        Called by the Device Application.
+
+        Adds the acquisition data to the acquisition data queue in the ADC.
+        Every time the new data arrives, the ADC notifies the User Application
+        class, which checks if all rrequired data has arrived and is properly
+        aligned. If yes, it sends the data to the actuall User Application.
+
+        :param data: dictionary with GUI channels indexes as keys, containing
+            acquisition data
+        :param pre_post_samples: number of acquired presamples and postsamples
+        :param offsets: difference betwenn
+        """
+
+
         curr_time = timer()
         time_diff = curr_time - self.last_data_time
         if(time_diff < 0.1):
