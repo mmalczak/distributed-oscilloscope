@@ -1,3 +1,11 @@
+"""
+expose.py
+============================================
+Exposes the functionalities of the Server to other Device Applications and to
+User Applications. All communication with other applications is done using
+Expose classs
+"""
+
 from zmq.utils.monitor import recv_monitor_message
 from zmq.utils.monitor import parse_monitor_message
 import zmq
@@ -7,8 +15,16 @@ logger = logging.getLogger(__name__)
 from DistributedOscilloscope.utilities.ipaddr import get_ip
 from DistributedOscilloscope.utilities import serialization
 
-class Expose():
 
+class Expose():
+    """
+    Top level class
+
+    :param connection_manager: :class:`~server.connection_manager.ConnectionManager`
+    :param port_user: port on which it listens for User Applications connections
+    :param port_device: port on which it listens for devices connections
+
+    """
     def __init__(self, connection_manager, port_user, port_device):
         self.__connection_manager = connection_manager
         self.__port_user = port_user
@@ -17,26 +33,70 @@ class Expose():
 
     def add_channel(self, oscilloscope_channel_idx, unique_ADC_name,
                     ADC_channel_idx, user_app_name):
+        """
+        Add channel in the User Application
+        Called by the User Application
+
+        :param oscilloscope_channel_idx: index of the channel in the user\
+            application
+        :param unique_ADC_name: name of the ADC
+        :param ADC_channel_index: channel index of the ADC
+        :param user_app_name: name of the User Application
+        """
         user_app = self.__connection_manager.get_user_app(user_app_name)
         ADC = self.__connection_manager.get_ADC(unique_ADC_name)
         user_app.add_channel(oscilloscope_channel_idx, ADC, ADC_channel_idx)
 
     def remove_channel(self, oscilloscope_channel_idx, user_app_name):
+        """
+        Remove channel from the User Application
+        Called by the User Application
+
+        :param oscilloscope_channel_idx: index of the channel in the user\
+            application
+        :param user_app_name: name of the User Application
+        """
+
         user_app = self.__connection_manager.get_user_app(user_app_name)
         user_app.remove_channel(oscilloscope_channel_idx)
 
     def add_trigger(self, type, unique_ADC_name, ADC_trigger_idx,
                     user_app_name):
+        """
+        Add trigger in the User Application
+        Called by the User Application
+
+        :param type: type of the trigger
+        :param unique_ADC_name: name of the ADC
+        :param ADC_trigger_index: trigger index of the ADC
+        :param user_app_name: name of the User Application
+        """
         user_app = self.__connection_manager.get_user_app(user_app_name)
         ADC = self.__connection_manager.get_ADC(unique_ADC_name)
         user_app.add_trigger(type, ADC, ADC_trigger_idx)
 
     def remove_trigger(self, user_app_name):
+        """
+        Remove trigger from the User Application
+        Called by the User Application
+
+        :param user_app_name: name of the User Application
+        """
         user_app = self.__connection_manager.get_user_app(user_app_name)
         user_app.remove_trigger()
 
     def set_ADC_parameter(self, parameter_name, value, unique_ADC_name,
                           idx=None):
+        """
+        Generic function, used to modify parameters of the ADC
+        Called by the User Application
+
+        :param parameter_name: name of the parameter to be modified
+        :param value: new value of the parameter
+        :param unique_ADC_name: name of the ADC
+        :param idx: index of the given parameter if applies
+        """
+
         ADC = self.__connection_manager.get_ADC(unique_ADC_name)
         try:
             ADC.set_ADC_parameter(parameter_name, value, idx)
@@ -44,30 +104,92 @@ class Expose():
             print("Set_ADC_parameter error {}".format(e))
 
     def single_acquisition(self, user_app_name):
+        """
+        Called by the User Application
+        Starts single acquisition in the given User Application
+
+        :param user_app_name: name of the User Application
+        """
         user_app = self.__connection_manager.get_user_app(user_app_name)
         user_app.configure_acquisition_ADCs_used()
 
     def run_acquisition(self, run, user_app_name):
+        """
+        Called by the User Application
+        Starts or stops continuous acquisition in the given User Application
+
+        :param run: defines if the acquisition is to be started or stopped
+        :param user_app_name: name of the User Application
+        """
+
         user_app = self.__connection_manager.get_user_app(user_app_name)
         user_app.run_acquisition(run)
 
     def set_pre_post_samples(self, presamples, postsamples, user_app_name):
+        """
+        Called by the User Application
+        Defines he number of presamples and postsamples that are to be set in
+        all ADCs used by the given User Application
+
+        :param presamples: number of presamples
+        :param postsamples: number of postsamples
+        :param user_app_name: name of the User Application
+        """
+
         user_app = self.__connection_manager.get_user_app(user_app_name)
         user_app.set_pre_post_samples(presamples, postsamples)
 
     def get_user_app_settings(self, user_app_name):
+        """
+        Called by the User Application
+        Retrieves the parameters of channels and trigger used by the
+        particular User Application as well as length of the acquisition.
+
+        :param user_app_name: name of the User Application
+
+        :return: Dictionary with required settings
+        """
         user_app = self.__connection_manager.get_user_app(user_app_name)
         return user_app.get_user_app_settings()
 
     def register_user_app(self, user_app_name, addr, port):
+        """
+        Called by the User Application
+        Registers User Application in the Distributed Oscilloscope
+
+        :param addr: IP address of the socket of the User Application
+        :param port: port of the socket of the User Application
+        :param user_app_name: name of the User Application
+        """
         self.__connection_manager.register_user_app(user_app_name, str(addr),
                                                     port)
 
     def unregister_user_app(self, user_app_name):
+        """
+        Called by the User Application
+        Unregisters User Application in the Distributed Oscilloscope
+
+        :param user_app_name: name of the User Application
+        """
         self.__connection_manager.unregister_user_app(user_app_name)
 
     """---------------------------ADC--------------------------------------"""
     def update_data(self, timestamp, pre_post, data, unique_ADC_name):
+        """
+        Called by the Device Application
+
+        Adds the acquisition data to the acquisition data queue in the ADC.
+        Every time the new data arrives, the ADC notifies the User Application
+        class, which checks if all rrequired data has arrived and is properly
+        aligned. If yes, it sends the data to the actuall User Application
+
+        :param timestamp: timestamp with the information about the time of the
+            trigger
+        :param pre_post: number of acquired presamples and postsamples
+        :param data: dictionary with ADC channels indexes as keys, containing
+            acquisition data
+        :param unique_ADC_name: name of the ADC
+        """
         if(data == 0):
             self.__connection_manager.stop_acquisition_if_user_app_contains_ADC(
                                                             unique_ADC_name)
@@ -78,10 +200,18 @@ class Expose():
         return True
 
     def register_ADC(self, unique_ADC_name, addr, port):
+        """
+        Called by the Device Application
+
+        """
         self.__connection_manager.register_ADC(unique_ADC_name, str(addr),
                                                port)
 
     def unregister_ADC(self, unique_ADC_name):
+        """
+        Called by the Device Application
+
+        """
         self.__connection_manager.unregister_ADC(unique_ADC_name)
 
     """---------------------------ADC--------------------------------------"""

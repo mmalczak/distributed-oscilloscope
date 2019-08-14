@@ -12,6 +12,17 @@ class HorizontalSettingsError(Exception):
 
 
 class UserApplication():
+    """
+    It is a model of the User Application.
+
+    All changes in the User Application are reflected here(adding/removing
+    channels, triggers, starting/stopping acquisition, changing the acquisition
+    length.
+
+    All changes that affect the User Apllication are done through this class
+    (availability of the devices, acquisition data)
+    """
+
 
     def __init__(self, name, user_app_addr, user_app_port, connection_manager):
         self.name = name
@@ -149,8 +160,6 @@ class UserApplication():
         else:
             logger.info("No trigger selected")
 
-
-
     def configure_acquisition_ADCs_used(self):
         if self.__trigger is not None:
             for ADC in self.__ADCs_used:
@@ -166,8 +175,6 @@ class UserApplication():
             ADC.stop_acquisition()
         for channel_idx, channel in self.__channels.items():
             channel.timestamp_pre_post_data = []
-
-
 
     def __all_data_aligned(self, max_timestamp):
         for channel_idx, channel in self.__channels.items():
