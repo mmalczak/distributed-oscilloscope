@@ -23,8 +23,10 @@ class ServerExpose():
         self.__devices_access = DevicesAccess(pci_addr, trtl, unique_ADC_name)
 
     def __getattr__(self, function_name):
-        """ If he requered function is not defined here, look for it in the
-        devices_access object"""
+        """
+        If he required function is not defined here, look for it in the
+        devices_access object
+        """
         return getattr(self.__devices_access, function_name)
 
     def set_server_address(self, addr):
@@ -32,8 +34,8 @@ class ServerExpose():
         If address of the Server is provided by the user, this function
         is called from main.
         If address of the Server is discovered by zeroconf, this function is
-        called by RPC call from the server.
-        It created the Publisher object used for sending the notifications
+        called by RPC call from the Server.
+        It creates the Publisher object used for sending the notifications
         and acquisition data to the Server.
 
         :param addr: address of the Server
@@ -41,7 +43,8 @@ class ServerExpose():
         self.server_publisher = Publisher(addr, self.__port_server)
 
     def exit(self):
-        """This fucntion is just for testing and will be removed after
+        """
+        This fucntion is just for testing and will be removed after
         addding ZeroMQ"""
         """doesn'r work with zeroconf"""
         data = {'function_name': 'unregister_ADC',
