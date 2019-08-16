@@ -1,8 +1,8 @@
 import numpy as np
-from .adc_lib_wrapper import ADC_Generic
-from .adc_lib_wrapper import adc_conf
-from .adc_lib_wrapper import timeval
-from .adc_lib_wrapper import adc_timestamp
+from PyAdcLib.PyAdcLib import adc_conf
+from PyAdcLib.PyAdcLib import timeval
+from PyAdcLib.PyAdcLib import adc_timestamp
+from PyAdcLib.PyAdcLibFmcAdc100m14b4ch import FmcAdc100m14b4ch
 from ctypes import c_uint
 from ctypes import c_int
 from ctypes import byref
@@ -10,32 +10,7 @@ from ctypes import memset
 from ctypes import sizeof
 
 
-class ADC_100m14b4cha(ADC_Generic):
-    ADC_CONF_100M14B4CHA_CHN_RANGE_N = 3
-
-    ADC_CONF_100M14B4CHA_CHN_RANGE_OPEN_DRAIN = 0
-    ADC_CONF_100M14B4CHA_CHN_RANGE_100mV = 0x23
-    ADC_CONF_100M14B4CHA_CHN_RANGE_1V = 0x11
-    ADC_CONF_100M14B4CHA_CHN_RANGE_10V = 0x45
-    ADC_CONF_100M14B4CHA_CHN_RANGE_100mV_CAL = 0x42
-    ADC_CONF_100M14B4CHA_CHN_RANGE_1V_CAL = 0x40
-    ADC_CONF_100M14B4CHA_CHN_RANGE_10V_CAL = 0x44
-
-    ADC_CONF_100M14B4CHA_BUF_KMALLOC = 0
-    ADC_CONF_100M14B4CHA_BUF_VMALLOC = 1
-
-    ADC_CONF_100M14B4CHA_BUF_TYPE = 0
-    ADC_CONF_100M14B4CHA_TRG_SW_EN = 1
-    ADC_CONF_100M14B4CHA_ACQ_MSHOT_MAX = 2
-    ADC_CONF_100M14B4CHA_BUF_SIZE_KB = 3
-    ADC_CONF_100M14B4CHA_TRG_ALT_EN = 4
-    __ADC_CONF_100M14B4CHA_LAST_INDEX = 5
-
-    def __init__(self, pci_addr):
-        super().__init__(pci_addr)
-
-
-class ADC_100m14b4cha_extended_API(ADC_100m14b4cha):
+class ADC_100m14b4cha_extended_API(FmcAdc100m14b4ch):
     def __init__(self, pci_addr):
         super().__init__(pci_addr)
         self.buf_ptr = 0
