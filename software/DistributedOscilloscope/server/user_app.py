@@ -12,17 +12,6 @@ class HorizontalSettingsError(Exception):
 
 
 class UserApplication():
-    """
-    It is a model of the User Application.
-
-    All changes in the User Application are reflected here(adding/removing
-    channels, triggers, starting/stopping acquisition, changing the acquisition
-    length.
-
-    All changes that affect the User Apllication are done through this class
-    (availability of the devices, acquisition data)
-    """
-
 
     def __init__(self, name, user_app_addr, user_app_port, connection_manager):
         self.name = name

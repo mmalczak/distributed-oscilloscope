@@ -5,10 +5,6 @@ logger = logging.getLogger(__name__)
 
 
 class ConnectionManager():
-    """
-    Manages connections with all nodes. Provides access to the nodes for other
-    classes
-    """
 
     def __init__(self):
         self.__user_apps = dict()

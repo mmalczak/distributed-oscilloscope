@@ -3,7 +3,7 @@ expose.py
 ============================================
 Exposes the functionalities of the Server to Device Applications and to
 User Applications. All communication with other applications is done using
-Expose class.
+the Expose class.
 For communication with the nodes it uses `ZeroMQ <https://zeromq.org/>`_
 sockets.
 
@@ -241,7 +241,7 @@ class Expose():
         and from Zeroconf (zeroconf_listener).
         The monitor socket is used to monitor the state of ZeroMQ connection.
 
-        The message contain the name of the method to call. Since communication
+        The message contains the name of the method to call. Since communication
         with the User Applications is synchronous, the socket_user_listener
         sends back the data returned by the called funciton. In case of
         socket_ADC_listener and zeroconf_listener the communication is
