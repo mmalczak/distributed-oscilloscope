@@ -161,7 +161,7 @@ class UserApplication():
 
     def stop_acquisition_ADCs_used(self):
         for ADC in self.__ADCs_used:
-            ADC.stop_acquisition()
+            ADC.run_acquisition(False)
         for channel_idx, channel in self.__channels.items():
             channel.timestamp_pre_post_data = []
 

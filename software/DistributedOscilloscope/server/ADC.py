@@ -230,8 +230,5 @@ class ADC:
     def run_acquisition(self, run):
         self.send_RPC('run_acquisition', run, self.__used_channels)
 
-    def stop_acquisition(self):
-        self.send_RPC('stop_acquisition')
-
     def set_server_address(self, server_addr):
         self.send_RPC('set_server_address', server_addr)

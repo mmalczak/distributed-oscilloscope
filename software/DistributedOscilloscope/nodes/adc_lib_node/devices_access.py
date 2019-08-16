@@ -193,8 +193,10 @@ class DevicesAccess():
         self.run = run
         if run:
             self.configure_acquisition(channels)
+        else:
+            self.__stop_acquisition()
 
-    def stop_acquisition(self):
+    def __stop_acquisition(self):
         self.__ADC.acq_stop(0)
         try:
             self.selector.unregister(self)
