@@ -11,6 +11,7 @@ The first application that has to be run is the Server. When the Server is alrea
 
 Before starting any of the applications, start the virtual environment and install the Distributed Oscilloscope, as described in section :ref:`inst_app`.
 
+.. _server_application:
 
 Server Application
 --------------------
@@ -26,6 +27,7 @@ Optional arguments:
 * port_user -- port of the Server exposed to the User Application, default value -- 8003 
 * port_device -- port of the Server exposed to the device, default value -- 8023
 
+.. _gui:
 
 GUI:
 ----------------
@@ -53,7 +55,7 @@ Optional arguments:
     * port -- port used on the current machine to listen for notifications and acquisition data, default value -- 8001
     * port_server -- port used on the Server to listen for the requests from the GUI, default value -- 8003
 
-
+.. _adc_application:
 
 ADC application:
 ------------------

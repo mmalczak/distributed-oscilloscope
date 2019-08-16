@@ -12,13 +12,15 @@ Applications
 
 .. important::
 
-    To be able to access the ADC device, the :ref:`dependencies` have to be installed.
+    To be able to access the ADC device, the :ref:`dependencies` have to be
+    installed.
 
 To use the DO, the python version 3.6 is required.
 
 
 
-Before installing the Distributed Oscilloscope and the requirements, create a python virtual environment to avoid issues with packages versions.
+Before installing the Distributed Oscilloscope and the requirements, create a
+python virtual environment to avoid issues with packages versions.
 
 .. code-block:: console
 
@@ -60,7 +62,8 @@ To install the dependencies for the ADC node, issue:
     $ pip install -r https://ohwr.org/project/distributed-oscilloscope/raw/master/software/DistributedOscilloscope/nodes/adc_lib_node/requirements.txt 
 
 
-To display help for each of the applications, type the name of the applications with '-h' option, e.g.:
+To display help for each of the applications, type the name of the applications
+with '-h' option, e.g.:
 
 .. code-block:: console
 
@@ -111,9 +114,19 @@ To be able to access the ADC device, the following drivers need to be loaded:
 
     commit: b07df87ad36d963beb7d7596b3dffa4221d6bd58
 
+To be able to access ADC device and WRTD, the following libraries have to be
+installed on the machine running the :ref:`adc_application`:
+
+* adc-lib:
+    https://ohwr.org/project/adc-lib/wikis/home
+
+* WRTD:
+    https://www.ohwr.org/project/wrtd/wikis/home
 
 
-After installing the drivers, the SPEC150T-based FMC_ADC reference design has to be loaded. You can find the reference design `here <https://wrtd.readthedocs.io/en/latest/ref_spec_fmc_adc.html#spec150t-ref-adc>`_. 
+After installing the drivers and the libraries, the SPEC150T-based FMC_ADC
+reference design has to be loaded. You can find the reference design
+`here <https://wrtd.readthedocs.io/en/latest/ref_spec_fmc_adc.html#spec150t-ref-adc>`_. 
 
 .. todo::
     Reset mockturtle CPUs

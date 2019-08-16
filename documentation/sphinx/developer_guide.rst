@@ -3,8 +3,8 @@
 Developer Guide
 ==================
 
-As described in :ref:`introduction`, currently there are two types of User
-Applications available:
+As described in :ref:`introduction`, DO currently supports two types of User
+Applications:
 
 * GUI
 * testbench
@@ -13,15 +13,18 @@ and one type of Device Application available:
 
 * ADCs supported by the `adc-lib <https://ohwr.org/project/adc-lib/wikis/home>`_.
 
-This section provides guidelines on how to develop new applications for the
-Distributed Oscilloscope.
+Depending on the needs of the user, different applications could be developed.
+In order to do this, the following tasks have to be performed:
 
-The Server provides interfaces for User Applications and Devices Applications.
-Each new application should use these interfaces. If the interfaces don't
-meet the requirements for the new application, they should be modified.
+* write application specific code
+* update or add a new model of the application in the Server
+* establish communication with the Server using the existing interface and if
+  necessary, update the interface
 
-In order to explain the interfaces, the communication patterns used in the DO
-have to be explained before.
+The section expalins breifly the communication patterns, existing interfaces
+and models of applications as well as the changes that have to be done to be
+able to add a new application.
+
 
 ========================
 Communication in the DO
@@ -50,14 +53,15 @@ Request/reply pattern is used to implement Remote Procedure Calls (RPC), which
 allow to control the behaviour of other application in a reliable way.
 The User Applications control the behaviour of the Distributed Oscilloscope,
 using a Server as a proxy. Therefore, the User Applications send RPC request to
-the Server and the Server sends the RPC requests to the ADC.
+the Server and the Server sends the RPC requests to the Device Application.
 
 Publisher/subscriber pattern is used for sending acquisition data and
 notifications about the availability of nodes. Device Applications send the
 notifications and acquisition data to the Server, which propagates them to the
 User Applications.
-There are two ways of sending the notifications to the Server about the
-presence of the Device Application:
+
+There are two ways of sending the notifications about the presence of the
+Device Application to the Server:
 
 * if the IP address of the server is provided during the startup of the
   Device Application, the notification is sent over the standard communication
@@ -66,15 +70,67 @@ presence of the Device Application:
   However, the Zeroconf Listener in the Server also uses
   the publisher/subscriber pattern for internal communication.
 
+When implementing the :ref:`interfaces` for new applications, the communication
+patterns should not be changed.
 
-======================
+
+=======================
+Applications Models
+=======================
+
+The Server contains models of User Applications and Device Applications.
+
+User Application model
+-----------------------
+
+The User Applications model is similar to standard oscilloscope. The
+functionality of the User Applications depends on the changes made in the
+model, that is:
+
+* channels selection
+* triggers selection
+* acquisition settings (e.g. length of acquisition, position of the trigger...)
+
+There are no forseen changes in the User Application model when adding a new
+User Application. The new application should make use of the
+:ref:`server_interface` and implement the
+:ref:`user_application_interface`.
+
+Device Application model
+-----------------------
+
+The Device Application model reflects the functionalities of the particular
+device. In case of the ADC, the functionalities are the following:
+
+* channels settings
+* triggers settings
+* acquisition settings
+
+The main reason for adding a new Device Application is adding a new type of
+device. In that case, the model of the application as well as the
+:ref:`device_application_interface` should be modified or added.
+
+
+.. _interfaces:
+
+===============
+Interfaces
+===============
+
+The Server provides interfaces for User Applications and Devices Applications.
+Each new application should use these interfaces. If the interfaces don't
+meet the requirements for the new application, they should be modified.
+
+
+.. _server_interface:
+
 Server Interface
-======================
+------------------
 
 .. todo::
 
-    Since currently the only available device, is and ADC, the interface
-    provides functions for interaction with the ADCs. If in the future other
+    Since currently the only available device is and ADC, the interface
+    provides functions for interaction with ADCs. If in the future other
     types of devices will be supported, the interface should be made more
     general or extended.
 
@@ -84,35 +140,29 @@ Server Interface
     :members:
 
 
+.. _user_application_interface:
 
-User Applications
-------------------
+User Application Interface
+----------------------------
 
+The following methods are used to receive information about availablility of
+of the devices and the data.
 
-
-
-
-
-
-
-.. autoclass:: server.connection_manager.ConnectionManager
-
-.. autoclass:: server.user_app.UserApplication
-
-
-.. todo::
-
-    describe the interface of the server, for the GUI and for the adc
-
-    describe what is required to be set in the server
-
-    describe how to add a new application, what is done by RPC, which
-    information the user has to poll for
-
-    describe as much as you can how to add a new type of device, you can write
-    that when more deivces will be there it will be worth creatin a virtual
-    class
+.. autoclass:: applications.pyqt_app.GUI.GUI_Class
+    :members: register_ADC, unregister_ADC, set_ADC_available,
+                set_ADC_unavailable, update_data
 
 
 
+.. _device_application_interface:
 
+Device Application Interface
+----------------------------
+
+.. autoclass:: nodes.adc_lib_node.server_expose.ServerExpose
+    :members: __getattr__, set_server_address
+
+.. autoclass:: nodes.adc_lib_node.devices_access.DevicesAccess
+    :members: set_user_app_name, set_WRTD_master, configure_adc_parameter,
+                get_current_adc_conf, configure_acquisition,
+                run_acquisition
