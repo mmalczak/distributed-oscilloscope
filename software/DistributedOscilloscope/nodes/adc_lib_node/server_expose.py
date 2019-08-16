@@ -28,10 +28,17 @@ class ServerExpose():
         return getattr(self.__devices_access, function_name)
 
     def set_server_address(self, addr):
-        self.server_publisher = Publisher(addr, self.__port_server)
+        """
+        If address of the Server is provided by the user, this function
+        is called from main.
+        If address of the Server is discovered by zeroconf, this function is
+        called by RPC call from the server.
+        It created the Publisher object used for sending the notifications
+        and acquisition data to the Server.
 
-    def set_user_app_name(self, user_app_name):
-        self.__devices_access.set_user_app_name(user_app_name)
+        :param addr: address of the Server
+        """
+        self.server_publisher = Publisher(addr, self.__port_server)
 
     def exit(self):
         """This fucntion is just for testing and will be removed after

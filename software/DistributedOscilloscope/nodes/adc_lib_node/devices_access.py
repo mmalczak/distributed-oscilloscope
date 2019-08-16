@@ -39,7 +39,12 @@ class DevicesAccess():
         self.run = False
 
     def set_user_app_name(self, user_app_name):
-        print(user_app_name)
+        """
+        Sets the name of the User Application -- this name is used to
+        distinguish WRTD rules.
+
+        :param user_app_name: Name of the User Application
+        """
         self.user_app_name = user_app_name
         if user_app_name:
             self.distribute_triggers_name = 'dt_' + user_app_name[0:8]
@@ -60,6 +65,31 @@ class DevicesAccess():
 
     def set_WRTD_master(self, WRTD_master, trigger_type=None,
                            ADC_trigger_idx=None):
+        """
+        Defines if particular device works as master or slave. The master
+        distributed the triggers, the slave receives the triggers.
+
+        Master mode:
+
+            * enables the selected trigger
+            * adds WRTD rule to distribute timestamps
+            * modifies the number of presmaples and postsamples to align data\
+                    from various ADCs
+
+        Slave mode:
+
+            * disables all triggers
+            * adds WRTD rule to receive timestamps
+            * modifies the number of presmaples and postsamples to align data\
+                    from various ADCs
+
+        :param WRTD_master: if True device works as master, if False device\
+                works as slave
+        :param trigger_type: in master mode defines the type of the trigger to\
+                enable
+        :param ADC_trigger_idx: in master mode dfines the index of the trigger\
+                to enable
+        """
         for count in range(4):
             self.__ADC.set_internal_trigger_enable(0, count)
         self.__ADC.set_external_trigger_enable(0, 0)
@@ -95,6 +125,14 @@ class DevicesAccess():
             self.__WRTD.enable_rule(self.receive_triggers_name)
 
     def configure_adc_parameter(self, function_name, *args):
+        """
+        Generic function to modify the ADC parameters.
+
+        :param function_name: the name of the function, which modifies\
+                particular ADC parameter
+        :param *args: arguments passed to the function -- the type of\
+                arguments depends on the selected function
+        """
         if(function_name == 'set_presamples' and self.__WRTD_master is False):
             self.__required_presamples = args[0]
             args = list(args)
@@ -109,6 +147,11 @@ class DevicesAccess():
             self.configure_acquisition(self.__channels)
 
     def get_current_adc_conf(self):
+        """
+        Retrieves the configuration of the ADC.
+
+        :return: Dictionary with ADC configurations
+        """
         conf = self.__ADC.current_config()
         conf['is_WRTD_master'] = self.__WRTD_master
         if(not self.__WRTD_master):
@@ -121,18 +164,13 @@ class DevicesAccess():
             acq_conf['presamples'] -= delay_samples
         return acq_conf
 
-    def stop_acquisition(self):
-        self.__ADC.acq_stop(0)
-        try:
-            self.selector.unregister(self)
-            logger.debug("The ADC device unregistered from the poller selector")
-        except KeyError:
-            logger.warning("The ADC device not available to unregister from "
-                           "the poller selector stop acquisition")
-
-        self.__acquisition_configured = False
-
     def configure_acquisition(self, channels):
+        """
+        Configures single acquisition.
+
+        :param channels: list of channels indexes from which the data should\
+                be retrieved
+        """
 
         self.__channels = channels
         self.__ADC.stop_acquisition()
@@ -144,10 +182,28 @@ class DevicesAccess():
 
 
     def run_acquisition(self, run, channels=None):
-        """channels could be None only if run is False"""
+        """
+        Starts or stops continuous acquisition.
+
+        :param run: if True start acquisition, if False stop acquisition
+        :param channels: list of channels indexes from which the data should\
+                be retrieved
+        """
+        #channels could be None only if run is False
         self.run = run
         if run:
             self.configure_acquisition(channels)
+
+    def stop_acquisition(self):
+        self.__ADC.acq_stop(0)
+        try:
+            self.selector.unregister(self)
+            logger.debug("The ADC device unregistered from the poller selector")
+        except KeyError:
+            logger.warning("The ADC device not available to unregister from "
+                           "the poller selector stop acquisition")
+
+        self.__acquisition_configured = False
 
     def fileno(self):
         return self.__ADC.fileno()
