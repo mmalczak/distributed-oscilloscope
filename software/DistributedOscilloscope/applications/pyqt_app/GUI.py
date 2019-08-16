@@ -80,30 +80,6 @@ class GUI_Class:
             self.triggers[count].register_ADC(unique_ADC_name)
         return True
 
-    def set_ADC_unavailable(self, unique_ADC_name):
-        """
-        Makes the ADC unavailable when other Application uses this ADC.
-
-        :param unique_ADC_name: name of the Device Application (ADC)
-        """
-
-        for count in range(0, self.number_of_GUI_channels):
-            self.channels[count].set_ADC_unavailable(unique_ADC_name)
-        for count in range(0, self.number_of_GUI_triggers):
-            self.triggers[count].set_ADC_unavailable(unique_ADC_name)
-
-    def set_ADC_available(self, unique_ADC_name):
-        """
-        Makes the ADC available when other Application stops using this ADC.
-
-        :param unique_ADC_name: name of the Device Application (ADC)
-        """
-
-        for count in range(0, self.number_of_GUI_channels):
-            self.channels[count].set_ADC_available(unique_ADC_name)
-        for count in range(0, self.number_of_GUI_triggers):
-            self.triggers[count].set_ADC_available(unique_ADC_name)
-
     def unregister_ADC(self, unique_ADC_name):
         """
         Unregisters an ADC.
@@ -119,6 +95,30 @@ class GUI_Class:
             self.triggers[count].unregister_ADC(unique_ADC_name)
             self.triggers[count].update_available_triggers_list()
         return True
+
+    def set_ADC_available(self, unique_ADC_name):
+        """
+        Makes the ADC available when other Application stops using this ADC.
+
+        :param unique_ADC_name: name of the Device Application (ADC)
+        """
+
+        for count in range(0, self.number_of_GUI_channels):
+            self.channels[count].set_ADC_available(unique_ADC_name)
+        for count in range(0, self.number_of_GUI_triggers):
+            self.triggers[count].set_ADC_available(unique_ADC_name)
+
+    def set_ADC_unavailable(self, unique_ADC_name):
+        """
+        Makes the ADC unavailable when other Application uses this ADC.
+
+        :param unique_ADC_name: name of the Device Application (ADC)
+        """
+
+        for count in range(0, self.number_of_GUI_channels):
+            self.channels[count].set_ADC_unavailable(unique_ADC_name)
+        for count in range(0, self.number_of_GUI_triggers):
+            self.triggers[count].set_ADC_unavailable(unique_ADC_name)
 
     def update_data(self, data, pre_post_samples, offsets):
         """
