@@ -181,14 +181,14 @@ class ADC:
             multiplication = multiplier[(previous_range, new_range)]
             threshold = int(curr_threshold * multiplication)
             if (threshold > 2**15-1 or threshold < -2**15):
-                ADC.send_RPC('set_adc_parameter',
+                ADC.send_RPC('configure_adc_parameter',
                              'set_internal_trigger_enable', 0, channel_idx)
-                ADC.send_RPC('set_adc_parameter',
+                ADC.send_RPC('configure_adc_parameter',
                              'set_internal_trigger_threshold', 0, channel_idx)
                 logger.warning("Internal trigger disabled: value out of range")
                 """TODO send information to the user_app"""
             else:
-                ADC.send_RPC('set_adc_parameter',
+                ADC.send_RPC('configure_adc_parameter',
                              'set_internal_trigger_threshold', threshold,
                              channel_idx)
 
@@ -212,10 +212,10 @@ class ADC:
             logger.error("Mapping error {}".format(e))
         try:
             if idx != None:
-                self.send_RPC('set_adc_parameter', function_name, mapped_value,
+                self.send_RPC('configure_adc_parameter', function_name, mapped_value,
                               idx)
             else:
-                self.send_RPC('set_adc_parameter', function_name, mapped_value)
+                self.send_RPC('configure_adc_parameter', function_name, mapped_value)
         except Exception as e:
             logger.error("Function invocation error {}".format(e))
         self.update_conf()

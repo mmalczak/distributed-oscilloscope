@@ -94,10 +94,12 @@ class DevicesAccess():
                                  'LC-O1')
             self.__WRTD.enable_rule(self.receive_triggers_name)
 
-    def configure_adc_parameter(self, function_name, args):
+    def configure_adc_parameter(self, function_name, *args):
         if(function_name == 'set_presamples' and self.__WRTD_master is False):
             self.__required_presamples = args[0]
+            args = list(args)
             args[0] += delay_samples
+            args = tuple(args)
         getattr(self.__ADC, function_name)(*args)
         if(function_name == ('set_presamples' or 'set_postsamples')):
             buf_size = self.__get_required_buffer_size()

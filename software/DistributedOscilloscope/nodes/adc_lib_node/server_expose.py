@@ -30,9 +30,6 @@ class ServerExpose():
     def set_server_address(self, addr):
         self.server_publisher = Publisher(addr, self.__port_server)
 
-    def set_adc_parameter(self, function_name, *args):
-        self.__devices_access.configure_adc_parameter(function_name, [*args])
-
     def set_user_app_name(self, user_app_name):
         self.__devices_access.set_user_app_name(user_app_name)
 
