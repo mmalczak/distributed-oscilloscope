@@ -122,17 +122,16 @@ class GUI_Class:
 
     def update_data(self, data, pre_post_samples, offsets):
         """
-        Called by the Device Application.
-
-        Adds the acquisition data to the acquisition data queue in the ADC.
-        Every time the new data arrives, the ADC notifies the User Application
-        class, which checks if all rrequired data has arrived and is properly
-        aligned. If yes, it sends the data to the actuall User Application.
+        It is used to send the acquisition data from the Server to the User
+        Application and depeneding on requirements of the Application, process
+        it or display. In case of GUI, the data is just displayed.
 
         :param data: dictionary with GUI channels indexes as keys, containing
             acquisition data
         :param pre_post_samples: number of acquired presamples and postsamples
-        :param offsets: difference betwenn
+        :param offsets: difference betwenn the timestamps of the channels,
+        with respec to the first channel -- this information is used to realign
+        the data if for any reason the value of the timestamp is not the same
         """
 
 
