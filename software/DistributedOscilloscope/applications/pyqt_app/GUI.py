@@ -129,8 +129,8 @@ class GUI_Class:
         :param data: dictionary with GUI channels indexes as keys, containing
             acquisition data
         :param pre_post_samples: number of acquired presamples and postsamples
-        :param offsets: difference betwenn the timestamps of the channels,
-        with respec to the first channel -- this information is used to realign
+        :param offsets: difference betwenn the timestamps of the channels,\
+        with respect to the first channel -- this information is used to realign\
         the data if for any reason the value of the timestamp is not the same
         """
 
