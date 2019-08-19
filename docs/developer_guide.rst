@@ -35,7 +35,6 @@ Oscilloscope are presented in :numref:`fig_do_communication`.
 
 .. figure:: graphics/DO_communication.png
    :name: fig_do_communication
-   :width: 800pt
    :align: center
    :alt: alternate text
    :figclass: align-center
