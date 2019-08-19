@@ -3,7 +3,7 @@ pyzmq==18.0.1
 zeroconf==0.21.3
 PyQt5==5.11.3
 pyqtgraph==0.10.0
-sphinx_rtd_theme
+sphinx-rtd-theme==0.4.3
 docutils==0.14
 Sphinx==1.8.5
 https://ohwr.org/project/distributed-oscilloscope/wikis/uploads/83b8f430e9a18bd9d7ad3ce3af91c5e0/PyWrtd-1.0.tar.gz
