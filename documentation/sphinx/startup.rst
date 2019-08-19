@@ -99,7 +99,8 @@ Examples configuration:
 -------------------------
 Supposing that the IP address of the Server is 128.141.79.22, the ADCs are
 installed in the same machine and the PCI slots where the ADCs are installed
-are 01 and 02, the applications have to be started with following parameters:
+are 01 and 02, the applications have to be started with the following
+parameters:
 
 .. code-block:: console
 

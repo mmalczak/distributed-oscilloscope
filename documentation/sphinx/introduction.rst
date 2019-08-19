@@ -23,7 +23,7 @@ Analog signals from various digitizers are time-stamped, aligned to the same mom
 Architecture
 ==============
 
-The DO constists of three layers:
+The DO consists of three layers:
 
 * `User Applications`_
 * `DO Server`_
@@ -41,7 +41,7 @@ The structure of the DO is presented in :numref:`fig_DO_basic_schematics`.
 
    Structure of the DO 
 
-The DO Server is a proxy between Devices and Users Applications. In a
+The DO Server is a proxy between Devices and Users Applications. In
 single network, there could be one server, multiple users and multiple devices.
 The applications typically are run on different machines, but it is not a
 restriction.

@@ -20,7 +20,7 @@ To use the DO, the python version 3.6 is required.
 
 
 Before installing the Distributed Oscilloscope and the requirements, create a
-python virtual environment to avoid issues with packages versions.
+Python virtual environment to avoid issues with packages versions.
 
 .. code-block:: console
 

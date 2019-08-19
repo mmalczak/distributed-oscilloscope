@@ -14,14 +14,14 @@ and one type of Device Application available:
 * ADCs supported by the `adc-lib <https://ohwr.org/project/adc-lib/wikis/home>`_.
 
 Depending on the needs of the user, different applications could be developed.
-In order to do this, the following tasks have to be performed:
+To do this, the following tasks have to be performed:
 
-* write application specific code
+* write application-specific code
 * update or add a new model of the application in the Server
 * establish communication with the Server using the existing interface and if
   necessary, update the interface
 
-The section expalins briefly the communication patterns, existing interfaces
+The section explains briefly the communication patterns, existing interfaces
 and models of applications as well as the changes that have to be done to be
 able to add a new application.
 
@@ -43,15 +43,15 @@ Oscilloscope are presented in :numref:`fig_do_communication`.
    Schematics of communications patterns in the Distributed Oscilloscope
 
 
-In the Distributed Oscilloscope there are two messaging patterns used to
+In the Distributed Oscilloscope, there are two messaging patterns used to
 communicate the nodes:
 
 * request/reply pattern
 * publisher/subscriber pattern
 
 Request/reply pattern is used to implement Remote Procedure Calls (RPC), which
-allow to control the behaviour of other application in a reliable way.
-The User Applications control the behaviour of the Distributed Oscilloscope,
+allow controlling the behavior of other application in a reliable way.
+The User Applications control the behavior of the Distributed Oscilloscope,
 using a Server as a proxy. Therefore, the User Applications send RPC request to
 the Server and the Server sends the RPC requests to the Device Application.
 
@@ -60,7 +60,7 @@ notifications about the availability of nodes. Device Applications send the
 notifications and acquisition data to the Server, which propagates them to
 User Applications.
 
-There are two ways of providing the information about the presence of the
+There are two ways of providing information about the presence of the
 Device Application to the Server:
 
 * if the IP address of the server is provided during the startup of the
@@ -85,7 +85,7 @@ using provided :ref:`interfaces`.
 User Application model
 -----------------------
 
-The User Applications model is similar to standard oscilloscope. The
+The User Applications model is similar to a standard oscilloscope. The
 functionality of the User Applications depends on the changes made in the
 model, that is:
 
@@ -93,7 +93,7 @@ model, that is:
 * triggers selection
 * acquisition settings (e.g. length of acquisition, position of the trigger...)
 
-There are no forseen changes in the User Application model when adding a new
+There are no foreseen changes in the User Application model when adding a new
 User Application.
 
 New applications should make use of the
@@ -125,7 +125,7 @@ Interfaces
 
 The Server provides interfaces for User Applications and Devices Applications.
 Each new application should use these interfaces. If the interfaces don't
-meet the requirements for new application, they should be modified.
+meet the requirements for a new application, they should be modified.
 
 
 .. _server_interface:
@@ -151,7 +151,7 @@ Server Interface
 User Application Interface
 ----------------------------
 
-The following methods are used to receive information about availablility of
+The following methods are used to receive information about the availability
 of the devices and the data.
 
 .. autoclass:: applications.pyqt_app.GUI.GUI_Class
