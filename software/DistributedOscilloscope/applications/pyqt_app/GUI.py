@@ -123,8 +123,8 @@ class GUI_Class:
     def update_data(self, data, pre_post_samples, offsets):
         """
         It is used to send the acquisition data from the Server to the User
-        Application and depeneding on requirements of the Application, process
-        it or display. In case of GUI, the data is just displayed.
+        Application and, depeneding on requirements of the Application, process
+        or display the data. In case of the GUI, the data is displayed.
 
         :param data: dictionary with GUI channels indexes as keys, containing
             acquisition data

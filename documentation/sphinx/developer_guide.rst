@@ -21,7 +21,7 @@ In order to do this, the following tasks have to be performed:
 * establish communication with the Server using the existing interface and if
   necessary, update the interface
 
-The section expalins breifly the communication patterns, existing interfaces
+The section expalins briefly the communication patterns, existing interfaces
 and models of applications as well as the changes that have to be done to be
 able to add a new application.
 
@@ -57,15 +57,15 @@ the Server and the Server sends the RPC requests to the Device Application.
 
 Publisher/subscriber pattern is used for sending acquisition data and
 notifications about the availability of nodes. Device Applications send the
-notifications and acquisition data to the Server, which propagates them to the
+notifications and acquisition data to the Server, which propagates them to
 User Applications.
 
-There are two ways of sending the notifications about the presence of the
+There are two ways of providing the information about the presence of the
 Device Application to the Server:
 
 * if the IP address of the server is provided during the startup of the
   Device Application, the notification is sent over the standard communication
-  channel the most bottom one in :numref:`fig_do_communication`.
+  channel -- the most bottom one in :numref:`fig_do_communication`.
 * using Zeroconf, which automatically discovers the IP address of the Server.
   However, the Zeroconf Listener in the Server also uses
   the publisher/subscriber pattern for internal communication.
@@ -79,6 +79,8 @@ Applications Models
 =======================
 
 The Server contains models of User Applications and Device Applications.
+Interaction with the applications is done through interaction with the models,
+using provided :ref:`interfaces`.
 
 User Application model
 -----------------------
@@ -92,7 +94,9 @@ model, that is:
 * acquisition settings (e.g. length of acquisition, position of the trigger...)
 
 There are no forseen changes in the User Application model when adding a new
-User Application. The new application should make use of the
+User Application.
+
+New applications should make use of the
 :ref:`server_interface` and implement the
 :ref:`user_application_interface`.
 
@@ -107,8 +111,10 @@ device. In case of the ADC, the functionalities are the following:
 * acquisition settings
 
 The main reason for adding a new Device Application is adding a new type of
-device. In that case, the model of the application as well as the
-:ref:`device_application_interface` should be modified or added.
+device. In that case, the model of the application,
+:ref:`device_application_interface` and
+:ref:`server_interface`
+should be modified.
 
 
 .. _interfaces:
@@ -119,7 +125,7 @@ Interfaces
 
 The Server provides interfaces for User Applications and Devices Applications.
 Each new application should use these interfaces. If the interfaces don't
-meet the requirements for the new application, they should be modified.
+meet the requirements for new application, they should be modified.
 
 
 .. _server_interface:

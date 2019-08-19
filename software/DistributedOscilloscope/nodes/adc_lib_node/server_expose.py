@@ -24,7 +24,7 @@ class ServerExpose():
 
     def __getattr__(self, function_name):
         """
-        If he required function is not defined here, look for it in the
+        If the required function is not defined here, look for it in the
         devices_access object
         """
         return getattr(self.__devices_access, function_name)

@@ -67,7 +67,7 @@ class DevicesAccess():
                            ADC_trigger_idx=None):
         """
         Defines if particular device works as master or slave. The master
-        distributed the triggers, the slave receives the triggers.
+        distributes the triggers, the slave receives the triggers.
 
         Master mode:
 
@@ -87,8 +87,8 @@ class DevicesAccess():
                 works as slave
         :param trigger_type: in master mode defines the type of the trigger to\
                 enable
-        :param ADC_trigger_idx: in master mode dfines the index of the trigger\
-                to enable
+        :param ADC_trigger_idx: in master mode defines the index of the\
+                trigger to enable
         """
         for count in range(4):
             self.__ADC.set_internal_trigger_enable(0, count)
@@ -130,7 +130,7 @@ class DevicesAccess():
 
         :param function_name: the name of the function, which modifies\
                 particular ADC parameter
-        :param *args: arguments passed to the function -- the type of\
+        :param args: arguments passed to the function -- the type of\
                 arguments depends on the selected function
         """
         if(function_name == 'set_presamples' and self.__WRTD_master is False):

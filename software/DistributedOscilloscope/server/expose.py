@@ -145,8 +145,8 @@ class Expose():
     def get_user_app_settings(self, user_app_name):
         """
         Called by the User Application.
-        Retrieves the parameters of channels and trigger used by the
-        particular User Application as well as length of the acquisition.
+        Retrieves the length of the acquisition and parameters of channels and
+        trigger used by the particular User Application.
 
         :param user_app_name: name of the User Application
 
@@ -235,10 +235,10 @@ class Expose():
     def run(self):
         """
         Called when the object of the class is created.
-        It listens in the loop for messages from
+        It listens for messages from
         Device Applications (socket_ADC_listener),
         User Applications (socket_user_listener)
-        and from Zeroconf (zeroconf_listener).
+        and from Zeroconf (zeroconf_listener) in the loop.
         The monitor socket is used to monitor the state of ZeroMQ connection.
 
         The message contains the name of the method to call. Since communication
