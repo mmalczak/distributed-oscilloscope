@@ -25,6 +25,9 @@ import sys
 # sys.path.append(os.path.abspath(soft_dir + 'nodes/adc_lib_node'))
 sys.path.append(os.path.abspath(soft_dir))
 
+import subprocess
+subprocess.call("cd graphics/;sh svg_to_png.sh;cd ../", shell=True)
+
 # -- General configuration ------------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.
