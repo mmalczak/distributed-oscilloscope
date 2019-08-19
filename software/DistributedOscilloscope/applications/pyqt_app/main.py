@@ -9,8 +9,8 @@ from DistributedOscilloscope.utilities.zmq_rpc import ZMQ_RPC
 from DistributedOscilloscope.utilities.addresses import server_expose_to_user_port
 from DistributedOscilloscope.utilities.ipaddr import get_ip
 
-"""TODO number of ADCs different from data dimension occuring when I
-switch off ADC"""
+"""TODO number of ADCs different from data dimension occuring when I switch
+off ADC"""
 
 
 class MainWindow(QMainWindow):
