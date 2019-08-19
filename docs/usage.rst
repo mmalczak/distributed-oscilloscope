@@ -8,7 +8,6 @@ The GUI application is presented in :numref:`fig_gui`.
 
 .. figure:: graphics/GUI.png
    :name: fig_gui
-   :width: 800pt
    :align: center
    :alt: alternate text
    :figclass: align-center
@@ -25,7 +24,6 @@ channel of the GUI.
 
 .. figure:: graphics/GUI_channels_selection.png
    :name: fig_gui_chann_sel
-   :width: 800pt
    :align: center
    :alt: alternate text
    :figclass: align-center
