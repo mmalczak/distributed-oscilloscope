@@ -37,6 +37,5 @@ def main():
     thread_zero_conf.start()
     expose = Expose(connection_manager, port_user, port_device)
 
-
 if __name__ == '__main__':
     main()
