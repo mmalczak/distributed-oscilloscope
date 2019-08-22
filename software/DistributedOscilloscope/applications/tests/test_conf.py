@@ -1,4 +1,4 @@
-server_addr = '128.141.79.50'
+server_addr = '128.141.79.22'
 
 update_data_types = {1: 'plot',
                      2: 'time_measurements',

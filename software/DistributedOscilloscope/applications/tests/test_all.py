@@ -19,7 +19,7 @@ import matplotlib.pyplot as plt
 import DistributedOscilloscope.server.ADC_configs as ADC_configs
 """TODO is this the rigth thing to do???"""
 
-server_addr = '128.141.79.50'
+server_addr = '128.141.79.22'
 ADC_addr = '128.141.162.185'
 
 
@@ -28,7 +28,7 @@ class OscilloscopeMethods(unittest.TestCase):
     server_handler = None
     server_expose = None
     ADCs = {'ADC1': [8000, 1], 'ADC2': [8001, 2]}
-    delay = 0.5
+    delay = 1
     return_queue = None
     testbench_name = None
 
@@ -59,7 +59,7 @@ class OscilloscopeMethods(unittest.TestCase):
 
     def connect_to_server(self):
         # addr = os.popen("ifconfig| grep inet").read().split()[1]
-        addr = '128.141.79.50'
+        addr = '128.141.79.22'
         port = 8001
         testbench_idx = addr + "_" + str(port)
         testbench_name = "testbench" + "_" + testbench_idx + "._http._tcp.local."
