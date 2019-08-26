@@ -302,8 +302,8 @@ class OscilloscopeMethods(unittest.TestCase):
         self.zmq_rpc.send_RPC('set_ADC_parameter', 'internal_trigger_enable',
                               1, unique_ADC_name_1, ADC_trigger_idx)
 
-        self.zmq_rpc.send_RPC('set_presamples', 0, self.testbench_name)
-        self.zmq_rpc.send_RPC('set_postsamples', 1000, self.testbench_name)
+        self.zmq_rpc.send_RPC('set_pre_post_samples', 0, 1000,
+                                      self.testbench_name)
 
         self.zmq_rpc.send_RPC('single_acquisition', self.testbench_name)
         self.return_queue.get()
@@ -351,7 +351,7 @@ class OscilloscopeMethods(unittest.TestCase):
     def measure_zero_cross_distance(self):
         self.zmq_rpc.send_RPC('single_acquisition', self.testbench_name)
         try:
-            data, offsets = self.return_queue.get(timeout=1 )
+            data, offsets = self.return_queue.get(timeout=0.1 )
         except:
             return None
         chan_1 = data[0]
@@ -407,7 +407,7 @@ class OscilloscopeMethods(unittest.TestCase):
     def test_precision(self):
         self.clean_queue()
 
-        number_of_acq = 200
+        number_of_acq = 5000
         """Some data could not arrive so actual number of acquisitions could
         be smaller"""
         self.results.write("Internal trigger on channel 3\n"
@@ -439,7 +439,7 @@ class OscilloscopeMethods(unittest.TestCase):
 
         ADC_trigger_idx = 3
 
-        self.zmq_rpc.send_RPC('set_ADC_parameter', 'channel_offset', -290000,
+        self.zmq_rpc.send_RPC('set_ADC_parameter', 'channel_offset', -5000,
                               unique_ADC_name_1, ADC_trigger_idx)
         """Used for calibration"""
 
