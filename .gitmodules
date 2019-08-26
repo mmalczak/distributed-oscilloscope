@@ -31,6 +31,3 @@
 [submodule "dependencies/drivers/i2c-ocore"]
 	path = dependencies/drivers/i2c-ocore
 	url = https://gitlab.cern.ch/coht/i2c-ocore.git
-[submodule "dependencies/wishbone-gen"]
-	path = dependencies/wishbone-gen
-	url = /home/milosz/projects/distributed-oscilloscope/dependencies/wishbone-gen/
