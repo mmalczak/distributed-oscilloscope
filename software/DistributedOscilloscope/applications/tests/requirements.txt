@@ -1,7 +1,7 @@
 asn1crypto==0.24.0
 bcrypt==3.1.7
 cffi==1.12.3
-cryptography==2.7
+cryptography==3.2
 cycler==0.10.0
 -e git+ssh://git@gitlab.cern.ch:7999/mmalczak/distributed_oscilloscope.git@935000598cca564cf6983b660c39ee330427f057#egg=DistributedOscilloscope
 ifaddr==0.1.6
